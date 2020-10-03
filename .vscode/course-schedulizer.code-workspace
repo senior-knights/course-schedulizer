@@ -13,7 +13,7 @@
       "source.fixAll": true
     },
     "eslint.enable": true,
-    "eslint.workingDirectories": ["../*"]
+    "eslint.workingDirectories": [{ "mode": "auto" }]
   },
   "extensions": {
     "recommendations": [

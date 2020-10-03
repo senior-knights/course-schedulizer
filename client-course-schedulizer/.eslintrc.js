@@ -25,13 +25,7 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: "module",
   },
-  plugins: [
-    "react",
-    "@typescript-eslint",
-    "typescript-sort-keys",
-    "react-hooks",
-    "sort-keys-fix",
-  ],
+  plugins: ["react", "@typescript-eslint", "typescript-sort-keys", "react-hooks", "sort-keys-fix"],
   rules: {
     // Disable some AirBnB rules.
     // Allow any linebreak type.
@@ -89,21 +83,10 @@ module.exports = {
 
     // More typescript specific rules
     "@typescript-eslint/array-type": "error",
-    "@typescript-eslint/explicit-module-boundary-types": "error",
-    "@typescript-eslint/explicit-function-return-type": [
-      "error",
-      {
-        allowTypedFunctionExpressions: false,
-      },
-    ],
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/type-annotation-spacing": "error",
-    "@typescript-eslint/typedef": [
-      "error",
-      {
-        arrowParameter: true,
-      },
-    ],
 
     // Works with v2 typescript-eslint but not v3.
     // Enforces no anti pattern with interfaces I
