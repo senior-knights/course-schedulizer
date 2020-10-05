@@ -15,7 +15,7 @@
     "react-bootstrap": "1.3.0",
     "react-dom": "^16.13.1"
   },
-  "homepage": "https://senior-knights.github.io/client-course-schedulizer",
+  "homepage": "https://senior-knights.github.io/course-schedulizer",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
