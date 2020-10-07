@@ -1,6 +1,7 @@
 name: Install and Test
 
 on:
+  push:
   pull_request:
     branches:
       - develop
