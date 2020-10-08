@@ -21,11 +21,15 @@ jobs:
       - name: Install Packages
         run: npm install
         working-directory: ${{env.working-directory}}
-      - name: Build page
+      - name: Build Page
         run: npm run build
+        working-directory: ${{env.working-directory}}
+      - name: Remove gh-pages Cache
+        run: rm -rf node_modules/gh-pages/.cache
         working-directory: ${{env.working-directory}}
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           publish_dir: ./build
+        working-directory: ${{env.working-directory}}
