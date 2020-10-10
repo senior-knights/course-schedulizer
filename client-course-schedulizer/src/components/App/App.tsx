@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import React, { ChangeEvent, PropsWithChildren, useState } from "react";
-import { Header } from "../Header/Header";
+import { Header } from "../Header";
 import "./App.scss";
 
 interface TabPanelProps {
