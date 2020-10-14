@@ -22,6 +22,7 @@ interface Meeting {
   days: string;
   // In minutes (usually 50)
   length: number;
+  location: Location;
   // Like "8:00AM" or "12:30PM"
   startTime: string;
 }
