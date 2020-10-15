@@ -1,13 +1,10 @@
-.toolbar {
+.schedule-toolbar {
   display: flex;
   justify-content: space-between;
 }
 
-.calvin-logo {
-  width: 120px;
-}
-
-.title {
+.semester-selector {
   display: flex;
+  text-align: center;
   align-items: center;
 }

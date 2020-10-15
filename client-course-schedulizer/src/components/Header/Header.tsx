@@ -1,17 +1,29 @@
-import { AppBar, Button, IconButton, Toolbar, Typography } from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
+import { AppBar, IconButton, Toolbar, Typography } from "@material-ui/core";
+import { ExitToApp, Menu } from "@material-ui/icons";
 import React from "react";
+import "./Header.scss";
 
 export const Header = () => {
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <IconButton aria-label="menu" color="inherit" edge="start">
-          <MenuIcon />
-        </IconButton>
-        <Typography variant="h6">Course Schedulizer</Typography>
-        <Button color="inherit">Login</Button>
-      </Toolbar>
-    </AppBar>
+    <div className="header">
+      <AppBar position="static">
+        <Toolbar className="toolbar">
+          <IconButton aria-label="menu" className="menu-button" color="inherit" edge="start">
+            <Menu />
+          </IconButton>
+          <div className="title">
+            <Typography variant="h6">Course Schedulizer</Typography>
+            <img
+              alt="Calvin Logo"
+              className="calvin-logo"
+              src="https://calvin.edu/dotAsset/0d95e9c5-c5ef-4870-8caf-c0afbfa40dcd.jpg"
+            />
+          </div>
+          <IconButton color="inherit">
+            <ExitToApp />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+    </div>
   );
 };
