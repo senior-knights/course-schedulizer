@@ -70,3 +70,7 @@ interface Section {
   studentHours?: number;
   year: number;
 }
+
+interface Schedule {
+  sections: Section[];
+}
