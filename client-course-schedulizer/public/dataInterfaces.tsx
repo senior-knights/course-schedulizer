@@ -11,6 +11,17 @@ enum Half {
   Second = "second",
 }
 
+enum Day {
+  Friday = "F",
+  Monday = "M",
+  // TODO: Are weekends ever used? (Can't really hurt to have them)
+  Saturday = "S",
+  Sunday = "Su",
+  Thursday = "Th",
+  Tuesday = "T",
+  Wednesday = "W",
+}
+
 interface Location {
   building: string;
   roomCapacity: number;
@@ -18,8 +29,8 @@ interface Location {
 }
 
 interface Meeting {
-  // Like "MWThF" (all days on which the given Meeting time and room is applicable)
-  days: string;
+  // All days on which the given Meeting time and room is applicable
+  days: Day[];
   // In minutes (usually 50)
   length: number;
   location: Location;
@@ -52,6 +63,7 @@ interface Section {
   letter: string;
   localMax: number;
   // Multiple Meetings possible if time/room differs on different days
+  // Asynchronous classes should have an empty array of meeting times
   meetings: Meeting[];
   semester: Semester;
   // Overrides Course value
