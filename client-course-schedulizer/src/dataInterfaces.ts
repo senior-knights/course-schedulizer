@@ -1,17 +1,17 @@
-enum Semester {
+export enum Semester {
   Fall = "FA",
   Interim = "IN", // TODO: Remove?
   Spring = "SP",
   Summer = "SU", // TODO: Is this a thing?
 }
 
-enum Half {
+export enum Half {
   First = "first",
   Full = "full",
   Second = "second",
 }
 
-enum Day {
+export enum Day {
   Friday = "F",
   Monday = "M",
   // TODO: Are weekends ever used? (Can't really hurt to have them)
@@ -22,13 +22,13 @@ enum Day {
   Wednesday = "W",
 }
 
-interface Location {
+export interface Location {
   building: string;
   roomCapacity: number;
   roomNumber: string;
 }
 
-interface Meeting {
+export interface Meeting {
   // All days on which the given Meeting time and room is applicable
   days: Day[];
   // In minutes (usually 50)
@@ -38,12 +38,12 @@ interface Meeting {
   startTime: string;
 }
 
-interface Instructor {
+export interface Instructor {
   firstName: string;
   lastName: string;
 }
 
-interface Course {
+export interface Course {
   facultyHours: number;
   name: string;
   number: string;
@@ -51,7 +51,7 @@ interface Course {
   studentHours: number;
 }
 
-interface Section {
+export interface Section {
   anticipatedSize: number;
   comments: string;
   course: Course;
@@ -71,6 +71,6 @@ interface Section {
   year: number;
 }
 
-interface Schedule {
+export interface Schedule {
   sections: Section[];
 }

@@ -1,0 +1,90 @@
+term,section,prefix,number,level,sectionID,load,daysString,location,startTime,startTimeStr,endTime,endTimeStr,duration,instructor,notes,days
+S,A,Math,323,300,Math-323-A-S,3,MW,NH 251,2000-01-01T13:00:00.000Z,08:00,2000-01-01T14:50:00.000Z,09:50,110,David Klanderman,,"M,W"
+F,A,Math,323,300,Math-323-A-F,3,MW,NH 251,2000-01-01T13:00:00.000Z,08:00,2000-01-01T14:50:00.000Z,09:50,110,Jane Gensink,,"M,W"
+F,A,Math,359,300,Math-359-A-F,3,R,NH 294,2000-01-01T23:00:00.000Z,18:00,2000-01-02T01:30:00.000Z,20:30,150,David Klanderman,,R
+F,B,Math,171,100,Math-171-B-F,4,MTWF,NH 276,2000-01-01T14:00:00.000Z,09:00,2000-01-01T14:50:00.000Z,09:50,50,Michael Bolt,,"M,T,W,F"
+F,A,Stat,143,100,Stat-143-A-F,4,MTRF,NH 295,2000-01-01T13:00:00.000Z,08:00,2000-01-01T13:50:00.000Z,08:50,50,Pam Plantinga,,"M,T,R,F"
+S,A,Stat,143,100,Stat-143-A-S,4,MTRF,NH 295,2000-01-01T13:00:00.000Z,08:00,2000-01-01T13:50:00.000Z,08:50,50,Pam Plantinga,,"M,T,R,F"
+S,B,Stat,143,100,Stat-143-B-S,4,MTRF,NH 295,2000-01-01T14:00:00.000Z,09:00,2000-01-01T14:50:00.000Z,09:50,50,Pam Plantinga,,"M,T,R,F"
+F,B,Stat,143,100,Stat-143-B-F,4,MTRF,NH 295,2000-01-01T14:00:00.000Z,09:00,2000-01-01T14:50:00.000Z,09:50,50,Pam Plantinga,,"M,T,R,F"
+S,A,Data,303,300,Data-303-A-S,3,MWF,SB 384,2000-01-01T19:30:00.000Z,14:30,2000-01-01T20:20:00.000Z,15:20,50,Randall Pruim,,"M,W,F"
+S,B,Math,252,200,Math-252-B-S,3,MWF,NH 259,2000-01-01T17:30:00.000Z,12:30,2000-01-01T18:20:00.000Z,13:20,50,Randall Pruim,,"M,W,F"
+S,A,Math,252,200,Math-252-A-S,3,MWF,NH 259,2000-01-01T16:30:00.000Z,11:30,2000-01-01T17:20:00.000Z,12:20,50,Randall Pruim,,"M,W,F"
+S,A,Math,365,300,Math-365-A-S,4,MTWF,NH 276,2000-01-01T13:00:00.000Z,08:00,2000-01-01T13:50:00.000Z,08:50,50,Michael Bolt,,"M,T,W,F"
+S,A,Stat,341,300,Stat-341-A-S,3,MWF,NH 276,2000-01-01T18:30:00.000Z,13:30,2000-01-01T19:20:00.000Z,14:20,50,Stacy DeRuiter,,"M,W,F"
+F,A,Math,221,200,Math-221-A-F,4,MTRF,NH 251,2000-01-01T18:30:00.000Z,13:30,2000-01-01T19:20:00.000Z,14:20,50,David Klanderman,,"M,T,R,F"
+F,A,Math,312,300,Math-312-A-F,4,MTWF,NH 261,2000-01-01T19:30:00.000Z,14:30,2000-01-01T20:20:00.000Z,15:20,50,James Turner,,"M,T,W,F"
+S,A,Stat,241,200,Stat-241-A-S,2,TR,NH 259,2000-01-01T16:30:00.000Z,11:30,2000-01-01T17:20:00.000Z,12:20,50,Tom Jager,,"T,R"
+S,B,Stat,241,200,Stat-241-B-S,2,TR,NH 259,2000-01-01T17:30:00.000Z,12:30,2000-01-01T18:20:00.000Z,13:20,50,Tom Jager,,"T,R"
+W,B,IDIS,150,100,IDIS-150-B-W,3,MTWRF,NH 259,2000-01-01T19:00:00.000Z,14:00,2000-01-01T22:00:00.000Z,17:00,180,Nathan Sunukjian,,"M,T,W,R,F"
+W,A,IDIS,150,100,IDIS-150-A-W,3,MTWRF,NH 259,2000-01-01T13:30:00.000Z,08:30,2000-01-01T17:00:00.000Z,12:00,210,Stacy DeRuiter,,"M,T,W,R,F"
+F,A,Math,231,200,Math-231-A-F,4,MTWF,NH 276,2000-01-01T19:30:00.000Z,14:30,2000-01-01T20:20:00.000Z,15:20,50,Todd Kapitula,,"M,T,W,F"
+F,A,Math,255,200,Math-255-A-F,4,MTWF,NH 261,2000-01-01T16:30:00.000Z,11:30,2000-01-01T17:20:00.000Z,12:20,50,Nathan Sunukjian,,"M,T,W,F"
+F,A,Math,222,200,Math-222-A-F,4,MTRF,NH 251,2000-01-01T19:30:00.000Z,14:30,2000-01-01T20:20:00.000Z,15:20,50,Gary Talsma,,"M,T,R,F"
+S,A,Math,222,200,Math-222-A-S,4,MTRF,NH 251,2000-01-01T19:30:00.000Z,14:30,2000-01-01T20:20:00.000Z,15:20,50,Gary Talsma,,"M,T,R,F"
+S,A,Stat,243,200,Stat-243-A-S,4,MTRF,NH 276,2000-01-01T16:30:00.000Z,11:30,2000-01-01T17:20:00.000Z,12:20,50,Stacy DeRuiter,,"M,T,R,F"
+F,A,Math,391,300,Math-391-A-F,1,R,NH 276,2000-01-01T20:40:00.000Z,15:40,2000-01-01T21:30:00.000Z,16:30,50,David Klanderman,Second instructor TBD,R
+S,B,Math,172,100,Math-172-B-S,4,MTWF,NH 276,2000-01-01T15:30:00.000Z,10:30,2000-01-01T16:20:00.000Z,11:20,50,James Turner,,"M,T,W,F"
+F,B,Math,271,200,Math-271-B-F,4,MTWF,NH 276,2000-01-01T15:30:00.000Z,10:30,2000-01-01T16:20:00.000Z,11:20,50,Michael Bolt,"Schedule Math 270 at same time.
+Need to determine date of Math 270 final.","M,T,W,F"
+S,A,Math,100,100,Math-100-A-S,3,MWF,NH 259,2000-01-01T18:30:00.000Z,13:30,2000-01-01T19:20:00.000Z,14:20,50,James Turner,,"M,W,F"
+S,C,Math,172,100,Math-172-C-S,4,MTWF,NH 259,2000-01-01T19:30:00.000Z,14:30,2000-01-01T20:20:00.000Z,15:20,50,James Turner,,"M,T,W,F"
+F,C,Math,271,200,Math-271-C-F,4,MTWF,NH 276,2000-01-01T18:30:00.000Z,13:30,2000-01-01T19:20:00.000Z,14:20,50,James Turner,"Schedule Math 270 at same time.
+Need to determine date of Math 270 final.","M,T,W,F"
+S,A,Math,380,300,Math-380-A-S,3,MWF,NH 261,2000-01-01T19:30:00.000Z,14:30,2000-01-01T20:20:00.000Z,15:20,50,Nathan Sunukjian,,"M,W,F"
+F,A,Math,100,100,Math-100-A-F,3,MWF,NH 251,2000-01-01T15:30:00.000Z,10:30,2000-01-01T16:20:00.000Z,11:20,50,Nathan Sunukjian,,"M,W,F"
+F,B,Math,172,100,Math-172-B-F,4,MTWF,NH 295,2000-01-01T19:30:00.000Z,14:30,2000-01-01T20:20:00.000Z,15:20,50,John Ferdinands,,"M,T,W,F"
+S,A,Math,391,300,Math-391-A-S,1,R,NH 276,2000-01-01T20:40:00.000Z,15:40,2000-01-01T21:30:00.000Z,16:30,50,Nathan Sunukjian,Second instructor TBD,R
+S,A,Math,355,300,Math-355-A-S,4,MTWF,NH 261,2000-01-01T16:30:00.000Z,11:30,2000-01-01T17:20:00.000Z,12:20,50,Christopher Moseley,,"M,T,W,F"
+W,A,Math,W84,W00,Math-W84-A-W,3,MTWRF,NH 276,2000-01-01T13:30:00.000Z,08:30,2000-01-01T17:00:00.000Z,12:00,210,Thomas Scofield,Or online stats in summer if not enough students?,"M,T,W,R,F"
+F,A,Math,172,100,Math-172-A-F,4,MTWF,NH 276,2000-01-01T13:00:00.000Z,08:00,2000-01-01T13:50:00.000Z,08:50,50,Michael Bolt,,"M,T,W,F"
+F,E,Stat,143,100,Stat-143-E-F,4,MTRF,NH 295,2000-01-01T18:30:00.000Z,13:30,2000-01-01T19:20:00.000Z,14:20,50,Christopher Moseley,,"M,T,R,F"
+F,C,Math,171,100,Math-171-C-F,4,MTWF,NH 295,2000-01-01T16:30:00.000Z,11:30,2000-01-01T17:20:00.000Z,12:20,50,James Turner,,"M,T,W,F"
+F,A,Math,171,100,Math-171-A-F,4,MTWF,NH 259,2000-01-01T15:30:00.000Z,10:30,2000-01-01T16:20:00.000Z,11:20,50,Christopher Moseley,Not planning to offer Math 169/170 in 2020-21,"M,T,W,F"
+F,D,Math,171,100,Math-171-D-F,4,MTWF,NH 259,2000-01-01T18:30:00.000Z,13:30,2000-01-01T19:20:00.000Z,14:20,50,John Ferdinands,,"M,T,W,F"
+F,A,Math,361,300,Math-361-A-F,4,MTWF,NH 251,2000-01-01T17:30:00.000Z,12:30,2000-01-01T18:20:00.000Z,13:20,50,John Ferdinands,,"M,T,W,F"
+F,E,Math,171,100,Math-171-E-F,4,MTWF,NH 259,2000-01-01T19:30:00.000Z,14:30,2000-01-01T20:20:00.000Z,15:20,50,Christopher Moseley,,"M,T,W,F"
+F,C,Stat,143,100,Stat-143-C-F,4,MTRF,NH 295,2000-01-01T15:30:00.000Z,10:30,2000-01-01T16:20:00.000Z,11:20,50,Staff,,"M,T,R,F"
+F,A,Stat,343,300,Stat-343-A-F,4,MTRF,NH 261,2000-01-01T18:30:00.000Z,13:30,2000-01-01T19:20:00.000Z,14:20,50,Thomas Scofield,,"M,T,R,F"
+F,A,Math,333,300,Math-333-A-F,4,MTWF,NH 261,2000-01-01T14:00:00.000Z,09:00,2000-01-01T14:50:00.000Z,09:50,50,Todd Kapitula,,"M,T,W,F"
+W,A,Stat,241,200,Stat-241-A-W,2,MTWRF,NH 276,2000-01-01T19:00:00.000Z,14:00,2000-01-01T22:00:00.000Z,17:00,180,Randall Pruim,"Or perhaps offer this in the fall?  Need to talk with Engineers.
+Tom Jager is willing to do 3 sections in spring, but not back to back to back.","M,T,W,R,F"
+F,A,Stat,145,100,Stat-145-A-F,4,MTWF,NH 259,2000-01-01T14:00:00.000Z,09:00,2000-01-01T14:50:00.000Z,09:50,50,Randall Pruim,,"M,T,W,F"
+F,D,Stat,143,100,Stat-143-D-F,4,MTRF,NH 295,2000-01-01T17:30:00.000Z,12:30,2000-01-01T18:20:00.000Z,13:20,50,Staff,,"M,T,R,F"
+F,A,Math,190,100,Math-190-A-F,0,W,NH 276,2000-01-01T20:30:00.000Z,15:30,2000-01-01T21:30:00.000Z,16:30,60,Thomas Scofield,First Year Seminar. With T Kapitula?,W
+S,A,Math,72,0,Math-72-A-S,1.5,TR,NH 276,2000-01-01T18:30:00.000Z,13:30,2000-01-01T19:20:00.000Z,14:20,50,Michael Bolt,New idea: split Math 170 into support courses for Math 171 (F) and Math 172 (S). Scheduling still TBD. This is a placeholder.,"T,R"
+F,,Educ,346,300,Educ-346--F,4,F,Off Campus,2000-01-01T13:00:00.000Z,08:00,2000-01-01T15:30:00.000Z,10:30,150,David Klanderman,"scheduled this on Friday morning just for.the sake of visualizing the schedule.  I think this is usually listed as some sort of ""all day / off campus"".",F
+S,A,Math,221,200,Math-221-A-S,4,MTWR,NH 251,2000-01-01T18:30:00.000Z,13:30,2000-01-01T19:20:00.000Z,14:20,50,David Klanderman,"2020-03-10: Change of Days.
+MTWR per instructor request (testing; open day on F)","M,T,W,R"
+S,A,Math,351,300,Math-351-A-S,4,MWRF,NH 261,2000-01-01T17:30:00.000Z,12:30,2000-01-01T18:20:00.000Z,13:20,50,John Ferdinands,2020-03-30: uniform open day for instructor,"M,W,R,F"
+S,A,Stat,145,100,Stat-145-A-S,4,MWRF,NH 276,2000-01-01T17:30:00.000Z,12:30,2000-01-01T18:20:00.000Z,13:20,50,Thomas Scofield,2020-03-30: uniform open day for instructor,"M,W,R,F"
+F,A,Math,71,700,Math-71-A-F,1.5,TR,NH 259,2000-01-01T17:30:00.000Z,12:30,2000-01-01T18:20:00.000Z,13:20,50,Thomas Scofield,"New idea: split Math 170 into support courses for Math 171 (F) and Math 172 (S).
+2020-05-04: Room swap to make room for Stat 245","T,R"
+F,B,Math,251,200,Math-251-B-F,3,MWF,NH 259,2000-01-01T17:30:00.000Z,12:30,2000-01-01T18:20:00.000Z,13:20,50,Thomas Scofield,2020-05-04: Room swap to make room for Stat 245,"M,W,F"
+F,A,Stat,245,200,Stat-245-A-F,4,MTRF,NH 276,2000-01-01T17:30:00.000Z,12:30,2000-01-01T18:20:00.000Z,13:20,50,Stacy DeRuiter,2020-05-04: Room swap to make room for Stat 245,"M,T,R,F"
+F,A,Math,251,200,Math-251-A-F,3,MWF,NH 259,2000-01-01T16:30:00.000Z,11:30,2000-01-01T17:20:00.000Z,12:20,50,Thomas Scofield,2020-05-04: Room swap to make room for Stat 245,"M,W,F"
+F,A,Math,271,200,Math-271-A-F,4,MTWF,NH 276,2000-01-01T16:30:00.000Z,11:30,2000-01-01T17:20:00.000Z,12:20,50,Todd Kapitula,"Schedule Math 270 at same time.
+Need to determine date of Math 270 final.
+2020-05-04: Room swap to make room for Stat 245","M,T,W,F"
+S,A,Math,327,300,Math-327-A-S,3,TR,NH 251,2000-01-01T17:05:00.000Z,12:05,2000-01-01T18:20:00.000Z,13:20,75,David Klanderman,"2020-03-10: Change days to avoid conflict with Educ course.
+This time allows for occasional trips to schools with a little buffer for travel.
+2020-05-04: Move time to make scheduling of 10:30 classes available for these students.","T,R"
+S,A,Math,132,100,Math-132-A-S,4,MWF,NH 251,2000-01-01T17:30:00.000Z,12:30,2000-01-01T18:20:00.000Z,13:20,50,Michael Bolt,2020-05-04: Moving T class session to make room for Math 327,"M,W,F"
+S,A-2,Math,132,100,Math-132-A-2-S,0,T,NH 276,2000-01-01T17:30:00.000Z,12:30,2000-01-01T18:20:00.000Z,13:20,50,Michael Bolt,2020-05-04: Moving T class session to make room for Math 327,T
+S,A,Math,231,200,Math-231-A-S,4,MWRF,NH 259,2000-01-01T14:00:00.000Z,09:00,2000-01-01T14:50:00.000Z,09:50,50,John Ferdinands,"2020-03-30: avoid tues engr lab
+2020-09-25: give John double prep for 231 (TS-> JF)","M,W,R,F"
+S,B,Math,231,200,Math-231-B-S,4,MWRF,NH 295,2000-01-01T15:30:00.000Z,10:30,2000-01-01T16:20:00.000Z,11:20,50,John Ferdinands,"2020-03-30: avoid tues engr lab
+2020-09-25: give John double prep for 231 (TK -> JF)","M,W,R,F"
+S,C,Math,231,200,Math-231-C-S,4,MWRF,NH 295,2000-01-01T16:30:00.000Z,11:30,2000-01-01T17:20:00.000Z,12:20,50,Thomas Scofield,"2020-03-30: avoid tues engr lab
+2020-09-25: give John double prep for 231 (JF-> TS)","M,W,R,F"
+S,D,Math,231,200,Math-231-D-S,4,MTWF,NH 295,2000-01-01T17:30:00.000Z,12:30,2000-01-01T18:20:00.000Z,13:20,50,Todd Kapitula,2020-09-25: give John double prep for 231 (NS -> TK),"M,T,W,F"
+S,A,Math,271,200,Math-271-A-S,4,MWRF,NH 276,2000-01-01T14:00:00.000Z,09:00,2000-01-01T14:50:00.000Z,09:50,50,Christopher Moseley,"2020-03-30: avoid tues engr lab
+2020-09-25: give John double prep for 231","M,W,R,F"
+S,A,Math,172,100,Math-172-A-S,4,MWRF,ONLINE,2000-01-01T13:00:00.000Z,08:00,2000-01-01T13:50:00.000Z,08:50,50,Christopher Moseley,"2020-03-30: uniform open day for instructor
+2020-09-25: create online 172 -- should it have a time?","M,W,R,F"
+S,A,Math,171,100,Math-171-A-S,4,MTWF,NH 259,2000-01-01T15:30:00.000Z,10:30,2000-01-01T16:20:00.000Z,11:20,50,Todd Kapitula,2020-09-25: swap-o-rama to create online 172 (CM -> TK),"M,T,W,F"
+S,A,Math,W83,W00,Math-W83-A-S,3,MWF,NH 261,2000-01-01T14:00:00.000Z,09:00,2000-01-01T14:50:00.000Z,09:50,50,Todd Kapitula,,"M,W,F"
+S,D,Stat,143,100,Stat-143-D-S,4,MTWF,NH 295,2000-01-01T16:30:00.000Z,11:30,2000-01-01T17:20:00.000Z,12:20,50,Nathan Sunukjian,"2020-03-30: open Thursday for instructor
+2020-09-25: swap-o-rama to create online 172 (1:30 -> 11:30)","M,T,W,F"
+S,E,Stat,143,100,Stat-143-E-S,4,MTWF,NH 295,2000-01-01T17:30:00.000Z,12:30,2000-01-01T18:20:00.000Z,13:20,50,Nathan Sunukjian,"2020-03-30: uniform open day for instructor
+2020-09-25: swap-a-rama to create online 172 (CM -> NS; 2:30 -> 12:30)","M,T,W,F"
