@@ -9,7 +9,7 @@ export const SemesterSelector = () => {
       <IconButton>
         <ChevronLeft />
       </IconButton>
-      <Typography variant="h6">Fall</Typography>
+      <Typography variant="h6">Fall 2021</Typography>
       <IconButton>
         <ChevronRight />
       </IconButton>
