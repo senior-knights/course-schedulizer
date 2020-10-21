@@ -1,4 +1,4 @@
-export enum Semester {
+export enum Term {
   Fall = "FA",
   Interim = "IN", // TODO: Remove?
   Spring = "SP",
@@ -32,7 +32,7 @@ export interface Meeting {
   // All days on which the given Meeting time and room is applicable
   days: Day[];
   // In minutes (usually 50)
-  length: number;
+  duration: number;
   location: Location;
   // Like "8:00AM" or "12:30PM"
   startTime: string;
@@ -65,9 +65,9 @@ export interface Section {
   // Multiple Meetings possible if time/room differs on different days
   // Asynchronous classes should have an empty array of meeting times
   meetings: Meeting[];
-  semester: Semester;
   // Overrides Course value
   studentHours?: number;
+  term: Term;
   year: number;
 }
 
