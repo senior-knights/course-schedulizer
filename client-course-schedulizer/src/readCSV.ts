@@ -169,6 +169,7 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
 
 export const readCSV = function readCSV() {
   // Referenced https://jscharting.com/tutorials/js-chart-data/client-side/fetch-csv-and-json/
+  // TODO: Construct a better test file (with all fields)
   fetch("data.csv")
     .then((response) => {
       return response.text();
