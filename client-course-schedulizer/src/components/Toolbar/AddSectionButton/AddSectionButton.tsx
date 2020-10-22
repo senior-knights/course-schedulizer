@@ -1,37 +1,27 @@
 import { IconButton, Popover } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
-import React, { MouseEvent, useState } from "react";
+import { bindPopover, bindTrigger, usePopupState } from "material-ui-popup-state/hooks";
+import React from "react";
 import { AddSectionPopover } from "../AddSectionPopover";
 import "./AddSectionButton.scss";
 
 export const AddSectionButton = () => {
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
-  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
+  const popupState = usePopupState({
+    popupId: "addSection",
+    variant: "popover",
+  });
 
   return (
     <div>
-      <IconButton onClick={handleClick}>
+      <IconButton {...bindTrigger(popupState)}>
         <Add />
       </IconButton>
       <Popover
-        anchorEl={anchorEl}
+        {...bindPopover(popupState)}
         anchorOrigin={{
           horizontal: "left",
           vertical: "bottom",
         }}
-        id={id}
-        onClose={handleClose}
-        open={open}
         transformOrigin={{
           horizontal: "right",
           vertical: "top",

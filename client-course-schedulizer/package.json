@@ -12,6 +12,7 @@
     "@types/node": "12.12.62",
     "@types/react": "16.9.49",
     "@types/react-dom": "16.9.8",
+    "material-ui-popup-state": "^1.7.0",
     "node-sass": "4.14.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
