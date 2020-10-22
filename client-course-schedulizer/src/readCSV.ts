@@ -21,6 +21,7 @@ const validFields = [
   // Needs to be parsed
   "days",
   "globalMax",
+  "localMax",
   "anticipatedSize",
   "comments",
 ];
@@ -46,11 +47,16 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
   let half: di.Half;
   let days: di.Day[];
   let globalMax: number;
+  let localMax: number;
   let anticipatedSize: number;
   let comments: string;
-  const schedule: di.Section[] = [];
+  // eslint-disable-next-line prefer-const
+  const schedule: di.Schedule = {
+    sections: [],
+  };
   const { data, meta } = objects;
   const { fields } = meta;
+  console.log(data);
   // eslint-disable-next-line prefer-const
   let usableFields: string[] = [];
   if (fields) {
@@ -80,6 +86,7 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
     half = di.Half.Full;
     days = [di.Day.Monday, di.Day.Wednesday, di.Day.Friday];
     globalMax = 30;
+    localMax = 30;
     anticipatedSize = 30;
     comments = "";
     for (let j = 0; j < usableFields.length; j += 1) {
@@ -88,72 +95,81 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
         value = object[field];
         switch (field) {
           case "name": {
-            name = "";
+            name = value;
             break;
           }
           case "prefix": {
-            prefix = "";
+            prefix = value;
             break;
           }
           case "number": {
-            number = "";
+            number = value;
             break;
           }
           case "section": {
-            letter = "";
+            letter = value;
             break;
           }
           case "studentHours": {
-            studentHours = 0;
+            studentHours = Number(value);
             break;
           }
           case "facultyHours": {
-            facultyHours = 0;
+            facultyHours = Number(value);
             break;
           }
           case "startTime": {
+            // TODO
             startTime = "8:00 AM";
             break;
           }
           case "duration": {
-            duration = 0;
+            duration = Number(value);
             break;
           }
           case "location": {
+            // TODO: Explode at space?
             building = "";
             roomNumber = "";
             break;
           }
           case "roomCapacity": {
-            roomCapacity = 30;
+            roomCapacity = Number(value);
             break;
           }
           case "year": {
-            year = new Date().getFullYear();
+            year = Number(value);
             break;
           }
           case "term": {
+            // TODO: Regex look for [Ff]([Aa])/(all), [Ss]([Pp])/(pring), ...
             term = di.Term.Fall;
             break;
           }
           case "half": {
+            // TODO
             half = di.Half.Full;
             break;
           }
           case "days": {
+            // TODO: Regex look for [Mm], [Tt]^[Hh], [Ww], [Tt][Hh]/[Rr], [Ff], [Ss]^[Uu], [Ss][Uu]/[Nn]
             days = [di.Day.Monday, di.Day.Wednesday, di.Day.Friday];
             break;
           }
           case "globalMax": {
-            globalMax = 30;
+            globalMax = Number(value);
+            break;
+          }
+          case "localMax": {
+            localMax = Number(value);
             break;
           }
           case "anticipatedSize": {
-            anticipatedSize = 30;
+            anticipatedSize = Number(value);
             break;
           }
           case "comments": {
-            comments = "";
+            comments = value;
             break;
           }
           default: {
@@ -162,7 +178,24 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
         }
       }
     }
-    // TODO: Construct a Section here, and add it to schedule
+    /* TODO
+    let section: di.Section = {
+      "anticipatedSize": anticipatedSize,
+      "comments": comments,
+      "course": course, // TODO
+      "facultyHours": facultyHours,
+      "globalMax": globalMax,
+      "half": half,
+      "instructors": instructor, // TODO
+      "letter": letter,
+      "localMax": localMax,
+      "meetings": Meeting[], // TODO
+      "studentHours": studentHours,
+      "term": term,
+      "year": year,
+    }
+    schedule.sections.push(section);
+    */
   }
   return schedule;
 };
