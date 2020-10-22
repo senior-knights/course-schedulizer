@@ -1,0 +1,13 @@
+.schedule-toolbar,
+.schedule-toolbar > div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.toolbar-left {
+  width: 35%;
+}
+
+.toolbar-right {
+  width: 20%;
+}

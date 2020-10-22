@@ -1,5 +1,6 @@
 node_modules/**/*
 .eslintcache
+debug.log
 
 # macOS
 .DS_Store
