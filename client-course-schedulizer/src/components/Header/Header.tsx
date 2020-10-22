@@ -20,7 +20,7 @@ export const Header = () => {
             <MenuItem onClick={popupState.close}>Export</MenuItem>
           </Menu>
           <Typography variant="h6">Course Schedulizer</Typography>
-          <img alt="Calvin Logo" className="calvin-logo" src={logo} />
+          <img alt="Org Logo" className="org-logo" src={logo} />
         </Toolbar>
       </AppBar>
     </div>

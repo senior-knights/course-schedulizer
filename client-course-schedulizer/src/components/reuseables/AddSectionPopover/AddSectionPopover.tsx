@@ -20,6 +20,9 @@ const styles: { row: CSSProperties } = {
 };
 
 export const AddSectionPopover = () => {
+  const days = ["M", "T", "W", "R", "F"];
+  const terms = ["Fall", "Interim", "Spring", "May"];
+
   return (
     <div className="popover-container">
       <Grid container spacing={4}>
@@ -54,21 +57,27 @@ export const AddSectionPopover = () => {
         <Grid item xs>
           <FormControl style={styles.row}>
             <FormLabel component="legend">Days</FormLabel>
-            <FormControlLabel control={<Checkbox />} label="M" />
-            <FormControlLabel control={<Checkbox />} label="T" />
-            <FormControlLabel control={<Checkbox />} label="W" />
-            <FormControlLabel control={<Checkbox />} label="R" />
-            <FormControlLabel control={<Checkbox />} label="F" />
+            {days.map((day) => {
+              return (
+                <FormControlLabel key={day.toLowerCase()} control={<Checkbox />} label={day} />
+              );
+            })}
           </FormControl>
         </Grid>
         <Grid item xs>
           <FormControl>
             <FormLabel component="legend">Term</FormLabel>
             <RadioGroup style={styles.row}>
-              <FormControlLabel control={<Radio />} label="Fall" value="fall" />
-              <FormControlLabel control={<Radio />} label="Winter" value="winter" />
-              <FormControlLabel control={<Radio />} label="Spring" value="spring" />
-              <FormControlLabel control={<Radio />} label="May" value="may" />
+              {terms.map((term) => {
+                return (
+                  <FormControlLabel
+                    key={term.toLowerCase()}
+                    control={<Radio />}
+                    label={term}
+                    value={term.toLowerCase()}
+                  />
+                );
+              })}
             </RadioGroup>
           </FormControl>
         </Grid>

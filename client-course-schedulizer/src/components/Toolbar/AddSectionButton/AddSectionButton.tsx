@@ -2,7 +2,7 @@ import { IconButton, Popover } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
 import { bindPopover, bindTrigger, usePopupState } from "material-ui-popup-state/hooks";
 import React from "react";
-import { AddSectionPopover } from "../AddSectionPopover";
+import { AddSectionPopover } from "../../reuseables/AddSectionPopover";
 import "./AddSectionButton.scss";
 
 export const AddSectionButton = () => {
