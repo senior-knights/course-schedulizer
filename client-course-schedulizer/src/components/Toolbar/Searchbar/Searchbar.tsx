@@ -3,15 +3,10 @@ import { Autocomplete } from "@material-ui/lab";
 import React from "react";
 import "./Searchbar.scss";
 
-const styles = {
-  searchBar: {
-    width: 300,
-  },
-};
-
 export const Searchbar = () => {
   return (
     <Autocomplete
+      className="searchbar"
       getOptionLabel={(option) => {
         return `${option.name}-${option.section}`;
       }}
@@ -20,7 +15,6 @@ export const Searchbar = () => {
       renderInput={(params) => {
         return <TextField {...params} label="Search" variant="outlined" />;
       }}
-      style={styles.searchBar}
     />
   );
 };
