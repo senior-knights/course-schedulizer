@@ -1,7 +1,7 @@
-import { Box, Paper, Tab, Tabs, Typography } from "@material-ui/core";
+import { Box, Paper, Tab, Tabs as MUITabs, Typography } from "@material-ui/core";
 import React, { ChangeEvent, PropsWithChildren, useState } from "react";
-import { ScheduleToolbar } from "../ScheduleToolbar";
-import "./SchedulizerTabs.scss";
+import { ScheduleToolbar } from "../Toolbar/ScheduleToolbar";
+import "./Tabs.scss";
 
 interface TabPanelProps {
   index: number;
@@ -28,7 +28,7 @@ const TabPanel = (props: PropsWithChildren<TabPanelProps>) => {
   );
 };
 
-export const SchedulizerTabs = () => {
+export const Tabs = () => {
   const [tabValue, setTabValue] = useState(0);
 
   const handleTabChange = (event: ChangeEvent<{}>, newValue: number) => {
@@ -37,7 +37,7 @@ export const SchedulizerTabs = () => {
 
   return (
     <Paper>
-      <Tabs
+      <MUITabs
         centered
         indicatorColor="primary"
         onChange={handleTabChange}
@@ -48,7 +48,7 @@ export const SchedulizerTabs = () => {
         <Tab label="Room Schedule" />
         <Tab label="Teaching Loads" />
         <Tab label="Conflicts" />
-      </Tabs>
+      </MUITabs>
       <TabPanel index={0} value={tabValue}>
         <ScheduleToolbar />
       </TabPanel>
