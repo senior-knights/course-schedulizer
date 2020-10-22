@@ -9,15 +9,8 @@ import {
   RadioGroup,
   TextField,
 } from "@material-ui/core";
-import { CSSProperties } from "@material-ui/core/styles/withStyles";
 import React from "react";
 import "./AddSectionPopover.scss";
-
-const styles: { row: CSSProperties } = {
-  row: {
-    flexDirection: "row",
-  },
-};
 
 export const AddSectionPopover = () => {
   const days = ["M", "T", "W", "R", "F"];
@@ -55,7 +48,7 @@ export const AddSectionPopover = () => {
       </Grid>
       <Grid container spacing={4}>
         <Grid item xs>
-          <FormControl style={styles.row}>
+          <FormControl>
             <FormLabel component="legend">Days</FormLabel>
             {days.map((day) => {
               return (
@@ -67,7 +60,7 @@ export const AddSectionPopover = () => {
         <Grid item xs>
           <FormControl>
             <FormLabel component="legend">Term</FormLabel>
-            <RadioGroup style={styles.row}>
+            <RadioGroup>
               {terms.map((term) => {
                 return (
                   <FormControlLabel
