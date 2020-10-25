@@ -32,6 +32,14 @@ const validFields = [
 ];
 
 // Define regexes for parsing
+const timeReg = RegExp("(?<![1-9])(1[0-9]|2[0-3]|[0-9]):([0-5][0-9])");
+const amReg = RegExp("[Aa][Mm]");
+const pmReg = RegExp("[Pp][Mm]");
+const fallReg = RegExp("[Ff]");
+const summerReg = RegExp("[Ss][Uu]");
+const springReg = RegExp("[Ss]");
+// "W" represents interim in Pruim's system it seems
+const interimReg = RegExp("[Ii]|[Ww]");
 const sunReg = RegExp("[Ss][Uu]|[Nn]");
 const monReg = RegExp("[Mm]");
 const tuesReg = RegExp("[Tt](?![Hh])");
@@ -39,9 +47,6 @@ const wedReg = RegExp("[Ww]");
 const thursReg = RegExp("[Tt][Hh]|[Rr]");
 const friReg = RegExp("[Ff]");
 const satReg = RegExp("[Ss](?![Uu])");
-const timeReg = RegExp("(?<![1-9])(1[0-9]|2[0-3]|[0-9]):([0-5][0-9])");
-const amReg = RegExp("[Aa][Mm]");
-const pmReg = RegExp("[Pp][Mm]");
 
 const convertToInterface = function convertToInterface(objects: papa.ParseResult<never>) {
   // Define variables for Schedule creation
@@ -243,8 +248,17 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
             break;
           }
           case "term": {
-            // TODO: Regex look for [Ff]([Aa])/(all), [Ss]([Pp])/(pring), ...
-            term = di.Term.Fall;
+            if (fallReg.test(value)) {
+              term = di.Term.Fall;
+            } else if (summerReg.test(value)) {
+              term = di.Term.Summer;
+            } else if (springReg.test(value)) {
+              term = di.Term.Spring;
+            } else if (interimReg.test(value)) {
+              term = di.Term.Interim;
+            } else {
+              console.log(`Term of "${value}" is unreadable, defaulting Fall`);
+            }
             break;
           }
           case "half": {
