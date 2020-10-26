@@ -4,7 +4,9 @@ import * as di from "./dataInterfaces";
 // For now the plan is to assume the CSV has these proper headers
 const validFields = [
   "name",
+  // If both are found, use "prefixes"
   "prefix",
+  "prefixes",
   "number",
   // Corresponds to letter
   "section",
@@ -40,6 +42,9 @@ const summerReg = RegExp("[Ss][Uu]");
 const springReg = RegExp("[Ss]");
 // "W" represents interim in Pruim's system it seems
 const interimReg = RegExp("[Ii]|[Ww]");
+const firstReg = RegExp("[Ff]irst");
+const secondReg = RegExp("[Ss]econd");
+const fullReg = RegExp("[Ff]ull");
 const sunReg = RegExp("[Ss][Uu]|[Nn]");
 const monReg = RegExp("[Mm]");
 const tuesReg = RegExp("[Tt](?![Hh])");
@@ -51,7 +56,7 @@ const satReg = RegExp("[Ss](?![Uu])");
 const convertToInterface = function convertToInterface(objects: papa.ParseResult<never>) {
   // Define variables for Schedule creation
   let name: string;
-  let prefix: string;
+  let prefixes: string[];
   let number: string;
   let letter: string;
   let studentHours: number;
@@ -59,7 +64,6 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
   let hourPart: string;
   let numHourPart: number;
   let minPart: string;
-  let numMinPart: number;
   let ampm: string;
   let startTime: string;
   let duration: number;
@@ -83,7 +87,6 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
   // Get data and fields from the CSV
   const { data, meta } = objects;
   const { fields } = meta;
-  console.log(data);
 
   // From the CSV fields, take the ones which we recognize
   // eslint-disable-next-line prefer-const
@@ -93,6 +96,8 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
   let startTimeStrIdx = -1;
   let instructorIdx = -1;
   let instructorsIdx = -1;
+  let prefixIdx = -1;
+  let prefixesIdx = -1;
   if (fields) {
     for (let i = 0; i < fields.length; i += 1) {
       field = fields[i];
@@ -106,6 +111,10 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
           instructorIdx = usableFields.length - 1;
         } else if (field === "instructors") {
           instructorsIdx = usableFields.length - 1;
+        } else if (field === "prefix") {
+          prefixIdx = usableFields.length - 1;
+        } else if (field === "prefixes") {
+          prefixesIdx = usableFields.length - 1;
         }
       }
     }
@@ -120,17 +129,24 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
   if (instructorIdx !== -1 && instructorsIdx !== -1) {
     usableFields.splice(instructorIdx, 1);
   }
+  // If both "prefix" and "prefixes" are present, ignore "prefix"
+  if (prefixIdx !== -1 && prefixesIdx !== -1) {
+    usableFields.splice(prefixIdx, 1);
+  }
 
   // Parse each row of the CSV as an object
   let object;
   let value: string;
   let regMatch: RegExpMatchArray | null;
+  let roomParts: string[];
+  let names: string[];
+  let nameParts: string[];
   for (let i = 0; i < data.length; i += 1) {
     object = data[i];
 
     // Reset defaults
     name = "";
-    prefix = "";
+    prefixes = [];
     number = "";
     letter = "";
     studentHours = 0;
@@ -138,7 +154,6 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
     hourPart = "8";
     numHourPart = 8;
     minPart = "00";
-    numMinPart = 0;
     ampm = "AM";
     startTime = "8:00 AM";
     duration = 50;
@@ -165,8 +180,9 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
             name = value;
             break;
           }
+          case "prefixes":
           case "prefix": {
-            prefix = value;
+            prefixes = value.split(";");
             break;
           }
           case "number": {
@@ -190,10 +206,9 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
             // Look for a time
             regMatch = value.match(timeReg);
             if (regMatch != null && regMatch.length === 3) {
-              // Get the hour and minute values, store as numbers and strings
+              // Get the hour and minute values, store as number and strings
               [, hourPart, minPart] = regMatch;
               numHourPart = Number(hourPart);
-              numMinPart = Number(minPart);
 
               // Handle high hour values
               if (numHourPart > 11) {
@@ -216,6 +231,7 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
               if (pmReg.test(value)) {
                 ampm = "PM";
                 if (pmReg.test(value)) {
+                  // eslint-disable-next-line no-console
                   console.log(`Time of "${value}" is labeled with AM and PM, defaulting to PM`);
                 }
               } else if (amReg.test(value)) {
@@ -225,6 +241,7 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
               // Piece the time together
               startTime = `${hourPart}:${minPart} ${ampm}`;
             } else {
+              // eslint-disable-next-line no-console
               console.log(`Time of "${value}" is unreadable, defaulting to 8:00 AM`);
             }
             break;
@@ -234,7 +251,19 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
             break;
           }
           case "location": {
-            // TODO: Explode at space?
+            roomParts = value.trim().split(" ");
+            if (roomParts.length === 1) {
+              // No room number given
+              [building] = roomParts;
+              number = "";
+            } else if (roomParts.length === 2) {
+              // Building and room number given
+              [building, number] = roomParts;
+            } else {
+              // Too many room parts given, assume last part is room number and rest is building
+              building = roomParts.slice(0, -1).join(" ");
+              [number] = roomParts.slice(-1);
+            }
             building = "";
             roomNumber = "";
             break;
@@ -257,18 +286,26 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
             } else if (interimReg.test(value)) {
               term = di.Term.Interim;
             } else {
-              console.log(`Term of "${value}" is unreadable, defaulting Fall`);
+              // eslint-disable-next-line no-console
+              console.log(`Term of "${value}" is unreadable, defaulting to Fall`);
             }
             break;
           }
           case "half": {
-            // TODO
-            half = di.Half.Full;
+            if (firstReg.test(value)) {
+              half = di.Half.First;
+            } else if (secondReg.test(value)) {
+              half = di.Half.Second;
+            } else if (fullReg.test(value)) {
+              half = di.Half.Full;
+            } else {
+              // eslint-disable-next-line no-console
+              console.log(`Half of "${value}" is unreadable, defaulting to Full`);
+            }
             break;
           }
           case "days": {
             days = [];
-
             if (sunReg.test(value)) {
               days.push(di.Day.Sunday);
             }
@@ -304,10 +341,31 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
             anticipatedSize = Number(value);
             break;
           }
-          case "instructor":
-          case "instructors": {
-            // TODO: Split at ";", then split each at first " "?
-            instructors = [];
+          case "instructors":
+          case "instructor": {
+            names = value.split(";");
+            for (let n = 0; n < names.length; n += 1) {
+              nameParts = names[n].trim().split(" ");
+              if (nameParts.length === 1) {
+                // No last name given
+                instructors.push({
+                  firstName: nameParts[0],
+                  lastName: "",
+                });
+              } else if (nameParts.length === 2) {
+                // First and last given
+                instructors.push({
+                  firstName: nameParts[0],
+                  lastName: nameParts[1],
+                });
+              } else {
+                // Too many names given, assume first part is first name and rest is last name
+                instructors.push({
+                  firstName: nameParts[0],
+                  lastName: nameParts.slice(1).join(" "),
+                });
+              }
+            }
             break;
           }
           case "comments": {
@@ -322,24 +380,39 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
     }
 
     // Create a section for this row of the CSV, and add it to the schedule
-    /* TODO
-    let section: di.Section = {
-      "anticipatedSize": anticipatedSize,
-      "comments": comments,
-      "course": course, // TODO
-      "facultyHours": facultyHours,
-      "globalMax": globalMax,
-      "half": half,
-      "instructors": instructor, // TODO
-      "letter": letter,
-      "localMax": localMax,
-      "meetings": Meeting[], // TODO
-      "studentHours": studentHours,
-      "term": term,
-      "year": year,
-    }
+    const section: di.Section = {
+      anticipatedSize,
+      comments,
+      course: {
+        facultyHours,
+        name,
+        number,
+        prefixes,
+        studentHours,
+      },
+      facultyHours,
+      globalMax,
+      half,
+      instructors,
+      letter,
+      localMax,
+      meetings: [
+        {
+          days,
+          duration,
+          location: {
+            building,
+            roomCapacity,
+            roomNumber,
+          },
+          startTime,
+        },
+      ], // TODO: Allow for multiple meetings
+      studentHours,
+      term,
+      year,
+    };
     schedule.sections.push(section);
-    */
   }
   return schedule;
 };

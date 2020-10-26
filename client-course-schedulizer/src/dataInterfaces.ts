@@ -47,7 +47,7 @@ export interface Course {
   facultyHours: number;
   name: string;
   number: string;
-  prefix: string[];
+  prefixes: string[];
   studentHours: number;
 }
 
