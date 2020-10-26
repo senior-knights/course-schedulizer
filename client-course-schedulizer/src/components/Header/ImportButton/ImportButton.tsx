@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-expressions */
 import { Input, InputLabel } from "@material-ui/core";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import "./ImportButton.scss";
@@ -7,6 +6,7 @@ export const ImportButton = () => {
   const [file, setFile] = useState<Blob>();
 
   useEffect(() => {
+    // https://stackoverflow.com/questions/5201317/read-the-contents-of-a-file-object
     const read = new FileReader();
     file && read.readAsBinaryString(file);
 
