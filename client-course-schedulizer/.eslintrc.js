@@ -25,7 +25,15 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: "module",
   },
-  plugins: ["react", "@typescript-eslint", "typescript-sort-keys", "react-hooks", "sort-keys-fix"],
+  plugins: [
+    "react",
+    "@typescript-eslint",
+    "typescript-sort-keys",
+    "react-hooks",
+    "sort-keys-fix",
+    "import",
+    "eslint-plugin-import-order-alphabetical",
+  ],
   rules: {
     // Disable some AirBnB rules.
     // Allow any linebreak type.
@@ -69,6 +77,15 @@ module.exports = {
       },
     ],
     "import/no-unresolved": "off",
+    // Sort imports by kind
+    "import/order": [
+      "error",
+      {
+        groups: ["builtin", "external", "index", "sibling", "parent", "internal"],
+      },
+    ],
+    // sort imports by letter
+    "import-order-alphabetical/order": "error",
 
     // Rules related to function definitions
     "func-style": ["error", "expression"],
