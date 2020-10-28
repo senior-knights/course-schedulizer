@@ -11,6 +11,7 @@ export const ImportButton = () => {
     file && read.readAsBinaryString(file);
 
     read.onloadend = () => {
+      // eslint-disable-next-line no-console
       console.log(read.result);
     };
   }, [file]);
