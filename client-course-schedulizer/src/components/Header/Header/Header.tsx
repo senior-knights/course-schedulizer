@@ -2,7 +2,8 @@ import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography } from "@materi
 import { Menu as MenuIcon } from "@material-ui/icons";
 import { bindMenu, bindTrigger, usePopupState } from "material-ui-popup-state/hooks";
 import React from "react";
-import logo from "../../assets/CalvinUniv-vert-full-color-inverse.png";
+import logo from "../../../assets/CalvinUniv-vert-full-color-inverse.png";
+import { ImportButton } from "../ImportButton";
 import "./Header.scss";
 
 export const Header = () => {
@@ -16,8 +17,10 @@ export const Header = () => {
             <MenuIcon />
           </IconButton>
           <Menu {...bindMenu(popupState)}>
-            <MenuItem onClick={popupState.close}>Import</MenuItem>
-            <MenuItem onClick={popupState.close}>Export</MenuItem>
+            <MenuItem>
+              <ImportButton />
+            </MenuItem>
+            <MenuItem onClick={popupState.close}>Export CSV</MenuItem>
           </Menu>
           <Typography variant="h6">Course Schedulizer</Typography>
           <img alt="Org Logo" className="org-logo" src={logo} />
