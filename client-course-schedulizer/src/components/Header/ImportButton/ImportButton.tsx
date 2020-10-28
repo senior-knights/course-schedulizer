@@ -16,14 +16,20 @@ export const ImportButton = () => {
     };
   }, [file]);
 
+  const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    e.target.files && setFile(e.target.files[0]);
+  };
+
   return (
     <InputLabel className="import-label" htmlFor="import-button">
       <Input
         className="hidden"
         id="import-button"
-        onChange={(e: ChangeEvent<HTMLInputElement>) => {
-          e.target.files && setFile(e.target.files[0]);
+        inputProps={{
+          accept:
+            ".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel",
         }}
+        onChange={onInputChange}
         type="file"
       />
       Import CSV
