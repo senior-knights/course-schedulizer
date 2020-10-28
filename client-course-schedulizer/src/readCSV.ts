@@ -182,7 +182,7 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
           }
           case "prefixes":
           case "prefix": {
-            prefixes = value.split(";");
+            prefixes = value.replace(" ", "").split(/[;,]/);
             break;
           }
           case "number": {
@@ -230,7 +230,7 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
               // Look to see whether AM or PM is specified explicitly
               if (pmReg.test(value)) {
                 ampm = "PM";
-                if (pmReg.test(value)) {
+                if (amReg.test(value)) {
                   // eslint-disable-next-line no-console
                   console.log(`Time of "${value}" is labeled with AM and PM, defaulting to PM`);
                 }
@@ -255,17 +255,15 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
             if (roomParts.length === 1) {
               // No room number given
               [building] = roomParts;
-              number = "";
+              roomNumber = "";
             } else if (roomParts.length === 2) {
               // Building and room number given
-              [building, number] = roomParts;
+              [building, roomNumber] = roomParts;
             } else {
               // Too many room parts given, assume last part is room number and rest is building
               building = roomParts.slice(0, -1).join(" ");
-              [number] = roomParts.slice(-1);
+              [roomNumber] = roomParts.slice(-1);
             }
-            building = "";
-            roomNumber = "";
             break;
           }
           case "roomCapacity": {
@@ -343,7 +341,7 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
           }
           case "instructors":
           case "instructor": {
-            names = value.split(";");
+            names = value.split(/[;,]/);
             for (let n = 0; n < names.length; n += 1) {
               nameParts = names[n].trim().split(" ");
               if (nameParts.length === 1) {
@@ -419,8 +417,7 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
 
 export const readCSV = function readCSV() {
   // Referenced https://jscharting.com/tutorials/js-chart-data/client-side/fetch-csv-and-json/
-  // TODO: Construct a better test file (with all fields)
-  fetch("data.csv")
+  fetch("modelSchedule.csv")
     .then((response) => {
       return response.text();
     })
