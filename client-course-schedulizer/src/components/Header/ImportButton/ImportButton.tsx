@@ -26,8 +26,7 @@ export const ImportButton = () => {
         className="hidden"
         id="import-button"
         inputProps={{
-          accept:
-            ".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel",
+          accept: ".csv",
         }}
         onChange={onInputChange}
         type="file"
