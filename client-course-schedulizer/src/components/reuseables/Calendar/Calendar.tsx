@@ -7,6 +7,7 @@ import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClic
 import timeGridPlugin from "@fullcalendar/timegrid";
 
 import React from "react";
+import "./Calendar.scss";
 
 export const Calendar = () => {
   return (

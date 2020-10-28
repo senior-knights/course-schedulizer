@@ -56,12 +56,12 @@ export const Tabs = () => {
       <TabPanel index={0} value={tabValue}>
         <ScheduleToolbar />
         <Grid alignItems="flex-start" container direction="row" justify="flex-start">
-          {professors.map((prof) => {
+          {professors.map((prof, index) => {
             return (
-              <div key={prof} style={{ width: 500 }}>
+              <span key={prof} className={index !== 0 ? "hide-axis" : ""} style={{ width: 500 }}>
                 <h3>{prof}</h3>
                 <Calendar key={prof} />
-              </div>
+              </span>
             );
           })}
         </Grid>
