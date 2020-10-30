@@ -33,6 +33,33 @@ const validFields = [
   "comments",
 ];
 
+interface SpreadsheetSection {
+  ampm: string;
+  anticipatedSize: number;
+  building: string;
+  comments: string;
+  days: di.Day[];
+  duration: number;
+  facultyHours: number;
+  globalMax: number;
+  half: di.Half;
+  hourPart: string;
+  instructors: di.Instructor[];
+  letter: string;
+  localMax: number;
+  minPart: string;
+  name: string;
+  numHourPart: number;
+  number: string;
+  prefixes: string[];
+  roomCapacity: number;
+  roomNumber: string;
+  startTime: string;
+  studentHours: number;
+  term: di.Term;
+  year: number;
+}
+
 // Define regexes for parsing
 const timeReg = RegExp("(?<![1-9])(1[0-9]|2[0-3]|[0-9]):([0-5][0-9])");
 const amReg = RegExp("[Aa][Mm]");
@@ -55,31 +82,7 @@ const satReg = RegExp("[Ss](?![Uu])");
 
 const convertToInterface = function convertToInterface(objects: papa.ParseResult<never>) {
   // Define variables for Schedule creation
-  let name: string;
-  let prefixes: string[];
-  let number: string;
-  let letter: string;
-  let studentHours: number;
-  let facultyHours: number;
-  let hourPart: string;
-  let numHourPart: number;
-  let minPart: string;
-  let ampm: string;
-  let startTime: string;
-  let duration: number;
-  let building: string;
-  let roomNumber: string;
-  let roomCapacity: number;
-  let year: number;
-  let term: di.Term;
-  let half: di.Half;
-  let days: di.Day[];
-  let globalMax: number;
-  let localMax: number;
-  let anticipatedSize: number;
-  let instructors: di.Instructor[];
-  let comments: string;
-  // eslint-disable-next-line prefer-const
+  let sss: SpreadsheetSection;
   const schedule: di.Schedule = {
     sections: [],
   };
@@ -90,7 +93,7 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
 
   // From the CSV fields, take the ones which we recognize
   // eslint-disable-next-line prefer-const
-  let usableFields: string[] = [];
+  const usableFields: string[] = [];
   let field;
   let startTimeIdx = -1;
   let startTimeStrIdx = -1;
@@ -145,30 +148,32 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
     object = data[i];
 
     // Reset defaults
-    name = "";
-    prefixes = [];
-    number = "";
-    letter = "";
-    studentHours = 0;
-    facultyHours = 0;
-    hourPart = "8";
-    numHourPart = 8;
-    minPart = "00";
-    ampm = "AM";
-    startTime = "8:00 AM";
-    duration = 50;
-    building = "";
-    roomNumber = "";
-    roomCapacity = 30;
-    year = new Date().getFullYear();
-    term = di.Term.Fall;
-    half = di.Half.Full;
-    days = [di.Day.Monday, di.Day.Wednesday, di.Day.Friday];
-    globalMax = 30;
-    localMax = 30;
-    anticipatedSize = 30;
-    instructors = [];
-    comments = "";
+    sss = {
+      ampm: "AM",
+      anticipatedSize: 30,
+      building: "",
+      comments: "",
+      days: [di.Day.Monday, di.Day.Wednesday, di.Day.Friday],
+      duration: 50,
+      facultyHours: 0,
+      globalMax: 30,
+      half: di.Half.Full,
+      hourPart: "8",
+      instructors: [],
+      letter: "",
+      localMax: 30,
+      minPart: "00",
+      name: "",
+      numHourPart: 8,
+      number: "",
+      prefixes: [],
+      roomCapacity: 30,
+      roomNumber: "",
+      startTime: "8:00 AM",
+      studentHours: 0,
+      term: di.Term.Fall,
+      year: new Date().getFullYear(),
+    };
 
     // Iterate through the fields of the CSV, and parse their values for this object
     for (let j = 0; j < usableFields.length; j += 1) {
@@ -177,28 +182,28 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
         value = String(object[field]);
         switch (field) {
           case "name": {
-            name = value;
+            sss.name = value;
             break;
           }
           case "prefixes":
           case "prefix": {
-            prefixes = value.replace(" ", "").split(/[;,]/);
+            sss.prefixes = value.replace(" ", "").split(/[;,]/);
             break;
           }
           case "number": {
-            number = value;
+            sss.number = value;
             break;
           }
           case "section": {
-            letter = value;
+            sss.letter = value;
             break;
           }
           case "studentHours": {
-            studentHours = Number(value);
+            sss.studentHours = Number(value);
             break;
           }
           case "facultyHours": {
-            facultyHours = Number(value);
+            sss.facultyHours = Number(value);
             break;
           }
           case "startTimeStr":
@@ -207,39 +212,39 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
             regMatch = value.match(timeReg);
             if (regMatch != null && regMatch.length === 3) {
               // Get the hour and minute values, store as number and strings
-              [, hourPart, minPart] = regMatch;
-              numHourPart = Number(hourPart);
+              [, sss.hourPart, sss.minPart] = regMatch;
+              sss.numHourPart = Number(sss.hourPart);
 
               // Handle high hour values
-              if (numHourPart > 11) {
-                if (numHourPart > 12) {
+              if (sss.numHourPart > 11) {
+                if (sss.numHourPart > 12) {
                   // If military time, convert to standard
-                  numHourPart -= 12;
-                  hourPart = String(numHourPart);
+                  sss.numHourPart -= 12;
+                  sss.hourPart = String(sss.numHourPart);
                 }
                 // Assume PM when 12:XX or military time
-                ampm = "PM";
+                sss.ampm = "PM";
               }
 
               // If hour is 0, assume military time of 12 AM
-              if (numHourPart === 0) {
-                hourPart = "12";
-                numHourPart = 12;
+              if (sss.numHourPart === 0) {
+                sss.hourPart = "12";
+                sss.numHourPart = 12;
               }
 
               // Look to see whether AM or PM is specified explicitly
               if (pmReg.test(value)) {
-                ampm = "PM";
+                sss.ampm = "PM";
                 if (amReg.test(value)) {
                   // eslint-disable-next-line no-console
                   console.log(`Time of "${value}" is labeled with AM and PM, defaulting to PM`);
                 }
               } else if (amReg.test(value)) {
-                ampm = "AM";
+                sss.ampm = "AM";
               }
 
               // Piece the time together
-              startTime = `${hourPart}:${minPart} ${ampm}`;
+              sss.startTime = `${sss.hourPart}:${sss.minPart} ${sss.ampm}`;
             } else {
               // eslint-disable-next-line no-console
               console.log(`Time of "${value}" is unreadable, defaulting to 8:00 AM`);
@@ -247,42 +252,42 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
             break;
           }
           case "duration": {
-            duration = Number(value);
+            sss.duration = Number(value);
             break;
           }
           case "location": {
             roomParts = value.trim().split(" ");
             if (roomParts.length === 1) {
               // No room number given
-              [building] = roomParts;
-              roomNumber = "";
+              [sss.building] = roomParts;
+              sss.roomNumber = "";
             } else if (roomParts.length === 2) {
               // Building and room number given
-              [building, roomNumber] = roomParts;
+              [sss.building, sss.roomNumber] = roomParts;
             } else {
               // Too many room parts given, assume last part is room number and rest is building
-              building = roomParts.slice(0, -1).join(" ");
-              [roomNumber] = roomParts.slice(-1);
+              sss.building = roomParts.slice(0, -1).join(" ");
+              [sss.roomNumber] = roomParts.slice(-1);
             }
             break;
           }
           case "roomCapacity": {
-            roomCapacity = Number(value);
+            sss.roomCapacity = Number(value);
             break;
           }
           case "year": {
-            year = Number(value);
+            sss.year = Number(value);
             break;
           }
           case "term": {
             if (fallReg.test(value)) {
-              term = di.Term.Fall;
+              sss.term = di.Term.Fall;
             } else if (summerReg.test(value)) {
-              term = di.Term.Summer;
+              sss.term = di.Term.Summer;
             } else if (springReg.test(value)) {
-              term = di.Term.Spring;
+              sss.term = di.Term.Spring;
             } else if (interimReg.test(value)) {
-              term = di.Term.Interim;
+              sss.term = di.Term.Interim;
             } else {
               // eslint-disable-next-line no-console
               console.log(`Term of "${value}" is unreadable, defaulting to Fall`);
@@ -291,11 +296,11 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
           }
           case "half": {
             if (firstReg.test(value)) {
-              half = di.Half.First;
+              sss.half = di.Half.First;
             } else if (secondReg.test(value)) {
-              half = di.Half.Second;
+              sss.half = di.Half.Second;
             } else if (fullReg.test(value)) {
-              half = di.Half.Full;
+              sss.half = di.Half.Full;
             } else {
               // eslint-disable-next-line no-console
               console.log(`Half of "${value}" is unreadable, defaulting to Full`);
@@ -303,40 +308,40 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
             break;
           }
           case "days": {
-            days = [];
+            sss.days = [];
             if (sunReg.test(value)) {
-              days.push(di.Day.Sunday);
+              sss.days.push(di.Day.Sunday);
             }
             if (monReg.test(value)) {
-              days.push(di.Day.Monday);
+              sss.days.push(di.Day.Monday);
             }
             if (tuesReg.test(value)) {
-              days.push(di.Day.Tuesday);
+              sss.days.push(di.Day.Tuesday);
             }
             if (wedReg.test(value)) {
-              days.push(di.Day.Wednesday);
+              sss.days.push(di.Day.Wednesday);
             }
             if (thursReg.test(value)) {
-              days.push(di.Day.Thursday);
+              sss.days.push(di.Day.Thursday);
             }
             if (friReg.test(value)) {
-              days.push(di.Day.Friday);
+              sss.days.push(di.Day.Friday);
             }
             if (satReg.test(value)) {
-              days.push(di.Day.Saturday);
+              sss.days.push(di.Day.Saturday);
             }
             break;
           }
           case "globalMax": {
-            globalMax = Number(value);
+            sss.globalMax = Number(value);
             break;
           }
           case "localMax": {
-            localMax = Number(value);
+            sss.localMax = Number(value);
             break;
           }
           case "anticipatedSize": {
-            anticipatedSize = Number(value);
+            sss.anticipatedSize = Number(value);
             break;
           }
           case "instructors":
@@ -346,19 +351,19 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
               nameParts = names[n].trim().split(" ");
               if (nameParts.length === 1) {
                 // No last name given
-                instructors.push({
+                sss.instructors.push({
                   firstName: nameParts[0],
                   lastName: "",
                 });
               } else if (nameParts.length === 2) {
                 // First and last given
-                instructors.push({
+                sss.instructors.push({
                   firstName: nameParts[0],
                   lastName: nameParts[1],
                 });
               } else {
                 // Too many names given, assume first part is first name and rest is last name
-                instructors.push({
+                sss.instructors.push({
                   firstName: nameParts[0],
                   lastName: nameParts.slice(1).join(" "),
                 });
@@ -367,7 +372,7 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
             break;
           }
           case "comments": {
-            comments = value;
+            sss.comments = value;
             break;
           }
           default: {
@@ -379,36 +384,36 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
 
     // Create a section for this row of the CSV, and add it to the schedule
     const section: di.Section = {
-      anticipatedSize,
-      comments,
+      anticipatedSize: sss.anticipatedSize,
+      comments: sss.comments,
       course: {
-        facultyHours,
-        name,
-        number,
-        prefixes,
-        studentHours,
+        facultyHours: sss.facultyHours,
+        name: sss.name,
+        number: sss.number,
+        prefixes: sss.prefixes,
+        studentHours: sss.studentHours,
       },
-      facultyHours,
-      globalMax,
-      half,
-      instructors,
-      letter,
-      localMax,
+      facultyHours: sss.facultyHours,
+      globalMax: sss.globalMax,
+      half: sss.half,
+      instructors: sss.instructors,
+      letter: sss.letter,
+      localMax: sss.localMax,
       meetings: [
         {
-          days,
-          duration,
+          days: sss.days,
+          duration: sss.duration,
           location: {
-            building,
-            roomCapacity,
-            roomNumber,
+            building: sss.building,
+            roomCapacity: sss.roomCapacity,
+            roomNumber: sss.roomNumber,
           },
-          startTime,
+          startTime: sss.startTime,
         },
       ], // TODO: Allow for multiple meetings
-      studentHours,
-      term,
-      year,
+      studentHours: sss.studentHours,
+      term: sss.term,
+      year: sss.year,
     };
     schedule.sections.push(section);
   }
