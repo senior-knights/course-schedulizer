@@ -1,10 +1,11 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Checkbox, FormControlLabel, FormLabel, Grid, Typography } from "@material-ui/core";
+import { Button, Grid, Typography } from "@material-ui/core";
 import React, { ChangeEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import { GridItemRadioGroup } from "../GridItemRadioGroup";
-import { GridItemTextField } from "../GridItemTextField";
+import { GridItemCheckboxGroup } from "../GridItem/GridItemCheckboxGroup";
+import { GridItemRadioGroup } from "../GridItem/GridItemRadioGroup";
+import { GridItemTextField } from "../GridItem/GridItemTextField";
 import "./AddSectionPopover.scss";
 
 export const AddSectionPopover = () => {
@@ -13,6 +14,7 @@ export const AddSectionPopover = () => {
   const semesterLengths = ["Full", "Half", "Intensive"];
   const halfSemester = ["First", "Second"];
   const intensiveSemester = ["A", "B", "C", "D"];
+  const spacing = 4;
 
   const schema = Yup.object().shape({
     days: Yup.array().transform((d) => {
@@ -39,13 +41,13 @@ export const AddSectionPopover = () => {
       <Typography className="title" variant="h4">
         Add/Update Section
       </Typography>
-      <Grid container spacing={4}>
+      <Grid container spacing={spacing}>
         <GridItemTextField label="Prefix" register={register} />
         <GridItemTextField label="Number" register={register} />
         <GridItemTextField label="Section" register={register} />
         <GridItemTextField label="Name" register={register} />
       </Grid>
-      <Grid container spacing={4}>
+      <Grid container spacing={spacing}>
         <GridItemTextField label="Instructor" register={register} />
         <GridItemTextField label="Location" register={register} />
         <GridItemTextField
@@ -59,7 +61,7 @@ export const AddSectionPopover = () => {
           textFieldProps={{ name: "studentHours" }}
         />
       </Grid>
-      <Grid container spacing={4}>
+      <Grid container spacing={spacing}>
         <GridItemTextField
           label="Anticipated Size"
           register={register}
@@ -82,23 +84,8 @@ export const AddSectionPopover = () => {
           textFieldProps={{ defaultValue: "08:00", name: "startTime", type: "time" }}
         />
       </Grid>
-      <Grid container spacing={4}>
-        <Grid item xs>
-          <FormLabel component="legend">Days</FormLabel>
-          {days.map((day, i) => {
-            return (
-              <FormControlLabel
-                key={day.toLowerCase()}
-                control={<Checkbox />}
-                defaultChecked={false}
-                inputRef={register}
-                label={day}
-                name={`days[${i}]`}
-                value={day}
-              />
-            );
-          })}
-        </Grid>
+      <Grid container spacing={spacing}>
+        <GridItemCheckboxGroup label="Days" options={days} register={register} />
         <GridItemRadioGroup
           control={control}
           defaultValue="FA"
