@@ -1,26 +1,25 @@
 /* eslint-disable import-order-alphabetical/order */
 import FullCalendar, { EventInput } from "@fullcalendar/react";
+import moment from "moment";
 
 // Plugins
-import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
 import timeGridPlugin from "@fullcalendar/timegrid";
 
 import React from "react";
 import "./Calendar.scss";
 
+export const initialDate = "2000-01-02";
 // TODO: remove
 const events: EventInput = [
   {
     description: "Lecture",
-    // NOTE: we need to make it be the current data
-    // Or make the calendar start at a certain date
-    end: "2020-10-27T11:30:00",
+    end: `${moment(initialDate).add(1, "days").format("YYYY-MM-DD")}T11:30:00`,
     extendedProps: {
       department: "CS",
       professor: "VanderLinden",
     },
-    start: "2020-10-27T10:30:00",
+    start: `${moment(initialDate).add(1, "days").format("YYYY-MM-DD")}T10:30:00`,
     title: "CS262",
   },
 ];
@@ -36,9 +35,11 @@ export const Calendar = () => {
         events={events}
         headerToolbar={false}
         height="auto"
+        initialDate={initialDate}
         initialView="timeGridWeek"
         nowIndicator={false}
-        plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
+        plugins={[interactionPlugin, timeGridPlugin]}
+        selectable
         weekends={false}
       />
     </>
