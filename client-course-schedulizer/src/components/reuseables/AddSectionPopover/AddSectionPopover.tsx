@@ -16,6 +16,7 @@ export const AddSectionPopover = () => {
   const intensiveSemester = ["A", "B", "C", "D"];
   const spacing = 4;
 
+  // remove false values from days array
   const schema = Yup.object().shape({
     days: Yup.array().transform((d) => {
       return d.filter((day: boolean | string) => {
@@ -30,6 +31,7 @@ export const AddSectionPopover = () => {
   const [semesterLength, setSemesterLength] = useState("full");
 
   const onSubmit = (data: unknown) => {
+    // eslint-disable-next-line no-console
     return console.log(data);
   };
   const onSemesterLengthChange = (e: ChangeEvent<HTMLInputElement>) => {
