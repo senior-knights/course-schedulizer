@@ -34,7 +34,6 @@ const validFields = [
 ];
 
 interface SpreadsheetSection {
-  ampm: string;
   anticipatedSize: number;
   building: string;
   comments: string;
@@ -43,13 +42,10 @@ interface SpreadsheetSection {
   facultyHours: number;
   globalMax: number;
   half: di.Half;
-  hourPart: string;
   instructors: di.Instructor[];
   letter: string;
   localMax: number;
-  minPart: string;
   name: string;
-  numHourPart: number;
   number: string;
   prefixes: string[];
   roomCapacity: number;
@@ -79,6 +75,53 @@ const wedReg = RegExp("[Ww]");
 const thursReg = RegExp("[Tt][Hh]|[Rr]");
 const friReg = RegExp("[Ff]");
 const satReg = RegExp("[Ss](?![Uu])");
+
+const startTimeCase = function startTimeCase(sss: SpreadsheetSection, value: string) {
+  let ampm = "AM";
+  let hourPart = "8";
+  let numHourPart = 8;
+  let minPart = "00";
+  const regMatch = value.match(timeReg);
+  if (regMatch != null && regMatch.length === 3) {
+    // Get the hour and minute values, store as number and strings
+    [, hourPart, minPart] = regMatch;
+    numHourPart = Number(hourPart);
+
+    // Handle high hour values
+    if (numHourPart > 11) {
+      if (numHourPart > 12) {
+        // If military time, convert to standard
+        numHourPart -= 12;
+        hourPart = String(numHourPart);
+      }
+      // Assume PM when 12:XX or military time
+      ampm = "PM";
+    }
+
+    // If hour is 0, assume military time of 12 AM
+    if (numHourPart === 0) {
+      hourPart = "12";
+      numHourPart = 12;
+    }
+
+    // Look to see whether AM or PM is specified explicitly
+    if (pmReg.test(value)) {
+      ampm = "PM";
+      if (amReg.test(value)) {
+        // eslint-disable-next-line no-console
+        console.log(`Time of "${value}" is labeled with AM and PM, defaulting to PM`);
+      }
+    } else if (amReg.test(value)) {
+      ampm = "AM";
+    }
+
+    // Piece the time together
+    return `${hourPart}:${minPart} ${ampm}`;
+  }
+  // eslint-disable-next-line no-console
+  console.log(`Time of "${value}" is unreadable, defaulting to 8:00 AM`);
+  return "8:00 AM";
+};
 
 const convertToInterface = function convertToInterface(objects: papa.ParseResult<never>) {
   // Define variables for Schedule creation
@@ -123,7 +166,6 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
   data.forEach((object) => {
     // Reset defaults
     sss = {
-      ampm: "AM",
       anticipatedSize: 30,
       building: "",
       comments: "",
@@ -132,13 +174,10 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
       facultyHours: 0,
       globalMax: 30,
       half: di.Half.Full,
-      hourPart: "8",
       instructors: [],
       letter: "",
       localMax: 30,
-      minPart: "00",
       name: "",
-      numHourPart: 8,
       number: "",
       prefixes: [],
       roomCapacity: 30,
@@ -180,47 +219,7 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
         }
         case "startTimeStr":
         case "startTime": {
-          // Look for a time
-          regMatch = value.match(timeReg);
-          if (regMatch != null && regMatch.length === 3) {
-            // Get the hour and minute values, store as number and strings
-            [, sss.hourPart, sss.minPart] = regMatch;
-            sss.numHourPart = Number(sss.hourPart);
-
-            // Handle high hour values
-            if (sss.numHourPart > 11) {
-              if (sss.numHourPart > 12) {
-                // If military time, convert to standard
-                sss.numHourPart -= 12;
-                sss.hourPart = String(sss.numHourPart);
-              }
-              // Assume PM when 12:XX or military time
-              sss.ampm = "PM";
-            }
-
-            // If hour is 0, assume military time of 12 AM
-            if (sss.numHourPart === 0) {
-              sss.hourPart = "12";
-              sss.numHourPart = 12;
-            }
-
-            // Look to see whether AM or PM is specified explicitly
-            if (pmReg.test(value)) {
-              sss.ampm = "PM";
-              if (amReg.test(value)) {
-                // eslint-disable-next-line no-console
-                console.log(`Time of "${value}" is labeled with AM and PM, defaulting to PM`);
-              }
-            } else if (amReg.test(value)) {
-              sss.ampm = "AM";
-            }
-
-            // Piece the time together
-            sss.startTime = `${sss.hourPart}:${sss.minPart} ${sss.ampm}`;
-          } else {
-            // eslint-disable-next-line no-console
-            console.log(`Time of "${value}" is unreadable, defaulting to 8:00 AM`);
-          }
+          sss.startTime = startTimeCase(sss, value);
           break;
         }
         case "duration": {
@@ -228,6 +227,7 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
           break;
         }
         case "location": {
+          // TODO: Function
           roomParts = value.trim().split(" ");
           if (roomParts.length === 1) {
             // No room number given
@@ -252,6 +252,7 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
           break;
         }
         case "term": {
+          // TODO: Function
           if (fallReg.test(value)) {
             sss.term = di.Term.Fall;
           } else if (summerReg.test(value)) {
@@ -267,6 +268,7 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
           break;
         }
         case "half": {
+          // TODO: Function
           if (firstReg.test(value)) {
             sss.half = di.Half.First;
           } else if (secondReg.test(value)) {
@@ -280,6 +282,7 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
           break;
         }
         case "days": {
+          // TODO: Function
           sss.days = [];
           if (sunReg.test(value)) {
             sss.days.push(di.Day.Sunday);
@@ -318,6 +321,7 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
         }
         case "instructors":
         case "instructor": {
+          // TODO: Function
           names = value.split(/[;,]/);
           names.forEach((name) => {
             nameParts = name.trim().split(" ");
