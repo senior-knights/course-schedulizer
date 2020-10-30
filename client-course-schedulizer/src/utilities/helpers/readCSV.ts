@@ -1,5 +1,5 @@
 import papa from "papaparse";
-import * as di from "./dataInterfaces";
+import * as di from "../interfaces/dataInterfaces";
 
 // For now the plan is to assume the CSV has these proper headers
 const validFields = [

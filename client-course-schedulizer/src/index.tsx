@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { App } from "./components";
-import * as read from "./readCSV";
 import * as serviceWorker from "./serviceWorker";
 import "./styles/index.scss";
+import * as read from "./utilities/helpers/readCSV";
 
 ReactDOM.render(
   <React.StrictMode>
