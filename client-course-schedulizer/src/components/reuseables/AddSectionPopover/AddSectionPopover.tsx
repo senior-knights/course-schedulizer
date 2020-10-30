@@ -7,11 +7,11 @@ import {
   Grid,
   Radio,
   RadioGroup,
-  TextField,
 } from "@material-ui/core";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as Yup from "yup";
+import { GridItemTextField } from "../GridItemTextField";
 import "./AddSectionPopover.scss";
 
 export const AddSectionPopover = () => {
@@ -36,38 +36,20 @@ export const AddSectionPopover = () => {
   return (
     <form className="popover-container" onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={4}>
-        <Grid item xs>
-          <TextField inputRef={register} label="Prefix" name="prefix" />
-        </Grid>
-        <Grid item xs>
-          <TextField inputRef={register} label="Number" name="number" />
-        </Grid>
-        <Grid item xs>
-          <TextField inputRef={register} label="Section" name="section" />
-        </Grid>
-        <Grid item xs>
-          <TextField inputRef={register} label="Load" name="load" />
-        </Grid>
+        <GridItemTextField label="Prefix" register={register} />
+        <GridItemTextField label="Number" register={register} />
+        <GridItemTextField label="Section" register={register} />
+        <GridItemTextField label="Load" register={register} />
       </Grid>
       <Grid container spacing={4}>
-        <Grid item xs>
-          <TextField inputRef={register} label="Instructor" name="instructor" />
-        </Grid>
-        <Grid item xs>
-          <TextField
-            defaultValue="08:00"
-            inputRef={register}
-            label="Start Time"
-            name="startTime"
-            type="time"
-          />
-        </Grid>
-        <Grid item xs>
-          <TextField inputRef={register} label="Duration" name="duration" />
-        </Grid>
-        <Grid item xs>
-          <TextField inputRef={register} label="Location" name="location" />
-        </Grid>
+        <GridItemTextField label="Instructor" register={register} />
+        <GridItemTextField
+          label="Start Time"
+          register={register}
+          textFieldProps={{ defaultValue: "08:00", name: "startTime", type: "time" }}
+        />
+        <GridItemTextField label="Duration" register={register} />
+        <GridItemTextField label="Location" register={register} />
       </Grid>
       <Grid container spacing={4}>
         <Grid item xs>
@@ -107,9 +89,11 @@ export const AddSectionPopover = () => {
             })}
           </Controller>
         </Grid>
-        <Grid item xs>
-          <TextField inputRef={register} label="Notes" multiline name="notes" rows={4} />
-        </Grid>
+        <GridItemTextField
+          label="Notes"
+          register={register}
+          textFieldProps={{ multiline: true, rows: 4 }}
+        />
         <Grid item xs>
           <Button color="primary" type="submit" variant="contained">
             Add Section
