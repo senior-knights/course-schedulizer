@@ -22,6 +22,7 @@ export const AddSectionButton = () => {
           horizontal: "left",
           vertical: "bottom",
         }}
+        PaperProps={{ style: { maxWidth: "50%", minWidth: "500px" } }}
         transformOrigin={{
           horizontal: "right",
           vertical: "top",
