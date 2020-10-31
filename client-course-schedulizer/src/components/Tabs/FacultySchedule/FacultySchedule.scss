@@ -1,0 +1,14 @@
+.calendars-wrapper {
+  overflow-x: auto;
+}
+
+.calendars-adjacent {
+  width: fit-content;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.calendar {
+  width: 600px; // This is static, and I don't like it, but I don't know how to make it better
+}
