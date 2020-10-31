@@ -76,17 +76,6 @@ module.exports = {
       },
     ],
     "import/no-unresolved": "off",
-    // sort imports
-    "sort-imports": [
-      "error",
-      {
-        ignoreCase: false,
-        ignoreDeclarationSort: false,
-        ignoreMemberSort: false,
-        memberSyntaxSortOrder: ["all", "multiple", "single", "none"],
-        allowSeparatedGroups: false,
-      },
-    ],
 
     // Rules related to function definitions
     "func-style": ["error", "expression"],
