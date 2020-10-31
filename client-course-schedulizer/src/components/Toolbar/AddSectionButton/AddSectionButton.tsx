@@ -12,7 +12,7 @@ export const AddSectionButton = () => {
   });
 
   return (
-    <div>
+    <>
       <IconButton {...bindTrigger(popupState)}>
         <Add />
       </IconButton>
@@ -30,6 +30,6 @@ export const AddSectionButton = () => {
       >
         <AddSectionPopover />
       </Popover>
-    </div>
+    </>
   );
 };

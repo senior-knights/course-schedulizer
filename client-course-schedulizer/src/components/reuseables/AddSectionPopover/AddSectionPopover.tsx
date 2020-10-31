@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Grid, Typography } from "@material-ui/core";
 import React, { ChangeEvent, useState } from "react";
 import { useForm } from "react-hook-form";
-import * as Yup from "yup";
+import { array, object } from "yup";
 import { GridItemCheckboxGroup } from "../GridItem/GridItemCheckboxGroup";
 import { GridItemRadioGroup } from "../GridItem/GridItemRadioGroup";
 import { GridItemTextField } from "../GridItem/GridItemTextField";
@@ -17,8 +17,8 @@ export const AddSectionPopover = () => {
   const spacing = 4;
 
   // remove false values from days array
-  const schema = Yup.object().shape({
-    days: Yup.array().transform((d) => {
+  const schema = object().shape({
+    days: array().transform((d) => {
       return d.filter((day: boolean | string) => {
         return day;
       });

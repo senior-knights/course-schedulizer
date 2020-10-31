@@ -20,5 +20,5 @@ export const GridItemTextField = ({
 };
 
 GridItemTextField.defaultProps = {
-  textFieldProps: {},
+  textFieldProps: undefined,
 };

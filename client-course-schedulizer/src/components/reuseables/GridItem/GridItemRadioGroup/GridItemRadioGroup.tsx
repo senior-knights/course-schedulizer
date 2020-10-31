@@ -49,6 +49,6 @@ export const GridItemRadioGroup = ({
 
 GridItemRadioGroup.defaultProps = {
   lowercase: false,
-  name: "",
+  name: undefined,
   onChange: undefined,
 };

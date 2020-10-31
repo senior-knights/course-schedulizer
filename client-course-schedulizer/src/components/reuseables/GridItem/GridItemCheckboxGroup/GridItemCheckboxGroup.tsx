@@ -10,7 +10,7 @@ export const GridItemCheckboxGroup = ({
   register,
 }: {
   label: string;
-  name?: string | undefined;
+  name?: string;
   options: string[];
   register: ReturnType<typeof useForm>["register"];
 }) => {
