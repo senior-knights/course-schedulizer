@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys-fix/sort-keys-fix */
 module.exports = {
   ignorePatterns: ["serviceWorker.ts", "*/_generated"],
   env: {
@@ -32,7 +33,6 @@ module.exports = {
     "react-hooks",
     "sort-keys-fix",
     "import",
-    "eslint-plugin-import-order-alphabetical",
   ],
   rules: {
     // Disable some AirBnB rules.
@@ -52,7 +52,6 @@ module.exports = {
     // Turn off rules related to Prettier. These are auto fixed.
     "max-len": "off",
     "@typescript-eslint/quotes": "off",
-    "@typescript-eslint/indent": "off",
     "arrow-parens": "off",
     "@typescript-eslint/semi": "off",
     "react/jsx-closing-bracket-location": "off",
@@ -77,15 +76,17 @@ module.exports = {
       },
     ],
     "import/no-unresolved": "off",
-    // Sort imports by kind
-    "import/order": [
+    // sort imports
+    "sort-imports": [
       "error",
       {
-        groups: ["builtin", "external", "index", "sibling", "parent", "internal"],
+        ignoreCase: false,
+        ignoreDeclarationSort: false,
+        ignoreMemberSort: false,
+        memberSyntaxSortOrder: ["all", "multiple", "single", "none"],
+        allowSeparatedGroups: false,
       },
     ],
-    // sort imports by letter
-    "import-order-alphabetical/order": "error",
 
     // Rules related to function definitions
     "func-style": ["error", "expression"],
