@@ -1,4 +1,4 @@
-/* eslint-disable import-order-alphabetical/order */
+/* eslint-disable sort-imports */
 import FullCalendar, { EventInput } from "@fullcalendar/react";
 import moment from "moment";
 

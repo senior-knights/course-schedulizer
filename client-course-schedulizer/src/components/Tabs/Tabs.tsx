@@ -1,6 +1,6 @@
-import { Box, Grid, Paper, Tab, Tabs as MUITabs, Typography } from "@material-ui/core";
+import { Box, Tabs as MUITabs, Paper, Tab, Typography } from "@material-ui/core";
 import React, { ChangeEvent, PropsWithChildren, useState } from "react";
-import { Calendar } from "../reuseables/Calendar";
+import { FacultySchedule } from "./FacultySchedule";
 import { ScheduleToolbar } from "../Toolbar/ScheduleToolbar";
 import "./Tabs.scss";
 
@@ -29,9 +29,6 @@ const TabPanel = (props: PropsWithChildren<TabPanelProps>) => {
   );
 };
 
-// TODO: remove this
-const professors = ["Norman", "Adams", "VanderLinden", "Arnold", "Bailey"];
-
 export const Tabs = () => {
   const [tabValue, setTabValue] = useState(0);
 
@@ -54,17 +51,7 @@ export const Tabs = () => {
         <Tab label="Conflicts" />
       </MUITabs>
       <TabPanel index={0} value={tabValue}>
-        <ScheduleToolbar />
-        <Grid alignItems="flex-start" container direction="row" justify="flex-start">
-          {professors.map((prof, index) => {
-            return (
-              <span key={prof} className={index !== 0 ? "hide-axis" : ""} style={{ width: 500 }}>
-                <h3>{prof}</h3>
-                <Calendar key={prof} />
-              </span>
-            );
-          })}
-        </Grid>
+        <FacultySchedule />
       </TabPanel>
       <TabPanel index={1} value={tabValue}>
         <ScheduleToolbar />
