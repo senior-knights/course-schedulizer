@@ -33,28 +33,7 @@ const validFields = [
   "comments",
 ];
 
-interface SpreadsheetSection {
-  anticipatedSize: number;
-  building: string;
-  comments: string;
-  days: di.Day[];
-  duration: number;
-  facultyHours: number;
-  globalMax: number;
-  half: di.Half;
-  instructors: di.Instructor[];
-  letter: string;
-  localMax: number;
-  name: string;
-  number: string;
-  prefixes: string[];
-  roomCapacity: number;
-  roomNumber: string;
-  startTime: string;
-  studentHours: number;
-  term: di.Term;
-  year: number;
-}
+type SpreadsheetSection = di.Section;
 
 // Define regexes for parsing
 const timeReg = RegExp("(?<![1-9])(1[0-9]|2[0-3]|[0-9]):([0-5][0-9])");
@@ -264,42 +243,43 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
     // Reset defaults
     sss = {
       anticipatedSize: 30,
-      building: "",
       comments: "",
-      days: [di.Day.Monday, di.Day.Wednesday, di.Day.Friday],
-      duration: 50,
-      facultyHours: 0,
+      course: { facultyHours: 0, name: "", number: "", prefixes: [], studentHours: 0 },
       globalMax: 30,
       half: di.Half.Full,
       instructors: [],
       letter: "",
       localMax: 30,
-      name: "",
-      number: "",
-      prefixes: [],
-      roomCapacity: 30,
-      roomNumber: "",
-      startTime: "8:00 AM",
-      studentHours: 0,
+      meetings: [
+        {
+          days: [di.Day.Monday, di.Day.Wednesday, di.Day.Friday],
+          duration: 50,
+          location: { building: "", roomCapacity: 30, roomNumber: "" },
+          startTime: "8:00 AM",
+        },
+      ],
       term: di.Term.Fall,
       year: new Date().getFullYear(),
     };
+
+    const { course, meetings } = sss;
+    const firstMeeting = meetings[0];
 
     // Iterate through the fields of the CSV, and parse their values for this object
     usableFields.forEach((field) => {
       value = String(object[field]);
       switch (field) {
         case "name": {
-          sss.name = value;
+          course.name = value;
           break;
         }
         case "prefixes":
         case "prefix": {
-          sss.prefixes = value.replace(" ", "").split(/[;,]/);
+          course.prefixes = value.replace(" ", "").split(/[;,]/);
           break;
         }
         case "number": {
-          sss.number = value;
+          course.number = value;
           break;
         }
         case "section": {
@@ -307,28 +287,28 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
           break;
         }
         case "studentHours": {
-          sss.studentHours = Number(value);
+          course.studentHours = Number(value);
           break;
         }
         case "facultyHours": {
-          sss.facultyHours = Number(value);
+          course.facultyHours = Number(value);
           break;
         }
         case "startTimeStr":
         case "startTime": {
-          sss.startTime = startTimeCase(sss, value);
+          firstMeeting.startTime = startTimeCase(sss, value);
           break;
         }
         case "duration": {
-          sss.duration = Number(value);
+          firstMeeting.duration = Number(value);
           break;
         }
         case "location": {
-          [sss.building, sss.roomNumber] = locationCase(value);
+          [firstMeeting.location.building, firstMeeting.location.roomNumber] = locationCase(value);
           break;
         }
         case "roomCapacity": {
-          sss.roomCapacity = Number(value);
+          firstMeeting.location.roomCapacity = Number(value);
           break;
         }
         case "year": {
@@ -344,7 +324,7 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
           break;
         }
         case "days": {
-          sss.days = daysCase(value);
+          firstMeeting.days = daysCase(value);
           break;
         }
         case "globalMax": {
@@ -376,36 +356,8 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
 
     // Create a section for this row of the CSV, and add it to the schedule
     const section: di.Section = {
-      anticipatedSize: sss.anticipatedSize,
-      comments: sss.comments,
-      course: {
-        facultyHours: sss.facultyHours,
-        name: sss.name,
-        number: sss.number,
-        prefixes: sss.prefixes,
-        studentHours: sss.studentHours,
-      },
-      facultyHours: sss.facultyHours,
-      globalMax: sss.globalMax,
-      half: sss.half,
-      instructors: sss.instructors,
-      letter: sss.letter,
-      localMax: sss.localMax,
-      meetings: [
-        {
-          days: sss.days,
-          duration: sss.duration,
-          location: {
-            building: sss.building,
-            roomCapacity: sss.roomCapacity,
-            roomNumber: sss.roomNumber,
-          },
-          startTime: sss.startTime,
-        },
-      ], // TODO: Allow for multiple meetings
-      studentHours: sss.studentHours,
-      term: sss.term,
-      year: sss.year,
+      // TODO: Allow for multiple meetings
+      ...sss,
     };
     schedule.sections.push(section);
   });
