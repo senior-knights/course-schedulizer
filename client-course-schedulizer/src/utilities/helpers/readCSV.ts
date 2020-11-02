@@ -76,7 +76,7 @@ const thursReg = RegExp("[Tt][Hh]|[Rr]");
 const friReg = RegExp("[Ff]");
 const satReg = RegExp("[Ss](?![Uu])");
 
-const startTimeCase = function startTimeCase(sss: SpreadsheetSection, value: string) {
+const startTimeCase = function startTimeCase(sss: SpreadsheetSection, value: string): string {
   let ampm = "AM";
   let hourPart = "8";
   let numHourPart = 8;
@@ -123,6 +123,107 @@ const startTimeCase = function startTimeCase(sss: SpreadsheetSection, value: str
   return "8:00 AM";
 };
 
+const locationCase = function locationCase(value: string): string[] {
+  const roomParts = value.trim().split(" ");
+  if (roomParts.length === 1) {
+    // No room number given
+    return [roomParts[0], ""];
+  }
+  if (roomParts.length === 2) {
+    // Building and room number given
+    return roomParts;
+  }
+  // Too many room parts given, assume last part is room number and rest is building
+  return [roomParts.slice(0, -1).join(" "), roomParts.slice(-1)[0]];
+};
+
+const termCase = function termCase(value: string): di.Term {
+  if (fallReg.test(value)) {
+    return di.Term.Fall;
+  }
+  if (summerReg.test(value)) {
+    return di.Term.Summer;
+  }
+  if (springReg.test(value)) {
+    return di.Term.Spring;
+  }
+  if (interimReg.test(value)) {
+    return di.Term.Interim;
+  }
+  // eslint-disable-next-line no-console
+  console.log(`Term of "${value}" is unreadable, defaulting to Fall`);
+  return di.Term.Fall;
+};
+
+const halfCase = function halfCase(value: string): di.Half {
+  if (firstReg.test(value)) {
+    return di.Half.First;
+  }
+  if (secondReg.test(value)) {
+    return di.Half.Second;
+  }
+  if (fullReg.test(value)) {
+    return di.Half.Full;
+  }
+  // eslint-disable-next-line no-console
+  console.log(`Half of "${value}" is unreadable, defaulting to Full`);
+  return di.Half.Full;
+};
+
+const daysCase = function daysCase(value: string): di.Day[] {
+  const days: di.Day[] = [];
+  if (sunReg.test(value)) {
+    days.push(di.Day.Sunday);
+  }
+  if (monReg.test(value)) {
+    days.push(di.Day.Monday);
+  }
+  if (tuesReg.test(value)) {
+    days.push(di.Day.Tuesday);
+  }
+  if (wedReg.test(value)) {
+    days.push(di.Day.Wednesday);
+  }
+  if (thursReg.test(value)) {
+    days.push(di.Day.Thursday);
+  }
+  if (friReg.test(value)) {
+    days.push(di.Day.Friday);
+  }
+  if (satReg.test(value)) {
+    days.push(di.Day.Saturday);
+  }
+  return days;
+};
+
+const instructorCase = function instructorCase(value: string): di.Instructor[] {
+  const names = value.split(/[;,]/);
+  const instructors: di.Instructor[] = [];
+  names.forEach((name) => {
+    const nameParts = name.trim().split(" ");
+    if (nameParts.length === 1) {
+      // No last name given
+      instructors.push({
+        firstName: nameParts[0],
+        lastName: "",
+      });
+    } else if (nameParts.length === 2) {
+      // First and last given
+      instructors.push({
+        firstName: nameParts[0],
+        lastName: nameParts[1],
+      });
+    } else {
+      // Too many names given, assume first part is first name and rest is last name
+      instructors.push({
+        firstName: nameParts[0],
+        lastName: nameParts.slice(1).join(" "),
+      });
+    }
+  });
+  return instructors;
+};
+
 const convertToInterface = function convertToInterface(objects: papa.ParseResult<never>) {
   // Define variables for Schedule creation
   let sss: SpreadsheetSection;
@@ -159,10 +260,6 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
 
   // Parse each row of the CSV as an object
   let value: string;
-  let regMatch: RegExpMatchArray | null;
-  let roomParts: string[];
-  let names: string[];
-  let nameParts: string[];
   data.forEach((object) => {
     // Reset defaults
     sss = {
@@ -227,20 +324,7 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
           break;
         }
         case "location": {
-          // TODO: Function
-          roomParts = value.trim().split(" ");
-          if (roomParts.length === 1) {
-            // No room number given
-            [sss.building] = roomParts;
-            sss.roomNumber = "";
-          } else if (roomParts.length === 2) {
-            // Building and room number given
-            [sss.building, sss.roomNumber] = roomParts;
-          } else {
-            // Too many room parts given, assume last part is room number and rest is building
-            sss.building = roomParts.slice(0, -1).join(" ");
-            [sss.roomNumber] = roomParts.slice(-1);
-          }
+          [sss.building, sss.roomNumber] = locationCase(value);
           break;
         }
         case "roomCapacity": {
@@ -252,59 +336,15 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
           break;
         }
         case "term": {
-          // TODO: Function
-          if (fallReg.test(value)) {
-            sss.term = di.Term.Fall;
-          } else if (summerReg.test(value)) {
-            sss.term = di.Term.Summer;
-          } else if (springReg.test(value)) {
-            sss.term = di.Term.Spring;
-          } else if (interimReg.test(value)) {
-            sss.term = di.Term.Interim;
-          } else {
-            // eslint-disable-next-line no-console
-            console.log(`Term of "${value}" is unreadable, defaulting to Fall`);
-          }
+          sss.term = termCase(value);
           break;
         }
         case "half": {
-          // TODO: Function
-          if (firstReg.test(value)) {
-            sss.half = di.Half.First;
-          } else if (secondReg.test(value)) {
-            sss.half = di.Half.Second;
-          } else if (fullReg.test(value)) {
-            sss.half = di.Half.Full;
-          } else {
-            // eslint-disable-next-line no-console
-            console.log(`Half of "${value}" is unreadable, defaulting to Full`);
-          }
+          sss.half = halfCase(value);
           break;
         }
         case "days": {
-          // TODO: Function
-          sss.days = [];
-          if (sunReg.test(value)) {
-            sss.days.push(di.Day.Sunday);
-          }
-          if (monReg.test(value)) {
-            sss.days.push(di.Day.Monday);
-          }
-          if (tuesReg.test(value)) {
-            sss.days.push(di.Day.Tuesday);
-          }
-          if (wedReg.test(value)) {
-            sss.days.push(di.Day.Wednesday);
-          }
-          if (thursReg.test(value)) {
-            sss.days.push(di.Day.Thursday);
-          }
-          if (friReg.test(value)) {
-            sss.days.push(di.Day.Friday);
-          }
-          if (satReg.test(value)) {
-            sss.days.push(di.Day.Saturday);
-          }
+          sss.days = daysCase(value);
           break;
         }
         case "globalMax": {
@@ -321,30 +361,7 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
         }
         case "instructors":
         case "instructor": {
-          // TODO: Function
-          names = value.split(/[;,]/);
-          names.forEach((name) => {
-            nameParts = name.trim().split(" ");
-            if (nameParts.length === 1) {
-              // No last name given
-              sss.instructors.push({
-                firstName: nameParts[0],
-                lastName: "",
-              });
-            } else if (nameParts.length === 2) {
-              // First and last given
-              sss.instructors.push({
-                firstName: nameParts[0],
-                lastName: nameParts[1],
-              });
-            } else {
-              // Too many names given, assume first part is first name and rest is last name
-              sss.instructors.push({
-                firstName: nameParts[0],
-                lastName: nameParts.slice(1).join(" "),
-              });
-            }
-          });
+          sss.instructors = instructorCase(value);
           break;
         }
         case "comments": {
