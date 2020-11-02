@@ -1,5 +1,6 @@
 import { Input, InputLabel } from "@material-ui/core";
 import React, { ChangeEvent, useEffect, useState } from "react";
+import * as csvParser from "../../../utilities/helpers/readCSV";
 import "./ImportButton.scss";
 
 export const ImportButton = () => {
@@ -12,7 +13,7 @@ export const ImportButton = () => {
 
     read.onloadend = () => {
       // eslint-disable-next-line no-console
-      console.log(read.result);
+      console.log(csvParser.readCSV(String(read.result)));
     };
   }, [file]);
 

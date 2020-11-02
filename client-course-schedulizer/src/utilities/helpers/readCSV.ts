@@ -203,7 +203,9 @@ const instructorCase = function instructorCase(value: string): di.Instructor[] {
   return instructors;
 };
 
-const convertToInterface = function convertToInterface(objects: papa.ParseResult<never>) {
+const convertToInterface = function convertToInterface(
+  objects: papa.ParseResult<never>,
+): di.Schedule {
   // Define variables for Schedule creation
   let sss: SpreadsheetSection;
   const schedule: di.Schedule = {
@@ -296,7 +298,9 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
         }
         case "startTimeStr":
         case "startTime": {
-          firstMeeting.startTime = startTimeCase(sss, value);
+          if (value) {
+            firstMeeting.startTime = startTimeCase(sss, value);
+          }
           break;
         }
         case "duration": {
@@ -354,6 +358,11 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
       }
     });
 
+    // Check if the meeting is empty, and should be removed
+    if (firstMeeting.days === [] || firstMeeting.duration === 0) {
+      sss.meetings = [];
+    }
+
     // Create a section for this row of the CSV, and add it to the schedule
     const section: di.Section = {
       // TODO: Allow for multiple meetings
@@ -364,14 +373,6 @@ const convertToInterface = function convertToInterface(objects: papa.ParseResult
   return schedule;
 };
 
-export const readCSV = function readCSV() {
-  // Referenced https://jscharting.com/tutorials/js-chart-data/client-side/fetch-csv-and-json/
-  fetch("modelSchedule.csv")
-    .then((response) => {
-      return response.text();
-    })
-    .then((text) => {
-      // eslint-disable-next-line no-console
-      console.log(convertToInterface(papa.parse(text, { header: true, skipEmptyLines: true })));
-    });
+export const readCSV = function readCSV(csvText: string): di.Schedule {
+  return convertToInterface(papa.parse(csvText, { header: true, skipEmptyLines: true }));
 };
