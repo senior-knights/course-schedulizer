@@ -1,3 +1,4 @@
+/* eslint-disable typescript-sort-keys/string-enum */
 export enum Term {
   Fall = "FA",
   Interim = "IN", // TODO: Remove?
@@ -5,26 +6,47 @@ export enum Term {
   Summer = "SU", // TODO: Is this a thing?
 }
 
-export enum Half {
-  First = "first",
-  Full = "full",
-  Second = "second",
+export enum SemesterLength {
+  Full = "Full",
+  HalfFirst = "First",
+  HalfSecond = "Second",
+  IntensiveA = "A",
+  IntensiveB = "B",
+  IntensiveC = "C",
+  IntensiveD = "D",
 }
 
 export enum Day {
-  Friday = "F",
   Monday = "M",
-  // TODO: Are weekends ever used? (Can't really hurt to have them)
-  Saturday = "S",
-  Sunday = "Su",
-  Thursday = "Th",
   Tuesday = "T",
   Wednesday = "W",
+  Thursday = "Th",
+  Friday = "F",
+  Saturday = "S",
+  Sunday = "Su",
+}
+
+export enum Half {
+  First = SemesterLength.HalfFirst,
+  Second = SemesterLength.HalfSecond,
+}
+
+export enum Intensive {
+  A = SemesterLength.IntensiveA,
+  B = SemesterLength.IntensiveB,
+  C = SemesterLength.IntensiveC,
+  D = SemesterLength.IntensiveD,
+}
+
+export enum SemesterLengthOption {
+  FullSemester = "Full",
+  HalfSemester = "Half",
+  IntensiveSemester = "Intensive",
 }
 
 export interface Location {
   building: string;
-  roomCapacity: number;
+  roomCapacity?: number;
   roomNumber: string;
 }
 
@@ -48,29 +70,29 @@ export interface Course {
   name: string;
   number: string;
   prefixes: string[];
+  sections: Section[];
   studentHours: number;
 }
 
 export interface Section {
   anticipatedSize: number;
   comments: string;
-  course: Course;
   // Overrides Course value
   facultyHours?: number;
   globalMax: number;
-  half: Half;
   instructors: Instructor[];
   letter: string;
   localMax: number;
   // Multiple Meetings possible if time/room differs on different days
   // Asynchronous classes should have an empty array of meeting times
   meetings: Meeting[];
+  semesterLength: SemesterLength;
   // Overrides Course value
   studentHours?: number;
   term: Term;
-  year: number;
+  year: number | string;
 }
 
 export interface Schedule {
-  sections: Section[];
+  courses: Course[];
 }
