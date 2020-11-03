@@ -4,6 +4,7 @@ import { bindMenu, bindTrigger, usePopupState } from "material-ui-popup-state/ho
 import React from "react";
 import logo from "../../../assets/CalvinUniv-vert-full-color-inverse.png";
 import { ImportButton } from "../ImportButton";
+import { ExportButton } from "../ExportButton";
 import "./Header.scss";
 
 export const Header = () => {
@@ -20,7 +21,9 @@ export const Header = () => {
             <MenuItem>
               <ImportButton />
             </MenuItem>
-            <MenuItem onClick={popupState.close}>Export CSV</MenuItem>
+            <MenuItem>
+              <ExportButton />
+            </MenuItem>
           </Menu>
           <Typography variant="h6">Course Schedulizer</Typography>
           <img alt="Org Logo" className="org-logo" src={logo} />
