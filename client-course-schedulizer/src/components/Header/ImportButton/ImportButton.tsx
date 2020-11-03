@@ -1,6 +1,7 @@
 import { Input, InputLabel } from "@material-ui/core";
 import React, { ChangeEvent, useEffect, useState } from "react";
-import * as csvParser from "../../../utilities/helpers/readCSV";
+import * as readCSV from "../../../utilities/helpers/readCSV";
+import * as writeCSV from "../../../utilities/helpers/writeCSV";
 import "./ImportButton.scss";
 
 export const ImportButton = () => {
@@ -12,8 +13,11 @@ export const ImportButton = () => {
     file && read.readAsBinaryString(file);
 
     read.onloadend = () => {
+      const schedule = readCSV.csvStringToSchedule(String(read.result));
       // eslint-disable-next-line no-console
-      console.log(csvParser.readCSV(String(read.result)));
+      console.log(schedule);
+      // eslint-disable-next-line no-console
+      console.log(writeCSV.scheduleToCSVString(schedule));
     };
   }, [file]);
 
