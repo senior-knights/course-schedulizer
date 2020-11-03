@@ -29,7 +29,7 @@ export const Calendar = () => {
     <>
       <FullCalendar
         allDaySlot={false}
-        dayHeaderFormat={{ weekday: "long" }}
+        dayHeaderFormat={{ weekday: "short" }}
         droppable
         editable
         events={events}
@@ -40,6 +40,8 @@ export const Calendar = () => {
         nowIndicator={false}
         plugins={[interactionPlugin, timeGridPlugin]}
         selectable
+        slotMaxTime="22:00:00"
+        slotMinTime="6:00:00"
         weekends={false}
       />
     </>
