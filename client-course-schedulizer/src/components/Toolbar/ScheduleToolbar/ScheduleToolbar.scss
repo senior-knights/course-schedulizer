@@ -1,3 +1,5 @@
+@import "../../../styles/constants.scss";
+
 .schedule-toolbar,
 .schedule-toolbar > div {
   display: flex;
@@ -7,13 +9,14 @@
 .schedule-toolbar {
   position: sticky;
   top: 0;
-  background-color: #f2f2f2;
+  background-color: $bg-header;
   z-index: 3;
-  padding: 1em;
-  margin-left: -2em;
-  margin-right: -2em;
-  margin-bottom: 1.5em;
-  height: 10vh;
+  padding: $spacing;
+  margin-left: -2 * $spacing;
+  margin-right: -2 * $spacing;
+  // TODO: there is slight squishing when stickied but not sure how to fix. takes time to debug
+  margin-bottom: 1.5 * $spacing;
+  min-height: 10vh;
 }
 
 .toolbar-left {
