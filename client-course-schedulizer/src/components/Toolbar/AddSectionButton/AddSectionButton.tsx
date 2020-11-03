@@ -12,7 +12,7 @@ export const AddSectionButton = () => {
   });
 
   return (
-    <div>
+    <>
       <IconButton {...bindTrigger(popupState)}>
         <Add />
       </IconButton>
@@ -22,6 +22,7 @@ export const AddSectionButton = () => {
           horizontal: "left",
           vertical: "bottom",
         }}
+        PaperProps={{ style: { maxWidth: "50%", minWidth: "500px" } }}
         transformOrigin={{
           horizontal: "right",
           vertical: "top",
@@ -29,6 +30,6 @@ export const AddSectionButton = () => {
       >
         <AddSectionPopover />
       </Popover>
-    </div>
+    </>
   );
 };
