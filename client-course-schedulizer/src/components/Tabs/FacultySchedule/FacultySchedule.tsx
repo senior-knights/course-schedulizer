@@ -24,8 +24,8 @@ export const FacultySchedule = () => {
         <Stick
           autoFlipVertically
           node={
-            <StickyNode>
-              <div className="calendars-adjacent">
+            <StickyNode top={window.innerHeight * 0.1}>
+              <div className="calendars-adjacent calendar-title-row">
                 {professors.map((prof) => {
                   return (
                     <div key={prof} className="calendar calendar-title">

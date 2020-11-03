@@ -5,13 +5,14 @@
 }
 
 .schedule-toolbar {
-  // position: sticky;
+  position: sticky;
   top: 0;
   background-color: #f2f2f2;
   z-index: 3;
   padding: 1em;
-  // margin-left: -2em;
-  // margin-right: -2em;
+  margin-left: -2em;
+  margin-right: -2em;
+  margin-bottom: 1.5em;
   height: 10vh;
 }
 
