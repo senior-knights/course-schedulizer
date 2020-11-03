@@ -1,5 +1,7 @@
 name,prefixes,number,section,studentHours,facultyHours,startTime,startTimeStr,duration,location,roomCapacity,year,term,half,days,globalMax,localMax,anticipatedSize,instructors,comments
 Logic and Complexity,MATH;CS;PHIL,312,A,4,4.5,blarg,12:30 PM,50,NH 232,30,2020,FA,Full,MWThF,30,20,27,Paul Erdos,This class counts for both CS and Math credit.
+Logic and Complexity,MATH;CS;PHIL,312,B,4,4.5,blarg,1:30 PM,50,NH 232,30,2020,FA,Full,MWThF,30,20,27,Paul Erdos,This class counts for both CS and Math credit.
 Computer Architecture Lab,ENGR,220L,C,1.5,2,cool,6:00 PM,80,SB 011A,20,2020,SP,First,TTh,20,10,15,Srinivasa Ramanujan,This class is a lab for ENGR 220.
+Computer Architecture Lab,ENGR,220L,A,1.5,2,cool,6:00 PM,50,SB 011A,20,2020,SP,First,MWF,20,10,15,Srinivasa Ramanujan,This class is a lab for ENGR 220.
 Statistics Theory,MATH;STAT,327,B,4,5,25:00,8:00 AM,110,Prince Conference Center GHWE,40,2020,SU,Second,MF,35,25,30,Thomas Bayes,
 Prime Number Theory,MATH,337,A,3,3,12:99,9:00 AM,50,CFAC Auditorium,200,2020,IN,Full,MWF,180,100,180,Leonhard Euler;Bernhard Riemann,

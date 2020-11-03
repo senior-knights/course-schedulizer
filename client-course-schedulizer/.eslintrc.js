@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys-fix/sort-keys-fix */
 module.exports = {
   ignorePatterns: ["serviceWorker.ts", "*/_generated"],
   env: {
@@ -25,7 +26,14 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: "module",
   },
-  plugins: ["react", "@typescript-eslint", "typescript-sort-keys", "react-hooks", "sort-keys-fix"],
+  plugins: [
+    "react",
+    "@typescript-eslint",
+    "typescript-sort-keys",
+    "react-hooks",
+    "sort-keys-fix",
+    "import",
+  ],
   rules: {
     // Disable some AirBnB rules.
     // Allow any linebreak type.
@@ -44,7 +52,6 @@ module.exports = {
     // Turn off rules related to Prettier. These are auto fixed.
     "max-len": "off",
     "@typescript-eslint/quotes": "off",
-    "@typescript-eslint/indent": "off",
     "arrow-parens": "off",
     "@typescript-eslint/semi": "off",
     "react/jsx-closing-bracket-location": "off",

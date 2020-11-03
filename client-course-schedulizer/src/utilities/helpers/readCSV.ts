@@ -33,8 +33,6 @@ const validFields = [
   "comments",
 ];
 
-type SpreadsheetSection = di.Section;
-
 // Define regexes for parsing
 const timeReg = RegExp("(?<![1-9])(1[0-9]|2[0-3]|[0-9]):([0-5][0-9])");
 const amReg = RegExp("[Aa][Mm]");
@@ -55,7 +53,7 @@ const thursReg = RegExp("[Tt][Hh]|[Rr]");
 const friReg = RegExp("[Ff]");
 const satReg = RegExp("[Ss](?![Uu])");
 
-const startTimeCase = function startTimeCase(sss: SpreadsheetSection, value: string): string {
+const startTimeCase = (value: string): string => {
   let ampm = "AM";
   let hourPart = "8";
   let numHourPart = 8;
@@ -102,7 +100,7 @@ const startTimeCase = function startTimeCase(sss: SpreadsheetSection, value: str
   return "8:00 AM";
 };
 
-const locationCase = function locationCase(value: string): string[] {
+const locationCase = (value: string): string[] => {
   const roomParts = value.trim().split(" ");
   if (roomParts.length === 1) {
     // No room number given
@@ -116,7 +114,7 @@ const locationCase = function locationCase(value: string): string[] {
   return [roomParts.slice(0, -1).join(" "), roomParts.slice(-1)[0]];
 };
 
-const termCase = function termCase(value: string): di.Term {
+const termCase = (value: string): di.Term => {
   if (fallReg.test(value)) {
     return di.Term.Fall;
   }
@@ -134,22 +132,22 @@ const termCase = function termCase(value: string): di.Term {
   return di.Term.Fall;
 };
 
-const halfCase = function halfCase(value: string): di.Half {
+const halfCase = (value: string): di.SemesterLength => {
   if (firstReg.test(value)) {
-    return di.Half.First;
+    return di.SemesterLength.HalfFirst;
   }
   if (secondReg.test(value)) {
-    return di.Half.Second;
+    return di.SemesterLength.HalfSecond;
   }
   if (fullReg.test(value)) {
-    return di.Half.Full;
+    return di.SemesterLength.Full;
   }
   // eslint-disable-next-line no-console
   console.log(`Half of "${value}" is unreadable, defaulting to Full`);
-  return di.Half.Full;
+  return di.SemesterLength.Full;
 };
 
-const daysCase = function daysCase(value: string): di.Day[] {
+const daysCase = (value: string): di.Day[] => {
   const days: di.Day[] = [];
   if (sunReg.test(value)) {
     days.push(di.Day.Sunday);
@@ -175,7 +173,7 @@ const daysCase = function daysCase(value: string): di.Day[] {
   return days;
 };
 
-const instructorCase = function instructorCase(value: string): di.Instructor[] {
+const instructorCase = (value: string): di.Instructor[] => {
   const names = value.split(/[;,]/);
   const instructors: di.Instructor[] = [];
   names.forEach((name) => {
@@ -203,13 +201,11 @@ const instructorCase = function instructorCase(value: string): di.Instructor[] {
   return instructors;
 };
 
-const convertToInterface = function convertToInterface(
-  objects: papa.ParseResult<never>,
-): di.Schedule {
+const convertToInterface = (objects: papa.ParseResult<never>): di.Schedule => {
   // Define variables for Schedule creation
-  let sss: SpreadsheetSection;
+  let sss: di.Section;
   const schedule: di.Schedule = {
-    sections: [],
+    courses: [],
   };
 
   // Get data and fields from the CSV
@@ -246,9 +242,7 @@ const convertToInterface = function convertToInterface(
     sss = {
       anticipatedSize: 30,
       comments: "",
-      course: { facultyHours: 0, name: "", number: "", prefixes: [], studentHours: 0 },
       globalMax: 30,
-      half: di.Half.Full,
       instructors: [],
       letter: "",
       localMax: 30,
@@ -260,11 +254,20 @@ const convertToInterface = function convertToInterface(
           startTime: "8:00 AM",
         },
       ],
+      semesterLength: di.SemesterLength.Full,
       term: di.Term.Fall,
       year: new Date().getFullYear(),
     };
 
-    const { course, meetings } = sss;
+    const { meetings } = sss;
+    const course: di.Course = {
+      facultyHours: 0,
+      name: "",
+      number: "",
+      prefixes: [],
+      sections: [],
+      studentHours: 0,
+    };
     const firstMeeting = meetings[0];
 
     // Iterate through the fields of the CSV, and parse their values for this object
@@ -298,9 +301,7 @@ const convertToInterface = function convertToInterface(
         }
         case "startTimeStr":
         case "startTime": {
-          if (value) {
-            firstMeeting.startTime = startTimeCase(sss, value);
-          }
+          firstMeeting.startTime = startTimeCase(value);
           break;
         }
         case "duration": {
@@ -324,7 +325,7 @@ const convertToInterface = function convertToInterface(
           break;
         }
         case "half": {
-          sss.half = halfCase(value);
+          sss.semesterLength = halfCase(value);
           break;
         }
         case "days": {
@@ -368,11 +369,29 @@ const convertToInterface = function convertToInterface(
       // TODO: Allow for multiple meetings
       ...sss,
     };
-    schedule.sections.push(section);
+
+    // Check if there is already a course in the schedule with the same prefix and number
+    const existingCourse: di.Course[] = schedule.courses.filter((c) => {
+      return (
+        c.prefixes.every((p) => {
+          return course.prefixes.includes(p);
+        }) && c.number === course.number
+      );
+    });
+
+    // If there is, add the new section to that course
+    if (existingCourse.length > 0) {
+      schedule.courses[schedule.courses.indexOf(existingCourse[0])].sections.push(section);
+    }
+    // Otherwise, add the new course to the schedule
+    else {
+      course.sections.push(section);
+      schedule.courses.push(course);
+    }
   });
   return schedule;
 };
 
-export const readCSV = function readCSV(csvText: string): di.Schedule {
+export const readCSV = (csvText: string): di.Schedule => {
   return convertToInterface(papa.parse(csvText, { header: true, skipEmptyLines: true }));
 };
