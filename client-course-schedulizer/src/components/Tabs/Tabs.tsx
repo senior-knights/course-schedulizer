@@ -1,5 +1,6 @@
-import { Box, Paper, Tab, Tabs as MUITabs, Typography } from "@material-ui/core";
+import { Box, Tabs as MUITabs, Paper, Tab, Typography } from "@material-ui/core";
 import React, { ChangeEvent, PropsWithChildren, useState } from "react";
+import { FacultySchedule } from "./FacultySchedule";
 import { ScheduleToolbar } from "../Toolbar/ScheduleToolbar";
 import "./Tabs.scss";
 
@@ -50,7 +51,7 @@ export const Tabs = () => {
         <Tab label="Conflicts" />
       </MUITabs>
       <TabPanel index={0} value={tabValue}>
-        <ScheduleToolbar />
+        <FacultySchedule />
       </TabPanel>
       <TabPanel index={1} value={tabValue}>
         <ScheduleToolbar />
