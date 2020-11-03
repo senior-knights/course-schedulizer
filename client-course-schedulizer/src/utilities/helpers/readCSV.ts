@@ -365,12 +365,21 @@ const convertToInterface = (objects: papa.ParseResult<never>) => {
       ...sss,
     };
 
+    // Check if there is already a course in the schedule with the same prefix and number
     const existingCourse: di.Course[] = schedule.courses.filter((c) => {
-      return c.prefixes === course.prefixes && c.number === course.number;
+      return (
+        c.prefixes.every((p) => {
+          return course.prefixes.includes(p);
+        }) && c.number === course.number
+      );
     });
+
+    // If there is, add the new section to that course
     if (existingCourse.length > 0) {
       schedule.courses[schedule.courses.indexOf(existingCourse[0])].sections.push(section);
-    } else {
+    }
+    // Otherwise, add the new course to the schedule
+    else {
       course.sections.push(section);
       schedule.courses.push(course);
     }

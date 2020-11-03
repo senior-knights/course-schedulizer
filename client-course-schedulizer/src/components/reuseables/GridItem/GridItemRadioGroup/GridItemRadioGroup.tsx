@@ -18,7 +18,7 @@ export const GridItemRadioGroup = ({
   label: string;
   lowercase?: boolean;
   name?: string;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void | undefined;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   options: string[];
   register: ReturnType<typeof useForm>["register"];
 }) => {
