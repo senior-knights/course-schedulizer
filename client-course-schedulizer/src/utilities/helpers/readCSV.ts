@@ -21,7 +21,9 @@ const validFields = [
   "roomCapacity",
   "year",
   "term",
+  // If both are found, use "semesterLength"
   "half",
+  "semesterLength",
   // Needs to be parsed
   "days",
   "globalMax",
@@ -132,7 +134,7 @@ const termCase = (value: string): di.Term => {
   return di.Term.Fall;
 };
 
-const halfCase = (value: string): di.SemesterLength => {
+const semesterLengthCase = (value: string): di.SemesterLength => {
   if (firstReg.test(value)) {
     return di.SemesterLength.HalfFirst;
   }
@@ -141,6 +143,19 @@ const halfCase = (value: string): di.SemesterLength => {
   }
   if (fullReg.test(value)) {
     return di.SemesterLength.Full;
+  }
+  const upperValue = value.toUpperCase();
+  if (upperValue === "A") {
+    return di.SemesterLength.IntensiveA;
+  }
+  if (upperValue === "B") {
+    return di.SemesterLength.IntensiveB;
+  }
+  if (upperValue === "C") {
+    return di.SemesterLength.IntensiveC;
+  }
+  if (upperValue === "D") {
+    return di.SemesterLength.IntensiveD;
   }
   // eslint-disable-next-line no-console
   console.log(`Half of "${value}" is unreadable, defaulting to Full`);
@@ -201,7 +216,12 @@ const instructorCase = (value: string): di.Instructor[] => {
   return instructors;
 };
 
-const convertToInterface = (objects: papa.ParseResult<never>) => {
+export const csvStringToSchedule = (csvString: string): di.Schedule => {
+  const objects: papa.ParseResult<never> = papa.parse(csvString, {
+    header: true,
+    skipEmptyLines: true,
+  });
+
   // Define variables for Schedule creation
   let sss: di.Section;
   const schedule: di.Schedule = {
@@ -215,8 +235,9 @@ const convertToInterface = (objects: papa.ParseResult<never>) => {
   // From the CSV fields, take the ones which we recognize
   let usableFields: string[] = [];
   const duplicates = [
-    ["startTime", "startTimeStr"],
     ["prefix", "prefixes"],
+    ["startTime", "startTimeStr"],
+    ["half", "semesterLength"],
     ["instructor", "instructors"],
   ];
   if (fields) {
@@ -225,14 +246,19 @@ const convertToInterface = (objects: papa.ParseResult<never>) => {
     });
   }
   // Remove the duplicate field names
+  // If both "prefix" and "prefixes" are present, ignore "prefix"
   // If both "startTime" and "startTimeStr" are present, ignore "startTime"
   // This is because Pruim's data has a timestamp in "startTime" (not our timezone)
+  // If both "half" and "semesterLength" are present, ignore "semesterLength"
   // If both "instructor" and "instructors" are present, ignore "instructor"
-  // If both "prefix" and "prefixes" are present, ignore "prefix"
+  let duplicateFields: string[];
   duplicates.forEach((duplicate) => {
-    if (usableFields.includes(duplicate[0]) && usableFields.includes(duplicate[1])) {
-      usableFields.splice(usableFields.indexOf(duplicate[0]), 1);
-    }
+    duplicateFields = duplicate.filter((d) => {
+      return usableFields.includes(d);
+    });
+    duplicateFields.slice(0, duplicateFields.length - 1).forEach((dd) => {
+      usableFields.splice(usableFields.indexOf(dd), 1);
+    });
   });
 
   // Parse each row of the CSV as an object
@@ -317,15 +343,16 @@ const convertToInterface = (objects: papa.ParseResult<never>) => {
           break;
         }
         case "year": {
-          sss.year = Number(value);
+          sss.year = Number.isInteger(Number(value)) ? Number(value) : value;
           break;
         }
         case "term": {
           sss.term = termCase(value);
           break;
         }
+        case "semesterLength":
         case "half": {
-          sss.semesterLength = halfCase(value);
+          sss.semesterLength = semesterLengthCase(value);
           break;
         }
         case "days": {
@@ -359,6 +386,11 @@ const convertToInterface = (objects: papa.ParseResult<never>) => {
       }
     });
 
+    // Check if the meeting is empty, and should be removed
+    if (firstMeeting.days === [] || firstMeeting.duration === 0) {
+      sss.meetings = [];
+    }
+
     // Create a section for this row of the CSV, and add it to the schedule
     const section: di.Section = {
       // TODO: Allow for multiple meetings
@@ -385,16 +417,4 @@ const convertToInterface = (objects: papa.ParseResult<never>) => {
     }
   });
   return schedule;
-};
-
-export const readCSV = () => {
-  // Referenced https://jscharting.com/tutorials/js-chart-data/client-side/fetch-csv-and-json/
-  fetch("modelSchedule.csv")
-    .then((response) => {
-      return response.text();
-    })
-    .then((text) => {
-      // eslint-disable-next-line no-console
-      console.log(convertToInterface(papa.parse(text, { header: true, skipEmptyLines: true })));
-    });
 };
