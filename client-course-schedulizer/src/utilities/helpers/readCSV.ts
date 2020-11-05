@@ -251,10 +251,14 @@ export const csvStringToSchedule = (csvString: string): di.Schedule => {
   // This is because Pruim's data has a timestamp in "startTime" (not our timezone)
   // If both "half" and "semesterLength" are present, ignore "semesterLength"
   // If both "instructor" and "instructors" are present, ignore "instructor"
+  let duplicateFields: string[];
   duplicates.forEach((duplicate) => {
-    if (usableFields.includes(duplicate[0]) && usableFields.includes(duplicate[1])) {
-      usableFields.splice(usableFields.indexOf(duplicate[0]), 1);
-    }
+    duplicateFields = duplicate.filter((d) => {
+      return usableFields.includes(d);
+    });
+    duplicateFields.slice(0, duplicateFields.length - 1).forEach((dd) => {
+      usableFields.splice(usableFields.indexOf(dd), 1);
+    });
   });
 
   // Parse each row of the CSV as an object

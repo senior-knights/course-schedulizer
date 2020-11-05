@@ -1,11 +1,12 @@
 import { Input, InputLabel } from "@material-ui/core";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import * as readCSV from "../../../utilities/helpers/readCSV";
-import * as writeCSV from "../../../utilities/helpers/writeCSV";
+import { ScheduleContext } from "../../../utilities/services/context";
 import "./ImportButton.scss";
 
 export const ImportButton = () => {
   const [file, setFile] = useState<Blob>();
+  const { setSchedule } = useContext(ScheduleContext);
 
   useEffect(() => {
     // https://stackoverflow.com/questions/5201317/read-the-contents-of-a-file-object
@@ -13,13 +14,12 @@ export const ImportButton = () => {
     file && read.readAsBinaryString(file);
 
     read.onloadend = () => {
-      const schedule = readCSV.csvStringToSchedule(String(read.result));
+      const scheduleJSON = readCSV.csvStringToSchedule(String(read.result));
+      setSchedule(scheduleJSON);
       // eslint-disable-next-line no-console
-      console.log(schedule);
-      // eslint-disable-next-line no-console
-      console.log(writeCSV.scheduleToCSVString(schedule));
+      console.log(scheduleJSON);
     };
-  }, [file]);
+  }, [file, setSchedule]);
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.target.files && setFile(e.target.files[0]);

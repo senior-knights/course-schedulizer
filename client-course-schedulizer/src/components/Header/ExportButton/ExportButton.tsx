@@ -1,7 +1,7 @@
 import { Input, InputLabel } from "@material-ui/core";
-import React, { ChangeEvent, useEffect, useState } from "react";
-import * as readCSV from "../../../utilities/helpers/readCSV";
+import React, { useContext } from "react";
 import * as writeCSV from "../../../utilities/helpers/writeCSV";
+import { ScheduleContext } from "../../../utilities/services/context";
 import "./ExportButton.scss";
 
 // From https://stackoverflow.com/a/18197341/14478665
@@ -19,36 +19,16 @@ const download = (filename: string, text: string) => {
 };
 
 export const ExportButton = () => {
-  const [file, setFile] = useState<Blob>();
+  const { schedule } = useContext(ScheduleContext);
 
-  useEffect(() => {
-    // https://stackoverflow.com/questions/5201317/read-the-contents-of-a-file-object
-    const read = new FileReader();
-    file && read.readAsBinaryString(file);
-
-    read.onloadend = () => {
-      download(
-        "schedule.csv",
-        writeCSV.scheduleToCSVString(readCSV.csvStringToSchedule(String(read.result))),
-      );
-    };
-  }, [file]);
-
-  const onExportChange = (e: ChangeEvent<HTMLInputElement>) => {
-    e.target.files && setFile(e.target.files[0]);
+  const onExportClick = () => {
+    // TODO: maybe generate a cool title like schedule-fall-2020.csv
+    download("schedule.csv", writeCSV.scheduleToCSVString(schedule));
   };
 
   return (
     <InputLabel className="export-label" htmlFor="export-button">
-      <Input
-        className="hidden"
-        id="export-button"
-        inputProps={{
-          accept: ".csv",
-        }}
-        onChange={onExportChange}
-        type="file"
-      />
+      <Input className="hidden" id="export-button" onClick={onExportClick} />
       Export CSV
     </InputLabel>
   );
