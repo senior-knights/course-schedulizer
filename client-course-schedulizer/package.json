@@ -28,7 +28,6 @@
     "react-hook-form": "^6.9.6",
     "react-stick": "4.1.1",
     "react-stickynode": "3.0.4",
-    "ts-transformer-keys": "^0.4.2",
     "yup": "^0.29.3"
   },
   "homepage": ".",
