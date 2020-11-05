@@ -1,0 +1,9 @@
+// Hide axis on the calendar
+.hide-axis .fc-timegrid-slot-label {
+  display: none;
+}
+
+// Force today's day to have same bg as others
+.fc-day-today {
+  background-color: inherit !important;
+}

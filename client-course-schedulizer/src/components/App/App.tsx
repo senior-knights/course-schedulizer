@@ -1,24 +1,19 @@
-import React from "react";
-import logo from "../../assets/logo.svg";
+import React, { useState } from "react";
+import { Header } from "../Header/Header";
+import { Tabs } from "../Tabs";
 import "./App.scss";
+import { ScheduleContext } from "../../utilities/services/context";
+import { Schedule } from "../../utilities/interfaces/dataInterfaces";
 
 export const App = () => {
+  const [schedule, setSchedule] = useState<Schedule>({ courses: [] });
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img alt="logo" className="App-logo" src={logo} />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Learn React
-        </a>
-      </header>
+      <ScheduleContext.Provider value={{ schedule, setSchedule }}>
+        <Header />
+        <Tabs />
+      </ScheduleContext.Provider>
     </div>
   );
 };
