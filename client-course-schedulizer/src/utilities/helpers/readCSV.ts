@@ -3,46 +3,7 @@ import * as di from "../interfaces/dataInterfaces";
 import * as cf from "./caseFunctions";
 
 interface ValidFields {
-  AcademicYear: Function;
-  BuildingAndRoom: Function;
-  CourseNum: Function;
-  Faculty: Function;
-  FacultyLoad: Function;
-  GlobalMax: Function;
-  LocalMax: Function;
-  MeetingDays: Function;
-  MeetingStart: Function;
-  MeetingTime: Function;
-  MinimumCredits: Function;
-  RoomCapacity: Function;
-  SectionCode: Function;
-  ShortTitle: Function;
-  SubjectCode: Function;
-  Term: Function;
-  Used: Function;
-  anticipatedSize: Function;
-  comments: Function;
-  days: Function;
-  duration: Function;
-  facultyHours: Function;
-  globalMax: Function;
-  half: Function;
-  instructor: Function;
-  instructors: Function;
-  localMax: Function;
-  location: Function;
-  name: Function;
-  number: Function;
-  prefix: Function;
-  prefixes: Function;
-  roomCapacity: Function;
-  section: Function;
-  semesterLength: Function;
-  startTime: Function;
-  startTimeStr: Function;
-  studentHours: Function;
-  term: Function;
-  year: Function;
+  [key: string]: Function;
 }
 
 const callbacks: ValidFields = {
