@@ -1,62 +1,25 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import StickyNode from "react-stickynode";
 import Stick from "react-stick";
 import { Calendar } from "../../reuseables/Calendar";
 import { ScheduleToolbar } from "../../Toolbar/ScheduleToolbar";
 import "./FacultySchedule.scss";
 import { ScheduleContext } from "../../../utilities/services/context";
-import { Schedule } from "../../../utilities/interfaces/dataInterfaces";
-
-const getProfs = (schedule: Schedule): string[] => {
-  let professors: string[] = [];
-  schedule.courses.map((course) => {
-    return course.sections.map((section) => {
-      return section.instructors.forEach((prof) => {
-        if (!professors.includes(prof.lastName)) {
-          professors = [...professors, prof.lastName];
-        }
-      });
-    });
-  });
-  return professors;
-};
-
-let renderCount = 0;
+import { getProfs } from "../../../utilities/services/facultySchedule";
 
 /* Creates a list of Calendars to create the Faculty Schedule
   <Stick> is used to stick the Schedule Header to the Schedule
   to track horizontal scrolling.
 */
 export const FacultySchedule = () => {
-  renderCount += 1;
-  console.log(`${FacultySchedule.name}. renderCount: `, renderCount);
-
   const { schedule } = useContext(ScheduleContext);
   const [professors, setProfessors] = useState<string[]>([]);
 
-  // Get list of unique professors.
-  const getProfsCallback = useCallback(() => {
-    schedule.courses.map((course) => {
-      return course.sections.map((section) => {
-        return section.instructors.map((prof) => {
-          return setProfessors((prevArr) => {
-            if (!prevArr.includes(prof.lastName)) {
-              return [...prevArr, prof.lastName];
-            }
-            return [...prevArr];
-          });
-        });
-      });
-    });
-  }, [schedule.courses]);
-
   // For some reason, this causes twice as many renders.
   useEffect(() => {
-    // setProfessors(getProfs(schedule));
-    getProfsCallback();
+    setProfessors(getProfs(schedule));
   }, [schedule]);
 
-  console.log(professors);
   return (
     <>
       <ScheduleToolbar />
