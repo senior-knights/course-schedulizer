@@ -3,6 +3,7 @@ import React, { ChangeEvent, PropsWithChildren, useState } from "react";
 import { FacultySchedule } from "./FacultySchedule";
 import { ScheduleToolbar } from "../Toolbar/ScheduleToolbar";
 import "./Tabs.scss";
+import { FacultyLoads } from "./FacultyLoads";
 
 interface TabPanelProps {
   index: number;
@@ -57,7 +58,7 @@ export const Tabs = () => {
         <ScheduleToolbar />
       </TabPanel>
       <TabPanel index={2} value={tabValue}>
-        Item Three
+        <FacultyLoads />
       </TabPanel>
       <TabPanel index={3} value={tabValue}>
         Item Four
