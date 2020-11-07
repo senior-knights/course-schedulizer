@@ -24,7 +24,7 @@ export const FacultySchedule = () => {
     <>
       <ScheduleToolbar />
       <div className="schedule-wrapper">
-        <Stick node={<StickyHeader professors={professors} />} position="top center">
+        <Stick node={<StickyHeader professors={professors} />} position="top left">
           <div className="adjacent">
             {professors.map((prof, index) => {
               const hideAxis = index !== 0 ? "hide-axis" : "";
