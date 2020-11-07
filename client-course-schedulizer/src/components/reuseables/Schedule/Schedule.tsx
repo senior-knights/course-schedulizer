@@ -45,7 +45,7 @@ export const Schedule = ({ calendarHeaders }: Schedule) => {
   );
 };
 
-// Time
+// Time-axis
 const LeftTimeAxis = () => {
   return (
     <div className="left-time-axis">
@@ -64,13 +64,15 @@ interface ScheduleHeader {
   headers: Schedule["calendarHeaders"];
 }
 
+const tenVH = window.innerHeight / 10;
+
 /*
   StickyHeader is used to keep the Schedule header sticky to the
   top of the view port.
 */
 const ScheduleHeader = ({ headers }: ScheduleHeader) => {
   return (
-    <StickyNode top={window.innerHeight / 10}>
+    <StickyNode top={tenVH}>
       <div className="adjacent schedule-header-row">
         {headers.map((header) => {
           return (

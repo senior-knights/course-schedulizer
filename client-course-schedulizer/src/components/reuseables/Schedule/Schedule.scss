@@ -20,9 +20,13 @@
   padding-bottom: $spacing;
 }
 
+$header-offset: 8;
+
 .schedule-header-row {
-  margin-left: -2 * $spacing;
-  padding-left: 2 * $spacing;
+  margin-left: -$header-offset * $spacing;
+  padding-left: $header-offset * $spacing;
+  margin-right: -$header-offset * $spacing;
+  padding-right: $header-offset * $spacing;
   background-color: $bg-header;
 }
 
@@ -34,14 +38,14 @@
 .time-slot {
   display: flex;
   justify-content: flex-end;
-  margin-top: -1.5em;
-  padding-right: 0.5em;
+  margin-top: -1.5 * $spacing;
+  padding-right: 0.5 * $spacing;
 }
 
 .left-time-axis {
-  background-color: lightblue;
+  background-color: $bg-header;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  width: 6em;
+  width: 6 * $spacing;
 }
