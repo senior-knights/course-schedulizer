@@ -15,6 +15,7 @@ export const ImportButton = () => {
 
     read.onloadend = () => {
       const scheduleJSON = readCSV.csvStringToSchedule(String(read.result));
+      // TODO: store in local state incase prof navigates away while editing.
       setSchedule(scheduleJSON);
       // eslint-disable-next-line no-console
       console.log(scheduleJSON);
