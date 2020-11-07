@@ -8,6 +8,7 @@ import {
   Day,
   Half,
   Intensive,
+  Meeting,
   Section,
   SemesterLength,
   SemesterLengthOption,
@@ -18,10 +19,11 @@ import { GridItemRadioGroup } from "../GridItem/GridItemRadioGroup";
 import { GridItemTextField } from "../GridItem/GridItemTextField";
 import "./AddSectionPopover.scss";
 
+// TODO: make all these dependent types. See comments and days
 interface SectionInput {
   anticipatedSize: string;
-  comments: string;
-  days: Day[];
+  comments: Section["comments"];
+  days: Meeting["days"];
   duration: string;
   facultyHours: string;
   globalMax: string;
