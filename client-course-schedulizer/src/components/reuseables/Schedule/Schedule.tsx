@@ -1,10 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
 import Stick from "react-stick";
 import StickyNode from "react-stickynode";
-import { ScheduleContext } from "../../../utilities/services/context";
-import { getProfs } from "../../../utilities/services/facultySchedule";
 import { ScheduleToolbar } from "../../Toolbar/ScheduleToolbar";
 import { Calendar } from "../Calendar";
+import "./Schedule.scss";
 
 const getArr = (): number[] => {
   const arr: number[] = [];
@@ -14,31 +13,27 @@ const getArr = (): number[] => {
   return arr;
 };
 
-/* Creates a list of Calendars to create the Faculty Schedule
+interface Schedule {
+  calendarHeaders: string[];
+}
+
+/* Creates a list of Calendars to create a Schedule
   <Stick> is used to stick the Schedule Header to the Schedule
   to track horizontal scrolling.
 */
-export const Schedule = () => {
-  const { schedule } = useContext(ScheduleContext);
-  const [professors, setProfessors] = useState<string[]>([]);
-
-  // For some reason, this causes twice as many renders.
-  useEffect(() => {
-    setProfessors(getProfs(schedule));
-  }, [schedule]);
-
+export const Schedule = ({ calendarHeaders }: Schedule) => {
   return (
     <>
       <ScheduleToolbar />
       <div className="schedule-time-axis-wrapper">
         <LeftTimeAxis />
         <div className="schedule-wrapper">
-          <Stick node={<StickyHeader professors={professors} />} position="top left">
+          <Stick node={<ScheduleHeader headers={calendarHeaders} />} position="top left">
             <div className="adjacent">
-              {professors.map((prof) => {
+              {calendarHeaders.map((header) => {
                 return (
-                  <div key={prof} className="calendar-width hide-axis">
-                    <Calendar key={prof} />
+                  <div key={header} className="calendar-width hide-axis">
+                    <Calendar key={header} />
                   </div>
                 );
               })}
@@ -65,19 +60,22 @@ const LeftTimeAxis = () => {
   );
 };
 
+interface ScheduleHeader {
+  headers: Schedule["calendarHeaders"];
+}
+
 /*
   StickyHeader is used to keep the Schedule header sticky to the
   top of the view port.
 */
-// TODO: Make into reusable component for future room schedule
-const StickyHeader = ({ professors }: { professors: string[] }) => {
+const ScheduleHeader = ({ headers }: ScheduleHeader) => {
   return (
     <StickyNode top={window.innerHeight / 10}>
       <div className="adjacent schedule-header-row">
-        {professors.map((prof) => {
+        {headers.map((header) => {
           return (
-            <div key={prof} className="calendar-width calendar-title">
-              {prof}
+            <div key={header} className="calendar-width calendar-title">
+              {header}
             </div>
           );
         })}
