@@ -17,7 +17,7 @@ export const FacultySchedule = () => {
 
   return (
     <>
-      <Schedule calendarHeaders={professors} />
+      <Schedule calendarHeaders={professors} slotMaxTime="22:00" slotMinTime="6:00" />
     </>
   );
 };

@@ -1,6 +1,7 @@
 /* eslint-disable sort-imports */
 import FullCalendar, { EventInput } from "@fullcalendar/react";
 import moment from "moment";
+import { CalendarOptions } from "@fullcalendar/common";
 
 // Plugins
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
@@ -24,10 +25,11 @@ const events: EventInput = [
   },
 ];
 
-export const Calendar = () => {
+export const Calendar = (props: CalendarOptions) => {
   return (
     <>
       <FullCalendar
+        // Default props
         allDaySlot={false}
         dayHeaderFormat={{ weekday: "short" }}
         dayHeaders={false} // TODO: temp
@@ -44,6 +46,8 @@ export const Calendar = () => {
         slotMaxTime="22:00:00"
         slotMinTime="6:00:00"
         weekends={false}
+        // Override props
+        {...props}
       />
     </>
   );
