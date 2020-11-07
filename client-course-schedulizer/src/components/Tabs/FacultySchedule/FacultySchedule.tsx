@@ -9,9 +9,8 @@ import { getProfs } from "../../../utilities/services/facultySchedule";
 
 const getArr = (): number[] => {
   const arr: number[] = [];
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < 16; i++) {
-    arr.push(i + 6);
+  for (let i = 0; i < 24; i += 1) {
+    arr.push(i);
   }
   return arr;
 };
@@ -32,27 +31,8 @@ export const FacultySchedule = () => {
   return (
     <>
       <ScheduleToolbar />
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        <div
-          style={{
-            backgroundColor: "lightblue",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-around",
-            width: "100px",
-          }}
-        >
-          {getArr().map((time) => {
-            return (
-              <div
-                key={time}
-                style={{ display: "flex", justifyContent: "flex-end", marginTop: "-1.5em" }}
-              >
-                <span>{time}</span>
-              </div>
-            );
-          })}
-        </div>
+      <div className="schedule-time-axis-wrapper">
+        <LeftTimeAxis />
         <div className="schedule-wrapper">
           <Stick node={<StickyHeader professors={professors} />} position="top left">
             <div className="adjacent">
@@ -68,6 +48,21 @@ export const FacultySchedule = () => {
         </div>
       </div>
     </>
+  );
+};
+
+// Time
+const LeftTimeAxis = () => {
+  return (
+    <div className="left-time-axis">
+      {getArr().map((time) => {
+        return (
+          <div key={time} className="time-slot">
+            <span>{`${time}:00`}</span>
+          </div>
+        );
+      })}
+    </div>
   );
 };
 

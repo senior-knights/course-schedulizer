@@ -25,3 +25,23 @@
   padding-left: 2 * $spacing;
   background-color: $bg-header;
 }
+
+.schedule-time-axis-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.time-slot {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -1.5em;
+  padding-right: 0.5em;
+}
+
+.left-time-axis {
+  background-color: lightblue;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 6em;
+}
