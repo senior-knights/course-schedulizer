@@ -30,6 +30,7 @@ export const Calendar = () => {
       <FullCalendar
         allDaySlot={false}
         dayHeaderFormat={{ weekday: "short" }}
+        dayHeaders={false} // TODO: temp
         droppable
         editable
         events={events}
