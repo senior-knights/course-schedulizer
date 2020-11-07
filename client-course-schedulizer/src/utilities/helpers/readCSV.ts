@@ -3,7 +3,7 @@ import * as di from "../interfaces/dataInterfaces";
 import * as cf from "./caseFunctions";
 
 interface ValidFields {
-  [key: string]: Function;
+  [key: string]: (value: string, data: cf.CaseCallbackParams) => void;
 }
 
 const callbacks: ValidFields = {
@@ -125,7 +125,8 @@ export const csvStringToSchedule = (csvString: string): di.Schedule => {
 
       // If there is, add the new section to that course
       if (existingCourse.length > 0) {
-        schedule.courses[schedule.courses.indexOf(existingCourse[0])].sections.push(section);
+        const existingCourseIndex = schedule.courses.indexOf(existingCourse[0]);
+        schedule.courses[existingCourseIndex].sections.push(section);
       }
       // Otherwise, add the new course to the schedule
       else {

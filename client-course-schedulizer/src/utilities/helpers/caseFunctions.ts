@@ -1,6 +1,6 @@
 import * as di from "../interfaces/dataInterfaces";
 
-interface CaseCallbackParams {
+export interface CaseCallbackParams {
   course: di.Course;
   firstMeeting: di.Meeting;
   section: di.Section;
