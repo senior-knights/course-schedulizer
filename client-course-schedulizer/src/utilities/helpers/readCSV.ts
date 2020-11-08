@@ -110,9 +110,9 @@ export const csvStringToSchedule = (csvString: string): di.Schedule => {
       });
 
       // Check if the meeting is empty, and should be removed
-      // if (firstMeeting.days === [] || firstMeeting.duration === 0) {
-      //   section.meetings = [];
-      // }
+      if (firstMeeting.days === [] || firstMeeting.duration === 0) {
+        section.meetings = [];
+      }
 
       // Check if there is already a course in the schedule with the same prefix and number
       const existingCourse: di.Course[] = schedule.courses.filter((c) => {
