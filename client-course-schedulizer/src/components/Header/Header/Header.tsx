@@ -17,11 +17,23 @@ export const Header = () => {
           <IconButton color="inherit" edge="start" {...bindTrigger(popupState)}>
             <MenuIcon />
           </IconButton>
-          <Menu {...bindMenu(popupState)}>
-            <MenuItem>
+          <Menu // Anchoring from: https://codesandbox.io/s/3rmgv?file=/demo.js:603-812
+            anchorOrigin={{
+              horizontal: "right",
+              vertical: "top",
+            }}
+            elevation={0}
+            getContentAnchorEl={null}
+            transformOrigin={{
+              horizontal: "left",
+              vertical: "top",
+            }}
+            {...bindMenu(popupState)}
+          >
+            <MenuItem className="import-menu-item">
               <ImportButton />
             </MenuItem>
-            <MenuItem>
+            <MenuItem className="export-menu-item">
               <ExportButton />
             </MenuItem>
           </Menu>
