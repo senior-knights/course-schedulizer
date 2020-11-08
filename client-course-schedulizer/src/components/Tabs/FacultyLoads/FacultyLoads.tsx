@@ -12,19 +12,19 @@ import { Column, useTable } from "react-table";
 import { Schedule, Term } from "../../../utilities/interfaces/dataInterfaces";
 import { ScheduleContext } from "../../../utilities/services/context";
 
-interface TableData {
-  faculty: string;
-  fallCourseSections?: string;
-  fallHours?: number;
-  loadNotes?: string;
-  otherDuties?: string;
-  otherHours?: number;
-  springCourseSections?: string;
-  springHours?: number;
-  summerCourseSections?: string;
-  summerHours?: number;
-  totalHours?: number;
-}
+type hourKeys = "fallHours" | "springHours" | "summerHours" | "totalHours" | "otherHours";
+type sectionKeys = "fallCourseSections" | "springCourseSections" | "summerCourseSections";
+
+type TableData = {
+  [key in hourKeys]?: number;
+} &
+  {
+    [key in sectionKeys]?: string;
+  } & {
+    faculty: string;
+    loadNotes?: string;
+    otherDuties?: string;
+  };
 
 const createTable = (schedule: Schedule): TableData[] => {
   const newTableData: TableData[] = [];
@@ -118,7 +118,10 @@ export const FacultyLoads = () => {
             headerGroups.map((headerGroup) => {
               return (
                 // Apply the header row props
-                <TableRow {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
+                <TableRow
+                  {...headerGroup.getHeaderGroupProps()}
+                  key={JSON.stringify(headerGroup.id)}
+                >
                   {
                     // Loop over the headers in each row
                     headerGroup.headers.map((column) => {
