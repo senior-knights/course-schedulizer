@@ -6,24 +6,7 @@ interface ValidFields {
   [key: string]: (value: string, data: cf.CaseCallbackParams) => void;
 }
 
-const callbacks: ValidFields = {
-  AcademicYear: cf.yearCase,
-  BuildingAndRoom: cf.locationCase,
-  CourseNum: cf.numberCase,
-  Faculty: cf.instructorCase,
-  FacultyLoad: cf.facultyHoursCase,
-  GlobalMax: cf.globalMaxCase,
-  LocalMax: cf.localMaxCase,
-  MeetingDays: cf.daysCase,
-  MeetingStart: cf.startTimeCase,
-  MeetingTime: cf.durationCase,
-  MinimumCredits: cf.studentHoursCase,
-  RoomCapacity: cf.roomCapacityCase,
-  SectionCode: cf.letterCase,
-  ShortTitle: cf.nameCase,
-  SubjectCode: cf.prefixCase,
-  Term: cf.termCase,
-  Used: cf.anticipatedSizeCase,
+const pruimSpreadsheetFields: ValidFields = {
   anticipatedSize: cf.anticipatedSizeCase,
   comments: cf.commentsCase,
   days: cf.daysCase,
@@ -47,6 +30,32 @@ const callbacks: ValidFields = {
   studentHours: cf.studentHoursCase,
   term: cf.termCase,
   year: cf.yearCase,
+};
+
+// TODO: parse duration and semester length
+const registrarSpreadsheetFields: ValidFields = {
+  AcademicYear: cf.yearCase,
+  BuildingAndRoom: cf.locationCase,
+  CourseNum: cf.numberCase,
+  Faculty: cf.instructorCase,
+  FacultyLoad: cf.facultyHoursCase,
+  GlobalMax: cf.globalMaxCase,
+  LocalMax: cf.localMaxCase,
+  MeetingDays: cf.daysCase,
+  MeetingStart: cf.startTimeCase,
+  MeetingTime: cf.durationCase,
+  MinimumCredits: cf.studentHoursCase,
+  RoomCapacity: cf.roomCapacityCase,
+  SectionCode: cf.letterCase,
+  ShortTitle: cf.nameCase,
+  SubjectCode: cf.prefixCase,
+  Term: cf.termCase,
+  Used: cf.anticipatedSizeCase,
+};
+
+const callbacks: ValidFields = {
+  ...pruimSpreadsheetFields,
+  ...registrarSpreadsheetFields,
 };
 
 export const csvStringToSchedule = (csvString: string): di.Schedule => {
