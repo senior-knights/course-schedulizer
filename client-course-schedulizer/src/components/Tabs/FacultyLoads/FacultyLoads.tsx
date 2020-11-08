@@ -44,11 +44,8 @@ const updateRow = ({
   sectionName,
   termName,
 }: UpdateRowParams) => {
-  const termCourseSectionProp = `${termName}CourseSections` as
-    | "fallCourseSections"
-    | "springCourseSections"
-    | "summerCourseSections";
-  const termHoursProp = `${termName}Hours` as "fallHours" | "springHours" | "summerHours";
+  const termCourseSectionProp = `${termName}CourseSections` as sectionKeys;
+  const termHoursProp = `${termName}Hours` as hourKeys;
   newRow[termCourseSectionProp] = prevRow?.[termCourseSectionProp]
     ? `${prevRow[termCourseSectionProp]}, ${sectionName}`
     : sectionName;
