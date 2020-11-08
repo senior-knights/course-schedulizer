@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 import {
   Paper,
   Table,
@@ -5,14 +6,14 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
+  TableRow as FacultyRow,
 } from "@material-ui/core";
 import React, { useContext, useMemo } from "react";
 import { Column, useTable } from "react-table";
-import { Schedule, Term } from "../../../utilities/interfaces/dataInterfaces";
+import { Course, Schedule, Section, Term } from "../../../utilities/interfaces/dataInterfaces";
 import { ScheduleContext } from "../../../utilities/services/context";
 
-interface TableData {
+interface FacultyRow {
   faculty: string;
   fallCourseSections?: string;
   fallHours?: number;
@@ -26,51 +27,74 @@ interface TableData {
   totalHours?: number;
 }
 
-const createTable = (schedule: Schedule): TableData[] => {
-  const newTableData: TableData[] = [];
+interface UpdateRowParams {
+  course: Course;
+  newRow: FacultyRow;
+  prevRow: FacultyRow;
+  section: Section;
+  sectionName: string;
+  termName?: "fall" | "spring" | "summer";
+}
+
+const updateRow = ({
+  course,
+  newRow,
+  prevRow,
+  section,
+  sectionName,
+  termName,
+}: UpdateRowParams) => {
+  const termCourseSectionProp = `${termName}CourseSections` as
+    | "fallCourseSections"
+    | "springCourseSections"
+    | "summerCourseSections";
+  const termHoursProp = `${termName}Hours` as "fallHours" | "springHours" | "summerHours";
+  newRow[termCourseSectionProp] = prevRow?.[termCourseSectionProp]
+    ? `${prevRow[termCourseSectionProp]}, ${sectionName}`
+    : sectionName;
+
+  newRow[termHoursProp] = prevRow?.[termHoursProp]
+    ? Number(prevRow[termHoursProp]) + (section.facultyHours || course.facultyHours)
+    : section.facultyHours || course.facultyHours;
+};
+
+const createTable = (schedule: Schedule): FacultyRow[] => {
+  const newTableData: FacultyRow[] = [];
   schedule.courses.forEach((course) => {
     course.sections.forEach((section) => {
       section.instructors.forEach((instructor) => {
         const instructorFullName = `${instructor.firstName} ${instructor.lastName}`;
         const sectionName = `${course.prefixes[0]}-${course.number}-${section.letter}`;
-        const newDataRow: TableData = {
+        const newFacultyRow: FacultyRow = {
           faculty: instructorFullName,
         };
-        const [oldDataRow] = newTableData.filter((data) => {
+        const [prevAddedFacultyRow] = newTableData.filter((data) => {
           return data.faculty === instructorFullName;
         });
+        const updateArgs = {
+          course,
+          newRow: newFacultyRow,
+          prevRow: prevAddedFacultyRow,
+          section,
+          sectionName,
+        };
         switch (section.term) {
           case Term.Fall:
-            newDataRow.fallCourseSections = oldDataRow?.fallCourseSections
-              ? `${oldDataRow.fallCourseSections}, ${sectionName}`
-              : sectionName;
-            newDataRow.fallHours = oldDataRow?.fallHours
-              ? oldDataRow.fallHours + (section.facultyHours || course.facultyHours)
-              : section.facultyHours || course.facultyHours;
+            updateRow({ ...updateArgs, termName: "fall" });
             break;
           case Term.Spring:
-            newDataRow.springCourseSections = oldDataRow?.springCourseSections
-              ? `${oldDataRow.springCourseSections}, ${sectionName}`
-              : sectionName;
-            newDataRow.springHours = oldDataRow?.springHours
-              ? oldDataRow.springHours + (section.facultyHours || course.facultyHours)
-              : section.facultyHours || course.facultyHours;
+            updateRow({ ...updateArgs, termName: "spring" });
             break;
           case Term.Summer:
-            newDataRow.summerCourseSections = oldDataRow?.summerCourseSections
-              ? `${oldDataRow?.summerCourseSections}, ${sectionName}`
-              : sectionName;
-            newDataRow.summerHours = oldDataRow?.summerHours
-              ? oldDataRow?.summerHours + (section.facultyHours || course.facultyHours)
-              : section.facultyHours || course.facultyHours;
+            updateRow({ ...updateArgs, termName: "summer" });
             break;
           default:
             break;
         }
-        if (oldDataRow) {
-          newTableData[newTableData.indexOf(oldDataRow)] = newDataRow;
+        if (prevAddedFacultyRow) {
+          newTableData[newTableData.indexOf(prevAddedFacultyRow)] = newFacultyRow;
         } else {
-          newTableData.push(newDataRow);
+          newTableData.push(newFacultyRow);
         }
       });
     });
@@ -86,12 +110,12 @@ const createTable = (schedule: Schedule): TableData[] => {
 export const FacultyLoads = () => {
   const { schedule } = useContext(ScheduleContext);
 
-  const data = useMemo<TableData[]>(() => {
+  const data = useMemo<FacultyRow[]>(() => {
     return createTable(schedule);
   }, [schedule]);
 
   // TODO: Add Other Duties/Hours and Load Notes
-  const columns = useMemo<Column<TableData>[]>(() => {
+  const columns = useMemo<Column<FacultyRow>[]>(() => {
     return [
       { Header: "Faculty", accessor: "faculty" },
       { Header: "Fall Course Sections", accessor: "fallCourseSections" },
@@ -118,13 +142,13 @@ export const FacultyLoads = () => {
             headerGroups.map((headerGroup) => {
               return (
                 // Apply the header row props
-                <TableRow {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
+                <FacultyRow {...headerGroup.getHeaderGroupProps()}>
                   {
                     // Loop over the headers in each row
                     headerGroup.headers.map((column) => {
                       return (
                         // Apply the header cell props
-                        <TableCell {...column.getHeaderProps()} key={column.id}>
+                        <TableCell {...column.getHeaderProps()}>
                           {
                             // Render the header
                             column.render("Header")
@@ -133,7 +157,7 @@ export const FacultyLoads = () => {
                       );
                     })
                   }
-                </TableRow>
+                </FacultyRow>
               );
             })
           }
@@ -147,13 +171,13 @@ export const FacultyLoads = () => {
               prepareRow(row);
               return (
                 // Apply the row props
-                <TableRow {...row.getRowProps()} key={row.id}>
+                <FacultyRow {...row.getRowProps()}>
                   {
                     // Loop over the rows cells
                     row.cells.map((cell) => {
                       // Apply the cell props
                       return (
-                        <TableCell {...cell.getCellProps()} key={cell.value}>
+                        <TableCell {...cell.getCellProps()}>
                           {
                             // Render the cell contents
                             cell.render("Cell")
@@ -162,7 +186,7 @@ export const FacultyLoads = () => {
                       );
                     })
                   }
-                </TableRow>
+                </FacultyRow>
               );
             })
           }
