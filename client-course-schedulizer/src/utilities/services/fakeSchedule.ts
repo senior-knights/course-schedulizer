@@ -1,3 +1,5 @@
+// Copied from Context from the Chrome inspector
+
 export const fakeSchedule = {
   courses: [
     {

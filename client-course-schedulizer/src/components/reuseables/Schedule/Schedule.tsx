@@ -2,20 +2,10 @@ import { CalendarOptions } from "@fullcalendar/react";
 import React from "react";
 import Stick from "react-stick";
 import StickyNode from "react-stickynode";
+import { getHoursArr } from "../../../utilities/services/schedule";
 import { ScheduleToolbar } from "../../Toolbar/ScheduleToolbar";
 import { Calendar } from "../Calendar";
 import "./Schedule.scss";
-
-// TODO: add better types for timing, maybe: https://stackoverflow.com/questions/51445767/how-to-define-a-regex-matched-string-type-in-typescript
-const getArr = (min: string, max: string): number[] => {
-  const minHour = parseInt(min.split(":")[0]);
-  const maxHour = parseInt(max.split(":")[0]);
-  const arr: number[] = [];
-  for (let i = minHour; i < maxHour; i += 1) {
-    arr.push(i);
-  }
-  return arr;
-};
 
 interface Schedule extends CalendarOptions {
   calendarHeaders: string[];
@@ -58,11 +48,12 @@ interface LeftTimeAxis {
   slotMinTime: string;
 }
 
-// Time-axis
+/* Display the hours on the left axis of the schedule
+ */
 const LeftTimeAxis = ({ slotMinTime: min, slotMaxTime: max }: LeftTimeAxis) => {
   return (
     <div className="left-time-axis">
-      {getArr(min, max).map((time) => {
+      {getHoursArr(min, max).map((time) => {
         return (
           <div key={time} className="time-slot">
             <span>{`${time}:00`}</span>

@@ -32,7 +32,6 @@ export const Calendar = (props: CalendarOptions) => {
         // Default props
         allDaySlot={false}
         dayHeaderFormat={{ weekday: "short" }}
-        dayHeaders={false} // TODO: temp
         droppable
         editable
         events={events}

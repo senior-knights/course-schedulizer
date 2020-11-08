@@ -48,4 +48,5 @@ $header-offset: 8;
   flex-direction: column;
   justify-content: space-around;
   width: 6 * $spacing;
+  padding-top: 28px; // Offset for the day headers
 }
