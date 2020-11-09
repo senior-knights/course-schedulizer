@@ -11,7 +11,7 @@ const timeReg = RegExp("(?<![1-9])(1[0-9]|2[0-3]|[0-9]):([0-5][0-9])");
 const amReg = RegExp("[Aa][Mm]");
 const pmReg = RegExp("[Pp][Mm]");
 const fallReg = RegExp("[Ff]");
-const summerReg = RegExp("[Ss][Uu]");
+const summerReg = RegExp("[Ss][Uu]|[Mm][Aa]");
 const springReg = RegExp("[Ss](?![Uu])");
 // "W" represents interim in Pruim's system it seems
 const interimReg = RegExp("[Ii]|[Ww]");
@@ -64,6 +64,8 @@ export const startTimeCase = (value: string, { firstMeeting }: CaseCallbackParam
 
     // Piece the time together
     firstMeeting.startTime = `${hourPart}:${minPart} ${ampm}`;
+  } else if (value === "") {
+    firstMeeting.startTime = "ASYNC";
   } else {
     // eslint-disable-next-line no-console
     console.log(`Time of "${value}" is unreadable, defaulting to 8:00 AM`);

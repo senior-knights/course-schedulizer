@@ -46,13 +46,20 @@ const updateRow = ({
 }: UpdateRowParams) => {
   const termCourseSectionProp = `${termName}CourseSections` as sectionKeys;
   const termHoursProp = `${termName}Hours` as hourKeys;
-  newRow[termCourseSectionProp] = prevRow?.[termCourseSectionProp]
-    ? `${prevRow[termCourseSectionProp]}, ${sectionName}`
-    : sectionName;
+  if (prevRow) {
+    prevRow[termCourseSectionProp] = prevRow[termCourseSectionProp]
+      ? (prevRow[termCourseSectionProp] = `${prevRow[termCourseSectionProp]}, ${sectionName}`)
+      : (prevRow[termCourseSectionProp] = sectionName);
 
-  newRow[termHoursProp] = prevRow?.[termHoursProp]
-    ? Number(prevRow[termHoursProp]) + (section.facultyHours || course.facultyHours)
-    : section.facultyHours || course.facultyHours;
+    prevRow[termHoursProp] = prevRow[termHoursProp]
+      ? (Number(prevRow[termHoursProp]) + (section.facultyHours || course.facultyHours)) /
+        section.instructors.length
+      : (section.facultyHours || course.facultyHours) / section.instructors.length;
+  } else {
+    newRow[termCourseSectionProp] = sectionName;
+    newRow[termHoursProp] =
+      (section.facultyHours || course.facultyHours) / section.instructors.length;
+  }
 };
 
 const createTable = (schedule: Schedule): FacultyRow[] => {
@@ -83,25 +90,32 @@ const createTable = (schedule: Schedule): FacultyRow[] => {
             updateRow({ ...updateArgs, termName: "spring" });
             break;
           case Term.Summer:
+          case Term.Interim:
             updateRow({ ...updateArgs, termName: "summer" });
             break;
           default:
+            // eslint-disable-next-line no-console
+            console.log(`Fell through case statement with value ${section.term}`);
             break;
         }
         if (prevAddedFacultyRow) {
-          newTableData[newTableData.indexOf(prevAddedFacultyRow)] = newFacultyRow;
+          newTableData[newTableData.indexOf(prevAddedFacultyRow)] = prevAddedFacultyRow;
         } else {
           newTableData.push(newFacultyRow);
         }
       });
     });
   });
-  return newTableData.map((row) => {
-    return {
-      ...row,
-      totalHours: (row.fallHours || 0) + (row.springHours || 0) + (row.summerHours || 0),
-    };
-  });
+  return newTableData
+    .map((row) => {
+      return {
+        ...row,
+        totalHours: (row.fallHours || 0) + (row.springHours || 0) + (row.summerHours || 0),
+      };
+    })
+    .sort((a, b) => {
+      return b.totalHours - a.totalHours;
+    });
 };
 
 export const FacultyLoads = () => {
