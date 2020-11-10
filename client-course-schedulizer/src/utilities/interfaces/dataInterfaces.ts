@@ -60,6 +60,8 @@ export interface Meeting {
   startTime: string;
 }
 
+// TODO: Some instructors have middle name, others have middle initials, some have professor prepended.
+// Maybe handle this by simply keeping this as a string?
 export interface Instructor {
   firstName: string;
   lastName: string;

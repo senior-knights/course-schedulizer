@@ -1,3 +1,4 @@
+import moment from "moment";
 import * as di from "../interfaces/dataInterfaces";
 
 export interface CaseCallbackParams {
@@ -63,7 +64,7 @@ export const startTimeCase = (value: string, { firstMeeting }: CaseCallbackParam
     }
 
     // Piece the time together
-    firstMeeting.startTime = `${hourPart}:${minPart} ${ampm}`;
+    firstMeeting.startTime = `${hourPart}:${minPart}${ampm}`;
   } else if (value === "") {
     firstMeeting.startTime = "ASYNC";
   } else {
@@ -227,7 +228,14 @@ export const facultyHoursCase = (value: string, { course }: CaseCallbackParams) 
 };
 
 export const durationCase = (value: string, { firstMeeting }: CaseCallbackParams) => {
-  firstMeeting.duration = Number.isInteger(Number(value)) ? Number(value) : 0;
+  if (Number.isInteger(Number(value))) {
+    firstMeeting.duration = Number(value);
+  } else {
+    const [startTime, endTime] = value.split(" ").join("").split("-");
+    const startTimeMoment = moment(startTime, "h:mma");
+    const endTimeMoment = moment(endTime, "h:mma");
+    firstMeeting.duration = endTimeMoment.diff(startTimeMoment, "minutes");
+  }
 };
 
 export const roomCapacityCase = (value: string, { firstMeeting }: CaseCallbackParams) => {
