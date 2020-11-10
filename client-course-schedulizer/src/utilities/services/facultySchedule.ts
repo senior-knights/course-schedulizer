@@ -1,16 +1,15 @@
+import forEach from "lodash/forEach";
 import { Schedule } from "../interfaces/dataInterfaces";
 
 // Get list of unique professors.
 export const getProfs = (schedule: Schedule): string[] => {
-  const professors: string[] = [];
-  schedule.courses.map((course) => {
-    return course.sections.map((section) => {
-      return section.instructors.forEach((prof) => {
-        if (!professors.includes(prof.lastName)) {
-          professors.push(prof.lastName);
-        }
+  const professorsSet = new Set<string>();
+  forEach(schedule.courses, (course) => {
+    forEach(course.sections, (section) => {
+      forEach(section.instructors, (prof) => {
+        professorsSet.add(prof.lastName);
       });
     });
   });
-  return professors;
+  return [...professorsSet];
 };
