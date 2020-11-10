@@ -6,6 +6,7 @@ import "./Tabs.scss";
 import { AppContext } from "../../utilities/services/appContext";
 import { AddSectionButton } from "../reuseables/AddSectionButton";
 import { AsyncComponent } from "../reuseables/AsyncComponent";
+import { FacultyLoads } from "./FacultyLoads";
 
 interface TabPanelProps {
   index: number;
@@ -73,7 +74,7 @@ export const Tabs = () => {
                 <ScheduleToolbar />
               </TabPanel>
               <TabPanel index={2} value={tabValue}>
-                Item Three
+                <FacultyLoads />
               </TabPanel>
               <TabPanel index={3} value={tabValue}>
                 Item Four
