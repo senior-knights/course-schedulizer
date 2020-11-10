@@ -28,26 +28,25 @@ const events: EventInput = [
 export const Calendar = (props: CalendarOptions) => {
   return (
     <>
-      <FullCalendar
-        // Default props
-        allDaySlot={false}
-        dayHeaderFormat={{ weekday: "short" }}
-        droppable
-        editable
-        events={events}
-        headerToolbar={false}
-        height="auto"
-        initialDate={initialDate}
-        initialView="timeGridWeek"
-        nowIndicator={false}
-        plugins={[interactionPlugin, timeGridPlugin]}
-        selectable
-        slotMaxTime="22:00:00"
-        slotMinTime="6:00:00"
-        weekends={false}
-        // Override props
-        {...props}
-      />
+      <FullCalendar {...props} />
     </>
   );
+};
+
+Calendar.defaultProps = {
+  allDaySlot: false,
+  dayHeaderFormat: { weekday: "short" },
+  droppable: true,
+  editable: true,
+  events,
+  headerToolbar: false,
+  height: "auto",
+  initialDate,
+  initialView: "timeGridWeek",
+  nowIndicator: false,
+  plugins: [interactionPlugin, timeGridPlugin],
+  selectable: true,
+  slotMaxTime: "22:00:00",
+  slotMinTime: "6:00:00",
+  weekends: false,
 };
