@@ -2,7 +2,6 @@ import { Input, InputLabel } from "@material-ui/core";
 import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import * as readCSV from "../../../utilities/helpers/readCSV";
 import { ScheduleContext } from "../../../utilities/services/context";
-import "./ImportButton.scss";
 
 export const ImportButton = () => {
   const [file, setFile] = useState<Blob>();
