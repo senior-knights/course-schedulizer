@@ -4,6 +4,7 @@ import { FacultySchedule } from "./FacultySchedule";
 import { ScheduleToolbar } from "../Toolbar/ScheduleToolbar";
 import "./Tabs.scss";
 import { ScheduleContext } from "../../utilities/services/context";
+import { AddSectionButton } from "../reuseables/AddSectionButton";
 
 interface TabPanelProps {
   index: number;
@@ -41,7 +42,10 @@ export const Tabs = () => {
   return (
     <Paper>
       {schedule.courses.length === 0 ? (
-        <h2>No schedule selected. Please import a CSV to start Editing</h2>
+        <>
+          <h2>No schedule selected. Please import a CSV to start Editing.</h2>
+          <AddSectionButton isIcon={false} />
+        </>
       ) : (
         <>
           <MUITabs
