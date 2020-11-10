@@ -11,7 +11,7 @@ import {
 import React, { useContext, useMemo } from "react";
 import { Column, useTable } from "react-table";
 import { Course, Schedule, Section, Term } from "../../../utilities/interfaces/dataInterfaces";
-import { ScheduleContext } from "../../../utilities/services/context";
+import { AppContext } from "../../../utilities/services/appContext";
 
 type hourKeys = "fallHours" | "springHours" | "summerHours" | "totalHours" | "otherHours";
 type sectionKeys = "fallCourseSections" | "springCourseSections" | "summerCourseSections";
@@ -119,7 +119,9 @@ const createTable = (schedule: Schedule): FacultyRow[] => {
 };
 
 export const FacultyLoads = () => {
-  const { schedule } = useContext(ScheduleContext);
+  const {
+    appState: { schedule },
+  } = useContext(AppContext);
 
   const data = useMemo<FacultyRow[]>(() => {
     return createTable(schedule);
