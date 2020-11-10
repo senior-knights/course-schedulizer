@@ -7,10 +7,10 @@ import "./ImportButton.scss";
 import { getProfs } from "../../../utilities/services/facultySchedule";
 
 export const ImportButton = () => {
-  const { schedule, setSchedule, setProfessors } = useContext(ScheduleContext);
+  const { schedule, setSchedule, setProfessors, setIsLoading } = useContext(ScheduleContext);
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    // TODO: add setLoading to true.
+    setIsLoading(true);
     const file: Blob | null = e.target.files && e.target.files[0];
     const read = new FileReader();
     file && read.readAsBinaryString(file);
@@ -22,7 +22,7 @@ export const ImportButton = () => {
         setSchedule(scheduleJSON);
         setProfessors(getProfs(scheduleJSON));
       }
-      // TODO: set setLoading to false
+      setIsLoading(false);
     };
   };
 
