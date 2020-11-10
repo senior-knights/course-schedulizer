@@ -2,13 +2,18 @@ import { Input, InputLabel } from "@material-ui/core";
 import React, { ChangeEvent, useContext } from "react";
 import isEqual from "lodash/isEqual";
 import * as readCSV from "../../../utilities/helpers/readCSV";
-import { ScheduleContext } from "../../../utilities/services/context";
+import { AppContext } from "../../../utilities/services/appContext";
 import "./ImportButton.scss";
-import { getProfs } from "../../../utilities/services/facultySchedule";
 
 export const ImportButton = () => {
-  const { schedule, setSchedule, setProfessors, setIsLoading } = useContext(ScheduleContext);
+  const {
+    appState: { schedule },
+    appDispatch,
+    setIsLoading,
+  } = useContext(AppContext);
 
+  // TODO: this only runs when input changes, but if the same file
+  // is uploaded, this will not run.
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setIsLoading(true);
     const file: Blob | null = e.target.files && e.target.files[0];
@@ -17,10 +22,10 @@ export const ImportButton = () => {
 
     read.onloadend = () => {
       const scheduleJSON = readCSV.csvStringToSchedule(String(read.result));
-      // TODO: store in local state incase prof navigates away while editing.
+      // TODO: store in local storage incase prof navigates away while editing.
+      // currently a redundant check
       if (!isEqual(schedule, scheduleJSON)) {
-        setSchedule(scheduleJSON);
-        setProfessors(getProfs(scheduleJSON));
+        appDispatch({ payload: { schedule: scheduleJSON }, type: "setScheduleData" });
       }
       setIsLoading(false);
     };

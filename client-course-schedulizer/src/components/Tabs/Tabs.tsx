@@ -3,7 +3,7 @@ import React, { ChangeEvent, PropsWithChildren, useContext, useState } from "rea
 import { FacultySchedule } from "./FacultySchedule";
 import { ScheduleToolbar } from "../Toolbar/ScheduleToolbar";
 import "./Tabs.scss";
-import { ScheduleContext } from "../../utilities/services/context";
+import { AppContext } from "../../utilities/services/appContext";
 import { AddSectionButton } from "../reuseables/AddSectionButton";
 import { AsyncComponent } from "../reuseables/AsyncComponent";
 
@@ -34,7 +34,10 @@ const TabPanel = (props: PropsWithChildren<TabPanelProps>) => {
 
 export const Tabs = () => {
   const [tabValue, setTabValue] = useState(0);
-  const { schedule, isLoading } = useContext(ScheduleContext);
+  const {
+    appState: { schedule },
+    isLoading,
+  } = useContext(AppContext);
 
   const handleTabChange = (event: ChangeEvent<{}>, newValue: number) => {
     setTabValue(newValue);

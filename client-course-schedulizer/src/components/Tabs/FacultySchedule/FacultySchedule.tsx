@@ -1,12 +1,14 @@
 import React, { useContext } from "react";
 import "./FacultySchedule.scss";
 import { Schedule } from "../../reuseables/Schedule";
-import { ScheduleContext } from "../../../utilities/services/context";
+import { AppContext } from "../../../utilities/services/appContext";
 
 /* Creates a list of Calendars to create the Faculty Schedule
  */
 export const FacultySchedule = () => {
-  const { professors } = useContext(ScheduleContext);
+  const {
+    appState: { professors },
+  } = useContext(AppContext);
 
   return (
     <>

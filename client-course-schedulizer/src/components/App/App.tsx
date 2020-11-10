@@ -1,24 +1,21 @@
-import React, { useState } from "react";
+import React, { useReducer, useState } from "react";
 import { Header } from "../Header/Header";
 import { Tabs } from "../Tabs";
 import "./App.scss";
-import { ScheduleContext } from "../../utilities/services/context";
-import { Schedule } from "../../utilities/interfaces/dataInterfaces";
+import { AppContext } from "../../utilities/services/appContext";
+import { reducer } from "../../utilities/services/appReducer";
+import { initialAppState } from "../../utilities/interfaces/appInterfaces";
 
 export const App = () => {
-  // TODO: make this a reducer
-  const [schedule, setSchedule] = useState<Schedule>({ courses: [] });
-  const [professors, setProfessors] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [appState, appDispatch] = useReducer(reducer, initialAppState);
 
   return (
     <div className="App">
-      <ScheduleContext.Provider
-        value={{ isLoading, professors, schedule, setIsLoading, setProfessors, setSchedule }}
-      >
+      <AppContext.Provider value={{ appDispatch, appState, isLoading, setIsLoading }}>
         <Header />
         <Tabs />
-      </ScheduleContext.Provider>
+      </AppContext.Provider>
     </div>
   );
 };
