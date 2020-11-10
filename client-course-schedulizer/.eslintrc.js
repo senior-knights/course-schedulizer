@@ -116,6 +116,7 @@ module.exports = {
     "no-nested-ternary": "off",
 
     "no-unused-expressions": ["error", { allowShortCircuit: true }],
+    "no-param-reassign": "off",
 
     // Enforce the same syntax for all arrow functions
     "arrow-body-style": ["error", "always"],

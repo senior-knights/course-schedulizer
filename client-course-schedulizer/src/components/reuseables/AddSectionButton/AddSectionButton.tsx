@@ -1,11 +1,15 @@
-import { IconButton, Popover } from "@material-ui/core";
+import { Button, IconButton, Popover } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
 import { bindPopover, bindTrigger, usePopupState } from "material-ui-popup-state/hooks";
 import React from "react";
-import { AddSectionPopover } from "../../reuseables/AddSectionPopover";
+import { AddSectionPopover } from "../AddSectionPopover";
 import "./AddSectionButton.scss";
 
-export const AddSectionButton = () => {
+interface AddSectionButton {
+  isIcon?: boolean;
+}
+
+export const AddSectionButton = ({ isIcon }: AddSectionButton) => {
   const popupState = usePopupState({
     popupId: "addSection",
     variant: "popover",
@@ -13,9 +17,15 @@ export const AddSectionButton = () => {
 
   return (
     <>
-      <IconButton {...bindTrigger(popupState)}>
-        <Add />
-      </IconButton>
+      {isIcon ? (
+        <IconButton {...bindTrigger(popupState)}>
+          <Add />
+        </IconButton>
+      ) : (
+        <Button color="primary" variant="contained" {...bindTrigger(popupState)}>
+          Add Section
+        </Button>
+      )}
       <Popover
         {...bindPopover(popupState)}
         anchorOrigin={{
@@ -32,4 +42,8 @@ export const AddSectionButton = () => {
       </Popover>
     </>
   );
+};
+
+AddSectionButton.defaultProps = {
+  isIcon: true,
 };

@@ -1,6 +1,7 @@
 /* eslint-disable sort-imports */
 import FullCalendar, { EventInput } from "@fullcalendar/react";
 import moment from "moment";
+import { CalendarOptions } from "@fullcalendar/common";
 
 // Plugins
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
@@ -24,26 +25,28 @@ const events: EventInput = [
   },
 ];
 
-export const Calendar = () => {
+export const Calendar = (props: CalendarOptions) => {
   return (
     <>
-      <FullCalendar
-        allDaySlot={false}
-        dayHeaderFormat={{ weekday: "short" }}
-        droppable
-        editable
-        events={events}
-        headerToolbar={false}
-        height="auto"
-        initialDate={initialDate}
-        initialView="timeGridWeek"
-        nowIndicator={false}
-        plugins={[interactionPlugin, timeGridPlugin]}
-        selectable
-        slotMaxTime="22:00:00"
-        slotMinTime="6:00:00"
-        weekends={false}
-      />
+      <FullCalendar {...props} />
     </>
   );
+};
+
+Calendar.defaultProps = {
+  allDaySlot: false,
+  dayHeaderFormat: { weekday: "short" },
+  droppable: true,
+  editable: true,
+  events,
+  headerToolbar: false,
+  height: "auto",
+  initialDate,
+  initialView: "timeGridWeek",
+  nowIndicator: false,
+  plugins: [interactionPlugin, timeGridPlugin],
+  selectable: true,
+  slotMaxTime: "22:00:00",
+  slotMinTime: "6:00:00",
+  weekends: false,
 };

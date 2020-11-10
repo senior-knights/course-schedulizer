@@ -2,10 +2,12 @@ import { Input, InputLabel } from "@material-ui/core";
 import React, { useContext } from "react";
 import download from "js-file-download";
 import * as writeCSV from "../../../utilities/helpers/writeCSV";
-import { ScheduleContext } from "../../../utilities/services/context";
+import { AppContext } from "../../../utilities/services/appContext";
 
 export const ExportButton = () => {
-  const { schedule } = useContext(ScheduleContext);
+  const {
+    appState: { schedule },
+  } = useContext(AppContext);
 
   const onExportClick = () => {
     // TODO: maybe generate a cool title like schedule-fall-2020.csv
