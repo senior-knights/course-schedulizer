@@ -14,6 +14,12 @@ import {
   SemesterLengthOption,
   Term,
 } from "../../../utilities/interfaces/dataInterfaces";
+import {
+  startTimeCase,
+  instructorCase,
+  locationCase,
+  prefixCase,
+} from "../../../utilities/helpers/caseFunctions";
 import { GridItemCheckboxGroup } from "../GridItem/GridItemCheckboxGroup";
 import { GridItemRadioGroup } from "../GridItem/GridItemRadioGroup";
 import { GridItemTextField } from "../GridItem/GridItemTextField";
@@ -87,8 +93,7 @@ export const AddSectionPopover = () => {
   const [semesterLength, setSemesterLength] = useState("full");
 
   const onSubmit = (data: SectionInput) => {
-    const instructorName = data.instructor.split(" ");
-    const location = data.instructor.split(" ");
+    const location = locationCase(data.location);
     const semesterType = convertToSemesterLength(
       data.intensive || data.half || data.semesterLength,
     );
@@ -96,7 +101,7 @@ export const AddSectionPopover = () => {
       anticipatedSize: Number(data.anticipatedSize),
       comments: data.comments,
       globalMax: Number(data.globalMax),
-      instructors: [{ firstName: instructorName[0], lastName: instructorName[1] }],
+      instructors: instructorCase(data.instructor),
       letter: data.section,
       localMax: Number(data.localMax),
       meetings: [
@@ -107,7 +112,7 @@ export const AddSectionPopover = () => {
             building: location[0],
             roomNumber: location[1],
           },
-          startTime: data.startTime,
+          startTime: startTimeCase(data.startTime),
         },
       ],
       semesterLength: semesterType,
@@ -120,7 +125,7 @@ export const AddSectionPopover = () => {
       facultyHours: Number(data.facultyHours),
       name: data.name,
       number: data.number,
-      prefixes: [data.prefix],
+      prefixes: prefixCase(data.prefix),
       sections: [newSection],
       studentHours: Number(data.studentHours),
     };
@@ -137,7 +142,6 @@ export const AddSectionPopover = () => {
         Add/Update Section
       </Typography>
       <Grid container spacing={spacing}>
-        {/* TODO: Allow for multiple prefixes */}
         {/* TODO: Dropdown for courses already in system */}
         <GridItemTextField label="Prefix" register={register} />
         <GridItemTextField label="Number" register={register} />
@@ -145,7 +149,6 @@ export const AddSectionPopover = () => {
         <GridItemTextField label="Name" register={register} />
       </Grid>
       <Grid container spacing={spacing}>
-        {/* TODO: Allow for multiple instructors */}
         {/* TODO: Dropdown for instructors with option to add new one */}
         <GridItemTextField label="Instructor" register={register} />
         {/* TODO: Room capacity? */}
@@ -167,7 +170,7 @@ export const AddSectionPopover = () => {
         <GridItemTextField
           label="Anticipated Size"
           register={register}
-          textFieldProps={{ multiline: true, name: "anticipatedSize", rows: 2 }}
+          textFieldProps={{ name: "anticipatedSize" }}
         />
         <GridItemTextField
           label="Global Max"
