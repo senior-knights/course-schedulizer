@@ -1,10 +1,11 @@
-import { Box, Tabs as MUITabs, Paper, Tab, Typography, CircularProgress } from "@material-ui/core";
+import { Box, Tabs as MUITabs, Paper, Tab, Typography } from "@material-ui/core";
 import React, { ChangeEvent, PropsWithChildren, useContext, useState } from "react";
 import { FacultySchedule } from "./FacultySchedule";
 import { ScheduleToolbar } from "../Toolbar/ScheduleToolbar";
 import "./Tabs.scss";
 import { ScheduleContext } from "../../utilities/services/context";
 import { AddSectionButton } from "../reuseables/AddSectionButton";
+import { AsyncComponent } from "../reuseables/AsyncComponent";
 
 interface TabPanelProps {
   index: number;
@@ -41,12 +42,7 @@ export const Tabs = () => {
 
   return (
     <Paper>
-      {isLoading ? (
-        <>
-          <div>parsing csv...</div>
-          <CircularProgress />
-        </>
-      ) : (
+      <AsyncComponent isLoading={isLoading}>
         <>
           {schedule.courses.length === 0 ? (
             <>
@@ -82,7 +78,7 @@ export const Tabs = () => {
             </>
           )}
         </>
-      )}
+      </AsyncComponent>
     </Paper>
   );
 };
