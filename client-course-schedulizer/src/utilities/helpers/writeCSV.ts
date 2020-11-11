@@ -9,7 +9,7 @@ export const scheduleToCSVString = (schedule: di.Schedule): string => {
       // TODO: Be wary of commas in strings?
       let instructorsStr = "";
       section.instructors.forEach((instructor) => {
-        instructorsStr += `${instructor.firstName} ${instructor.lastName};`;
+        instructorsStr += `${instructor};`;
       });
       instructorsStr = instructorsStr.slice(0, -1);
       const meeting = section.meetings ? section.meetings[0] : null;

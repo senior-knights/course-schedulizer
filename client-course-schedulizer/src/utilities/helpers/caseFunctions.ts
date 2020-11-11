@@ -1,3 +1,4 @@
+import moment from "moment";
 import * as di from "../interfaces/dataInterfaces";
 
 export interface CaseCallbackParams {
@@ -7,9 +8,9 @@ export interface CaseCallbackParams {
 }
 
 // Define regexes for parsing
-const timeReg = RegExp("(?<![1-9])(1[0-9]|2[0-3]|[0-9]):([0-5][0-9])");
-const amReg = RegExp("[Aa][Mm]");
-const pmReg = RegExp("[Pp][Mm]");
+// const timeReg = RegExp("(?<![1-9])(1[0-9]|2[0-3]|[0-9]):([0-5][0-9])");
+// const amReg = RegExp("[Aa][Mm]");
+// const pmReg = RegExp("[Pp][Mm]");
 const fallReg = RegExp("[Ff]");
 const summerReg = RegExp("[Ss][Uu]|[Mm][Aa]");
 const springReg = RegExp("[Ss](?![Uu])");
@@ -24,53 +25,7 @@ const friReg = RegExp("[Ff]");
 const satReg = RegExp("[Ss](?![Uu])");
 
 export const startTimeCase = (value: string, { firstMeeting }: CaseCallbackParams) => {
-  let ampm = "AM";
-  let hourPart = "8";
-  let numHourPart = 8;
-  let minPart = "00";
-  const regMatch = value.match(timeReg);
-  if (regMatch != null && regMatch.length === 3) {
-    // Get the hour and minute values, store as number and strings
-    [, hourPart, minPart] = regMatch;
-    numHourPart = Number(hourPart);
-
-    // Handle high hour values
-    if (numHourPart > 11) {
-      if (numHourPart > 12) {
-        // If military time, convert to standard
-        numHourPart -= 12;
-        hourPart = String(numHourPart);
-      }
-      // Assume PM when 12:XX or military time
-      ampm = "PM";
-    }
-
-    // If hour is 0, assume military time of 12 AM
-    else if (numHourPart === 0) {
-      hourPart = "12";
-      numHourPart = 12;
-    }
-
-    // Look to see whether AM or PM is specified explicitly
-    if (pmReg.test(value)) {
-      ampm = "PM";
-      if (amReg.test(value)) {
-        // eslint-disable-next-line no-console
-        console.log(`Time of "${value}" is labeled with AM and PM, defaulting to PM`);
-      }
-    } else if (amReg.test(value)) {
-      ampm = "AM";
-    }
-
-    // Piece the time together
-    firstMeeting.startTime = `${hourPart}:${minPart} ${ampm}`;
-  } else if (value === "") {
-    firstMeeting.startTime = "ASYNC";
-  } else {
-    // eslint-disable-next-line no-console
-    console.log(`Time of "${value}" is unreadable, defaulting to 8:00 AM`);
-    firstMeeting.startTime = "8:00 AM";
-  }
+  firstMeeting.startTime = moment(value, "h:mma").isValid() ? value : "";
 };
 
 export const locationCase = (value: string, { firstMeeting }: CaseCallbackParams) => {
@@ -125,7 +80,7 @@ export const semesterLengthCase = (value: string, { section }: CaseCallbackParam
     section.semesterLength = di.SemesterLength.IntensiveD;
   } else {
     // eslint-disable-next-line no-console
-    console.log(`Half of "${value}" is unreadable, defaulting to Full`);
+    console.log(`Semester Length of "${value}" is unreadable, defaulting to Full`);
     section.semesterLength = di.SemesterLength.Full;
   }
 };
@@ -155,31 +110,32 @@ export const daysCase = (value: string, { firstMeeting }: CaseCallbackParams) =>
 };
 
 export const instructorCase = (value: string, { section }: CaseCallbackParams) => {
-  const names = value.split(/[;,\n]/);
-  const instructors: di.Instructor[] = [];
-  names.forEach((name) => {
-    const nameParts = name.trim().split(" ");
-    if (nameParts.length === 1) {
-      // No last name given
-      instructors.push({
-        firstName: nameParts[0],
-        lastName: "",
-      });
-    } else if (nameParts.length === 2) {
-      // First and last given
-      instructors.push({
-        firstName: nameParts[0],
-        lastName: nameParts[1],
-      });
-    } else {
-      // Too many names given, assume first part is first name and rest is last name
-      instructors.push({
-        firstName: nameParts[0],
-        lastName: nameParts.slice(1).join(" "),
-      });
-    }
+  const instructors = value.split(/[;,\n]/);
+  section.instructors = instructors.map((instructor) => {
+    return instructor.trim();
   });
-  section.instructors = instructors;
+};
+
+export const sectionStartCase = (value: string, { section }: CaseCallbackParams) => {
+  section.startSectionDate = value;
+};
+
+export const sectionEndCase = (value: string, { section }: CaseCallbackParams) => {
+  const sectionStart = moment(section.startSectionDate, "l");
+  const sectionEnd = moment(value, "l");
+  const sectionLength = sectionEnd.diff(sectionStart, "days");
+  const startMonth = sectionStart.month();
+  const firstStartMonths = [0, 1, 7, 8]; // Jan, Feb, Aug, Sept
+  if (sectionLength > 80) {
+    section.semesterLength = di.SemesterLength.Full;
+  } else if (sectionLength > 35 && sectionLength <= 80) {
+    section.semesterLength = firstStartMonths.includes(startMonth)
+      ? di.SemesterLength.HalfFirst
+      : di.SemesterLength.HalfSecond;
+  } else {
+    // TODO: Figure out if intensive is A, B, C, or D
+    section.semesterLength = di.SemesterLength.IntensiveA;
+  }
 };
 
 export const prefixCase = (value: string, { course }: CaseCallbackParams) => {
@@ -227,7 +183,14 @@ export const facultyHoursCase = (value: string, { course }: CaseCallbackParams) 
 };
 
 export const durationCase = (value: string, { firstMeeting }: CaseCallbackParams) => {
-  firstMeeting.duration = Number.isInteger(Number(value)) ? Number(value) : 0;
+  if (Number.isInteger(Number(value))) {
+    firstMeeting.duration = Number(value);
+  } else {
+    const [startTime, endTime] = value.split(" ").join("").split("-");
+    const startTimeMoment = moment(startTime, "h:mma");
+    const endTimeMoment = moment(endTime, "h:mma");
+    firstMeeting.duration = endTimeMoment.diff(startTimeMoment, "minutes");
+  }
 };
 
 export const roomCapacityCase = (value: string, { firstMeeting }: CaseCallbackParams) => {
