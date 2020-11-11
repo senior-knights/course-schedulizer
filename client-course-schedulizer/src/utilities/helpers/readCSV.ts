@@ -47,6 +47,8 @@ const registrarSpreadsheetFields: ValidFields = {
   MinimumCredits: cf.studentHoursCase,
   RoomCapacity: cf.roomCapacityCase,
   SectionCode: cf.letterCase,
+  SectionEndDate: cf.sectionEndCase,
+  SectionStartDate: cf.sectionStartCase,
   ShortTitle: cf.nameCase,
   SubjectCode: cf.prefixCase,
   Term: cf.termCase,

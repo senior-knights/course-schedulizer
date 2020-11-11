@@ -1,6 +1,6 @@
 import fetch from "isomorphic-fetch";
 import { csvStringToSchedule } from "./readCSV";
-import { Course, Day, Schedule, Section, Term } from "../interfaces/dataInterfaces";
+import { Course, Day, Schedule, Section, SemesterLength, Term } from "../interfaces/dataInterfaces";
 
 let schedule: Schedule;
 let basicCourse: Course;
@@ -8,6 +8,8 @@ let basicSection: Section;
 let noMeetingSection: Section;
 let multipleInstructorSection: Section;
 let interimSection: Section;
+let firstHalfSection: Section;
+
 beforeAll(async () => {
   const csv = await fetch(
     "https://raw.githubusercontent.com/senior-knights/course-schedulizer/develop/client-course-schedulizer/public/math-schedule.csv",
@@ -18,7 +20,10 @@ beforeAll(async () => {
   [basicSection, noMeetingSection] = basicCourse.sections;
   [multipleInstructorSection] = schedule.courses[6].sections;
   [interimSection] = schedule.courses[3].sections;
+  [firstHalfSection] = schedule.courses[13].sections;
 });
+
+// TODO: add section to test file with second half semester length and Intensive B-D
 
 it("loads csv to Schedule object", () => {
   expect(schedule).toBeDefined();
@@ -59,7 +64,6 @@ describe("parses basic course", () => {
   });
 });
 
-// TODO: semesterLength
 describe("parses basic section", () => {
   it("loads section", () => {
     expect(basicSection).toBeDefined();
@@ -113,6 +117,10 @@ describe("parses basic section", () => {
     expect(basicSection.meetings[0].startTime).toEqual("12:30PM");
     expect(basicSection.meetings[0].duration).toEqual(50);
   });
+
+  it("parses semester length", () => {
+    expect(basicSection.semesterLength).toEqual(SemesterLength.Full);
+  });
 });
 
 it("parses multiple instructors", () => {
@@ -143,8 +151,16 @@ describe("parses interim section", () => {
     expect(interimSection.meetings[0].startTime).toEqual("8:30AM");
     expect(interimSection.meetings[0].duration).toEqual(510);
   });
+
+  it("parses semester length", () => {
+    expect(interimSection.semesterLength).toEqual(SemesterLength.IntensiveA);
+  });
 });
 
 it("handles sections with no meeting time", () => {
   expect(noMeetingSection.meetings.length).toEqual(0);
+});
+
+it("parses first half semester length", () => {
+  expect(firstHalfSection.semesterLength).toEqual(SemesterLength.HalfFirst);
 });

@@ -126,7 +126,7 @@ export const semesterLengthCase = (value: string, { section }: CaseCallbackParam
     section.semesterLength = di.SemesterLength.IntensiveD;
   } else {
     // eslint-disable-next-line no-console
-    console.log(`Half of "${value}" is unreadable, defaulting to Full`);
+    console.log(`Semester Length of "${value}" is unreadable, defaulting to Full`);
     section.semesterLength = di.SemesterLength.Full;
   }
 };
@@ -181,6 +181,28 @@ export const instructorCase = (value: string, { section }: CaseCallbackParams) =
     }
   });
   section.instructors = instructors;
+};
+
+export const sectionStartCase = (value: string, { section }: CaseCallbackParams) => {
+  section.semesterLength = value;
+};
+
+export const sectionEndCase = (value: string, { section }: CaseCallbackParams) => {
+  const sectionStart = moment(section.semesterLength, "l");
+  const sectionEnd = moment(value, "l");
+  const sectionLength = sectionEnd.diff(sectionStart, "days");
+  const startMonth = sectionStart.month();
+  const firstStartMonths = [0, 1, 7, 8]; // Jan, Feb, Aug, Sept
+  if (sectionLength > 80) {
+    section.semesterLength = di.SemesterLength.Full;
+  } else if (sectionLength > 35 && sectionLength <= 80) {
+    section.semesterLength = firstStartMonths.includes(startMonth)
+      ? di.SemesterLength.HalfFirst
+      : di.SemesterLength.HalfSecond;
+  } else {
+    // TODO: Figure out if intensive is A, B, C, or D
+    section.semesterLength = di.SemesterLength.IntensiveA;
+  }
 };
 
 export const prefixCase = (value: string, { course }: CaseCallbackParams) => {
