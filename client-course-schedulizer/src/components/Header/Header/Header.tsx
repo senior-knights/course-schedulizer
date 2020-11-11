@@ -5,12 +5,14 @@ import React, { useContext } from "react";
 import logo from "../../../assets/CalvinUniv-vert-full-color-inverse.png";
 import { ImportButton } from "../ImportButton";
 import * as writeCSV from "../../../utilities/helpers/writeCSV";
-import { ScheduleContext } from "../../../utilities/services/context";
+import { AppContext } from "../../../utilities/services/appContext";
 import "./Header.scss";
 
 export const Header = () => {
   const popupState = usePopupState({ popupId: "menu", variant: "popover" });
-  const { schedule } = useContext(ScheduleContext);
+  const {
+    appState: { schedule },
+  } = useContext(AppContext);
 
   return (
     <div className="header">
