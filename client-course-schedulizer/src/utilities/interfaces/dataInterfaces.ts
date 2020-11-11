@@ -88,7 +88,8 @@ export interface Section {
   // Multiple Meetings possible if time/room differs on different days
   // Asynchronous classes should have an empty array of meeting times
   meetings: Meeting[];
-  semesterLength: SemesterLength | string;
+  semesterLength: SemesterLength;
+  startSectionDate?: string;
   // Overrides Course value
   studentHours?: number;
   term: Term;

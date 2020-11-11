@@ -8,9 +8,9 @@ export interface CaseCallbackParams {
 }
 
 // Define regexes for parsing
-const timeReg = RegExp("(?<![1-9])(1[0-9]|2[0-3]|[0-9]):([0-5][0-9])");
-const amReg = RegExp("[Aa][Mm]");
-const pmReg = RegExp("[Pp][Mm]");
+// const timeReg = RegExp("(?<![1-9])(1[0-9]|2[0-3]|[0-9]):([0-5][0-9])");
+// const amReg = RegExp("[Aa][Mm]");
+// const pmReg = RegExp("[Pp][Mm]");
 const fallReg = RegExp("[Ff]");
 const summerReg = RegExp("[Ss][Uu]|[Mm][Aa]");
 const springReg = RegExp("[Ss](?![Uu])");
@@ -25,53 +25,7 @@ const friReg = RegExp("[Ff]");
 const satReg = RegExp("[Ss](?![Uu])");
 
 export const startTimeCase = (value: string, { firstMeeting }: CaseCallbackParams) => {
-  let ampm = "AM";
-  let hourPart = "8";
-  let numHourPart = 8;
-  let minPart = "00";
-  const regMatch = value.match(timeReg);
-  if (regMatch != null && regMatch.length === 3) {
-    // Get the hour and minute values, store as number and strings
-    [, hourPart, minPart] = regMatch;
-    numHourPart = Number(hourPart);
-
-    // Handle high hour values
-    if (numHourPart > 11) {
-      if (numHourPart > 12) {
-        // If military time, convert to standard
-        numHourPart -= 12;
-        hourPart = String(numHourPart);
-      }
-      // Assume PM when 12:XX or military time
-      ampm = "PM";
-    }
-
-    // If hour is 0, assume military time of 12 AM
-    else if (numHourPart === 0) {
-      hourPart = "12";
-      numHourPart = 12;
-    }
-
-    // Look to see whether AM or PM is specified explicitly
-    if (pmReg.test(value)) {
-      ampm = "PM";
-      if (amReg.test(value)) {
-        // eslint-disable-next-line no-console
-        console.log(`Time of "${value}" is labeled with AM and PM, defaulting to PM`);
-      }
-    } else if (amReg.test(value)) {
-      ampm = "AM";
-    }
-
-    // Piece the time together
-    firstMeeting.startTime = `${hourPart}:${minPart}${ampm}`;
-  } else if (value === "") {
-    firstMeeting.startTime = "ASYNC";
-  } else {
-    // eslint-disable-next-line no-console
-    console.log(`Time of "${value}" is unreadable, defaulting to 8:00 AM`);
-    firstMeeting.startTime = "8:00 AM";
-  }
+  firstMeeting.startTime = moment(value, "h:mma").isValid() ? value : "";
 };
 
 export const locationCase = (value: string, { firstMeeting }: CaseCallbackParams) => {
@@ -184,11 +138,11 @@ export const instructorCase = (value: string, { section }: CaseCallbackParams) =
 };
 
 export const sectionStartCase = (value: string, { section }: CaseCallbackParams) => {
-  section.semesterLength = value;
+  section.startSectionDate = value;
 };
 
 export const sectionEndCase = (value: string, { section }: CaseCallbackParams) => {
-  const sectionStart = moment(section.semesterLength, "l");
+  const sectionStart = moment(section.startSectionDate, "l");
   const sectionEnd = moment(value, "l");
   const sectionLength = sectionEnd.diff(sectionStart, "days");
   const startMonth = sectionStart.month();
