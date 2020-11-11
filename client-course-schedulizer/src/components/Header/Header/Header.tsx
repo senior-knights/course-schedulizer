@@ -1,18 +1,14 @@
 import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography } from "@material-ui/core";
 import { Menu as MenuIcon } from "@material-ui/icons";
 import { bindMenu, bindTrigger, usePopupState } from "material-ui-popup-state/hooks";
-import React, { useContext } from "react";
+import React from "react";
 import logo from "../../../assets/CalvinUniv-vert-full-color-inverse.png";
 import { ImportButton } from "../ImportButton";
-import * as writeCSV from "../../../utilities/helpers/writeCSV";
-import { AppContext } from "../../../utilities/services/appContext";
+import { ExportButton } from "../ExportButton";
 import "./Header.scss";
 
 export const Header = () => {
   const popupState = usePopupState({ popupId: "menu", variant: "popover" });
-  const {
-    appState: { schedule },
-  } = useContext(AppContext);
 
   return (
     <div className="header">
@@ -21,19 +17,24 @@ export const Header = () => {
           <IconButton color="inherit" edge="start" {...bindTrigger(popupState)}>
             <MenuIcon />
           </IconButton>
-          <Menu {...bindMenu(popupState)}>
-            <MenuItem>
+          <Menu // Anchoring from: https://codesandbox.io/s/3rmgv?file=/demo.js:603-812
+            anchorOrigin={{
+              horizontal: "right",
+              vertical: "top",
+            }}
+            elevation={0}
+            getContentAnchorEl={null}
+            transformOrigin={{
+              horizontal: "left",
+              vertical: "top",
+            }}
+            {...bindMenu(popupState)}
+          >
+            <MenuItem className="import-menu-item">
               <ImportButton />
             </MenuItem>
-            <MenuItem
-              onClick={() => {
-                // TODO: make an ExportButton component
-                popupState.close();
-                // eslint-disable-next-line no-console
-                console.log(writeCSV.scheduleToCSVString(schedule));
-              }}
-            >
-              Export CSV
+            <MenuItem className="export-menu-item">
+              <ExportButton />
             </MenuItem>
           </Menu>
           <Typography variant="h6">Course Schedulizer</Typography>
