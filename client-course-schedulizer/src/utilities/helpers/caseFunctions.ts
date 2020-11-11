@@ -110,7 +110,10 @@ export const daysCase = (value: string, { firstMeeting }: CaseCallbackParams) =>
 };
 
 export const instructorCase = (value: string, { section }: CaseCallbackParams) => {
-  section.instructors = value.split(/[;,\n]/);
+  const instructors = value.split(/[;,\n]/);
+  section.instructors = instructors.map((instructor) => {
+    return instructor.trim();
+  });
 };
 
 export const sectionStartCase = (value: string, { section }: CaseCallbackParams) => {
