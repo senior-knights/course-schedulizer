@@ -60,13 +60,6 @@ export interface Meeting {
   startTime: string;
 }
 
-// TODO: Some instructors have middle name, others have middle initials, some have professor prepended.
-// Maybe handle this by simply keeping this as a string?
-export interface Instructor {
-  firstName: string;
-  lastName: string;
-}
-
 export interface Course {
   facultyHours: number;
   name: string;
@@ -82,7 +75,7 @@ export interface Section {
   // Overrides Course value
   facultyHours?: number;
   globalMax: number;
-  instructors: Instructor[];
+  instructors: string[];
   letter: string;
   localMax: number;
   // Multiple Meetings possible if time/room differs on different days

@@ -95,8 +95,7 @@ describe("parses basic section", () => {
 
   it("parses instructors", () => {
     expect(basicSection.instructors.length).toEqual(1);
-    expect(basicSection.instructors[0].firstName).toEqual("James");
-    expect(basicSection.instructors[0].lastName).toEqual("Turner");
+    expect(basicSection.instructors[0]).toEqual("James Turner");
   });
 
   it("parses meetings", () => {
@@ -125,10 +124,8 @@ describe("parses basic section", () => {
 
 it("parses multiple instructors", () => {
   expect(multipleInstructorSection.instructors.length).toEqual(2);
-  expect(multipleInstructorSection.instructors[0].firstName).toEqual("Thomas");
-  expect(multipleInstructorSection.instructors[0].lastName).toEqual("L. Scofield");
-  expect(multipleInstructorSection.instructors[1].firstName).toEqual("Todd");
-  expect(multipleInstructorSection.instructors[1].lastName).toEqual("Kapitula");
+  expect(multipleInstructorSection.instructors[0]).toEqual("Thomas L. Scofield");
+  expect(multipleInstructorSection.instructors[1]).toEqual("Todd Kapitula");
 });
 
 describe("parses interim section", () => {

@@ -110,31 +110,7 @@ export const daysCase = (value: string, { firstMeeting }: CaseCallbackParams) =>
 };
 
 export const instructorCase = (value: string, { section }: CaseCallbackParams) => {
-  const names = value.split(/[;,\n]/);
-  const instructors: di.Instructor[] = [];
-  names.forEach((name) => {
-    const nameParts = name.trim().split(" ");
-    if (nameParts.length === 1) {
-      // No last name given
-      instructors.push({
-        firstName: nameParts[0],
-        lastName: "",
-      });
-    } else if (nameParts.length === 2) {
-      // First and last given
-      instructors.push({
-        firstName: nameParts[0],
-        lastName: nameParts[1],
-      });
-    } else {
-      // Too many names given, assume first part is first name and rest is last name
-      instructors.push({
-        firstName: nameParts[0],
-        lastName: nameParts.slice(1).join(" "),
-      });
-    }
-  });
-  section.instructors = instructors;
+  section.instructors = value.split(/[;,\n]/);
 };
 
 export const sectionStartCase = (value: string, { section }: CaseCallbackParams) => {
