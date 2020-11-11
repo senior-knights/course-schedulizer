@@ -3,7 +3,6 @@ import React, { ChangeEvent, useContext } from "react";
 import isEqual from "lodash/isEqual";
 import * as readCSV from "../../../utilities/helpers/readCSV";
 import { AppContext } from "../../../utilities/services/appContext";
-import "./ImportButton.scss";
 
 export const ImportButton = () => {
   const {
