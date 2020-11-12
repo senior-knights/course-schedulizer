@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Grid, Typography } from "@material-ui/core";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { array, object } from "yup";
 import {
@@ -20,6 +20,7 @@ import {
   locationCase,
   prefixCase,
 } from "../../../utilities/helpers/caseFunctions";
+import { AppContext } from "../../../utilities/services/appContext";
 import { GridItemCheckboxGroup } from "../GridItem/GridItemCheckboxGroup";
 import { GridItemRadioGroup } from "../GridItem/GridItemRadioGroup";
 import { GridItemTextField } from "../GridItem/GridItemTextField";
@@ -76,6 +77,12 @@ const convertToSemesterLength = (sl: Half | Intensive | SemesterLengthOption): S
 };
 
 export const AddSectionPopover = () => {
+  const {
+    appState: { schedule },
+    appDispatch,
+    setIsLoading,
+  } = useContext(AppContext);
+
   const spacing = 4;
 
   // remove false values from days array
@@ -93,6 +100,7 @@ export const AddSectionPopover = () => {
   const [semesterLength, setSemesterLength] = useState("full");
 
   const onSubmit = (data: SectionInput) => {
+    setIsLoading(true);
     const location = locationCase(data.location);
     const semesterType = convertToSemesterLength(
       data.intensive || data.half || data.semesterLength,
@@ -129,8 +137,10 @@ export const AddSectionPopover = () => {
       sections: [newSection],
       studentHours: Number(data.studentHours),
     };
-    // eslint-disable-next-line no-console
-    return console.log(newCourse);
+
+    schedule.courses.push(newCourse);
+    appDispatch({ payload: { schedule }, type: "setScheduleData" });
+    setIsLoading(false);
   };
   const onSemesterLengthChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSemesterLength(e.target.value);
