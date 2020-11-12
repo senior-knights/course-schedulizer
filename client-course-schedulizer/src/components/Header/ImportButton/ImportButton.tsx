@@ -1,28 +1,34 @@
 import { Input, InputLabel } from "@material-ui/core";
-import React, { ChangeEvent, useContext, useEffect, useState } from "react";
+import React, { ChangeEvent, useContext } from "react";
+import isEqual from "lodash/isEqual";
 import * as readCSV from "../../../utilities/helpers/readCSV";
-import { ScheduleContext } from "../../../utilities/services/context";
-import "./ImportButton.scss";
+import { AppContext } from "../../../utilities/services/appContext";
 
 export const ImportButton = () => {
-  const [file, setFile] = useState<Blob>();
-  const { setSchedule } = useContext(ScheduleContext);
+  const {
+    appState: { schedule },
+    appDispatch,
+    setIsLoading,
+  } = useContext(AppContext);
 
-  useEffect(() => {
-    // https://stackoverflow.com/questions/5201317/read-the-contents-of-a-file-object
+  // TODO: this only runs when input changes, but if the same file
+  // is uploaded, this will not run.
+  // https://stackoverflow.com/questions/5201317/read-the-contents-of-a-file-object
+  const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setIsLoading(true);
+    const file: Blob | null = e.target.files && e.target.files[0];
     const read = new FileReader();
     file && read.readAsBinaryString(file);
 
     read.onloadend = () => {
       const scheduleJSON = readCSV.csvStringToSchedule(String(read.result));
-      setSchedule(scheduleJSON);
-      // eslint-disable-next-line no-console
-      console.log(scheduleJSON);
+      // TODO: store in local storage incase prof navigates away while editing.
+      // currently a redundant check
+      if (!isEqual(schedule, scheduleJSON)) {
+        appDispatch({ payload: { schedule: scheduleJSON }, type: "setScheduleData" });
+      }
+      setIsLoading(false);
     };
-  }, [file, setSchedule]);
-
-  const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    e.target.files && setFile(e.target.files[0]);
   };
 
   return (

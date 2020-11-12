@@ -8,6 +8,7 @@ import {
   Day,
   Half,
   Intensive,
+  Meeting,
   Section,
   SemesterLength,
   SemesterLengthOption,
@@ -18,10 +19,11 @@ import { GridItemRadioGroup } from "../GridItem/GridItemRadioGroup";
 import { GridItemTextField } from "../GridItem/GridItemTextField";
 import "./AddSectionPopover.scss";
 
+// TODO: make all these dependent types. See comments and days
 interface SectionInput {
   anticipatedSize: string;
-  comments: string;
-  days: Day[];
+  comments: Section["comments"];
+  days: Meeting["days"];
   duration: string;
   facultyHours: string;
   globalMax: string;
@@ -85,8 +87,7 @@ export const AddSectionPopover = () => {
   const [semesterLength, setSemesterLength] = useState("full");
 
   const onSubmit = (data: SectionInput) => {
-    const instructorName = data.instructor.split(" ");
-    const location = data.instructor.split(" ");
+    const location = data.location.split(" ");
     const semesterType = convertToSemesterLength(
       data.intensive || data.half || data.semesterLength,
     );
@@ -94,7 +95,7 @@ export const AddSectionPopover = () => {
       anticipatedSize: Number(data.anticipatedSize),
       comments: data.comments,
       globalMax: Number(data.globalMax),
-      instructors: [{ firstName: instructorName[0], lastName: instructorName[1] }],
+      instructors: data.instructor.split(/[;,\n]/),
       letter: data.section,
       localMax: Number(data.localMax),
       meetings: [
