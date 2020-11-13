@@ -1,7 +1,8 @@
-import { CalendarOptions } from "@fullcalendar/react";
+import { CalendarOptions, EventInput } from "@fullcalendar/react";
 import React from "react";
 import Stick from "react-stick";
 import StickyNode from "react-stickynode";
+import { Term } from "../../../utilities/interfaces/dataInterfaces";
 import { getHoursArr } from "../../../utilities/services/schedule";
 import { ScheduleToolbar } from "../../Toolbar/ScheduleToolbar";
 import { Calendar } from "../Calendar";
@@ -20,6 +21,7 @@ export const Schedule = ({ calendarHeaders, ...calendarOptions }: Schedule) => {
     slotMaxTime: calendarOptions.slotMaxTime as string,
     slotMinTime: calendarOptions.slotMinTime as string,
   };
+  const events = calendarOptions?.events as EventInput[];
   return (
     <>
       <ScheduleToolbar />
@@ -29,9 +31,15 @@ export const Schedule = ({ calendarHeaders, ...calendarOptions }: Schedule) => {
           <Stick node={<ScheduleHeader headers={calendarHeaders} />} position="top left">
             <div className="adjacent">
               {calendarHeaders.map((header) => {
+                const calendarEvents = events?.filter((e) => {
+                  return (
+                    header === e.extendedProps?.header &&
+                    e.extendedProps?.section.term === Term.Fall
+                  );
+                });
                 return (
                   <div key={header} className="calendar-width hide-axis">
-                    <Calendar {...calendarOptions} key={header} />
+                    <Calendar {...calendarOptions} key={header} events={calendarEvents} />
                   </div>
                 );
               })}
