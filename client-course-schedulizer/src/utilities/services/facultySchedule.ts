@@ -7,7 +7,7 @@ export const getProfs = (schedule: Schedule): string[] => {
   forEach(schedule.courses, (course) => {
     forEach(course.sections, (section) => {
       forEach(section.instructors, (prof) => {
-        professorsSet.add(prof.lastName);
+        professorsSet.add(prof);
       });
     });
   });

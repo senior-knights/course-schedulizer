@@ -1,15 +1,16 @@
-import * as di from "../interfaces/dataInterfaces";
+import moment from "moment";
+import { Course, Day, Meeting, Section, SemesterLength, Term } from "../interfaces/dataInterfaces";
 
 export interface CaseCallbackParams {
-  course: di.Course;
-  firstMeeting: di.Meeting;
-  section: di.Section;
+  course: Course;
+  firstMeeting: Meeting;
+  section: Section;
 }
 
 // Define regexes for parsing
-const timeReg = RegExp("(?<![1-9])(1[0-9]|2[0-3]|[0-9]):([0-5][0-9])");
-const amReg = RegExp("[Aa][Mm]");
-const pmReg = RegExp("[Pp][Mm]");
+// const timeReg = RegExp("(?<![1-9])(1[0-9]|2[0-3]|[0-9]):([0-5][0-9])");
+// const amReg = RegExp("[Aa][Mm]");
+// const pmReg = RegExp("[Pp][Mm]");
 const fallReg = RegExp("[Ff]");
 const summerReg = RegExp("[Ss][Uu]|[Mm][Aa]");
 const springReg = RegExp("[Ss](?![Uu])");
@@ -92,61 +93,23 @@ export const facultyHoursCallback = (value: string, { course }: CaseCallbackPara
 };
 
 export const durationCallback = (value: string, { firstMeeting }: CaseCallbackParams) => {
-  firstMeeting.duration = numberDefaultZeroCase(value);
+  firstMeeting.duration = durationCase(value);
 };
 
 export const roomCapacityCallback = (value: string, { firstMeeting }: CaseCallbackParams) => {
   firstMeeting.location.roomCapacity = numberDefaultZeroCase(value);
 };
 
+export const sectionStartCallback = (value: string, { section }: CaseCallbackParams) => {
+  section.startSectionDate = value;
+};
+
+export const sectionEndCallback = (value: string, { section }: CaseCallbackParams) => {
+  section.semesterLength = sectionEndCase(value, section.startSectionDate);
+};
+
 export const startTimeCase = (value: string): string => {
-  let ampm = "AM";
-  let hourPart = "8";
-  let numHourPart = 8;
-  let minPart = "00";
-  const regMatch = value.match(timeReg);
-  if (regMatch != null && regMatch.length === 3) {
-    // Get the hour and minute values, store as number and strings
-    [, hourPart, minPart] = regMatch;
-    numHourPart = Number(hourPart);
-
-    // Handle high hour values
-    if (numHourPart > 11) {
-      if (numHourPart > 12) {
-        // If military time, convert to standard
-        numHourPart -= 12;
-        hourPart = String(numHourPart);
-      }
-      // Assume PM when 12:XX or military time
-      ampm = "PM";
-    }
-
-    // If hour is 0, assume military time of 12 AM
-    else if (numHourPart === 0) {
-      hourPart = "12";
-      numHourPart = 12;
-    }
-
-    // Look to see whether AM or PM is specified explicitly
-    if (pmReg.test(value)) {
-      ampm = "PM";
-      if (amReg.test(value)) {
-        // eslint-disable-next-line no-console
-        console.log(`Time of "${value}" is labeled with AM and PM, defaulting to PM`);
-      }
-    } else if (amReg.test(value)) {
-      ampm = "AM";
-    }
-
-    // Piece the time together
-    return `${hourPart}:${minPart} ${ampm}`;
-  }
-  if (value === "") {
-    return "ASYNC";
-  }
-  // eslint-disable-next-line no-console
-  console.log(`Time of "${value}" is unreadable, defaulting to 8:00 AM`);
-  return "8:00 AM";
+  return moment(value, "h:mma").isValid() ? value : "";
 };
 
 export const locationCase = (value: string): string[] => {
@@ -163,105 +126,105 @@ export const locationCase = (value: string): string[] => {
   return [roomParts.slice(0, -1).join(" "), roomParts.slice(-1)[0]];
 };
 
-export const termCase = (value: string): di.Term => {
+export const termCase = (value: string): Term => {
   if (fallReg.test(value)) {
-    return di.Term.Fall;
+    return Term.Fall;
   }
   if (summerReg.test(value)) {
-    return di.Term.Summer;
+    return Term.Summer;
   }
   if (springReg.test(value)) {
-    return di.Term.Spring;
+    return Term.Spring;
   }
   if (interimReg.test(value)) {
-    return di.Term.Interim;
+    return Term.Interim;
   }
   // eslint-disable-next-line no-console
   console.log(`Term of "${value}" is unreadable, defaulting to Fall`);
-  return di.Term.Fall;
+  return Term.Fall;
 };
 
-export const semesterLengthCase = (value: string): di.SemesterLength => {
+export const semesterLengthCase = (value: string): SemesterLength => {
   const upperValue = value.toUpperCase();
   const lowerValue = value.toLowerCase();
   if (lowerValue === "first") {
-    return di.SemesterLength.HalfFirst;
+    return SemesterLength.HalfFirst;
   }
   if (lowerValue === "second") {
-    return di.SemesterLength.HalfSecond;
+    return SemesterLength.HalfSecond;
   }
   if (lowerValue === "full") {
-    return di.SemesterLength.Full;
+    return SemesterLength.Full;
   }
   if (upperValue === "A") {
-    return di.SemesterLength.IntensiveA;
+    return SemesterLength.IntensiveA;
   }
   if (upperValue === "B") {
-    return di.SemesterLength.IntensiveB;
+    return SemesterLength.IntensiveB;
   }
   if (upperValue === "C") {
-    return di.SemesterLength.IntensiveC;
+    return SemesterLength.IntensiveC;
   }
   if (upperValue === "D") {
-    return di.SemesterLength.IntensiveD;
+    return SemesterLength.IntensiveD;
   }
   // eslint-disable-next-line no-console
   console.log(`Half of "${value}" is unreadable, defaulting to Full`);
-  return di.SemesterLength.Full;
+  return SemesterLength.Full;
 };
 
 export const daysCase = (value: string) => {
-  const days: di.Day[] = [];
+  const days: Day[] = [];
   if (sunReg.test(value)) {
-    days.push(di.Day.Sunday);
+    days.push(Day.Sunday);
   }
   if (monReg.test(value)) {
-    days.push(di.Day.Monday);
+    days.push(Day.Monday);
   }
   if (tuesReg.test(value)) {
-    days.push(di.Day.Tuesday);
+    days.push(Day.Tuesday);
   }
   if (wedReg.test(value)) {
-    days.push(di.Day.Wednesday);
+    days.push(Day.Wednesday);
   }
   if (thursReg.test(value)) {
-    days.push(di.Day.Thursday);
+    days.push(Day.Thursday);
   }
   if (friReg.test(value)) {
-    days.push(di.Day.Friday);
+    days.push(Day.Friday);
   }
   if (satReg.test(value)) {
-    days.push(di.Day.Saturday);
+    days.push(Day.Saturday);
   }
   return days;
 };
 
-export const instructorCase = (value: string): di.Instructor[] => {
-  const names = value.split(/[;,\n]/);
-  const instructors: di.Instructor[] = [];
-  names.forEach((name) => {
-    const nameParts = name.trim().split(" ");
-    if (nameParts.length === 1) {
-      // No last name given
-      instructors.push({
-        firstName: nameParts[0],
-        lastName: "",
-      });
-    } else if (nameParts.length === 2) {
-      // First and last given
-      instructors.push({
-        firstName: nameParts[0],
-        lastName: nameParts[1],
-      });
-    } else {
-      // Too many names given, assume first part is first name and rest is last name
-      instructors.push({
-        firstName: nameParts[0],
-        lastName: nameParts.slice(1).join(" "),
-      });
-    }
+export const instructorCase = (value: string): string[] => {
+  const instructors = value.split(/[;,\n]/);
+  return instructors.map((instructor) => {
+    return instructor.trim();
   });
-  return instructors;
+};
+
+export const sectionEndCase = (
+  value: string,
+  startSectionDate: string | undefined,
+): SemesterLength => {
+  const sectionStart = moment(startSectionDate, "l");
+  const sectionEnd = moment(value, "l");
+  const sectionLength = sectionEnd.diff(sectionStart, "days");
+  const startMonth = sectionStart.month();
+  const firstStartMonths = [0, 1, 7, 8]; // Jan, Feb, Aug, Sept
+  if (sectionLength > 80) {
+    return SemesterLength.Full;
+  }
+  if (sectionLength > 35 && sectionLength <= 80) {
+    return firstStartMonths.includes(startMonth)
+      ? SemesterLength.HalfFirst
+      : SemesterLength.HalfSecond;
+  }
+  // TODO: Figure out if intensive is A, B, C, or D
+  return SemesterLength.IntensiveA;
 };
 
 export const prefixCase = (value: string): string[] => {
@@ -270,6 +233,16 @@ export const prefixCase = (value: string): string[] => {
 
 export const numberDefaultZeroCase = (value: string): number => {
   return Number.isInteger(Number(value)) ? Number(value) : 0;
+};
+
+export const durationCase = (value: string): number => {
+  if (Number.isInteger(Number(value))) {
+    return Number(value);
+  }
+  const [startTime, endTime] = value.split(" ").join("").split("-");
+  const startTimeMoment = moment(startTime, "h:mma");
+  const endTimeMoment = moment(endTime, "h:mma");
+  return endTimeMoment.diff(startTimeMoment, "minutes");
 };
 
 export const yearCase = (value: string): number | string => {

@@ -60,11 +60,6 @@ export interface Meeting {
   startTime: string;
 }
 
-export interface Instructor {
-  firstName: string;
-  lastName: string;
-}
-
 export interface Course {
   facultyHours: number;
   name: string;
@@ -80,13 +75,14 @@ export interface Section {
   // Overrides Course value
   facultyHours?: number;
   globalMax: number;
-  instructors: Instructor[];
+  instructors: string[];
   letter: string;
   localMax: number;
   // Multiple Meetings possible if time/room differs on different days
   // Asynchronous classes should have an empty array of meeting times
   meetings: Meeting[];
   semesterLength: SemesterLength;
+  startSectionDate?: string;
   // Overrides Course value
   studentHours?: number;
   term: Term;

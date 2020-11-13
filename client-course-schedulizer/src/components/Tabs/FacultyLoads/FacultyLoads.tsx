@@ -67,13 +67,12 @@ const createTable = (schedule: Schedule): FacultyRow[] => {
   schedule.courses.forEach((course) => {
     course.sections.forEach((section) => {
       section.instructors.forEach((instructor) => {
-        const instructorFullName = `${instructor.firstName} ${instructor.lastName}`;
         const sectionName = `${course.prefixes[0]}-${course.number}-${section.letter}`;
         const newFacultyRow: FacultyRow = {
-          faculty: instructorFullName,
+          faculty: instructor,
         };
         const [prevAddedFacultyRow] = newTableData.filter((data) => {
-          return data.faculty === instructorFullName;
+          return data.faculty === instructor;
         });
         const updateArgs = {
           course,

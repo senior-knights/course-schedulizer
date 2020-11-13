@@ -1,5 +1,5 @@
 import papa from "papaparse";
-import * as di from "../interfaces/dataInterfaces";
+import { Course, Schedule, Section, SemesterLength, Term } from "../interfaces/dataInterfaces";
 import * as cf from "./caseFunctions";
 
 interface ValidFields {
@@ -47,6 +47,8 @@ const registrarSpreadsheetFields: ValidFields = {
   MinimumCredits: cf.studentHoursCallback,
   RoomCapacity: cf.roomCapacityCallback,
   SectionCode: cf.letterCallback,
+  SectionEndDate: cf.sectionEndCallback,
+  SectionStartDate: cf.sectionStartCallback,
   ShortTitle: cf.nameCallback,
   SubjectCode: cf.prefixCallback,
   Term: cf.termCallback,
@@ -58,15 +60,15 @@ const callbacks: ValidFields = {
   ...registrarSpreadsheetFields,
 };
 
-export const csvStringToSchedule = (csvString: string): di.Schedule => {
+export const csvStringToSchedule = (csvString: string): Schedule => {
   const objects: papa.ParseResult<never> = papa.parse(csvString, {
     header: true,
     skipEmptyLines: true,
   });
 
   // Define variables for Schedule creation
-  let section: di.Section;
-  const schedule: di.Schedule = {
+  let section: Section;
+  const schedule: Schedule = {
     courses: [],
   };
 
@@ -92,13 +94,13 @@ export const csvStringToSchedule = (csvString: string): di.Schedule => {
           startTime: "",
         },
       ],
-      semesterLength: di.SemesterLength.Full,
-      term: di.Term.Fall,
+      semesterLength: SemesterLength.Full,
+      term: Term.Fall,
       year: new Date().getFullYear(),
     };
 
     const { meetings } = section;
-    const course: di.Course = {
+    const course: Course = {
       facultyHours: 0,
       name: "",
       number: "",
@@ -124,7 +126,7 @@ export const csvStringToSchedule = (csvString: string): di.Schedule => {
       }
 
       // Check if there is already a course in the schedule with the same prefix and number
-      const existingCourse: di.Course[] = schedule.courses.filter((c) => {
+      const existingCourse: Course[] = schedule.courses.filter((c) => {
         return (
           c.prefixes.some((p) => {
             return course.prefixes.includes(p);
