@@ -125,26 +125,31 @@ export const csvStringToSchedule = (csvString: string): Schedule => {
         section.meetings = [];
       }
 
-      // Check if there is already a course in the schedule with the same prefix and number
-      const existingCourse: Course[] = schedule.courses.filter((c) => {
-        return (
-          c.prefixes.some((p) => {
-            return course.prefixes.includes(p);
-          }) && c.number === course.number
-        );
-      });
-
-      // If there is, add the new section to that course
-      if (existingCourse.length > 0) {
-        const existingCourseIndex = schedule.courses.indexOf(existingCourse[0]);
-        schedule.courses[existingCourseIndex].sections.push(section);
-      }
-      // Otherwise, add the new course to the schedule
-      else {
-        course.sections.push(section);
-        schedule.courses.push(course);
-      }
+      // Insert the Section to the Schedule, either as a new Course or to an existing Course
+      insertSectionCourse(schedule, section, course);
     }
   });
   return schedule;
+};
+
+export const insertSectionCourse = (schedule: Schedule, section: Section, course: Course) => {
+  // Check if there is already a course in the schedule with the same prefix and number
+  const existingCourse: Course[] = schedule.courses.filter((c) => {
+    return (
+      c.prefixes.some((p) => {
+        return course.prefixes.includes(p);
+      }) && c.number === course.number
+    );
+  });
+
+  // If there is, add the new section to that course
+  if (existingCourse.length > 0) {
+    const existingCourseIndex = schedule.courses.indexOf(existingCourse[0]);
+    schedule.courses[existingCourseIndex].sections.push(section);
+  }
+  // Otherwise, add the new course to the schedule
+  else {
+    course.sections.push(section);
+    schedule.courses.push(course);
+  }
 };

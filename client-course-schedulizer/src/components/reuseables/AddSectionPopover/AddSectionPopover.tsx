@@ -8,6 +8,7 @@ import {
   Day,
   Half,
   Intensive,
+  Location,
   Meeting,
   Section,
   SemesterLength,
@@ -20,33 +21,34 @@ import {
   locationCase,
   prefixCase,
 } from "../../../utilities/helpers/caseFunctions";
+import { insertSectionCourse } from "../../../utilities/helpers/readCSV";
 import { AppContext } from "../../../utilities/services/appContext";
 import { GridItemCheckboxGroup } from "../GridItem/GridItemCheckboxGroup";
 import { GridItemRadioGroup } from "../GridItem/GridItemRadioGroup";
 import { GridItemTextField } from "../GridItem/GridItemTextField";
 import "./AddSectionPopover.scss";
 
-// TODO: make all these dependent types. See comments and days
 interface SectionInput {
-  anticipatedSize: string;
+  anticipatedSize: Section["anticipatedSize"];
   comments: Section["comments"];
   days: Meeting["days"];
-  duration: string;
-  facultyHours: string;
-  globalMax: string;
+  duration: Meeting["duration"];
+  facultyHours: Section["facultyHours"];
+  globalMax: Section["globalMax"];
   half: Half;
   instructor: string;
   intensive?: Intensive;
-  localMax: string;
+  localMax: Section["localMax"];
   location: string;
-  name: string;
-  number: string;
+  name: Course["name"];
+  number: Course["number"];
   prefix: string;
-  section: string;
+  roomCapacity: Location["roomCapacity"];
+  section: Section["letter"];
   semesterLength: SemesterLengthOption;
-  startTime: string;
-  studentHours: string;
-  term: Term;
+  startTime: Meeting["startTime"];
+  studentHours: Section["studentHours"];
+  term: Section["term"];
 }
 
 enum Weekday {
@@ -85,7 +87,7 @@ export const AddSectionPopover = () => {
 
   const spacing = 4;
 
-  // remove false values from days array
+  // Remove false values from days array
   const schema = object().shape({
     days: array().transform((d) => {
       return d.filter((day: boolean | string) => {
@@ -118,6 +120,7 @@ export const AddSectionPopover = () => {
           duration: Number(data.duration),
           location: {
             building: location[0],
+            roomCapacity: Number(data.roomCapacity),
             roomNumber: location[1],
           },
           startTime: startTimeCase(data.startTime),
@@ -128,7 +131,6 @@ export const AddSectionPopover = () => {
       year: "2021-2022",
     };
 
-    // TODO: Append section to previously existing course if a course has already been created
     const newCourse: Course = {
       facultyHours: Number(data.facultyHours),
       name: data.name,
@@ -138,7 +140,9 @@ export const AddSectionPopover = () => {
       studentHours: Number(data.studentHours),
     };
 
-    schedule.courses.push(newCourse);
+    // Insert the Section to the Schedule, either as a new Course or to an existing Course
+    insertSectionCourse(schedule, newSection, newCourse);
+
     appDispatch({ payload: { schedule }, type: "setScheduleData" });
     setIsLoading(false);
   };
@@ -161,9 +165,13 @@ export const AddSectionPopover = () => {
       <Grid container spacing={spacing}>
         {/* TODO: Dropdown for instructors with option to add new one */}
         <GridItemTextField label="Instructor" register={register} />
-        {/* TODO: Room capacity? */}
         {/* TODO: Dropdown for rooms with option to add new one */}
         <GridItemTextField label="Location" register={register} />
+        <GridItemTextField
+          label="Room Capacity"
+          register={register}
+          textFieldProps={{ name: "roomCapacity" }}
+        />
         {/* TODO: Allow facultyHours and studentHours to be set separately for a section */}
         <GridItemTextField
           label="Faculty Hours"
