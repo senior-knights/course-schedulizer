@@ -1,27 +1,28 @@
-import { CalendarOptions, EventInput } from "@fullcalendar/react";
+import { CalendarOptions } from "@fullcalendar/react";
 import React, { useContext } from "react";
 import Stick from "react-stick";
 import StickyNode from "react-stickynode";
 import { AppContext } from "../../../utilities/services/appContext";
-import { getHoursArr } from "../../../utilities/services/schedule";
+import { GroupedEvents, getHoursArr } from "../../../utilities/services/schedule";
+
 import { ScheduleToolbar } from "../../Toolbar/ScheduleToolbar";
 import { Calendar } from "../Calendar";
 import "./Schedule.scss";
 
 interface Schedule extends CalendarOptions {
   calendarHeaders: string[];
+  groupedEvents: GroupedEvents;
 }
 
 /* Creates a list of Calendars to create a Schedule
   <Stick> is used to stick the Schedule Header to the Schedule
   to track horizontal scrolling.
 */
-export const Schedule = ({ calendarHeaders, ...calendarOptions }: Schedule) => {
+export const Schedule = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Schedule) => {
   const times = {
     slotMaxTime: calendarOptions.slotMaxTime as string,
     slotMinTime: calendarOptions.slotMinTime as string,
   };
-  const events = calendarOptions?.events as EventInput[];
   const {
     appState: { selectedTerm },
   } = useContext(AppContext);
@@ -34,15 +35,13 @@ export const Schedule = ({ calendarHeaders, ...calendarOptions }: Schedule) => {
           <Stick node={<ScheduleHeader headers={calendarHeaders} />} position="top left">
             <div className="adjacent">
               {calendarHeaders.map((header) => {
-                const calendarEvents = events?.filter((e) => {
-                  return (
-                    header === e.extendedProps?.header &&
-                    e.extendedProps?.section.term === selectedTerm
-                  );
+                const groupEvents = groupedEvents[header];
+                const groupEventsInTerm = groupEvents.filter((e) => {
+                  return e.extendedProps?.section.term === selectedTerm;
                 });
                 return (
                   <div key={header} className="calendar-width hide-axis">
-                    <Calendar {...calendarOptions} key={header} events={calendarEvents} />
+                    <Calendar {...calendarOptions} key={header} events={groupEventsInTerm} />
                   </div>
                 );
               })}

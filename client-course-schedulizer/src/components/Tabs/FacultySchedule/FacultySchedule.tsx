@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import "./FacultySchedule.scss";
 import { Schedule } from "../../reuseables/Schedule";
 import { AppContext } from "../../../utilities/services/appContext";
-import { getFacultyEvents } from "../../../utilities/services/facultySchedule";
+import { getEvents } from "../../../utilities/services/schedule";
 
 /* Creates a list of Calendars to create the Faculty Schedule
  */
@@ -15,7 +15,7 @@ export const FacultySchedule = () => {
     <>
       <Schedule
         calendarHeaders={professors}
-        events={getFacultyEvents(schedule)}
+        groupedEvents={getEvents(schedule, "faculty")}
         slotMaxTime="22:00"
         slotMinTime="6:00"
       />
