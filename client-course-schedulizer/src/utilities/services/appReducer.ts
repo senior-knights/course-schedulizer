@@ -1,15 +1,16 @@
 import { AppAction, AppState } from "../interfaces/appInterfaces";
 import { getProfs } from "./facultySchedule";
+import { getRooms } from "./roomsSchedule";
 
 /*
   Provides a function to perform multiple setState updates
   at once that depend on each other.
 */
-export const reducer = (state: AppState, action: AppAction) => {
+export const reducer = (state: AppState, action: AppAction): AppState => {
+  const { schedule } = action.payload;
   switch (action.type) {
     case "setScheduleData": {
-      const { schedule } = action.payload;
-      return { ...state, professors: getProfs(schedule), schedule };
+      return { ...state, professors: getProfs(schedule), rooms: getRooms(schedule), schedule };
     }
     default:
       return state;

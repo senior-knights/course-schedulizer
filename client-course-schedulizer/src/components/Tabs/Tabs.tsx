@@ -1,12 +1,12 @@
 import { Box, Tabs as MUITabs, Paper, Tab, Typography } from "@material-ui/core";
 import React, { ChangeEvent, PropsWithChildren, useContext, useState } from "react";
 import { FacultySchedule } from "./FacultySchedule";
-import { ScheduleToolbar } from "../Toolbar/ScheduleToolbar";
 import "./Tabs.scss";
 import { AppContext } from "../../utilities/services/appContext";
 import { AddSectionButton } from "../reuseables/AddSectionButton";
 import { AsyncComponent } from "../reuseables/AsyncComponent";
 import { FacultyLoads } from "./FacultyLoads";
+import { RoomsSchedule } from "./RoomsSchedule";
 
 interface TabPanelProps {
   index: number;
@@ -71,7 +71,7 @@ export const Tabs = () => {
                 <FacultySchedule />
               </TabPanel>
               <TabPanel index={1} value={tabValue}>
-                <ScheduleToolbar />
+                <RoomsSchedule />
               </TabPanel>
               <TabPanel index={2} value={tabValue}>
                 <FacultyLoads />

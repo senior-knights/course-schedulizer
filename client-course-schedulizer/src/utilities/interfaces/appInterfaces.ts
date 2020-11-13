@@ -2,15 +2,15 @@ import { Schedule } from "./dataInterfaces";
 
 // structure for the global app state
 export interface AppState {
-  isLoading: boolean;
   professors: string[];
+  rooms: string[];
   schedule: Schedule;
 }
 
 // Defaults for the app state when it launches
 export const initialAppState = {
-  isLoading: false,
   professors: [],
+  rooms: [],
   schedule: { courses: [] },
 };
 
