@@ -1,23 +1,24 @@
-import { Schedule } from "./dataInterfaces";
+import { Schedule, Term } from "./dataInterfaces";
 
 // structure for the global app state
 export interface AppState {
-  isLoading: boolean;
   professors: string[];
   schedule: Schedule;
+  selectedTerm: Term;
 }
 
 // Defaults for the app state when it launches
 export const initialAppState = {
-  isLoading: false,
   professors: [],
   schedule: { courses: [] },
+  selectedTerm: Term.Fall,
 };
 
 // structure of actions that can be sent to app dispatch
 export interface AppAction {
   payload: {
-    schedule: Schedule;
+    schedule?: Schedule;
+    term?: Term;
   };
-  type: "setScheduleData"; // add | to add more actions in the future
+  type: "setScheduleData" | "setSelectedTerm"; // add | to add more actions in the future
 }

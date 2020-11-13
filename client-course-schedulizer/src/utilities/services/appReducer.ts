@@ -1,4 +1,5 @@
 import { AppAction, AppState } from "../interfaces/appInterfaces";
+import { Term } from "../interfaces/dataInterfaces";
 import { getProfs } from "./facultySchedule";
 
 /*
@@ -8,8 +9,14 @@ import { getProfs } from "./facultySchedule";
 export const reducer = (state: AppState, action: AppAction) => {
   switch (action.type) {
     case "setScheduleData": {
-      const { schedule } = action.payload;
+      let { schedule } = action.payload;
+      schedule = schedule || { courses: [] };
       return { ...state, professors: getProfs(schedule), schedule };
+    }
+    case "setSelectedTerm": {
+      let { term } = action.payload;
+      term = term || Term.Fall;
+      return { ...state, selectedTerm: term };
     }
     default:
       return state;

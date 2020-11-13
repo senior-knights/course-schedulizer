@@ -22,8 +22,8 @@ export const Calendar = (props: CalendarOptions) => {
 Calendar.defaultProps = {
   allDaySlot: false,
   dayHeaderFormat: { weekday: "short" },
-  droppable: true,
-  editable: false, // TODO: Change to true if we can leek section meeting times
+  droppable: false,
+  editable: false, // TODO: Change to true if we can lock section meeting times
   headerToolbar: false,
   height: "auto",
   initialDate,

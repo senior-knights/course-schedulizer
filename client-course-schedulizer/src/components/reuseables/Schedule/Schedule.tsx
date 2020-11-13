@@ -1,8 +1,8 @@
 import { CalendarOptions, EventInput } from "@fullcalendar/react";
-import React from "react";
+import React, { useContext } from "react";
 import Stick from "react-stick";
 import StickyNode from "react-stickynode";
-import { Term } from "../../../utilities/interfaces/dataInterfaces";
+import { AppContext } from "../../../utilities/services/appContext";
 import { getHoursArr } from "../../../utilities/services/schedule";
 import { ScheduleToolbar } from "../../Toolbar/ScheduleToolbar";
 import { Calendar } from "../Calendar";
@@ -22,6 +22,9 @@ export const Schedule = ({ calendarHeaders, ...calendarOptions }: Schedule) => {
     slotMinTime: calendarOptions.slotMinTime as string,
   };
   const events = calendarOptions?.events as EventInput[];
+  const {
+    appState: { selectedTerm },
+  } = useContext(AppContext);
   return (
     <>
       <ScheduleToolbar />
@@ -34,7 +37,7 @@ export const Schedule = ({ calendarHeaders, ...calendarOptions }: Schedule) => {
                 const calendarEvents = events?.filter((e) => {
                   return (
                     header === e.extendedProps?.header &&
-                    e.extendedProps?.section.term === Term.Fall
+                    e.extendedProps?.section.term === selectedTerm
                   );
                 });
                 return (

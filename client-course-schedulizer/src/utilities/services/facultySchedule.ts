@@ -29,19 +29,20 @@ export const getFacultyEvents = (schedule: Schedule): EventInput[] => {
           forEach(meeting.days, (day) => {
             const startTimeMoment = moment(meeting.startTime, "h:mma");
             const endTimeMoment = moment(startTimeMoment).add(meeting.duration, "minutes");
-            const dayOfWeekMoment = moment(initialDate)
+            const dayOfWeek = moment(initialDate)
               .add(days.indexOf(day) + 1, "days")
               .format("YYYY-MM-DD");
             const sectionName = `${course.prefixes[0]}-${course.number}-${section.letter}`;
             events.push({
               description: course.name,
-              end: `${dayOfWeekMoment}T${endTimeMoment.format("HH:mm")}`,
+              end: `${dayOfWeek}T${endTimeMoment.format("HH:mm")}`,
               extendedProps: {
                 course,
                 header: prof,
+                meeting,
                 section,
               },
-              start: `${dayOfWeekMoment}T${startTimeMoment.format("HH:mm")}`,
+              start: `${dayOfWeek}T${startTimeMoment.format("HH:mm")}`,
               title: sectionName,
             });
           });
