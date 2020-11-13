@@ -17,6 +17,7 @@ export interface GroupedEvents {
   [key: string]: EventInput[];
 }
 
+// TODO: Add events with no meeting times as all day
 export const getEvents = (schedule: Schedule, groups: "faculty" | "room"): GroupedEvents => {
   const events: GroupedEvents = {};
   const days: Day[] = Object.keys(Day).map((day) => {
