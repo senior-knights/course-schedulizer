@@ -1,5 +1,7 @@
+import { flatten, map, maxBy, minBy } from "lodash";
+import moment from "moment";
 import { AppAction, AppState } from "../interfaces/appInterfaces";
-import { Term } from "../interfaces/dataInterfaces";
+import { Meeting, Section, Term } from "../interfaces/dataInterfaces";
 import { getProfs } from "./facultySchedule";
 
 /*
@@ -11,7 +13,17 @@ export const reducer = (state: AppState, action: AppAction) => {
     case "setScheduleData": {
       let { schedule } = action.payload;
       schedule = schedule || { courses: [] };
-      return { ...state, professors: getProfs(schedule), schedule };
+      const sections: Section[] = flatten(map(schedule.courses, "sections"));
+      const meetings: Meeting[] = flatten(map(sections, "meetings"));
+      const startTimes = map(map(meetings, "startTime"), (time) => {
+        return moment(time, "h:mma");
+      });
+      const endTimes = map(meetings, (meeting) => {
+        return moment(meeting.startTime, "h:mma").add(meeting.duration, "minutes");
+      });
+      const slotMinTime = minBy(startTimes)?.format("HH:mm") || "6:00";
+      const slotMaxTime = maxBy(endTimes)?.format("HH:mm") || "22:00";
+      return { ...state, professors: getProfs(schedule), schedule, slotMaxTime, slotMinTime };
     }
     case "setSelectedTerm": {
       let { term } = action.payload;

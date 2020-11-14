@@ -5,6 +5,8 @@ export interface AppState {
   professors: string[];
   schedule: Schedule;
   selectedTerm: Term;
+  slotMaxTime: string;
+  slotMinTime: string;
 }
 
 // Defaults for the app state when it launches
@@ -12,6 +14,8 @@ export const initialAppState = {
   professors: [],
   schedule: { courses: [] },
   selectedTerm: Term.Fall,
+  slotMaxTime: "22:00",
+  slotMinTime: "6:00",
 };
 
 // structure of actions that can be sent to app dispatch

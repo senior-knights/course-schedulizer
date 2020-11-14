@@ -20,14 +20,20 @@ interface Schedule extends CalendarOptions {
   to track horizontal scrolling.
 */
 export const Schedule = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Schedule) => {
-  // TODO: Limit times to the min and max time of events by default
-  const times = {
-    slotMaxTime: calendarOptions.slotMaxTime as string,
-    slotMinTime: calendarOptions.slotMinTime as string,
-  };
   const {
-    appState: { selectedTerm },
+    appState: { selectedTerm, slotMaxTime, slotMinTime },
   } = useContext(AppContext);
+
+  const times = {
+    slotMaxTime,
+    slotMinTime,
+  };
+
+  calendarOptions = {
+    ...calendarOptions,
+    slotMaxTime,
+    slotMinTime,
+  };
 
   // Filter out events from other terms
   forOwn(groupedEvents, (_, key) => {
