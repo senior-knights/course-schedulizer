@@ -1,8 +1,7 @@
-import { flatten, map, maxBy, minBy } from "lodash";
-import moment from "moment";
 import { AppAction, AppState } from "../interfaces/appInterfaces";
-import { Meeting, Section, Term } from "../interfaces/dataInterfaces";
+import { Term } from "../interfaces/dataInterfaces";
 import { getProfs } from "./facultySchedule";
+import { getMinAndMaxTimes } from "./schedule";
 
 /*
   Provides a function to perform multiple setState updates
@@ -13,17 +12,14 @@ export const reducer = (state: AppState, action: AppAction) => {
     case "setScheduleData": {
       let { schedule } = action.payload;
       schedule = schedule || { courses: [] };
-      const sections: Section[] = flatten(map(schedule.courses, "sections"));
-      const meetings: Meeting[] = flatten(map(sections, "meetings"));
-      const startTimes = map(meetings, (meeting) => {
-        return moment(meeting.startTime, "h:mma");
-      });
-      const endTimes = map(meetings, (meeting) => {
-        return moment(meeting.startTime, "h:mma").add(meeting.duration, "minutes");
-      });
-      const slotMinTime = minBy(startTimes)?.format("HH:mm") || "6:00";
-      const slotMaxTime = maxBy(endTimes)?.format("HH:mm") || "22:00";
-      return { ...state, professors: getProfs(schedule), schedule, slotMaxTime, slotMinTime };
+      const times = getMinAndMaxTimes(schedule);
+      return {
+        ...state,
+        professors: getProfs(schedule),
+        schedule,
+        slotMaxTime: times.maxTime,
+        slotMinTime: times.minTime,
+      };
     }
     case "setSelectedTerm": {
       let { term } = action.payload;
