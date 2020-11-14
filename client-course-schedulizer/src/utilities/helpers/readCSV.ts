@@ -32,7 +32,6 @@ const pruimSpreadsheetFields: ValidFields = {
   year: cf.yearCase,
 };
 
-// TODO: parse duration and semester length
 const registrarSpreadsheetFields: ValidFields = {
   AcademicYear: cf.yearCase,
   BuildingAndRoom: cf.locationCase,
