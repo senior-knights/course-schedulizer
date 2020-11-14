@@ -15,8 +15,8 @@ export const reducer = (state: AppState, action: AppAction) => {
       schedule = schedule || { courses: [] };
       const sections: Section[] = flatten(map(schedule.courses, "sections"));
       const meetings: Meeting[] = flatten(map(sections, "meetings"));
-      const startTimes = map(map(meetings, "startTime"), (time) => {
-        return moment(time, "h:mma");
+      const startTimes = map(meetings, (meeting) => {
+        return moment(meeting.startTime, "h:mma");
       });
       const endTimes = map(meetings, (meeting) => {
         return moment(meeting.startTime, "h:mma").add(meeting.duration, "minutes");

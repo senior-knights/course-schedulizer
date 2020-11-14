@@ -31,8 +31,7 @@ export const Schedule = ({ calendarHeaders, groupedEvents, ...calendarOptions }:
 
   calendarOptions = {
     ...calendarOptions,
-    slotMaxTime,
-    slotMinTime,
+    ...times,
   };
 
   // Filter out events from other terms
@@ -42,7 +41,7 @@ export const Schedule = ({ calendarHeaders, groupedEvents, ...calendarOptions }:
     });
   });
 
-  // Filter out headers (and calendars) with no events
+  // Filter out headers with no events
   const calendarHeadersNoEmptyInTerm = filter(calendarHeaders, (header) => {
     const groupEvents = groupedEvents[header];
     return groupEvents?.length > 0;
