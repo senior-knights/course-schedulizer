@@ -38,7 +38,7 @@ export const Schedule = ({ calendarHeaders, groupedEvents, ...calendarOptions }:
               {/* TODO: Remove calendars with no events */}
               {calendarHeaders.map((header) => {
                 const groupEvents = groupedEvents[header];
-                const groupEventsInTerm = groupEvents.filter((e) => {
+                const groupEventsInTerm = groupEvents?.filter((e) => {
                   return e.extendedProps?.section.term === selectedTerm;
                 });
                 return (
