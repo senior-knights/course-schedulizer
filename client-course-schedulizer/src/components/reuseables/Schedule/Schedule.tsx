@@ -1,4 +1,5 @@
 import { CalendarOptions } from "@fullcalendar/react";
+import { filter, forOwn } from "lodash";
 import React, { useContext } from "react";
 import Stick from "react-stick";
 import StickyNode from "react-stickynode";
@@ -27,23 +28,35 @@ export const Schedule = ({ calendarHeaders, groupedEvents, ...calendarOptions }:
   const {
     appState: { selectedTerm },
   } = useContext(AppContext);
+
+  // Filter out events from other terms
+  forOwn(groupedEvents, (_, key) => {
+    groupedEvents[key] = filter(groupedEvents[key], (e) => {
+      return e.extendedProps?.section.term === selectedTerm;
+    });
+  });
+
+  // Filter out headers (and calendars) with no events
+  const calendarHeadersNoEmptyInTerm = filter(calendarHeaders, (header) => {
+    const groupEvents = groupedEvents[header];
+    return groupEvents?.length > 0;
+  });
+
   return (
     <>
       <ScheduleToolbar />
       <div className="schedule-time-axis-wrapper">
         <LeftTimeAxis {...times} />
         <div className="schedule-wrapper">
-          <Stick node={<ScheduleHeader headers={calendarHeaders} />} position="top left">
+          <Stick
+            node={<ScheduleHeader headers={calendarHeadersNoEmptyInTerm} />}
+            position="top left"
+          >
             <div className="adjacent">
-              {/* TODO: Remove calendars with no events */}
-              {calendarHeaders.map((header) => {
-                const groupEvents = groupedEvents[header];
-                const groupEventsInTerm = groupEvents?.filter((e) => {
-                  return e.extendedProps?.section.term === selectedTerm;
-                });
+              {calendarHeadersNoEmptyInTerm.map((header) => {
                 return (
                   <div key={header} className="calendar-width hide-axis">
-                    <Calendar {...calendarOptions} key={header} events={groupEventsInTerm} />
+                    <Calendar {...calendarOptions} key={header} events={groupedEvents[header]} />
                   </div>
                 );
               })}
