@@ -136,7 +136,8 @@ export const AddSectionPopover = () => {
       name: data.name,
       number: data.number,
       prefixes: prefixCase(data.prefix),
-      sections: [newSection],
+      // The newSection will be added later in insertSectionCourse()
+      sections: [],
       studentHours: Number(data.studentHours),
     };
 
@@ -151,7 +152,7 @@ export const AddSectionPopover = () => {
   };
 
   return (
-    <form className="popover-container" onSubmit={handleSubmit(onSubmit)}>
+    <form className="popover-container">
       <Typography className="title" variant="h4">
         Add/Update Section
       </Typography>
@@ -265,7 +266,7 @@ export const AddSectionPopover = () => {
       </Grid>
       <Grid container>
         <Grid item xs>
-          <Button color="primary" type="submit" variant="contained">
+          <Button color="primary" onClick={handleSubmit(onSubmit)} variant="contained">
             Submit
           </Button>
         </Grid>
