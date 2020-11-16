@@ -1,4 +1,4 @@
-import { Box, Tabs as MUITabs, Paper, Tab, Typography } from "@material-ui/core";
+import { Box, Tabs as MUITabs, Tab, Typography } from "@material-ui/core";
 import React, { ChangeEvent, PropsWithChildren, useContext, useState } from "react";
 import { FacultySchedule } from "./FacultySchedule";
 import "./Tabs.scss";
@@ -45,44 +45,42 @@ export const Tabs = () => {
   };
 
   return (
-    <Paper>
-      <AsyncComponent isLoading={isLoading}>
-        <>
-          {schedule.courses.length === 0 ? (
-            <>
-              <h2>No schedule selected. Please import a CSV to start Editing.</h2>
-              <AddSectionButton isIcon={false} />
-            </>
-          ) : (
-            <>
-              <MUITabs
-                centered
-                indicatorColor="primary"
-                onChange={handleTabChange}
-                textColor="primary"
-                value={tabValue}
-              >
-                <Tab label="Faculty Schedule" />
-                <Tab label="Room Schedule" />
-                <Tab label="Teaching Loads" />
-                <Tab label="Conflicts" />
-              </MUITabs>
-              <TabPanel index={0} value={tabValue}>
-                <FacultySchedule />
-              </TabPanel>
-              <TabPanel index={1} value={tabValue}>
-                <RoomsSchedule />
-              </TabPanel>
-              <TabPanel index={2} value={tabValue}>
-                <FacultyLoads />
-              </TabPanel>
-              <TabPanel index={3} value={tabValue}>
-                Item Four
-              </TabPanel>
-            </>
-          )}
-        </>
-      </AsyncComponent>
-    </Paper>
+    <AsyncComponent isLoading={isLoading}>
+      <>
+        {schedule.courses.length === 0 ? (
+          <>
+            <h2>No schedule selected. Please import a CSV to start Editing.</h2>
+            <AddSectionButton isIcon={false} />
+          </>
+        ) : (
+          <>
+            <MUITabs
+              centered
+              indicatorColor="primary"
+              onChange={handleTabChange}
+              textColor="primary"
+              value={tabValue}
+            >
+              <Tab label="Faculty Schedule" />
+              <Tab label="Room Schedule" />
+              <Tab label="Teaching Loads" />
+              <Tab label="Conflicts" />
+            </MUITabs>
+            <TabPanel index={0} value={tabValue}>
+              <FacultySchedule />
+            </TabPanel>
+            <TabPanel index={1} value={tabValue}>
+              <RoomsSchedule />
+            </TabPanel>
+            <TabPanel index={2} value={tabValue}>
+              <FacultyLoads />
+            </TabPanel>
+            <TabPanel index={3} value={tabValue}>
+              Item Four
+            </TabPanel>
+          </>
+        )}
+      </>
+    </AsyncComponent>
   );
 };
