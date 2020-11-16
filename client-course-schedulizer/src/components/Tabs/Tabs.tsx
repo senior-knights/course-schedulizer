@@ -51,6 +51,7 @@ export const Tabs = () => {
         {schedule.courses.length === 0 ? (
           <>
             <h2>No schedule selected. Please import a CSV or add a section to start Editing.</h2>
+            {/* TODO: Fix this. This importButton styling is very weird, and it padding is odd. */}
             <ImportButton className="import-button MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary" />
             <AddSectionButton isIcon={false} />
           </>
