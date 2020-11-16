@@ -1,10 +1,14 @@
 import { CalendarOptions } from "@fullcalendar/react";
-import { filter, forOwn } from "lodash";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Stick from "react-stick";
 import StickyNode from "react-stickynode";
 import { AppContext } from "../../../utilities/services/appContext";
-import { GroupedEvents, getHoursArr } from "../../../utilities/services/schedule";
+import {
+  GroupedEvents,
+  getHoursArr,
+  filterEventsByTerm,
+  filterHeadersWithNoEvents,
+} from "../../../utilities/services/schedule";
 
 import { ScheduleToolbar } from "../../Toolbar/ScheduleToolbar";
 import { Calendar } from "../Calendar";
@@ -40,22 +44,12 @@ export const Schedule = ({ calendarHeaders, groupedEvents, ...calendarOptions }:
 
   // Filter out events from other terms
   useEffect(() => {
-    const tempGroupedEvents: GroupedEvents = {};
-    forOwn(groupedEvents, (_, key) => {
-      tempGroupedEvents[key] = filter(groupedEvents[key], (e) => {
-        return e.extendedProps?.section.term === selectedTerm;
-      });
-    });
-    setFilteredEvents(tempGroupedEvents);
+    setFilteredEvents(filterEventsByTerm(groupedEvents, selectedTerm));
   }, [groupedEvents, selectedTerm]);
 
   // Filter out headers with no events
   useEffect(() => {
-    const tempHeaders = filter(calendarHeaders, (header) => {
-      const groupEvents = filteredEvents[header];
-      return groupEvents?.length > 0;
-    });
-    setFilteredHeaders(tempHeaders);
+    setFilteredHeaders(filterHeadersWithNoEvents(filteredEvents, calendarHeaders));
   }, [filteredEvents, calendarHeaders]);
 
   return (

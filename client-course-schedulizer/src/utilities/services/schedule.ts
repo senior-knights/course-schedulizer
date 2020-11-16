@@ -1,10 +1,10 @@
 import { EventInput } from "@fullcalendar/react";
-import { flatten, forEach, map, maxBy, minBy } from "lodash";
+import { filter, flatten, forEach, forOwn, map, maxBy, minBy } from "lodash";
 import range from "lodash/range";
 import moment from "moment";
 import { initialDate } from "../../components/reuseables/Calendar";
 import { enumArray } from "../helpers/utils";
-import { Day, Meeting, Schedule, Section } from "../interfaces/dataInterfaces";
+import { Day, Meeting, Schedule, Section, Term } from "../interfaces/dataInterfaces";
 
 // Returns a list of hours to display on the Schedule
 // TODO: add better types for timing, maybe: https://stackoverflow.com/questions/51445767/how-to-define-a-regex-matched-string-type-in-typescript
@@ -74,4 +74,21 @@ export const getMinAndMaxTimes = (schedule: Schedule) => {
     maxTime,
     minTime,
   };
+};
+
+export const filterEventsByTerm = (groupedEvents: GroupedEvents, term: Term) => {
+  const tempGroupedEvents: GroupedEvents = {};
+  forOwn(groupedEvents, (_, key) => {
+    tempGroupedEvents[key] = filter(groupedEvents[key], (e) => {
+      return e.extendedProps?.section.term === term;
+    });
+  });
+  return tempGroupedEvents;
+};
+
+export const filterHeadersWithNoEvents = (filteredEvents: GroupedEvents, headers: string[]) => {
+  return filter(headers, (header) => {
+    const groupEvents = filteredEvents[header];
+    return groupEvents?.length > 0;
+  });
 };
