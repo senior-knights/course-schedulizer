@@ -1,5 +1,5 @@
 import { CalendarOptions } from "@fullcalendar/react";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useMemo } from "react";
 import Stick from "react-stick";
 import StickyNode from "react-stickynode";
 import { AppContext } from "../../../utilities/services/appContext";
@@ -39,17 +39,14 @@ export const Schedule = ({ calendarHeaders, groupedEvents, ...calendarOptions }:
     ...times,
   };
 
-  const [filteredEvents, setFilteredEvents] = useState(groupedEvents);
-  const [filteredHeaders, setFilteredHeaders] = useState(calendarHeaders);
-
   // Filter out events from other terms
-  useEffect(() => {
-    setFilteredEvents(filterEventsByTerm(groupedEvents, selectedTerm));
+  const filteredEvents = useMemo(() => {
+    return filterEventsByTerm(groupedEvents, selectedTerm);
   }, [groupedEvents, selectedTerm]);
 
   // Filter out headers with no events
-  useEffect(() => {
-    setFilteredHeaders(filterHeadersWithNoEvents(filteredEvents, calendarHeaders));
+  const calenderHeadersNoEmptyInTerm = useMemo(() => {
+    return filterHeadersWithNoEvents(filteredEvents, calendarHeaders);
   }, [filteredEvents, calendarHeaders]);
 
   return (
@@ -58,9 +55,12 @@ export const Schedule = ({ calendarHeaders, groupedEvents, ...calendarOptions }:
       <div className="schedule-time-axis-wrapper">
         <LeftTimeAxis {...times} />
         <div className="schedule-wrapper">
-          <Stick node={<ScheduleHeader headers={filteredHeaders} />} position="top left">
+          <Stick
+            node={<ScheduleHeader headers={calenderHeadersNoEmptyInTerm} />}
+            position="top left"
+          >
             <div className="adjacent">
-              {filteredHeaders.map((header) => {
+              {calenderHeadersNoEmptyInTerm.map((header) => {
                 return (
                   <div key={header} className="calendar-width hide-axis">
                     <Calendar {...calendarOptions} key={header} events={filteredEvents[header]} />
