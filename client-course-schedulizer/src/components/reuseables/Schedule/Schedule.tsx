@@ -29,6 +29,7 @@ export const Schedule = ({ calendarHeaders, groupedEvents, ...calendarOptions }:
     slotMinTime,
   };
 
+  // Add context times to the existing calendarOptions
   calendarOptions = {
     ...calendarOptions,
     ...times,

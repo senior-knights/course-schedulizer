@@ -3,6 +3,7 @@ import { flatten, forEach, map, maxBy, minBy } from "lodash";
 import range from "lodash/range";
 import moment from "moment";
 import { initialDate } from "../../components/reuseables/Calendar";
+import { enumArray } from "../helpers/utils";
 import { Day, Meeting, Schedule, Section } from "../interfaces/dataInterfaces";
 
 // Returns a list of hours to display on the Schedule
@@ -20,22 +21,20 @@ export interface GroupedEvents {
 // TODO: Add events with no meeting times as all day
 export const getEvents = (schedule: Schedule, groups: "faculty" | "room"): GroupedEvents => {
   const events: GroupedEvents = {};
-  const days: Day[] = Object.keys(Day).map((day) => {
-    return Day[day as keyof typeof Day];
-  });
+  const days: Day[] = enumArray(Day);
   forEach(schedule.courses, (course) => {
     forEach(course.sections, (section) => {
+      const sectionName = `${course.prefixes[0]}-${course.number}-${section.letter}`;
       forEach(section.instructors, (prof) => {
         forEach(section.meetings, (meeting) => {
+          const room = `${meeting.location.building} ${meeting.location.roomNumber}`;
+          const group = groups === "faculty" ? prof : room;
+          const startTimeMoment = moment(meeting.startTime, "h:mma");
+          const endTimeMoment = moment(startTimeMoment).add(meeting.duration, "minutes");
           forEach(meeting.days, (day) => {
-            const startTimeMoment = moment(meeting.startTime, "h:mma");
-            const endTimeMoment = moment(startTimeMoment).add(meeting.duration, "minutes");
             const dayOfWeek = moment(initialDate)
               .add(days.indexOf(day) + 1, "days")
               .format("YYYY-MM-DD");
-            const sectionName = `${course.prefixes[0]}-${course.number}-${section.letter}`;
-            const room = `${meeting.location.building} ${meeting.location.roomNumber}`;
-            const group = groups === "faculty" ? prof : room;
             const newEvent: EventInput = {
               description: course.name,
               end: `${dayOfWeek}T${endTimeMoment.format("HH:mm")}`,
@@ -67,10 +66,10 @@ export const getMinAndMaxTimes = (schedule: Schedule) => {
     return moment(meeting.startTime, "h:mma");
   });
   const endTimes = map(meetings, (meeting) => {
-    return moment(meeting.startTime, "h:mma").add(meeting.duration, "minutes");
+    return moment(meeting.startTime, "h:mma").add(meeting.duration, "minutes").format("HH:mm");
   });
   const minTime = minBy(startTimes)?.format("HH:mm") || "6:00";
-  const maxTime = maxBy(endTimes)?.format("HH:mm") || "22:00";
+  const maxTime = maxBy(endTimes) || "22:00";
   return {
     maxTime,
     minTime,
