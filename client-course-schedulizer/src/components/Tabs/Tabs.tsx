@@ -7,6 +7,7 @@ import { AddSectionButton } from "../reuseables/AddSectionButton";
 import { AsyncComponent } from "../reuseables/AsyncComponent";
 import { FacultyLoads } from "./FacultyLoads";
 import { RoomsSchedule } from "./RoomsSchedule";
+import { ImportButton } from "../Header/ImportButton";
 
 interface TabPanelProps {
   index: number;
@@ -49,7 +50,8 @@ export const Tabs = () => {
       <>
         {schedule.courses.length === 0 ? (
           <>
-            <h2>No schedule selected. Please import a CSV to start Editing.</h2>
+            <h2>No schedule selected. Please import a CSV or add a section to start Editing.</h2>
+            <ImportButton className="import-button MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary" />
             <AddSectionButton isIcon={false} />
           </>
         ) : (
