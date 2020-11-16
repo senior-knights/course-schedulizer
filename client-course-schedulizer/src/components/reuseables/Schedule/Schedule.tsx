@@ -1,37 +1,69 @@
 import { CalendarOptions } from "@fullcalendar/react";
-import React from "react";
+import React, { useContext, useMemo } from "react";
 import Stick from "react-stick";
 import StickyNode from "react-stickynode";
-import { getHoursArr } from "../../../utilities/services/schedule";
+import { AppContext } from "../../../utilities/services/appContext";
+import {
+  GroupedEvents,
+  getHoursArr,
+  filterEventsByTerm,
+  filterHeadersWithNoEvents,
+} from "../../../utilities/services/schedule";
+
 import { ScheduleToolbar } from "../../Toolbar/ScheduleToolbar";
 import { Calendar } from "../Calendar";
 import "./Schedule.scss";
 
 interface Schedule extends CalendarOptions {
   calendarHeaders: string[];
+  groupedEvents: GroupedEvents;
 }
 
 /* Creates a list of Calendars to create a Schedule
   <Stick> is used to stick the Schedule Header to the Schedule
   to track horizontal scrolling.
 */
-export const Schedule = ({ calendarHeaders, ...calendarOptions }: Schedule) => {
+export const Schedule = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Schedule) => {
+  const {
+    appState: { selectedTerm, slotMaxTime, slotMinTime },
+  } = useContext(AppContext);
+
   const times = {
-    slotMaxTime: calendarOptions.slotMaxTime as string,
-    slotMinTime: calendarOptions.slotMinTime as string,
+    slotMaxTime,
+    slotMinTime,
   };
+
+  // Add context times to the existing calendarOptions
+  calendarOptions = {
+    ...calendarOptions,
+    ...times,
+  };
+
+  // Filter out events from other terms
+  const filteredEvents = useMemo(() => {
+    return filterEventsByTerm(groupedEvents, selectedTerm);
+  }, [groupedEvents, selectedTerm]);
+
+  // Filter out headers with no events
+  const calenderHeadersNoEmptyInTerm = useMemo(() => {
+    return filterHeadersWithNoEvents(filteredEvents, calendarHeaders);
+  }, [filteredEvents, calendarHeaders]);
+
   return (
     <>
       <ScheduleToolbar />
       <div className="schedule-time-axis-wrapper">
         <LeftTimeAxis {...times} />
         <div className="schedule-wrapper">
-          <Stick node={<ScheduleHeader headers={calendarHeaders} />} position="top left">
+          <Stick
+            node={<ScheduleHeader headers={calenderHeadersNoEmptyInTerm} />}
+            position="top left"
+          >
             <div className="adjacent">
-              {calendarHeaders.map((header) => {
+              {calenderHeadersNoEmptyInTerm.map((header) => {
                 return (
                   <div key={header} className="calendar-width hide-axis">
-                    <Calendar {...calendarOptions} key={header} />
+                    <Calendar {...calendarOptions} key={header} events={filteredEvents[header]} />
                   </div>
                 );
               })}
