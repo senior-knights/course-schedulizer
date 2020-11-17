@@ -3,7 +3,6 @@ import React from "react";
 import { useImportFile } from "../../../utilities/hooks/useImportFile";
 
 interface ImportButton {
-  // eslint-disable-next-line react/require-default-props
   className?: string;
 }
 
@@ -26,4 +25,8 @@ export const ImportButton = ({ className }: ImportButton) => {
       </InputLabel>
     </div>
   );
+};
+
+ImportButton.defaultProps = {
+  className: "",
 };

@@ -4,6 +4,7 @@ import React, { useContext } from "react";
 import { enumArray } from "../../../utilities/helpers/utils";
 import { Term } from "../../../utilities/interfaces/dataInterfaces";
 import { AppContext } from "../../../utilities/services/appContext";
+import { ScheduleContext } from "../../reuseables/Schedule";
 import "./SemesterSelector.scss";
 
 export const SemesterSelector = () => {
@@ -11,13 +12,13 @@ export const SemesterSelector = () => {
   const {
     appState: { selectedTerm },
     appDispatch,
-    setIsCSVLoading,
   } = useContext(AppContext);
+  const { setIsScheduleLoading } = useContext(ScheduleContext);
 
   const handleOnClick = (index: number) => {
     // TODO: add another loading state for when the Schedule is updating.
     return async () => {
-      setIsCSVLoading(true);
+      setIsScheduleLoading(true);
       const newTerm = terms[index];
       // This action takes so long it affectively makes this
       //  synchronous function asynchronous.
@@ -25,7 +26,7 @@ export const SemesterSelector = () => {
         payload: { term: newTerm },
         type: "setSelectedTerm",
       });
-      setIsCSVLoading(false);
+      setIsScheduleLoading(false);
     };
   };
 

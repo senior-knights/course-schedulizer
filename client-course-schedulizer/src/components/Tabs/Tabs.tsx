@@ -47,7 +47,8 @@ export const Tabs = () => {
 
   return (
     <AsyncComponent isLoading={isCSVLoading}>
-      <>
+      <AsyncComponent.Loading>Parsing CSV...</AsyncComponent.Loading>
+      <AsyncComponent.Loaded>
         {schedule.courses.length === 0 ? (
           <>
             <h2>No schedule selected. Please import a CSV or add a section to start Editing.</h2>
@@ -83,7 +84,7 @@ export const Tabs = () => {
             </TabPanel>
           </>
         )}
-      </>
+      </AsyncComponent.Loaded>
     </AsyncComponent>
   );
 };
