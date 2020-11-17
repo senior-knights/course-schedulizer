@@ -2,7 +2,6 @@ import { IconButton, Typography } from "@material-ui/core";
 import { ChevronLeft, ChevronRight } from "@material-ui/icons";
 import React, { useContext } from "react";
 import { enumArray } from "../../../utilities/helpers/utils";
-import { useThunk } from "../../../utilities/hooks/useThunk";
 import { Term } from "../../../utilities/interfaces/dataInterfaces";
 import { AppContext } from "../../../utilities/services/appContext";
 import "./SemesterSelector.scss";
@@ -14,21 +13,19 @@ export const SemesterSelector = () => {
     appDispatch,
     setIsLoading,
   } = useContext(AppContext);
-  const thunkDispatch = useThunk(appDispatch);
 
   const handleOnClick = (index: number) => {
     // TODO: add another loading state for when the Schedule is updating.
-    return () => {
+    return async () => {
       setIsLoading(true);
       const newTerm = terms[index];
       // This action takes so long it affectively makes this
       //  synchronous function asynchronous.
-      thunkDispatch({
+      await appDispatch({
         payload: { term: newTerm },
         type: "setSelectedTerm",
-      }).then(() => {
-        return setIsLoading(false);
       });
+      setIsLoading(false);
     };
   };
 
