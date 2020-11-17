@@ -2,6 +2,7 @@ import { IconButton, Typography } from "@material-ui/core";
 import { ChevronLeft, ChevronRight } from "@material-ui/icons";
 import React, { useContext } from "react";
 import { enumArray } from "../../../utilities/helpers/utils";
+import { useThunk } from "../../../utilities/hooks/useThunk";
 import { Term } from "../../../utilities/interfaces/dataInterfaces";
 import { AppContext } from "../../../utilities/services/appContext";
 import "./SemesterSelector.scss";
@@ -13,28 +14,19 @@ export const SemesterSelector = () => {
     appDispatch,
     setIsLoading,
   } = useContext(AppContext);
+  const thunkDispatch = useThunk(appDispatch);
 
-  const thing = (index: number) => {
-    return () => {
-      return new Promise((resolve) => {
-        const newTerm = terms[index];
-        appDispatch({
-          payload: { term: newTerm },
-          type: "setSelectedTerm",
-        });
-
-        resolve();
-      });
-    };
-  };
-
-  // https://stackoverflow.com/questions/47565389/call-function-after-dispatch-from-redux-has-finished
   const handleOnClick = (index: number) => {
-    console.log("here");
     // TODO: add another loading state for when the Schedule is updating.
     return () => {
       setIsLoading(true);
-      thing(index)().then(() => {
+      const newTerm = terms[index];
+      // This action takes so long it affectively makes this
+      //  synchronous function asynchronous.
+      thunkDispatch({
+        payload: { term: newTerm },
+        type: "setSelectedTerm",
+      }).then(() => {
         return setIsLoading(false);
       });
     };
