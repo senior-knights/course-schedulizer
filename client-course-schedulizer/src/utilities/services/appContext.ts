@@ -1,8 +1,6 @@
 import { createContext, Dispatch, SetStateAction } from "react";
+import { voidFn } from "../helpers/utils";
 import { AppAction, AppState, initialAppState } from "../interfaces/appInterfaces";
-
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const voidFn = () => {};
 
 interface AppContext {
   appDispatch: Dispatch<AppAction> | (() => void);

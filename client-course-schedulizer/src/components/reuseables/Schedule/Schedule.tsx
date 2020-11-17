@@ -1,12 +1,5 @@
 import { CalendarOptions } from "@fullcalendar/react";
-import React, {
-  useContext,
-  useMemo,
-  useState,
-  createContext,
-  Dispatch,
-  SetStateAction,
-} from "react";
+import React, { useContext, useMemo, useState } from "react";
 import Stick from "react-stick";
 import StickyNode from "react-stickynode";
 import { AppContext } from "../../../utilities/services/appContext";
@@ -16,38 +9,40 @@ import {
   filterEventsByTerm,
   filterHeadersWithNoEvents,
 } from "../../../utilities/services/schedule";
-
+import { ScheduleContext } from "../../../utilities/services/scheduleContext";
 import { ScheduleToolbar } from "../../Toolbar/ScheduleToolbar";
 import { AsyncComponent } from "../AsyncComponent";
 import { Calendar } from "../Calendar";
 import "./Schedule.scss";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const voidFn = () => {};
-
-interface ScheduleContext {
-  isScheduleLoading: boolean;
-  setIsScheduleLoading:
-    | Dispatch<SetStateAction<ScheduleContext["isScheduleLoading"]>>
-    | (() => void);
-}
-
-export const ScheduleContext = createContext<ScheduleContext>({
-  isScheduleLoading: false,
-  setIsScheduleLoading: voidFn,
-});
-
-interface Schedule extends CalendarOptions {
+interface ScheduleBase extends CalendarOptions {
   calendarHeaders: string[];
   groupedEvents: GroupedEvents;
 }
+
+/* Provides a Schedule component to handle loading and async events and interfaces
+  with a BaseSchedule.
+*/
+export const Schedule = (props: ScheduleBase) => {
+  const [isScheduleLoading, setIsScheduleLoading] = useState(false);
+
+  return (
+    <ScheduleContext.Provider value={{ isScheduleLoading, setIsScheduleLoading }}>
+      <AsyncComponent isLoading={isScheduleLoading}>
+        <AsyncComponent.Loading>Updating Schedule...</AsyncComponent.Loading>
+        <AsyncComponent.Loaded>
+          <ScheduleBase {...props} />
+        </AsyncComponent.Loaded>
+      </AsyncComponent>
+    </ScheduleContext.Provider>
+  );
+};
 
 /* Creates a list of Calendars to create a Schedule
   <Stick> is used to stick the Schedule Header to the Schedule
   to track horizontal scrolling.
 */
-export const Schedule = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Schedule) => {
-  const [isScheduleLoading, setIsScheduleLoading] = useState(false);
+const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: ScheduleBase) => {
   const {
     appState: { selectedTerm, slotMaxTime, slotMinTime },
   } = useContext(AppContext);
@@ -74,37 +69,28 @@ export const Schedule = ({ calendarHeaders, groupedEvents, ...calendarOptions }:
   }, [filteredEvents, calendarHeaders]);
 
   return (
-    <ScheduleContext.Provider value={{ isScheduleLoading, setIsScheduleLoading }}>
-      <AsyncComponent isLoading={isScheduleLoading}>
-        <AsyncComponent.Loading>Updating Schedule...</AsyncComponent.Loading>
-        <AsyncComponent.Loaded>
-          <ScheduleToolbar />
-          <div className="schedule-time-axis-wrapper">
-            <LeftTimeAxis {...times} />
-            <div className="schedule-wrapper">
-              <Stick
-                node={<ScheduleHeader headers={calenderHeadersNoEmptyInTerm} />}
-                position="top left"
-              >
-                <div className="adjacent">
-                  {calenderHeadersNoEmptyInTerm.map((header) => {
-                    return (
-                      <div key={header} className="calendar-width hide-axis">
-                        <Calendar
-                          {...calendarOptions}
-                          key={header}
-                          events={filteredEvents[header]}
-                        />
-                      </div>
-                    );
-                  })}
-                </div>
-              </Stick>
+    <>
+      <ScheduleToolbar />
+      <div className="schedule-time-axis-wrapper">
+        <LeftTimeAxis {...times} />
+        <div className="schedule-wrapper">
+          <Stick
+            node={<ScheduleHeader headers={calenderHeadersNoEmptyInTerm} />}
+            position="top left"
+          >
+            <div className="adjacent">
+              {calenderHeadersNoEmptyInTerm.map((header) => {
+                return (
+                  <div key={header} className="calendar-width hide-axis">
+                    <Calendar {...calendarOptions} key={header} events={filteredEvents[header]} />
+                  </div>
+                );
+              })}
             </div>
-          </div>
-        </AsyncComponent.Loaded>
-      </AsyncComponent>
-    </ScheduleContext.Provider>
+          </Stick>
+        </div>
+      </div>
+    </>
   );
 };
 
@@ -130,7 +116,7 @@ const LeftTimeAxis = ({ slotMinTime: min, slotMaxTime: max }: LeftTimeAxis) => {
 };
 
 interface ScheduleHeader {
-  headers: Schedule["calendarHeaders"];
+  headers: ScheduleBase["calendarHeaders"];
 }
 
 const tenVH = window.innerHeight / 10;

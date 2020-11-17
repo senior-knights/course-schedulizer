@@ -4,7 +4,7 @@ import React, { useContext } from "react";
 import { enumArray } from "../../../utilities/helpers/utils";
 import { Term } from "../../../utilities/interfaces/dataInterfaces";
 import { AppContext } from "../../../utilities/services/appContext";
-import { ScheduleContext } from "../../reuseables/Schedule";
+import { ScheduleContext } from "../../../utilities/services/scheduleContext";
 import "./SemesterSelector.scss";
 
 export const SemesterSelector = () => {
