@@ -16,7 +16,6 @@ export const SemesterSelector = () => {
   const { setIsScheduleLoading } = useContext(ScheduleContext);
 
   const handleOnClick = (index: number) => {
-    // TODO: add another loading state for when the Schedule is updating.
     return async () => {
       setIsScheduleLoading(true);
       const newTerm = terms[index];

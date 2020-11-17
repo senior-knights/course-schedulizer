@@ -30,13 +30,13 @@ export const AsyncComponent: FC<AsyncComponent> & AsyncSubComponents = ({
   return <>{isLoading ? <>{loadingNode}</> : <>{loadedNode}</>}</>;
 };
 
-const Loading: FC<{}> = ({ children }: PropsWithChildren<{}>) => {
+const Loading: FC<{}> = ({ children }: PropsWithChildren<{}>): JSX.Element => {
   return <>{children}</>;
 };
 Loading.displayName = "Loading";
 AsyncComponent.Loading = Loading;
 
-const Loaded: FC<{}> = ({ children }: PropsWithChildren<{}>) => {
+const Loaded: FC<{}> = ({ children }: PropsWithChildren<{}>): JSX.Element => {
   return <>{children}</>;
 };
 Loaded.displayName = "Loaded";
