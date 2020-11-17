@@ -110,6 +110,7 @@ export const AddSectionPopover = () => {
     const newSection: Section = {
       anticipatedSize: Number(data.anticipatedSize),
       comments: data.comments,
+      facultyHours: Number(data.facultyHours),
       globalMax: Number(data.globalMax),
       instructors: instructorCase(data.instructor),
       letter: data.section,
@@ -127,6 +128,7 @@ export const AddSectionPopover = () => {
         },
       ],
       semesterLength: semesterType,
+      studentHours: Number(data.studentHours),
       term: data.term,
       year: "2021-2022",
     };
@@ -173,7 +175,6 @@ export const AddSectionPopover = () => {
           register={register}
           textFieldProps={{ name: "roomCapacity" }}
         />
-        {/* TODO: Allow facultyHours and studentHours to be set separately for a section */}
         <GridItemTextField
           label="Faculty Hours"
           register={register}
