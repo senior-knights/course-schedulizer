@@ -11,14 +11,31 @@ export const SemesterSelector = () => {
   const {
     appState: { selectedTerm },
     appDispatch,
+    setIsLoading,
   } = useContext(AppContext);
 
-  const handleOnClick = (index: number) => {
+  const thing = (index: number) => {
     return () => {
-      const newTerm = terms[index];
-      appDispatch({
-        payload: { term: newTerm },
-        type: "setSelectedTerm",
+      return new Promise((resolve) => {
+        const newTerm = terms[index];
+        appDispatch({
+          payload: { term: newTerm },
+          type: "setSelectedTerm",
+        });
+
+        resolve();
+      });
+    };
+  };
+
+  // https://stackoverflow.com/questions/47565389/call-function-after-dispatch-from-redux-has-finished
+  const handleOnClick = (index: number) => {
+    console.log("here");
+    // TODO: add another loading state for when the Schedule is updating.
+    return () => {
+      setIsLoading(true);
+      thing(index)().then(() => {
+        return setIsLoading(false);
       });
     };
   };
