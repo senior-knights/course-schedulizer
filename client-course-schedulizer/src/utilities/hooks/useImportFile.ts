@@ -8,14 +8,14 @@ export const useImportFile = () => {
   const {
     appState: { schedule },
     appDispatch,
-    setIsLoading,
+    setIsCSVLoading,
   } = useContext(AppContext);
 
   // TODO: this only runs when input changes, but if the same file
   // is uploaded, this will not run.
   // https://stackoverflow.com/questions/5201317/read-the-contents-of-a-file-object
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setIsLoading(true);
+    setIsCSVLoading(true);
     const file: Blob | null = e.target.files && e.target.files[0];
     const read = new FileReader();
     file && read.readAsBinaryString(file);
@@ -27,7 +27,7 @@ export const useImportFile = () => {
       if (!isEqual(schedule, scheduleJSON)) {
         appDispatch({ payload: { schedule: scheduleJSON }, type: "setScheduleData" });
       }
-      setIsLoading(false);
+      setIsCSVLoading(false);
     };
   };
 

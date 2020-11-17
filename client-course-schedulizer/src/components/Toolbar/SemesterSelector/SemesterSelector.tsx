@@ -11,13 +11,13 @@ export const SemesterSelector = () => {
   const {
     appState: { selectedTerm },
     appDispatch,
-    setIsLoading,
+    setIsCSVLoading,
   } = useContext(AppContext);
 
   const handleOnClick = (index: number) => {
     // TODO: add another loading state for when the Schedule is updating.
     return async () => {
-      setIsLoading(true);
+      setIsCSVLoading(true);
       const newTerm = terms[index];
       // This action takes so long it affectively makes this
       //  synchronous function asynchronous.
@@ -25,7 +25,7 @@ export const SemesterSelector = () => {
         payload: { term: newTerm },
         type: "setSelectedTerm",
       });
-      setIsLoading(false);
+      setIsCSVLoading(false);
     };
   };
 

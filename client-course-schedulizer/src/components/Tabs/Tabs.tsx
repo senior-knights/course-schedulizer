@@ -38,7 +38,7 @@ export const Tabs = () => {
   const [tabValue, setTabValue] = useState(0);
   const {
     appState: { schedule },
-    isLoading,
+    isCSVLoading,
   } = useContext(AppContext);
 
   const handleTabChange = (event: ChangeEvent<{}>, newValue: number) => {
@@ -46,7 +46,7 @@ export const Tabs = () => {
   };
 
   return (
-    <AsyncComponent isLoading={isLoading}>
+    <AsyncComponent isLoading={isCSVLoading}>
       <>
         {schedule.courses.length === 0 ? (
           <>
