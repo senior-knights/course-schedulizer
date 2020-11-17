@@ -1,5 +1,5 @@
 import papa from "papaparse";
-import * as di from "../interfaces/dataInterfaces";
+import { Course, Schedule, Section, SemesterLength, Term } from "../interfaces/dataInterfaces";
 import * as cf from "./caseFunctions";
 
 interface ValidFields {
@@ -7,51 +7,51 @@ interface ValidFields {
 }
 
 const pruimSpreadsheetFields: ValidFields = {
-  anticipatedSize: cf.anticipatedSizeCase,
-  comments: cf.commentsCase,
-  days: cf.daysCase,
-  duration: cf.durationCase,
-  facultyHours: cf.facultyHoursCase,
-  globalMax: cf.globalMaxCase,
-  half: cf.semesterLengthCase,
-  instructor: cf.instructorCase,
-  instructors: cf.instructorCase,
-  localMax: cf.localMaxCase,
-  location: cf.locationCase,
-  name: cf.nameCase,
-  number: cf.numberCase,
-  prefix: cf.prefixCase,
-  prefixes: cf.prefixCase,
-  roomCapacity: cf.roomCapacityCase,
-  section: cf.letterCase,
-  semesterLength: cf.semesterLengthCase,
-  startTime: cf.startTimeCase,
-  startTimeStr: cf.startTimeCase,
-  studentHours: cf.studentHoursCase,
-  term: cf.termCase,
-  year: cf.yearCase,
+  anticipatedSize: cf.anticipatedSizeCallback,
+  comments: cf.commentsCallback,
+  days: cf.daysCallback,
+  duration: cf.durationCallback,
+  facultyHours: cf.facultyHoursCallback,
+  globalMax: cf.globalMaxCallback,
+  half: cf.semesterLengthCallback,
+  instructor: cf.instructorCallback,
+  instructors: cf.instructorCallback,
+  localMax: cf.localMaxCallback,
+  location: cf.locationCallback,
+  name: cf.nameCallback,
+  number: cf.numberCallback,
+  prefix: cf.prefixCallback,
+  prefixes: cf.prefixCallback,
+  roomCapacity: cf.roomCapacityCallback,
+  section: cf.letterCallback,
+  semesterLength: cf.semesterLengthCallback,
+  startTime: cf.startTimeCallback,
+  startTimeStr: cf.startTimeCallback,
+  studentHours: cf.studentHoursCallback,
+  term: cf.termCallback,
+  year: cf.yearCallback,
 };
 
 const registrarSpreadsheetFields: ValidFields = {
-  AcademicYear: cf.yearCase,
-  BuildingAndRoom: cf.locationCase,
-  CourseNum: cf.numberCase,
-  Faculty: cf.instructorCase,
-  FacultyLoad: cf.facultyHoursCase,
-  GlobalMax: cf.globalMaxCase,
-  LocalMax: cf.localMaxCase,
-  MeetingDays: cf.daysCase,
-  MeetingStart: cf.startTimeCase,
-  MeetingTime: cf.durationCase,
-  MinimumCredits: cf.studentHoursCase,
-  RoomCapacity: cf.roomCapacityCase,
-  SectionCode: cf.letterCase,
-  SectionEndDate: cf.sectionEndCase,
-  SectionStartDate: cf.sectionStartCase,
-  ShortTitle: cf.nameCase,
-  SubjectCode: cf.prefixCase,
-  Term: cf.termCase,
-  Used: cf.anticipatedSizeCase,
+  AcademicYear: cf.yearCallback,
+  BuildingAndRoom: cf.locationCallback,
+  CourseNum: cf.numberCallback,
+  Faculty: cf.instructorCallback,
+  FacultyLoad: cf.facultyHoursCallback,
+  GlobalMax: cf.globalMaxCallback,
+  LocalMax: cf.localMaxCallback,
+  MeetingDays: cf.daysCallback,
+  MeetingStart: cf.startTimeCallback,
+  MeetingTime: cf.durationCallback,
+  MinimumCredits: cf.studentHoursCallback,
+  RoomCapacity: cf.roomCapacityCallback,
+  SectionCode: cf.letterCallback,
+  SectionEndDate: cf.sectionEndCallback,
+  SectionStartDate: cf.sectionStartCallback,
+  ShortTitle: cf.nameCallback,
+  SubjectCode: cf.prefixCallback,
+  Term: cf.termCallback,
+  Used: cf.anticipatedSizeCallback,
 };
 
 const callbacks: ValidFields = {
@@ -59,15 +59,15 @@ const callbacks: ValidFields = {
   ...registrarSpreadsheetFields,
 };
 
-export const csvStringToSchedule = (csvString: string): di.Schedule => {
+export const csvStringToSchedule = (csvString: string): Schedule => {
   const objects: papa.ParseResult<never> = papa.parse(csvString, {
     header: true,
     skipEmptyLines: true,
   });
 
   // Define variables for Schedule creation
-  let section: di.Section;
-  const schedule: di.Schedule = {
+  let section: Section;
+  const schedule: Schedule = {
     courses: [],
   };
 
@@ -93,13 +93,13 @@ export const csvStringToSchedule = (csvString: string): di.Schedule => {
           startTime: "",
         },
       ],
-      semesterLength: di.SemesterLength.Full,
-      term: di.Term.Fall,
+      semesterLength: SemesterLength.Full,
+      term: Term.Fall,
       year: new Date().getFullYear(),
     };
 
     const { meetings } = section;
-    const course: di.Course = {
+    const course: Course = {
       facultyHours: 0,
       name: "",
       number: "",
@@ -124,26 +124,31 @@ export const csvStringToSchedule = (csvString: string): di.Schedule => {
         section.meetings = [];
       }
 
-      // Check if there is already a course in the schedule with the same prefix and number
-      const existingCourse: di.Course[] = schedule.courses.filter((c) => {
-        return (
-          c.prefixes.some((p) => {
-            return course.prefixes.includes(p);
-          }) && c.number === course.number
-        );
-      });
-
-      // If there is, add the new section to that course
-      if (existingCourse.length > 0) {
-        const existingCourseIndex = schedule.courses.indexOf(existingCourse[0]);
-        schedule.courses[existingCourseIndex].sections.push(section);
-      }
-      // Otherwise, add the new course to the schedule
-      else {
-        course.sections.push(section);
-        schedule.courses.push(course);
-      }
+      // Insert the Section to the Schedule, either as a new Course or to an existing Course
+      insertSectionCourse(schedule, section, course);
     }
   });
   return schedule;
+};
+
+export const insertSectionCourse = (schedule: Schedule, section: Section, course: Course) => {
+  // Check if there is already a course in the schedule with the same prefix and number
+  const existingCourse: Course[] = schedule.courses.filter((c) => {
+    return (
+      c.prefixes.some((p) => {
+        return course.prefixes.includes(p);
+      }) && c.number === course.number
+    );
+  });
+
+  // If there is, add the new section to that course
+  if (existingCourse.length > 0) {
+    const existingCourseIndex = schedule.courses.indexOf(existingCourse[0]);
+    schedule.courses[existingCourseIndex].sections.push(section);
+  }
+  // Otherwise, add the new course to the schedule
+  else {
+    course.sections.push(section);
+    schedule.courses.push(course);
+  }
 };

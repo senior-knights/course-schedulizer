@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Grid, Typography } from "@material-ui/core";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { array, object } from "yup";
 import {
@@ -8,38 +8,47 @@ import {
   Day,
   Half,
   Intensive,
+  Location,
   Meeting,
   Section,
   SemesterLength,
   SemesterLengthOption,
   Term,
 } from "../../../utilities/interfaces/dataInterfaces";
+import {
+  startTimeCase,
+  instructorCase,
+  locationCase,
+  prefixCase,
+} from "../../../utilities/helpers/caseFunctions";
+import { insertSectionCourse } from "../../../utilities/helpers/readCSV";
+import { AppContext } from "../../../utilities/services/appContext";
 import { GridItemCheckboxGroup } from "../GridItem/GridItemCheckboxGroup";
 import { GridItemRadioGroup } from "../GridItem/GridItemRadioGroup";
 import { GridItemTextField } from "../GridItem/GridItemTextField";
 import "./AddSectionPopover.scss";
 
-// TODO: make all these dependent types. See comments and days
 interface SectionInput {
-  anticipatedSize: string;
+  anticipatedSize: Section["anticipatedSize"];
   comments: Section["comments"];
   days: Meeting["days"];
-  duration: string;
-  facultyHours: string;
-  globalMax: string;
+  duration: Meeting["duration"];
+  facultyHours: Section["facultyHours"];
+  globalMax: Section["globalMax"];
   half: Half;
   instructor: string;
   intensive?: Intensive;
-  localMax: string;
+  localMax: Section["localMax"];
   location: string;
-  name: string;
-  number: string;
+  name: Course["name"];
+  number: Course["number"];
   prefix: string;
-  section: string;
+  roomCapacity: Location["roomCapacity"];
+  section: Section["letter"];
   semesterLength: SemesterLengthOption;
-  startTime: string;
-  studentHours: string;
-  term: Term;
+  startTime: Meeting["startTime"];
+  studentHours: Section["studentHours"];
+  term: Section["term"];
 }
 
 enum Weekday {
@@ -70,9 +79,15 @@ const convertToSemesterLength = (sl: Half | Intensive | SemesterLengthOption): S
 };
 
 export const AddSectionPopover = () => {
+  const {
+    appState: { schedule },
+    appDispatch,
+    setIsLoading,
+  } = useContext(AppContext);
+
   const spacing = 4;
 
-  // remove false values from days array
+  // Remove false values from days array
   const schema = object().shape({
     days: array().transform((d) => {
       return d.filter((day: boolean | string) => {
@@ -87,15 +102,17 @@ export const AddSectionPopover = () => {
   const [semesterLength, setSemesterLength] = useState("full");
 
   const onSubmit = (data: SectionInput) => {
-    const location = data.location.split(" ");
+    setIsLoading(true);
+    const location = locationCase(data.location);
     const semesterType = convertToSemesterLength(
       data.intensive || data.half || data.semesterLength,
     );
     const newSection: Section = {
       anticipatedSize: Number(data.anticipatedSize),
       comments: data.comments,
+      facultyHours: Number(data.facultyHours),
       globalMax: Number(data.globalMax),
-      instructors: data.instructor.split(/[;,\n]/),
+      instructors: instructorCase(data.instructor),
       letter: data.section,
       localMax: Number(data.localMax),
       meetings: [
@@ -104,39 +121,44 @@ export const AddSectionPopover = () => {
           duration: Number(data.duration),
           location: {
             building: location[0],
+            roomCapacity: Number(data.roomCapacity),
             roomNumber: location[1],
           },
-          startTime: data.startTime,
+          startTime: startTimeCase(data.startTime),
         },
       ],
       semesterLength: semesterType,
+      studentHours: Number(data.studentHours),
       term: data.term,
       year: "2021-2022",
     };
 
-    // TODO: Append section to previously existing course if a course has already been created
     const newCourse: Course = {
       facultyHours: Number(data.facultyHours),
       name: data.name,
       number: data.number,
-      prefixes: [data.prefix],
-      sections: [newSection],
+      prefixes: prefixCase(data.prefix),
+      // The newSection will be added later in insertSectionCourse()
+      sections: [],
       studentHours: Number(data.studentHours),
     };
-    // eslint-disable-next-line no-console
-    return console.log(newCourse);
+
+    // Insert the Section to the Schedule, either as a new Course or to an existing Course
+    insertSectionCourse(schedule, newSection, newCourse);
+
+    appDispatch({ payload: { schedule }, type: "setScheduleData" });
+    setIsLoading(false);
   };
   const onSemesterLengthChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSemesterLength(e.target.value);
   };
 
   return (
-    <form className="popover-container" onSubmit={handleSubmit(onSubmit)}>
+    <form className="popover-container">
       <Typography className="title" variant="h4">
         Add/Update Section
       </Typography>
       <Grid container spacing={spacing}>
-        {/* TODO: Allow for multiple prefixes */}
         {/* TODO: Dropdown for courses already in system */}
         <GridItemTextField label="Prefix" register={register} />
         <GridItemTextField label="Number" register={register} />
@@ -144,13 +166,15 @@ export const AddSectionPopover = () => {
         <GridItemTextField label="Name" register={register} />
       </Grid>
       <Grid container spacing={spacing}>
-        {/* TODO: Allow for multiple instructors */}
         {/* TODO: Dropdown for instructors with option to add new one */}
         <GridItemTextField label="Instructor" register={register} />
-        {/* TODO: Room capacity? */}
         {/* TODO: Dropdown for rooms with option to add new one */}
         <GridItemTextField label="Location" register={register} />
-        {/* TODO: Allow facultyHours and studentHours to be set separately for a section */}
+        <GridItemTextField
+          label="Room Capacity"
+          register={register}
+          textFieldProps={{ name: "roomCapacity" }}
+        />
         <GridItemTextField
           label="Faculty Hours"
           register={register}
@@ -166,7 +190,7 @@ export const AddSectionPopover = () => {
         <GridItemTextField
           label="Anticipated Size"
           register={register}
-          textFieldProps={{ multiline: true, name: "anticipatedSize", rows: 2 }}
+          textFieldProps={{ name: "anticipatedSize" }}
         />
         <GridItemTextField
           label="Global Max"
@@ -243,7 +267,7 @@ export const AddSectionPopover = () => {
       </Grid>
       <Grid container>
         <Grid item xs>
-          <Button color="primary" type="submit" variant="contained">
+          <Button color="primary" onClick={handleSubmit(onSubmit)} variant="contained">
             Submit
           </Button>
         </Grid>
