@@ -3,7 +3,7 @@ import { Course, Day, Meeting, Section, SemesterLength, Term } from "../interfac
 
 export interface CaseCallbackParams {
   course: Course;
-  firstMeeting: Meeting;
+  meetings: Meeting[];
   section: Section;
 }
 
@@ -24,12 +24,40 @@ const thursReg = RegExp("[Tt][Hh]|[Rr]");
 const friReg = RegExp("[Ff]");
 const satReg = RegExp("[Ss](?![Uu])");
 
-export const startTimeCallback = (value: string, { firstMeeting }: CaseCallbackParams) => {
-  firstMeeting.startTime = startTimeCase(value);
+export const startTimeCallback = (value: string, { meetings }: CaseCallbackParams) => {
+  const startTimes = value.split("\n");
+  let i = 0;
+  startTimes.forEach((startTime) => {
+    if (meetings.length <= i) {
+      // If there aren't enough meetings, create a new one
+      meetings.push({
+        days: [],
+        duration: 0,
+        location: { building: "", roomCapacity: 0, roomNumber: "" },
+        startTime: "",
+      });
+    }
+    meetings[i].startTime = startTimeCase(startTime);
+    i += 1;
+  });
 };
 
-export const locationCallback = (value: string, { firstMeeting }: CaseCallbackParams) => {
-  [firstMeeting.location.building, firstMeeting.location.roomNumber] = locationCase(value);
+export const locationCallback = (value: string, { meetings }: CaseCallbackParams) => {
+  const locations = value.split("\n");
+  let i = 0;
+  locations.forEach((location) => {
+    if (meetings.length <= i) {
+      // If there aren't enough meetings, create a new one
+      meetings.push({
+        days: [],
+        duration: 0,
+        location: { building: "", roomCapacity: 0, roomNumber: "" },
+        startTime: "",
+      });
+    }
+    [meetings[i].location.building, meetings[i].location.roomNumber] = locationCase(location);
+    i += 1;
+  });
 };
 
 export const termCallback = (value: string, { section }: CaseCallbackParams) => {
@@ -40,8 +68,22 @@ export const semesterLengthCallback = (value: string, { section }: CaseCallbackP
   section.semesterLength = semesterLengthCase(value);
 };
 
-export const daysCallback = (value: string, { firstMeeting }: CaseCallbackParams) => {
-  firstMeeting.days = daysCase(value);
+export const daysCallback = (value: string, { meetings }: CaseCallbackParams) => {
+  const daysStrings = value.split("\n");
+  let i = 0;
+  daysStrings.forEach((days) => {
+    if (meetings.length <= i) {
+      // If there aren't enough meetings, create a new one
+      meetings.push({
+        days: [],
+        duration: 0,
+        location: { building: "", roomCapacity: 0, roomNumber: "" },
+        startTime: "",
+      });
+    }
+    meetings[i].days = daysCase(days);
+    i += 1;
+  });
 };
 
 export const instructorCallback = (value: string, { section }: CaseCallbackParams) => {
@@ -92,12 +134,40 @@ export const facultyHoursCallback = (value: string, { course }: CaseCallbackPara
   course.facultyHours = numberDefaultZeroCase(value);
 };
 
-export const durationCallback = (value: string, { firstMeeting }: CaseCallbackParams) => {
-  firstMeeting.duration = durationCase(value);
+export const durationCallback = (value: string, { meetings }: CaseCallbackParams) => {
+  const durations = value.split("\n");
+  let i = 0;
+  durations.forEach((duration) => {
+    if (meetings.length <= i) {
+      // If there aren't enough meetings, create a new one
+      meetings.push({
+        days: [],
+        duration: 0,
+        location: { building: "", roomCapacity: 0, roomNumber: "" },
+        startTime: "",
+      });
+    }
+    meetings[i].duration = durationCase(duration);
+    i += 1;
+  });
 };
 
-export const roomCapacityCallback = (value: string, { firstMeeting }: CaseCallbackParams) => {
-  firstMeeting.location.roomCapacity = numberDefaultZeroCase(value);
+export const roomCapacityCallback = (value: string, { meetings }: CaseCallbackParams) => {
+  const capacities = value.split("\n");
+  let i = 0;
+  capacities.forEach((capacity) => {
+    if (meetings.length <= i) {
+      // If there aren't enough meetings, create a new one
+      meetings.push({
+        days: [],
+        duration: 0,
+        location: { building: "", roomCapacity: 0, roomNumber: "" },
+        startTime: "",
+      });
+    }
+    meetings[i].location.roomCapacity = numberDefaultZeroCase(capacity);
+    i += 1;
+  });
 };
 
 export const sectionStartCallback = (value: string, { section }: CaseCallbackParams) => {
