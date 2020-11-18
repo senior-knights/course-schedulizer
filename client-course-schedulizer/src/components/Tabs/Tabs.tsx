@@ -14,28 +14,10 @@ interface TabPanelProps {
   value: number;
 }
 
-const TabPanel = (props: PropsWithChildren<TabPanelProps>) => {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      aria-labelledby={`simple-tab-${index}`}
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      role="tabpanel"
-      {...other}
-    >
-      {value === index && (
-        <Box p={3}>
-          <Typography component="div">{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-};
-
+/* A navigator between the different features of the app */
 export const Tabs = () => {
-  const [tabValue, setTabValue] = useState(0);
+  const DEFAULT_TAB = 0;
+  const [tabValue, setTabValue] = useState(DEFAULT_TAB);
   const {
     appState: { schedule },
     isCSVLoading,
@@ -45,18 +27,13 @@ export const Tabs = () => {
     setTabValue(newValue);
   };
 
+  const scheduleHasCourses = schedule.courses.length > 0;
+
   return (
     <AsyncComponent isLoading={isCSVLoading}>
       <AsyncComponent.Loading>Parsing CSV...</AsyncComponent.Loading>
       <AsyncComponent.Loaded>
-        {schedule.courses.length === 0 ? (
-          <>
-            <h2>No schedule selected. Please import a CSV or add a section to start Editing.</h2>
-            {/* TODO: Fix this. This importButton styling is very weird, and it padding is odd. */}
-            <ImportButton className="import-button MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary" />
-            <AddSectionButton isIcon={false} />
-          </>
-        ) : (
+        {scheduleHasCourses ? (
           <>
             <MUITabs
               centered
@@ -83,8 +60,47 @@ export const Tabs = () => {
               Item Four
             </TabPanel>
           </>
+        ) : (
+          <NoCoursesHeader />
         )}
       </AsyncComponent.Loaded>
     </AsyncComponent>
+  );
+};
+
+/* Display information when schedule has no courses. */
+const NoCoursesHeader = () => {
+  return (
+    <>
+      <h2>No schedule data.</h2>
+      <p>
+        Please import a CSV of an existing schedule or start building the schedule from scratch by
+        adding your first section.
+      </p>
+      {/* TODO: Fix this. This importButton styling is very weird, and it padding is odd. */}
+      <ImportButton className="import-button MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary" />
+      <AddSectionButton isIcon={false} />
+    </>
+  );
+};
+
+/* TabPanel displays the content of a selected tab */
+const TabPanel = (props: PropsWithChildren<TabPanelProps>) => {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      aria-labelledby={`simple-tab-${index}`}
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      role="tabpanel"
+      {...other}
+    >
+      {value === index && (
+        <Box p={3}>
+          <Typography component="div">{children}</Typography>
+        </Box>
+      )}
+    </div>
   );
 };
