@@ -37,7 +37,7 @@ type Alternatives = {
 };
 
 /*
-Returns an iterable for a type of of a runtypes union.
+Returns an iterable from a "runtypes" union.
 Ref: https://github.com/microsoft/TypeScript/issues/13542#issuecomment-282762530
 */
 const getUnionTypeIterable = <T extends Alternatives>(type: T): string[] => {
