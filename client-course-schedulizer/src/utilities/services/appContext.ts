@@ -1,14 +1,12 @@
 import { createContext, Dispatch, SetStateAction } from "react";
+import { voidFn } from "../helpers/utils";
 import { AppAction, AppState, initialAppState } from "../interfaces/appInterfaces";
-
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const voidFn = () => {};
 
 interface AppContext {
   appDispatch: Dispatch<AppAction> | (() => void);
   appState: AppState;
-  isLoading: boolean;
-  setIsLoading: Dispatch<SetStateAction<AppContext["isLoading"]>> | (() => void);
+  isCSVLoading: boolean;
+  setIsCSVLoading: Dispatch<SetStateAction<AppContext["isCSVLoading"]>> | (() => void);
 }
 
 /* Used for containing the global state of the app
@@ -18,6 +16,6 @@ interface AppContext {
 export const AppContext = createContext<AppContext>({
   appDispatch: voidFn,
   appState: initialAppState,
-  isLoading: false,
-  setIsLoading: voidFn,
+  isCSVLoading: false,
+  setIsCSVLoading: voidFn,
 });

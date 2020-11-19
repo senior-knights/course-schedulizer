@@ -3,6 +3,7 @@ import { Schedule, Term } from "./dataInterfaces";
 // structure for the global app state
 export interface AppState {
   professors: string[];
+  rooms: string[];
   schedule: Schedule;
   selectedTerm: Term;
   slotMaxTime: string;
@@ -12,6 +13,7 @@ export interface AppState {
 // Defaults for the app state when it launches
 export const initialAppState = {
   professors: [],
+  rooms: [],
   schedule: { courses: [] },
   selectedTerm: Term.Fall,
   slotMaxTime: "22:00",
