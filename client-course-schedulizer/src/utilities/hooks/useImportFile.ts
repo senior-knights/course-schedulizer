@@ -20,12 +20,12 @@ export const useImportFile = () => {
     const read = new FileReader();
     file && read.readAsBinaryString(file);
 
-    read.onloadend = () => {
+    read.onloadend = async () => {
       const scheduleJSON = readCSV.csvStringToSchedule(String(read.result));
       // TODO: store in local storage incase prof navigates away while editing.
       // currently a redundant check
       if (!isEqual(schedule, scheduleJSON)) {
-        appDispatch({ payload: { schedule: scheduleJSON }, type: "setScheduleData" });
+        await appDispatch({ payload: { schedule: scheduleJSON }, type: "setScheduleData" });
       }
       setIsCSVLoading(false);
     };
