@@ -16,7 +16,7 @@ export const scheduleToCSVString = (schedule: di.Schedule): string => {
         durationStr += `${meeting.duration}\n`;
         locationStr += meeting.location.roomNumber
           ? `${meeting.location.building} ${meeting.location.roomNumber}\n`
-          : "meeting.location.building\n";
+          : `${meeting.location.building}\n`;
         roomCapacityStr += `${meeting.location.roomCapacity}\n`;
         daysStr += `${meeting.days.join("")}\n`;
       });
@@ -31,9 +31,9 @@ export const scheduleToCSVString = (schedule: di.Schedule): string => {
         section.letter
       },${section.studentHours ?? course.studentHours},${
         section.facultyHours ?? course.facultyHours
-      },${startTimeStr},${durationStr},${locationStr},${roomCapacityStr},${section.year},${
+      },"${startTimeStr}","${durationStr}","${locationStr}","${roomCapacityStr}",${section.year},${
         section.term
-      },${section.semesterLength},${daysStr},${section.globalMax},${section.localMax},${
+      },${section.semesterLength},"${daysStr}",${section.globalMax},${section.localMax},${
         section.anticipatedSize
       },${section.instructors.join(";")},${section.comments},`;
     });
