@@ -122,7 +122,6 @@ export const csvStringToSchedule = (csvString: string): Schedule => {
       insertSectionCourse(schedule, section, course);
     }
   });
-  console.log(schedule);
   return schedule;
 };
 
