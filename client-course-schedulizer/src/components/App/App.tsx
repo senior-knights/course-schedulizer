@@ -7,12 +7,12 @@ import { reducer } from "../../utilities/services/appReducer";
 import { initialAppState } from "../../utilities/interfaces/appInterfaces";
 
 export const App = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isCSVLoading, setIsCSVLoading] = useState(false);
   const [appState, appDispatch] = useReducer(reducer, initialAppState);
 
   return (
     <div className="App">
-      <AppContext.Provider value={{ appDispatch, appState, isLoading, setIsLoading }}>
+      <AppContext.Provider value={{ appDispatch, appState, isCSVLoading, setIsCSVLoading }}>
         <Header />
         <Tabs />
       </AppContext.Provider>

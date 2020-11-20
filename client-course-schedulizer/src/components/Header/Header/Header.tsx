@@ -22,7 +22,6 @@ export const Header = () => {
               horizontal: "right",
               vertical: "top",
             }}
-            elevation={0}
             getContentAnchorEl={null}
             transformOrigin={{
               horizontal: "left",

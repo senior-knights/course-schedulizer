@@ -1,5 +1,5 @@
 import { CalendarOptions } from "@fullcalendar/react";
-import React, { useContext, useMemo } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import Stick from "react-stick";
 import StickyNode from "react-stickynode";
 import { AppContext } from "../../../utilities/services/appContext";
@@ -9,21 +9,40 @@ import {
   filterEventsByTerm,
   filterHeadersWithNoEvents,
 } from "../../../utilities/services/schedule";
-
+import { ScheduleContext } from "../../../utilities/services/scheduleContext";
 import { ScheduleToolbar } from "../../Toolbar/ScheduleToolbar";
+import { AsyncComponent } from "../AsyncComponent";
 import { Calendar } from "../Calendar";
 import "./Schedule.scss";
 
-interface Schedule extends CalendarOptions {
+interface ScheduleBase extends CalendarOptions {
   calendarHeaders: string[];
   groupedEvents: GroupedEvents;
 }
+
+/* Provides a Schedule component to handle loading and async events and interfaces
+  with a BaseSchedule.
+*/
+export const Schedule = (props: ScheduleBase) => {
+  const [isScheduleLoading, setIsScheduleLoading] = useState(false);
+
+  return (
+    <ScheduleContext.Provider value={{ isScheduleLoading, setIsScheduleLoading }}>
+      <AsyncComponent isLoading={isScheduleLoading}>
+        <AsyncComponent.Loading>Updating Schedule...</AsyncComponent.Loading>
+        <AsyncComponent.Loaded>
+          <ScheduleBase {...props} />
+        </AsyncComponent.Loaded>
+      </AsyncComponent>
+    </ScheduleContext.Provider>
+  );
+};
 
 /* Creates a list of Calendars to create a Schedule
   <Stick> is used to stick the Schedule Header to the Schedule
   to track horizontal scrolling.
 */
-export const Schedule = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Schedule) => {
+const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: ScheduleBase) => {
   const {
     appState: { selectedTerm, slotMaxTime, slotMinTime },
   } = useContext(AppContext);
@@ -97,7 +116,7 @@ const LeftTimeAxis = ({ slotMinTime: min, slotMaxTime: max }: LeftTimeAxis) => {
 };
 
 interface ScheduleHeader {
-  headers: Schedule["calendarHeaders"];
+  headers: ScheduleBase["calendarHeaders"];
 }
 
 const tenVH = window.innerHeight / 10;

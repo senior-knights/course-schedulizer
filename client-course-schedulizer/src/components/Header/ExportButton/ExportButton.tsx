@@ -1,4 +1,4 @@
-import { Input, InputLabel } from "@material-ui/core";
+import { InputLabel } from "@material-ui/core";
 import React, { useContext } from "react";
 import download from "js-file-download";
 import * as writeCSV from "../../../utilities/helpers/writeCSV";
@@ -15,8 +15,7 @@ export const ExportButton = () => {
   };
 
   return (
-    <InputLabel className="export-label" htmlFor="export-button">
-      <Input className="hidden" id="export-button" onClick={onExportClick} />
+    <InputLabel className="export-label" htmlFor="export-button" onClick={onExportClick}>
       Export CSV
     </InputLabel>
   );
