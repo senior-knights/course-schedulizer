@@ -82,7 +82,7 @@ export const AddSectionPopover = () => {
   const {
     appState: { schedule },
     appDispatch,
-    setIsLoading,
+    setIsCSVLoading,
   } = useContext(AppContext);
 
   const spacing = 4;
@@ -102,7 +102,7 @@ export const AddSectionPopover = () => {
   const [semesterLength, setSemesterLength] = useState("full");
 
   const onSubmit = (data: SectionInput) => {
-    setIsLoading(true);
+    setIsCSVLoading(true);
     const location = locationCase(data.location);
     const semesterType = convertToSemesterLength(
       data.intensive || data.half || data.semesterLength,
@@ -147,7 +147,7 @@ export const AddSectionPopover = () => {
     insertSectionCourse(schedule, newSection, newCourse);
 
     appDispatch({ payload: { schedule }, type: "setScheduleData" });
-    setIsLoading(false);
+    setIsCSVLoading(false);
   };
   const onSemesterLengthChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSemesterLength(e.target.value);
