@@ -163,6 +163,7 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
       const existingSectionIndex = schedule.courses[existingCourseIndex].sections.indexOf(
         existingSection[0],
       );
+      // TODO: Avoid duplicate meetings?
       schedule.courses[existingCourseIndex].sections[
         existingSectionIndex
       ].meetings = schedule.courses[existingCourseIndex].sections[
