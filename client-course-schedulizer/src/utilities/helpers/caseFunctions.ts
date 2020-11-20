@@ -7,6 +7,9 @@ export interface CaseCallbackParams {
   section: Section;
 }
 
+export const MIN_HALF_LENGTH = 35;
+export const MAX_HALF_LENGTH = 80;
+
 // Define regexes for parsing
 // const timeReg = RegExp("(?<![1-9])(1[0-9]|2[0-3]|[0-9]):([0-5][0-9])");
 // const amReg = RegExp("[Aa][Mm]");
@@ -285,10 +288,10 @@ export const sectionEndCase = (
   const sectionLength = sectionEnd.diff(sectionStart, "days");
   const startMonth = sectionStart.month();
   const firstStartMonths = [0, 1, 7, 8]; // Jan, Feb, Aug, Sept
-  if (sectionLength > 80) {
+  if (sectionLength > MAX_HALF_LENGTH) {
     return SemesterLength.Full;
   }
-  if (sectionLength > 35 && sectionLength <= 80) {
+  if (sectionLength > MIN_HALF_LENGTH && sectionLength <= MAX_HALF_LENGTH) {
     return firstStartMonths.includes(startMonth)
       ? SemesterLength.HalfFirst
       : SemesterLength.HalfSecond;
