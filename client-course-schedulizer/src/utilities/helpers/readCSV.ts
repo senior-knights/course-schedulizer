@@ -129,17 +129,11 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
   const { meetings } = section;
 
   // Check if any meetings are empty, and should be removed
-  let i = 0;
-  let numRemoved = 0;
-  const meetingsCopy = meetings;
-  meetings.forEach((meeting) => {
-    if (meeting.days === [] || meeting.duration === 0) {
-      meetingsCopy.splice(i - numRemoved, 1);
-      numRemoved += 1;
-    }
-    i += 1;
+  // TODO: What about TBA meetings where the location is specified but not the time
+  //       (currently allowing these causes the app to crash)
+  section.meetings = meetings.filter((meeting) => {
+    return meeting.days.length > 0 || meeting.duration > 0;
   });
-  section.meetings = meetingsCopy;
 
   // Check if there is already a course in the schedule with the same prefix and number
   const existingCourse: Course[] = schedule.courses.filter((c) => {
