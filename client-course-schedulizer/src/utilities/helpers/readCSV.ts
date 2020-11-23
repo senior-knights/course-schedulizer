@@ -107,7 +107,6 @@ export const csvStringToSchedule = (csvString: string): Schedule => {
       sections: [],
       studentHours: 0,
     };
-    const [firstMeeting] = meetings;
 
     // Iterate through the fields of the CSV, and parse their values for this object
     if (fields) {
@@ -115,14 +114,9 @@ export const csvStringToSchedule = (csvString: string): Schedule => {
         const value = String(object[field]);
         field = field.replace(/\s/g, "");
         if (field in callbacks) {
-          callbacks[field as keyof ValidFields](value, { course, firstMeeting, section });
+          callbacks[field as keyof ValidFields](value, { course, meetings, section });
         }
       });
-
-      // Check if the meeting is empty, and should be removed
-      if (firstMeeting.days === [] || firstMeeting.duration === 0) {
-        section.meetings = [];
-      }
 
       // Insert the Section to the Schedule, either as a new Course or to an existing Course
       insertSectionCourse(schedule, section, course);
@@ -132,6 +126,15 @@ export const csvStringToSchedule = (csvString: string): Schedule => {
 };
 
 export const insertSectionCourse = (schedule: Schedule, section: Section, course: Course) => {
+  const { meetings } = section;
+
+  // Check if any meetings are empty, and should be removed
+  // TODO: What about TBA meetings where the location is specified but not the time
+  //       (currently allowing these causes the app to crash)
+  section.meetings = meetings.filter((meeting) => {
+    return meeting.days.length > 0 && meeting.duration > 0;
+  });
+
   // Check if there is already a course in the schedule with the same prefix and number
   const existingCourse: Course[] = schedule.courses.filter((c) => {
     return (
@@ -141,10 +144,30 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
     );
   });
 
-  // If there is, add the new section to that course
+  // If there is, first check if there is already a section for that course with the same letter and term
   if (existingCourse.length > 0) {
     const existingCourseIndex = schedule.courses.indexOf(existingCourse[0]);
-    schedule.courses[existingCourseIndex].sections.push(section);
+    const existingSection: Section[] = existingCourse[0].sections.filter((s) => {
+      // TODO: Should we check year and/or semesterLength here as well?
+      return s.letter === section.letter && s.term === section.term;
+    });
+
+    // If there is, add the new meeting(s) to the existing course
+    if (existingSection.length > 0) {
+      const existingSectionIndex = schedule.courses[existingCourseIndex].sections.indexOf(
+        existingSection[0],
+      );
+      // TODO: Avoid duplicate meetings?
+      schedule.courses[existingCourseIndex].sections[
+        existingSectionIndex
+      ].meetings = schedule.courses[existingCourseIndex].sections[
+        existingSectionIndex
+      ].meetings.concat(section.meetings);
+    }
+    // Otherwise, add the new section to the existing course
+    else {
+      schedule.courses[existingCourseIndex].sections.push(section);
+    }
   }
   // Otherwise, add the new course to the schedule
   else {

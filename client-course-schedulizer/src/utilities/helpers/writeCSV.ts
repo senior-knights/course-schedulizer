@@ -5,25 +5,37 @@ export const scheduleToCSVString = (schedule: di.Schedule): string => {
     "name,prefixes,number,section,studentHours,facultyHours,startTime,duration,location,roomCapacity,year,term,semesterLength,days,globalMax,localMax,anticipatedSize,instructors,comments";
   schedule.courses.forEach((course) => {
     course.sections.forEach((section) => {
-      // TODO: Instead of getting the first meeting, iterate through all meetings
-      // TODO: Be wary of commas in strings?
-      let instructorsStr = "";
-      section.instructors.forEach((instructor) => {
-        instructorsStr += `${instructor};`;
+      // Iterate through meetings to construct relevant strings
+      let startTimeStr = "";
+      let durationStr = "";
+      let locationStr = "";
+      let roomCapacityStr = "";
+      let daysStr = "";
+      section.meetings.forEach((meeting) => {
+        startTimeStr += `${meeting.startTime}\n`;
+        durationStr += `${meeting.duration}\n`;
+        locationStr += meeting.location.roomNumber
+          ? `${meeting.location.building} ${meeting.location.roomNumber}\n`
+          : `${meeting.location.building}\n`;
+        roomCapacityStr += `${meeting.location.roomCapacity}\n`;
+        daysStr += `${meeting.days.join("")}\n`;
       });
-      instructorsStr = instructorsStr.slice(0, -1);
-      const meeting = section.meetings ? section.meetings[0] : null;
-      csvStr += `\n${course.name},${course.prefixes.join(";")},${course.number},${section.letter},${
-        section.studentHours ?? course.studentHours
-      },${section.facultyHours ?? course.facultyHours},${meeting ? meeting.startTime : ""},${
-        meeting ? meeting.duration : ""
-      },${meeting ? `${meeting.location.building} ${meeting.location.roomNumber}` : ""},${
-        meeting ? meeting.location.roomCapacity : ""
-      },${section.year},${section.term},${section.semesterLength},${
-        meeting ? meeting.days.join("") : ""
-      },${section.globalMax},${section.localMax},${section.anticipatedSize},${instructorsStr},${
-        section.comments
-      },`;
+      // Remove trailing newlines
+      startTimeStr = startTimeStr.slice(0, -1);
+      durationStr = durationStr.slice(0, -1);
+      locationStr = locationStr.slice(0, -1);
+      roomCapacityStr = roomCapacityStr.slice(0, -1);
+      daysStr = daysStr.slice(0, -1);
+      // TODO: Be wary of commas in strings?
+      csvStr += `\n"${course.name}",${course.prefixes.join(";")},${course.number},${
+        section.letter
+      },${section.studentHours ?? course.studentHours},${
+        section.facultyHours ?? course.facultyHours
+      },"${startTimeStr}","${durationStr}","${locationStr}","${roomCapacityStr}",${section.year},${
+        section.term
+      },${section.semesterLength},"${daysStr}",${section.globalMax},${section.localMax},${
+        section.anticipatedSize
+      },${section.instructors.join(";")},${section.comments},`;
     });
   });
   return csvStr;

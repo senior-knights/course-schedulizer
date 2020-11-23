@@ -3,7 +3,7 @@ import { Course, Day, Meeting, Section, SemesterLength, Term } from "../interfac
 
 export interface CaseCallbackParams {
   course: Course;
-  firstMeeting: Meeting;
+  meetings: Meeting[];
   section: Section;
 }
 
@@ -27,12 +27,44 @@ const thursReg = RegExp("[Tt][Hh]|[Rr]");
 const friReg = RegExp("[Ff]");
 const satReg = RegExp("[Ss](?![Uu])");
 
-export const startTimeCallback = (value: string, { firstMeeting }: CaseCallbackParams) => {
-  firstMeeting.startTime = startTimeCase(value);
+const createMeetings = (value: string, { meetings }: CaseCallbackParams): string[] => {
+  const valueParts = value.split("\n");
+  valueParts.forEach((_, i) => {
+    if (meetings.length <= i) {
+      // If there aren't enough meetings, create a new one
+      meetings.push({
+        days: [],
+        duration: 0,
+        location: { building: "", roomCapacity: 0, roomNumber: "" },
+        startTime: "",
+      });
+    }
+  });
+  return valueParts;
 };
 
-export const locationCallback = (value: string, { firstMeeting }: CaseCallbackParams) => {
-  [firstMeeting.location.building, firstMeeting.location.roomNumber] = locationCase(value);
+const assignWithMeetings = (
+  value: string,
+  params: CaseCallbackParams,
+  arrAssign: (value: string, i: number, arr: Meeting[]) => void,
+) => {
+  const valueParts = createMeetings(value, params);
+  const { meetings } = params;
+  valueParts.forEach((v, i) => {
+    arrAssign(v, i, meetings);
+  });
+};
+
+export const startTimeCallback = (value: string, params: CaseCallbackParams) => {
+  assignWithMeetings(value, params, (startTime, i, meetings) => {
+    meetings[i].startTime = startTimeCase(startTime);
+  });
+};
+
+export const locationCallback = (value: string, params: CaseCallbackParams) => {
+  assignWithMeetings(value, params, (location, i, meetings) => {
+    [meetings[i].location.building, meetings[i].location.roomNumber] = locationCase(location);
+  });
 };
 
 export const termCallback = (value: string, { section }: CaseCallbackParams) => {
@@ -43,8 +75,10 @@ export const semesterLengthCallback = (value: string, { section }: CaseCallbackP
   section.semesterLength = semesterLengthCase(value);
 };
 
-export const daysCallback = (value: string, { firstMeeting }: CaseCallbackParams) => {
-  firstMeeting.days = daysCase(value);
+export const daysCallback = (value: string, params: CaseCallbackParams) => {
+  assignWithMeetings(value, params, (days, i, meetings) => {
+    meetings[i].days = daysCase(days);
+  });
 };
 
 export const instructorCallback = (value: string, { section }: CaseCallbackParams) => {
@@ -95,12 +129,16 @@ export const facultyHoursCallback = (value: string, { course }: CaseCallbackPara
   course.facultyHours = numberDefaultZeroCase(value);
 };
 
-export const durationCallback = (value: string, { firstMeeting }: CaseCallbackParams) => {
-  firstMeeting.duration = durationCase(value);
+export const durationCallback = (value: string, params: CaseCallbackParams) => {
+  assignWithMeetings(value, params, (duration, i, meetings) => {
+    meetings[i].duration = durationCase(duration);
+  });
 };
 
-export const roomCapacityCallback = (value: string, { firstMeeting }: CaseCallbackParams) => {
-  firstMeeting.location.roomCapacity = numberDefaultZeroCase(value);
+export const roomCapacityCallback = (value: string, params: CaseCallbackParams) => {
+  assignWithMeetings(value, params, (capacity, i, meetings) => {
+    meetings[i].location.roomCapacity = numberDefaultZeroCase(capacity);
+  });
 };
 
 export const sectionStartCallback = (value: string, { section }: CaseCallbackParams) => {
@@ -203,6 +241,8 @@ export const daysCase = (value: string) => {
 };
 
 export const instructorCase = (value: string): string[] => {
+  // TODO: Instead of splitting at newlines here, instructors should be on a per meeting level
+  //       with newlines separating between the instructor(s) for each meeting (see other meeting relative fields)
   const instructors = value.split(/[;,\n]/);
   return instructors.map((instructor) => {
     return instructor.trim();
