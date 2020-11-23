@@ -29,7 +29,7 @@ const satReg = RegExp("[Ss](?![Uu])");
 
 const createMeetings = (value: string, { meetings }: CaseCallbackParams): string[] => {
   const valueParts = value.split("\n");
-  for (let i = 0; i < valueParts.length; i += 1) {
+  valueParts.forEach((_, i) => {
     if (meetings.length <= i) {
       // If there aren't enough meetings, create a new one
       meetings.push({
@@ -39,22 +39,30 @@ const createMeetings = (value: string, { meetings }: CaseCallbackParams): string
         startTime: "",
       });
     }
-  }
+  });
   return valueParts;
 };
 
-export const startTimeCallback = (value: string, params: CaseCallbackParams) => {
-  const startTimes = createMeetings(value, params);
+const assignWithMeetings = (
+  value: string,
+  params: CaseCallbackParams,
+  arrAssign: (value: string, i: number, arr: Meeting[]) => void,
+) => {
+  const valueParts = createMeetings(value, params);
   const { meetings } = params;
-  startTimes.forEach((startTime, i) => {
+  valueParts.forEach((v, i) => {
+    arrAssign(v, i, meetings);
+  });
+};
+
+export const startTimeCallback = (value: string, params: CaseCallbackParams) => {
+  assignWithMeetings(value, params, (startTime, i, meetings) => {
     meetings[i].startTime = startTimeCase(startTime);
   });
 };
 
 export const locationCallback = (value: string, params: CaseCallbackParams) => {
-  const locations = createMeetings(value, params);
-  const { meetings } = params;
-  locations.forEach((location, i) => {
+  assignWithMeetings(value, params, (location, i, meetings) => {
     [meetings[i].location.building, meetings[i].location.roomNumber] = locationCase(location);
   });
 };
@@ -68,9 +76,7 @@ export const semesterLengthCallback = (value: string, { section }: CaseCallbackP
 };
 
 export const daysCallback = (value: string, params: CaseCallbackParams) => {
-  const daysStrings = createMeetings(value, params);
-  const { meetings } = params;
-  daysStrings.forEach((days, i) => {
+  assignWithMeetings(value, params, (days, i, meetings) => {
     meetings[i].days = daysCase(days);
   });
 };
@@ -124,17 +130,13 @@ export const facultyHoursCallback = (value: string, { course }: CaseCallbackPara
 };
 
 export const durationCallback = (value: string, params: CaseCallbackParams) => {
-  const durations = createMeetings(value, params);
-  const { meetings } = params;
-  durations.forEach((duration, i) => {
+  assignWithMeetings(value, params, (duration, i, meetings) => {
     meetings[i].duration = durationCase(duration);
   });
 };
 
 export const roomCapacityCallback = (value: string, params: CaseCallbackParams) => {
-  const capacities = createMeetings(value, params);
-  const { meetings } = params;
-  capacities.forEach((capacity, i) => {
+  assignWithMeetings(value, params, (capacity, i, meetings) => {
     meetings[i].location.roomCapacity = numberDefaultZeroCase(capacity);
   });
 };
