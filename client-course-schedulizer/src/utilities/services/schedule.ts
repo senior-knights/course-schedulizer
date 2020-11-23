@@ -18,6 +18,12 @@ export interface GroupedEvents {
   [key: string]: EventInput[];
 }
 
+const eventExistsInEventList = (event: EventInput, eventList: EventInput[]): boolean => {
+  return eventList.some((e) => {
+    return e.title === event.title && e.start === event.start && e.end === event.end;
+  });
+};
+
 // TODO: Add events with no meeting times as all day
 export const getEvents = (schedule: Schedule, groups: "faculty" | "room"): GroupedEvents => {
   const events: GroupedEvents = {};
@@ -47,7 +53,10 @@ export const getEvents = (schedule: Schedule, groups: "faculty" | "room"): Group
               title: sectionName,
             };
             if (events[group]) {
-              events[group].push(newEvent);
+              // Only add the event if it hasn't already been added
+              if (!eventExistsInEventList(newEvent, events[group])) {
+                events[group].push(newEvent);
+              }
             } else {
               events[group] = [newEvent];
             }
