@@ -1,7 +1,6 @@
-.import-button {
-  margin-right: 1em !important;
-}
-
-.import-button * {
-  color: white !important;
+.schedulizer-header {
+  display: flex !important;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }

@@ -1,27 +1,30 @@
 .toolbar {
-  display: flex;
   justify-content: space-between;
 }
 
 .org-logo {
   width: 60px;
+  height: auto;
 }
 
-.hidden {
-  display: none !important;
+.toolbar-group {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
 }
 
-.import-menu-item,
-.export-menu-item {
-  padding: 0px !important;
+// Style all children of .links parent
+.links > * {
+  margin-left: 1em !important;
+  color: white !important;
 }
 
-.import-label,
-.export-label {
-  padding-top: 6px !important;
-  padding-bottom: 6px !important;
-  padding-left: 16px !important;
-  padding-right: 16px !important;
-  color: black !important;
-  cursor: pointer;
+// Style all children of .title parent
+.title > * {
+  margin-right: 1em !important;
+}
+
+.title {
+  text-decoration: none;
+  color: white;
 }
