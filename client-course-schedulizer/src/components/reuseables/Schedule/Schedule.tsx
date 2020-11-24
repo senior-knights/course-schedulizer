@@ -1,7 +1,7 @@
 import { CalendarOptions, EventClickArg } from "@fullcalendar/react";
 import { Popover } from "@material-ui/core";
 import { bindPopover, usePopupState } from "material-ui-popup-state/hooks";
-import React, { useContext, useMemo, useState } from "react";
+import React, { useCallback, useContext, useMemo, useState } from "react";
 import Stick from "react-stick";
 import StickyNode from "react-stickynode";
 import { AppContext } from "../../../utilities/services/appContext";
@@ -51,13 +51,16 @@ const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Sc
   } = useContext(AppContext);
 
   const popupState = usePopupState({
-    popupId: "updateSection",
+    popupId: "addSection",
     variant: "popover",
   });
 
-  const handleEventClick = (arg: EventClickArg) => {
-    popupState.open(arg.el);
-  };
+  const handleEventClick = useCallback(
+    (arg: EventClickArg) => {
+      popupState.open(arg.el);
+    },
+    [popupState],
+  );
 
   const times = {
     slotMaxTime,
