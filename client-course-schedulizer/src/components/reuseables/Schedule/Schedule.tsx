@@ -1,4 +1,6 @@
-import { CalendarOptions } from "@fullcalendar/react";
+import { CalendarOptions, EventClickArg } from "@fullcalendar/react";
+import { Popover } from "@material-ui/core";
+import { bindPopover, usePopupState } from "material-ui-popup-state/hooks";
 import React, { useContext, useMemo, useState } from "react";
 import Stick from "react-stick";
 import StickyNode from "react-stickynode";
@@ -11,6 +13,7 @@ import {
 } from "../../../utilities/services/schedule";
 import { ScheduleContext } from "../../../utilities/services/scheduleContext";
 import { ScheduleToolbar } from "../../Toolbar/ScheduleToolbar";
+import { AddSectionPopover } from "../AddSectionPopover";
 import { AsyncComponent } from "../AsyncComponent";
 import { Calendar } from "../Calendar";
 import "./Schedule.scss";
@@ -47,6 +50,15 @@ const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Sc
     appState: { selectedTerm, slotMaxTime, slotMinTime },
   } = useContext(AppContext);
 
+  const popupState = usePopupState({
+    popupId: "updateSection",
+    variant: "popover",
+  });
+
+  const handleEventClick = (arg: EventClickArg) => {
+    popupState.open(arg.el);
+  };
+
   const times = {
     slotMaxTime,
     slotMinTime,
@@ -82,7 +94,12 @@ const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Sc
               {calenderHeadersNoEmptyInTerm.map((header) => {
                 return (
                   <div key={header} className="calendar-width hide-axis">
-                    <Calendar {...calendarOptions} key={header} events={filteredEvents[header]} />
+                    <Calendar
+                      {...calendarOptions}
+                      key={header}
+                      eventClick={handleEventClick}
+                      events={filteredEvents[header]}
+                    />
                   </div>
                 );
               })}
@@ -90,6 +107,20 @@ const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Sc
           </Stick>
         </div>
       </div>
+      <Popover
+        {...bindPopover(popupState)}
+        anchorOrigin={{
+          horizontal: "left",
+          vertical: "bottom",
+        }}
+        PaperProps={{ style: { maxWidth: "50%", minWidth: "500px" } }}
+        transformOrigin={{
+          horizontal: "right",
+          vertical: "top",
+        }}
+      >
+        <AddSectionPopover />
+      </Popover>
     </>
   );
 };
