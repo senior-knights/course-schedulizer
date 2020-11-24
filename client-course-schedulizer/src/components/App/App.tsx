@@ -1,7 +1,7 @@
 import React, { useReducer, useState } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./App.scss";
-import { AboutPage, HelpPage, SchedulizerPage } from "../blah";
+import { AboutPage, HelpPage, SchedulizerPage } from "../pages";
 import { Header } from "../Header/Header";
 import { reducer } from "../../utilities/services/appReducer";
 import { initialAppState } from "../../utilities/interfaces/appInterfaces";
