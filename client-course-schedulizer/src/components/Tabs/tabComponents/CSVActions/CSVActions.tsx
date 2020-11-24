@@ -29,10 +29,10 @@ export const CSVActions = () => {
         {...bindMenu(popupState)}
       >
         <MenuItem button className="MuiButton-textPrimary">
-          <ImportInputWrapper>Import CSV</ImportInputWrapper>
+          <ImportInputWrapper>IMPORT CSV</ImportInputWrapper>
         </MenuItem>
         <MenuItem button className="MuiButton-textSecondary" onClick={onExportClick}>
-          Export CSV
+          EXPORT CSV
         </MenuItem>
       </Menu>
     </>
