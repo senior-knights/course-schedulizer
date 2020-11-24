@@ -1,33 +1,15 @@
-import { Input, InputLabel } from "@material-ui/core";
+import { Button, ButtonProps } from "@material-ui/core";
 import React from "react";
-import { useImportFile } from "../../../../../utilities/hooks/useImportFile";
+import { ImportInputWrapper } from "../../../../reuseables/ImportInputWrapper/ImportInputWrapper";
 import "./ImportButton.scss";
 
-interface ImportButton {
-  className?: string;
-}
-
-export const ImportButton = ({ className }: ImportButton) => {
-  const onInputChange = useImportFile();
-
+/* An import button that is stylable using the Mat UI props. */
+export const ImportButton = (btnProps: ButtonProps) => {
   return (
-    <div className={className}>
-      <InputLabel className="import-label" htmlFor="import-button">
-        <Input
-          className="hidden"
-          id="import-button"
-          inputProps={{
-            accept: ".csv",
-          }}
-          onChange={onInputChange}
-          type="file"
-        />
+    <ImportInputWrapper>
+      <Button color="primary" component="span" {...btnProps}>
         Import CSV
-      </InputLabel>
-    </div>
+      </Button>
+    </ImportInputWrapper>
   );
-};
-
-ImportButton.defaultProps = {
-  className: "",
 };

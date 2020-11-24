@@ -1,22 +1,16 @@
-import { InputLabel } from "@material-ui/core";
-import React, { useContext } from "react";
-import download from "js-file-download";
-import * as writeCSV from "../../../../../utilities/helpers/writeCSV";
-import { AppContext } from "../../../../../utilities/services/appContext";
+import { Button, ButtonProps } from "@material-ui/core";
+import React from "react";
+import { useExportCSV } from "../../../../../utilities/hooks/useExportCSV";
 
-export const ExportButton = () => {
-  const {
-    appState: { schedule },
-  } = useContext(AppContext);
-
-  const onExportClick = () => {
-    // TODO: maybe generate a cool title like schedule-fall-2020.csv
-    download(writeCSV.scheduleToCSVString(schedule), "schedule.csv");
-  };
+/* A button that will export the current schedule as a CSV.
+  Can style with Mat UI props.
+*/
+export const ExportButton = (btnProps: ButtonProps) => {
+  const onExportClick = useExportCSV();
 
   return (
-    <InputLabel className="export-label" htmlFor="export-button" onClick={onExportClick}>
+    <Button color="secondary" component="span" onClick={onExportClick} {...btnProps}>
       Export CSV
-    </InputLabel>
+    </Button>
   );
 };

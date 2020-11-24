@@ -1,4 +1,5 @@
 import React from "react";
+import { Box } from "@material-ui/core";
 import { ImportButton } from "../CSVActions/ImportButton";
 import { AddSectionButton } from "../../../reuseables/AddSectionButton";
 import "./NoCoursesHeader.scss";
@@ -12,8 +13,9 @@ export const NoCoursesHeader = () => {
         Please import a CSV of an existing schedule or start building the schedule from scratch by
         adding your first section.
       </p>
-      {/* TODO: Fix this. This importButton styling is very weird, and it padding is odd. */}
-      <ImportButton className="import-button MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary" />
+      <Box component="span" marginRight={1}>
+        <ImportButton variant="contained" />
+      </Box>
       <AddSectionButton isIcon={false} />
     </>
   );

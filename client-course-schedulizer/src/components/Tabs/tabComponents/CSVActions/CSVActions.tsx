@@ -2,13 +2,14 @@ import React from "react";
 import { Menu as MenuIcon } from "@material-ui/icons";
 import { bindMenu, bindTrigger, usePopupState } from "material-ui-popup-state/hooks";
 import { IconButton, Menu, MenuItem } from "@material-ui/core";
-import { ImportButton } from "./ImportButton";
-import { ExportButton } from "./ExportButton";
 import "./CSVActions.scss";
+import { ImportInputWrapper } from "../../../reuseables/ImportInputWrapper/ImportInputWrapper";
+import { useExportCSV } from "../../../../utilities/hooks/useExportCSV";
 
 /* Hamburger with options for the CSV */
 export const CSVActions = () => {
   const popupState = usePopupState({ popupId: "menu", variant: "popover" });
+  const onExportClick = useExportCSV();
 
   return (
     <>
@@ -27,11 +28,11 @@ export const CSVActions = () => {
         }}
         {...bindMenu(popupState)}
       >
-        <MenuItem className="import-menu-item">
-          <ImportButton />
+        <MenuItem button className="MuiButton-textPrimary">
+          <ImportInputWrapper>Import CSV</ImportInputWrapper>
         </MenuItem>
-        <MenuItem className="export-menu-item">
-          <ExportButton />
+        <MenuItem button className="MuiButton-textSecondary" onClick={onExportClick}>
+          Export CSV
         </MenuItem>
       </Menu>
     </>
