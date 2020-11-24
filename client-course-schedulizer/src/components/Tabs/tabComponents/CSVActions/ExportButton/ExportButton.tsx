@@ -1,8 +1,8 @@
 import { InputLabel } from "@material-ui/core";
 import React, { useContext } from "react";
 import download from "js-file-download";
-import * as writeCSV from "../../../utilities/helpers/writeCSV";
-import { AppContext } from "../../../utilities/services/appContext";
+import * as writeCSV from "../../../../../utilities/helpers/writeCSV";
+import { AppContext } from "../../../../../utilities/services/appContext";
 
 export const ExportButton = () => {
   const {

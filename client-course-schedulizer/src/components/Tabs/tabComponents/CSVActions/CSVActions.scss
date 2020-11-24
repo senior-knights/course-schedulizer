@@ -2,3 +2,13 @@
 .export-menu-item {
   padding: 0px !important;
 }
+
+.import-label,
+.export-label {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+  color: black !important;
+  cursor: pointer;
+}

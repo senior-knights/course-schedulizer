@@ -1,6 +1,6 @@
 import { Input, InputLabel } from "@material-ui/core";
 import React from "react";
-import { useImportFile } from "../../../utilities/hooks/useImportFile";
+import { useImportFile } from "../../../../../utilities/hooks/useImportFile";
 import "./ImportButton.scss";
 
 interface ImportButton {

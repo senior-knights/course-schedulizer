@@ -1,5 +1,5 @@
 import React from "react";
-import { ImportButton } from "../../../Header/ImportButton";
+import { ImportButton } from "../CSVActions/ImportButton";
 import { AddSectionButton } from "../../../reuseables/AddSectionButton";
 import "./NoCoursesHeader.scss";
 

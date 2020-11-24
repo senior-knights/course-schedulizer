@@ -2,8 +2,8 @@ import React from "react";
 import { Menu as MenuIcon } from "@material-ui/icons";
 import { bindMenu, bindTrigger, usePopupState } from "material-ui-popup-state/hooks";
 import { IconButton, Menu, MenuItem } from "@material-ui/core";
-import { ImportButton } from "../../../Header/ImportButton";
-import { ExportButton } from "../../../Header/ExportButton";
+import { ImportButton } from "./ImportButton";
+import { ExportButton } from "./ExportButton";
 import "./CSVActions.scss";
 
 /* Hamburger with options for the CSV */
