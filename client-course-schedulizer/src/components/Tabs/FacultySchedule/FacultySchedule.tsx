@@ -1,6 +1,7 @@
 import { Schedule } from "components";
 import React, { useContext } from "react";
-import { AppContext, getEvents } from "utilities";
+import { getEvents } from "utilities";
+import { AppContext } from "utilities/contexts";
 import "./FacultySchedule.scss";
 
 /* Creates a list of Calendars to create the Faculty Schedule
