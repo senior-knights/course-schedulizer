@@ -1,6 +1,8 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+import React from "01/../react";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import ReactDOM from "02/../react-dom";
 import { App } from "components";
-import React from "react";
-import ReactDOM from "react-dom";
 import * as serviceWorker from "serviceWorker";
 import "styles/index.scss";
 
