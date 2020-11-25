@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
 import { Schedule } from "components";
+import React, { useContext } from "react";
 import { AppContext, getEvents } from "utilities";
 
 export const RoomsSchedule = () => {

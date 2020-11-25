@@ -1,7 +1,7 @@
-import { useContext } from "react";
 import download from "js-file-download";
 import moment from "moment";
-import { scheduleToCSVString, AppContext } from "utilities";
+import { useContext } from "react";
+import { AppContext, scheduleToCSVString } from "utilities";
 
 /* Hook that downloads the current schedule when onExportClick
  is executed. */

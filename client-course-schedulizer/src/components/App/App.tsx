@@ -1,8 +1,8 @@
-import React, { useReducer, useState } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { AboutPage, HelpPage, SchedulizerPage } from "components/pages";
-import { AppContext, reducer, initialAppState } from "utilities";
 import { Header } from "components";
+import { AboutPage, HelpPage, SchedulizerPage } from "components/pages";
+import React, { useReducer, useState } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { AppContext, initialAppState, reducer } from "utilities";
 import "./App.scss";
 
 export const App = () => {

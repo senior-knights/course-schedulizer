@@ -1,8 +1,8 @@
 import { Button, ButtonProps, IconButton, Popover } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
+import { AddSectionPopover } from "components";
 import { bindPopover, bindTrigger, usePopupState } from "material-ui-popup-state/hooks";
 import React from "react";
-import { AddSectionPopover } from "components";
 import "./AddSectionButton.scss";
 
 interface AddSectionButton extends ButtonProps {

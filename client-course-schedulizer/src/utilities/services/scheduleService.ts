@@ -1,8 +1,8 @@
 import { EventInput } from "@fullcalendar/react";
 import { filter, flatten, forEach, forOwn, map, maxBy, minBy, range } from "lodash";
 import moment from "moment";
-import { INITIAL_DATE } from "utilities/constants";
 import { enumArray } from "utilities";
+import { INITIAL_DATE } from "utilities/constants";
 import { Day, Meeting, Schedule, Section, Term } from "utilities/interfaces";
 
 // Returns a list of hours to display on the Schedule

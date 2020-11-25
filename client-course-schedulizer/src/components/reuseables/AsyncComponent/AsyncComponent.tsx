@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, FC } from "react";
+import React, { FC, PropsWithChildren } from "react";
 import { Literal, Static, Union } from "runtypes";
 import { createFC, getElements } from "utilities";
 

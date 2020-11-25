@@ -1,8 +1,8 @@
-import React from "react";
-import { Menu as MenuIcon } from "@material-ui/icons";
-import { bindMenu, bindTrigger, usePopupState } from "material-ui-popup-state/hooks";
 import { IconButton, Menu, MenuItem } from "@material-ui/core";
+import { Menu as MenuIcon } from "@material-ui/icons";
 import { ImportInputWrapper } from "components";
+import { bindMenu, bindTrigger, usePopupState } from "material-ui-popup-state/hooks";
+import React from "react";
 import { useExportCSV } from "utilities";
 import "./CSVActions.scss";
 

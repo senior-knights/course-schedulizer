@@ -1,11 +1,9 @@
-import FullCalendar from "@fullcalendar/react";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import FullCalendar from "01/../@fullcalendar/react";
 import { CalendarOptions } from "@fullcalendar/common";
-
-// Plugins
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
 import timeGridPlugin from "@fullcalendar/timegrid";
-
-import React from "react"; // Has to come after the FullCalendar/react package
+import React from "react";
 import { INITIAL_DATE } from "utilities/constants";
 import "./Calendar.scss";
 

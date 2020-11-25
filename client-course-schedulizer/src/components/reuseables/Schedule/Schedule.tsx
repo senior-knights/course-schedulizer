@@ -1,15 +1,15 @@
 import { CalendarOptions } from "@fullcalendar/react";
+import { AsyncComponent, Calendar, ScheduleToolbar } from "components";
 import React, { useContext, useMemo, useState } from "react";
 import Stick from "react-stick";
 import StickyNode from "react-stickynode";
 import { AppContext, ScheduleContext } from "utilities/contexts";
 import {
-  GroupedEvents,
-  getHoursArr,
   filterEventsByTerm,
   filterHeadersWithNoEvents,
+  getHoursArr,
+  GroupedEvents,
 } from "utilities/services";
-import { ScheduleToolbar, AsyncComponent, Calendar } from "components";
 import "./Schedule.scss";
 
 interface ScheduleBase extends CalendarOptions {

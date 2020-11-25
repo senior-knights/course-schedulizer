@@ -1,5 +1,5 @@
 import { AppAction, AppState, Term } from "utilities/interfaces";
-import { getProfs, getRooms, getMinAndMaxTimes } from "utilities/services";
+import { getMinAndMaxTimes, getProfs, getRooms } from "utilities/services";
 
 /*
   Provides a function to perform multiple setState updates
