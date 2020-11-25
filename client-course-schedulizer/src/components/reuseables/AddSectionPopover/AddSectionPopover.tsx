@@ -5,84 +5,22 @@ import React, { ChangeEvent, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { AppContext } from "utilities/contexts";
 import {
-  insertSectionCourse,
-  instructorCase,
-  locationCase,
-  prefixCase,
-  startTimeCase,
-} from "utilities/helpers";
-import {
-  Course,
   Day,
   Half,
-  Instructor,
   Intensive,
-  Location,
-  Meeting,
-  Prefix,
-  Section,
   SemesterLength,
   SemesterLengthOption,
   Term,
   Weekday,
 } from "utilities/interfaces";
-import { array, object } from "yup";
 import "./AddSectionPopover.scss";
-
-interface SectionInput {
-  anticipatedSize: Section["anticipatedSize"];
-  comments: Section["comments"];
-  days: Meeting["days"];
-  duration: Meeting["duration"];
-  facultyHours: Section["facultyHours"];
-  globalMax: Section["globalMax"];
-  half: Half;
-  instructor: Instructor;
-  intensive?: Intensive;
-  localMax: Section["localMax"];
-  location: string;
-  name: Course["name"];
-  number: Course["number"];
-  prefix: Prefix;
-  roomCapacity: Location["roomCapacity"];
-  section: Section["letter"];
-  semesterLength: SemesterLengthOption;
-  startTime: Meeting["startTime"];
-  studentHours: Section["studentHours"];
-  term: Section["term"];
-}
-
-const convertToSemesterLength = (sl: Half | Intensive | SemesterLengthOption): SemesterLength => {
-  switch (sl) {
-    case Half.First:
-      return SemesterLength.HalfFirst;
-    case Half.Second:
-      return SemesterLength.HalfSecond;
-    case Intensive.A:
-      return SemesterLength.IntensiveA;
-    case Intensive.B:
-      return SemesterLength.IntensiveB;
-    case Intensive.C:
-      return SemesterLength.IntensiveC;
-    case Intensive.D:
-      return SemesterLength.IntensiveD;
-    default:
-      return SemesterLength.Full;
-  }
-};
+import { schema, SectionInput, updateScheduleWithNewSection } from "./AddSectionPopoverService";
 
 const SPACING = 4;
 
-// Remove false values from days array
-const schema = object().shape({
-  days: array().transform((d) => {
-    return d.filter((day: boolean | string) => {
-      return day;
-    });
-  }),
-});
-
+/* A form to input information to add a schedule */
 export const AddSectionPopover = () => {
+  // hooks
   const {
     appState: { schedule },
     appDispatch,
@@ -93,54 +31,14 @@ export const AddSectionPopover = () => {
   });
   const [semesterLength, setSemesterLength] = useState("full");
 
+  // handlers
   const onSubmit = (data: SectionInput) => {
     setIsCSVLoading(true);
-    const location = locationCase(data.location);
-    const semesterType = convertToSemesterLength(
-      data.intensive || data.half || data.semesterLength,
-    );
-    const newSection: Section = {
-      anticipatedSize: Number(data.anticipatedSize),
-      comments: data.comments,
-      facultyHours: Number(data.facultyHours),
-      globalMax: Number(data.globalMax),
-      instructors: instructorCase(data.instructor),
-      letter: data.section,
-      localMax: Number(data.localMax),
-      meetings: [
-        {
-          days: data.days,
-          duration: Number(data.duration),
-          location: {
-            building: location[0],
-            roomCapacity: Number(data.roomCapacity),
-            roomNumber: location[1],
-          },
-          startTime: startTimeCase(data.startTime),
-        },
-      ],
-      semesterLength: semesterType,
-      studentHours: Number(data.studentHours),
-      term: data.term,
-      year: "2021-2022",
-    };
-
-    const newCourse: Course = {
-      facultyHours: Number(data.facultyHours),
-      name: data.name,
-      number: data.number,
-      prefixes: prefixCase(data.prefix),
-      // The newSection will be added later in insertSectionCourse()
-      sections: [],
-      studentHours: Number(data.studentHours),
-    };
-
-    // Insert the Section to the Schedule, either as a new Course or to an existing Course
-    insertSectionCourse(schedule, newSection, newCourse);
-
+    updateScheduleWithNewSection(data, schedule);
     appDispatch({ payload: { schedule }, type: "setScheduleData" });
     setIsCSVLoading(false);
   };
+
   const onSemesterLengthChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSemesterLength(e.target.value);
   };
