@@ -1,7 +1,8 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+import React, { ChangeEvent, useContext, useState } from "01/../react";
 import { Container, Tab, Tabs as MUITabs } from "@material-ui/core";
 import { AsyncComponent } from "components";
 import { FacultyLoads, FacultySchedule, RoomsSchedule } from "components/Tabs";
-import React, { ChangeEvent, useContext, useState } from "react";
 import { AppContext } from "utilities/contexts";
 import { CSVActions, NoCoursesHeader, TabPanel } from "./tabComponents";
 import "./Tabs.scss";
