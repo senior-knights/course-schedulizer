@@ -26,6 +26,14 @@ export enum Day {
   Sunday = "Su",
 }
 
+export enum Weekday {
+  Monday = Day.Monday,
+  Tuesday = Day.Tuesday,
+  Wednesday = Day.Wednesday,
+  Thursday = Day.Thursday,
+  Friday = Day.Friday,
+}
+
 export enum Half {
   First = SemesterLength.HalfFirst,
   Second = SemesterLength.HalfSecond,
@@ -60,14 +68,18 @@ export interface Meeting {
   startTime: string;
 }
 
+export type Prefix = string;
+
 export interface Course {
   facultyHours: number;
   name: string;
   number: string;
-  prefixes: string[];
+  prefixes: Prefix[];
   sections: Section[];
   studentHours: number;
 }
+
+export type Instructor = string;
 
 export interface Section {
   anticipatedSize: number;
@@ -75,7 +87,7 @@ export interface Section {
   // Overrides Course value
   facultyHours?: number;
   globalMax: number;
-  instructors: string[];
+  instructors: Instructor[];
   letter: string;
   localMax: number;
   // Multiple Meetings possible if time/room differs on different days

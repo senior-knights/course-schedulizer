@@ -15,13 +15,16 @@ import {
   Course,
   Day,
   Half,
+  Instructor,
   Intensive,
   Location,
   Meeting,
+  Prefix,
   Section,
   SemesterLength,
   SemesterLengthOption,
   Term,
+  Weekday,
 } from "utilities/interfaces";
 import { array, object } from "yup";
 import "./AddSectionPopover.scss";
@@ -34,27 +37,19 @@ interface SectionInput {
   facultyHours: Section["facultyHours"];
   globalMax: Section["globalMax"];
   half: Half;
-  instructor: string;
+  instructor: Instructor;
   intensive?: Intensive;
   localMax: Section["localMax"];
   location: string;
   name: Course["name"];
   number: Course["number"];
-  prefix: string;
+  prefix: Prefix;
   roomCapacity: Location["roomCapacity"];
   section: Section["letter"];
   semesterLength: SemesterLengthOption;
   startTime: Meeting["startTime"];
   studentHours: Section["studentHours"];
   term: Section["term"];
-}
-
-enum Weekday {
-  Monday = Day.Monday,
-  Tuesday = Day.Tuesday,
-  Wednesday = Day.Wednesday,
-  Thursday = Day.Thursday,
-  Friday = Day.Friday,
 }
 
 const convertToSemesterLength = (sl: Half | Intensive | SemesterLengthOption): SemesterLength => {
@@ -76,24 +71,23 @@ const convertToSemesterLength = (sl: Half | Intensive | SemesterLengthOption): S
   }
 };
 
+const SPACING = 4;
+
+// Remove false values from days array
+const schema = object().shape({
+  days: array().transform((d) => {
+    return d.filter((day: boolean | string) => {
+      return day;
+    });
+  }),
+});
+
 export const AddSectionPopover = () => {
   const {
     appState: { schedule },
     appDispatch,
     setIsCSVLoading,
   } = useContext(AppContext);
-
-  const spacing = 4;
-
-  // Remove false values from days array
-  const schema = object().shape({
-    days: array().transform((d) => {
-      return d.filter((day: boolean | string) => {
-        return day;
-      });
-    }),
-  });
-
   const { register, handleSubmit, control } = useForm<SectionInput>({
     resolver: yupResolver(schema),
   });
@@ -156,14 +150,14 @@ export const AddSectionPopover = () => {
       <Typography className="title" variant="h4">
         Add/Update Section
       </Typography>
-      <Grid container spacing={spacing}>
+      <Grid container spacing={SPACING}>
         {/* TODO: Dropdown for courses already in system */}
         <GridItemTextField label="Prefix" register={register} />
         <GridItemTextField label="Number" register={register} />
         <GridItemTextField label="Section" register={register} />
         <GridItemTextField label="Name" register={register} />
       </Grid>
-      <Grid container spacing={spacing}>
+      <Grid container spacing={SPACING}>
         {/* TODO: Dropdown for instructors with option to add new one */}
         <GridItemTextField label="Instructor" register={register} />
         {/* TODO: Dropdown for rooms with option to add new one */}
@@ -184,7 +178,7 @@ export const AddSectionPopover = () => {
           textFieldProps={{ name: "studentHours" }}
         />
       </Grid>
-      <Grid container spacing={spacing}>
+      <Grid container spacing={SPACING}>
         <GridItemTextField
           label="Anticipated Size"
           register={register}
@@ -207,7 +201,7 @@ export const AddSectionPopover = () => {
           textFieldProps={{ defaultValue: "08:00", name: "startTime", type: "time" }}
         />
       </Grid>
-      <Grid container spacing={spacing}>
+      <Grid container spacing={SPACING}>
         <GridItemCheckboxGroup
           label="Days"
           options={Object.values(Day).filter((day) => {
