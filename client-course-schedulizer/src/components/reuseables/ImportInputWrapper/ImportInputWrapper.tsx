@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from "react";
-import { useImportFile } from "../../../utilities/hooks/useImportFile";
+import { useImportFile } from "utilities";
 
 /* Wraps whatever children in a label that will capture the click
 on the children and open the file explorer to upload a file.

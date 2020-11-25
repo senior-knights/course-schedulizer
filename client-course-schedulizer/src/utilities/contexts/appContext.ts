@@ -1,6 +1,5 @@
 import { createContext, Dispatch, SetStateAction } from "react";
-import { voidFn } from "../helpers/utils";
-import { AppAction, AppState, initialAppState } from "../interfaces/appInterfaces";
+import { voidFn, AppAction, AppState, initialAppState } from "utilities";
 
 interface AppContext {
   appDispatch: Dispatch<AppAction> | (() => void);

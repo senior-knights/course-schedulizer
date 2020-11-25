@@ -1,5 +1,5 @@
 import papa from "papaparse";
-import { Course, Schedule, Section, SemesterLength, Term } from "../interfaces/dataInterfaces";
+import { Course, Schedule, Section, SemesterLength, Term } from "utilities";
 import * as cf from "./caseFunctions";
 
 interface ValidFields {

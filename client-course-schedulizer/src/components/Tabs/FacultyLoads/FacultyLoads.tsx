@@ -10,8 +10,8 @@ import {
 } from "@material-ui/core";
 import React, { useContext, useMemo } from "react";
 import { Column, useTable } from "react-table";
-import { Course, Schedule, Section, Term } from "../../../utilities/interfaces/dataInterfaces";
-import { AppContext } from "../../../utilities/services/appContext";
+import { Course, Schedule, Section, Term } from "utilities/interfaces";
+import { AppContext } from "utilities/contexts";
 
 type hourKeys = "fallHours" | "springHours" | "summerHours" | "totalHours" | "otherHours";
 type sectionKeys = "fallCourseSections" | "springCourseSections" | "summerCourseSections";

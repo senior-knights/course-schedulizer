@@ -1,7 +1,6 @@
 import React from "react";
 import { Box } from "@material-ui/core";
-import { ImportButton } from "../CSVActions/ImportButton";
-import { AddSectionButton } from "../../../reuseables/AddSectionButton";
+import { ImportButton, AddSectionButton } from "components";
 import "./NoCoursesHeader.scss";
 
 /* Display information when schedule has no courses. */

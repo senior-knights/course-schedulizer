@@ -1,8 +1,7 @@
 import { useContext } from "react";
 import download from "js-file-download";
 import moment from "moment";
-import { AppContext } from "../services/appContext";
-import * as writeCSV from "../helpers/writeCSV";
+import { scheduleToCSVString, AppContext } from "utilities";
 
 /* Hook that downloads the current schedule when onExportClick
  is executed. */
@@ -13,7 +12,7 @@ export const useExportCSV = () => {
 
   const onExportClick = () => {
     // TODO: maybe generate a cool title like schedule-fall-2020.csv
-    download(writeCSV.scheduleToCSVString(schedule), `schedule_${moment().format()}.csv`);
+    download(scheduleToCSVString(schedule), `schedule_${moment().format()}.csv`);
   };
   return onExportClick;
 };

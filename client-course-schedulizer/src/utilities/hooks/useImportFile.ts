@@ -1,7 +1,6 @@
 import { isEqual } from "lodash";
 import { ChangeEvent, useContext } from "react";
-import { AppContext } from "../services/appContext";
-import * as readCSV from "../helpers/readCSV";
+import { AppContext, csvStringToSchedule } from "utilities";
 
 // A closure with statefulness. Used to handle changes to inputs
 export const useImportFile = () => {
@@ -21,7 +20,7 @@ export const useImportFile = () => {
     file && read.readAsBinaryString(file);
 
     read.onloadend = async () => {
-      const scheduleJSON = readCSV.csvStringToSchedule(String(read.result));
+      const scheduleJSON = csvStringToSchedule(String(read.result));
       // TODO: store in local storage incase prof navigates away while editing.
       // currently a redundant check
       if (!isEqual(schedule, scheduleJSON)) {

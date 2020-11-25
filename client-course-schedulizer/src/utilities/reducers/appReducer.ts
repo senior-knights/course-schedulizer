@@ -1,8 +1,5 @@
-import { AppAction, AppState } from "../interfaces/appInterfaces";
-import { Term } from "../interfaces/dataInterfaces";
-import { getProfs } from "./facultySchedule";
-import { getRooms } from "./roomsSchedule";
-import { getMinAndMaxTimes } from "./schedule";
+import { AppAction, AppState, Term } from "utilities/interfaces";
+import { getProfs, getRooms, getMinAndMaxTimes } from "utilities/services";
 
 /*
   Provides a function to perform multiple setState updates

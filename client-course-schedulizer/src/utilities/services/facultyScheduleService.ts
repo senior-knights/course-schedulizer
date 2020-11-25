@@ -1,5 +1,5 @@
 import forEach from "lodash/forEach";
-import { Schedule } from "../interfaces/dataInterfaces";
+import { Schedule } from "utilities";
 
 // Get list of unique professors.
 export const getProfs = (schedule: Schedule): string[] => {

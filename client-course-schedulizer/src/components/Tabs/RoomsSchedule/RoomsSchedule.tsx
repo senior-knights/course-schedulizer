@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
-import { Schedule } from "../../reuseables/Schedule";
-import { AppContext } from "../../../utilities/services/appContext";
-import { getEvents } from "../../../utilities/services/schedule";
+import { Schedule } from "components";
+import { AppContext, getEvents } from "utilities";
 
 export const RoomsSchedule = () => {
   const {

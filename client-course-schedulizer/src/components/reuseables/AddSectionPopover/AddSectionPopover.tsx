@@ -14,18 +14,16 @@ import {
   SemesterLength,
   SemesterLengthOption,
   Term,
-} from "../../../utilities/interfaces/dataInterfaces";
+} from "utilities/interfaces";
 import {
   startTimeCase,
   instructorCase,
   locationCase,
   prefixCase,
-} from "../../../utilities/helpers/caseFunctions";
-import { insertSectionCourse } from "../../../utilities/helpers/readCSV";
-import { AppContext } from "../../../utilities/services/appContext";
-import { GridItemCheckboxGroup } from "../GridItem/GridItemCheckboxGroup";
-import { GridItemRadioGroup } from "../GridItem/GridItemRadioGroup";
-import { GridItemTextField } from "../GridItem/GridItemTextField";
+  insertSectionCourse,
+} from "utilities/helpers";
+import { AppContext } from "utilities/contexts";
+import { GridItemCheckboxGroup, GridItemRadioGroup, GridItemTextField } from "components";
 import "./AddSectionPopover.scss";
 
 interface SectionInput {
