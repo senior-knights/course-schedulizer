@@ -1,5 +1,5 @@
+import { Tabs } from "components";
 import React from "react";
-import { Tabs } from "../../Tabs";
 
 export const SchedulizerPage = () => {
   return (

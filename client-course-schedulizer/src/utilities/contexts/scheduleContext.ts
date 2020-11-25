@@ -1,5 +1,5 @@
 import { createContext, Dispatch, SetStateAction } from "react";
-import { voidFn } from "../helpers/utils";
+import { voidFn } from "utilities";
 
 interface ScheduleContext {
   isScheduleLoading: boolean;

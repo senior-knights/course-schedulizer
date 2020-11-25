@@ -1,12 +1,10 @@
-import { Container, Tabs as MUITabs, Tab } from "@material-ui/core";
+import { Container, Tab, Tabs as MUITabs } from "@material-ui/core";
+import { AsyncComponent } from "components";
+import { FacultyLoads, FacultySchedule, RoomsSchedule } from "components/Tabs";
 import React, { ChangeEvent, useContext, useState } from "react";
-import { FacultySchedule } from "./FacultySchedule";
-import "./Tabs.scss";
-import { AppContext } from "../../utilities/services/appContext";
-import { AsyncComponent } from "../reuseables/AsyncComponent";
-import { FacultyLoads } from "./FacultyLoads";
-import { RoomsSchedule } from "./RoomsSchedule";
+import { AppContext } from "utilities/contexts";
 import { CSVActions, NoCoursesHeader, TabPanel } from "./tabComponents";
+import "./Tabs.scss";
 
 const DEFAULT_TAB = 0;
 

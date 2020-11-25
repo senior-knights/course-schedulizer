@@ -1,15 +1,11 @@
-/* eslint-disable sort-imports */
-import FullCalendar from "@fullcalendar/react";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import FullCalendar from "01/../@fullcalendar/react";
 import { CalendarOptions } from "@fullcalendar/common";
-
-// Plugins
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
 import timeGridPlugin from "@fullcalendar/timegrid";
-
 import React from "react";
+import { INITIAL_DATE } from "utilities/constants";
 import "./Calendar.scss";
-
-export const initialDate = "2000-01-02";
 
 export const Calendar = (props: CalendarOptions) => {
   return (
@@ -26,7 +22,7 @@ Calendar.defaultProps = {
   editable: false, // TODO: Change to true if we can lock section meeting times
   headerToolbar: false,
   height: "auto",
-  initialDate,
+  initialDate: INITIAL_DATE,
   initialView: "timeGridWeek",
   nowIndicator: false,
   plugins: [interactionPlugin, timeGridPlugin],

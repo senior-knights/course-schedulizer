@@ -1,11 +1,10 @@
+import { Header } from "components";
+import { AboutPage, HelpPage, SchedulizerPage } from "components/pages";
 import React, { useReducer, useState } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { initialAppState, reducer } from "utilities";
+import { AppContext } from "utilities/contexts";
 import "./App.scss";
-import { AboutPage, HelpPage, SchedulizerPage } from "../pages";
-import { Header } from "../Header/Header";
-import { reducer } from "../../utilities/services/appReducer";
-import { initialAppState } from "../../utilities/interfaces/appInterfaces";
-import { AppContext } from "../../utilities/services/appContext";
 
 export const App = () => {
   const [isCSVLoading, setIsCSVLoading] = useState(false);
