@@ -1,4 +1,6 @@
+import { cloneDeep } from "lodash";
 import moment from "moment";
+import { emptyMeeting } from "utilities/constants";
 import { Course, Day, Meeting, Section, SemesterLength, Term } from "utilities/interfaces";
 
 export interface CaseCallbackParams {
@@ -32,12 +34,7 @@ const createMeetings = (value: string, { meetings }: CaseCallbackParams): string
   valueParts.forEach((_, i) => {
     if (meetings.length <= i) {
       // If there aren't enough meetings, create a new one
-      meetings.push({
-        days: [],
-        duration: 0,
-        location: { building: "", roomCapacity: 0, roomNumber: "" },
-        startTime: "",
-      });
+      meetings.push(cloneDeep(emptyMeeting));
     }
   });
   return valueParts;

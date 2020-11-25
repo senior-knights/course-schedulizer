@@ -1,5 +1,6 @@
+import { cloneDeep } from "lodash";
 import papa from "papaparse";
-import { Course, Schedule, Section, SemesterLength, Term } from "utilities";
+import { Course, emptyCourse, emptySection, Meeting, Schedule, Section } from "utilities";
 import * as cf from "./caseFunctions";
 
 interface ValidFields {
@@ -66,7 +67,6 @@ export const csvStringToSchedule = (csvString: string): Schedule => {
   });
 
   // Define variables for Schedule creation
-  let section: Section;
   const schedule: Schedule = {
     courses: [],
   };
@@ -78,35 +78,9 @@ export const csvStringToSchedule = (csvString: string): Schedule => {
   // Parse each row of the CSV as an object
   data.forEach((object) => {
     // Reset defaults
-    section = {
-      anticipatedSize: 0,
-      comments: "",
-      globalMax: 0,
-      instructors: [],
-      letter: "",
-      localMax: 0,
-      meetings: [
-        {
-          days: [],
-          duration: 0,
-          location: { building: "", roomCapacity: 0, roomNumber: "" },
-          startTime: "",
-        },
-      ],
-      semesterLength: SemesterLength.Full,
-      term: Term.Fall,
-      year: new Date().getFullYear(),
-    };
-
-    const { meetings } = section;
-    const course: Course = {
-      facultyHours: 0,
-      name: "",
-      number: "",
-      prefixes: [],
-      sections: [],
-      studentHours: 0,
-    };
+    const section = cloneDeep(emptySection);
+    const meetings: Meeting[] = [];
+    const course: Course = cloneDeep(emptyCourse);
 
     // Iterate through the fields of the CSV, and parse their values for this object
     if (fields) {
@@ -119,6 +93,7 @@ export const csvStringToSchedule = (csvString: string): Schedule => {
       });
 
       // Insert the Section to the Schedule, either as a new Course or to an existing Course
+      section.meetings = meetings;
       insertSectionCourse(schedule, section, course);
     }
   });

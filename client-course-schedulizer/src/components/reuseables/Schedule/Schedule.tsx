@@ -5,6 +5,7 @@ import { bindPopover, usePopupState } from "material-ui-popup-state/hooks";
 import React, { useCallback, useContext, useMemo, useState } from "react";
 import Stick from "react-stick";
 import StickyNode from "react-stickynode";
+import { CourseSectionMeeting } from "utilities";
 import { AppContext, ScheduleContext } from "utilities/contexts";
 import {
   filterEventsByTerm,
@@ -45,6 +46,7 @@ const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Sc
   const {
     appState: { selectedTerm, slotMaxTime, slotMinTime },
   } = useContext(AppContext);
+  const [popupData, setPopupData] = useState<CourseSectionMeeting>();
 
   const popupState = usePopupState({
     popupId: "addSection",
@@ -53,6 +55,7 @@ const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Sc
 
   const handleEventClick = useCallback(
     (arg: EventClickArg) => {
+      setPopupData(arg.event.extendedProps as CourseSectionMeeting);
       popupState.open(arg.el);
     },
     [popupState],
@@ -118,7 +121,7 @@ const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Sc
           vertical: "top",
         }}
       >
-        <AddSectionPopover />
+        <AddSectionPopover values={popupData} />
       </Popover>
     </>
   );

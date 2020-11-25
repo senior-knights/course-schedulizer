@@ -3,17 +3,21 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import "./GridItemCheckboxGroup.scss";
 
+interface GridItemCheckboxGroup {
+  label: string;
+  name?: string;
+  options: string[];
+  register: ReturnType<typeof useForm>["register"];
+  value?: string[];
+}
+
 export const GridItemCheckboxGroup = ({
   label,
   name,
   options,
   register,
-}: {
-  label: string;
-  name?: string;
-  options: string[];
-  register: ReturnType<typeof useForm>["register"];
-}) => {
+  value,
+}: GridItemCheckboxGroup) => {
   return (
     <Grid item xs>
       <FormLabel component="legend">{label}</FormLabel>
@@ -21,8 +25,7 @@ export const GridItemCheckboxGroup = ({
         return (
           <FormControlLabel
             key={o.toLowerCase()}
-            control={<Checkbox />}
-            defaultChecked={false}
+            control={<Checkbox defaultChecked={value?.includes(o)} />}
             inputRef={register}
             label={o}
             name={`${name || label.toLowerCase()}[${i}]`}
@@ -36,4 +39,5 @@ export const GridItemCheckboxGroup = ({
 
 GridItemCheckboxGroup.defaultProps = {
   name: undefined,
+  value: [],
 };
