@@ -1,10 +1,8 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-import React, { useReducer, useState } from "01/../react";
 import { Header } from "components";
 import { AboutPage, HelpPage, SchedulizerPage } from "components/pages";
+import React, { useReducer, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { initialAppState, reducer } from "utilities";
-import { AppContext } from "utilities/contexts";
+import { AppContext, initialAppState, reducer } from "utilities";
 import "./App.scss";
 
 export const App = () => {
