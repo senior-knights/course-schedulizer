@@ -1,5 +1,6 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { ChangeEvent, useContext } from "01/../react";
 import { isEqual } from "lodash";
-import { ChangeEvent, useContext } from "react";
 import { AppContext, csvStringToSchedule } from "utilities";
 
 // A closure with statefulness. Used to handle changes to inputs
