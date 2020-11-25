@@ -2,10 +2,11 @@ import { Button, ButtonProps, IconButton, Popover } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
 import { AddSectionPopover } from "components";
 import { bindPopover, bindTrigger, usePopupState } from "material-ui-popup-state/hooks";
-import React from "react";
+import React, { ComponentType } from "react";
 import "./AddSectionButton.scss";
 
 interface AddSectionButton extends ButtonProps {
+  // eslint-disable-next-line react/require-default-props
   isIcon?: boolean;
 }
 
@@ -33,7 +34,7 @@ export const AddSectionButton = (props: AddSectionButton) => {
           horizontal: "left",
           vertical: "bottom",
         }}
-        PaperProps={{ style: { maxWidth: "50%", minWidth: "500px" } }}
+        PaperProps={{ style: { minWidth: "500px" } }}
         transformOrigin={{
           horizontal: "right",
           vertical: "top",
@@ -45,6 +46,7 @@ export const AddSectionButton = (props: AddSectionButton) => {
   );
 };
 
-AddSectionButton.defaultProps = {
+// ref: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/36320
+(AddSectionButton as ComponentType<AddSectionButton>).defaultProps = {
   isIcon: true,
 };
