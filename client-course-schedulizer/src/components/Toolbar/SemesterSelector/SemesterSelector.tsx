@@ -1,10 +1,8 @@
 import { IconButton, Typography } from "@material-ui/core";
 import { ChevronLeft, ChevronRight } from "@material-ui/icons";
 import React, { useContext } from "react";
-import { enumArray } from "../../../utilities/helpers/utils";
-import { Term } from "../../../utilities/interfaces/dataInterfaces";
-import { AppContext } from "../../../utilities/services/appContext";
-import { ScheduleContext } from "../../../utilities/services/scheduleContext";
+import { enumArray, Term } from "utilities";
+import { AppContext, ScheduleContext } from "utilities/contexts";
 import "./SemesterSelector.scss";
 
 export const SemesterSelector = () => {

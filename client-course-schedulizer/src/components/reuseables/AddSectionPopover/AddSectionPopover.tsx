@@ -1,8 +1,16 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Grid, Typography } from "@material-ui/core";
-import React, { ChangeEvent, useState, useContext } from "react";
+import { GridItemCheckboxGroup, GridItemRadioGroup, GridItemTextField } from "components";
+import React, { ChangeEvent, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import { array, object } from "yup";
+import { AppContext } from "utilities/contexts";
+import {
+  insertSectionCourse,
+  instructorCase,
+  locationCase,
+  prefixCase,
+  startTimeCase,
+} from "utilities/helpers";
 import {
   Course,
   Day,
@@ -14,18 +22,8 @@ import {
   SemesterLength,
   SemesterLengthOption,
   Term,
-} from "../../../utilities/interfaces/dataInterfaces";
-import {
-  startTimeCase,
-  instructorCase,
-  locationCase,
-  prefixCase,
-} from "../../../utilities/helpers/caseFunctions";
-import { insertSectionCourse } from "../../../utilities/helpers/readCSV";
-import { AppContext } from "../../../utilities/services/appContext";
-import { GridItemCheckboxGroup } from "../GridItem/GridItemCheckboxGroup";
-import { GridItemRadioGroup } from "../GridItem/GridItemRadioGroup";
-import { GridItemTextField } from "../GridItem/GridItemTextField";
+} from "utilities/interfaces";
+import { array, object } from "yup";
 import "./AddSectionPopover.scss";
 
 interface SectionInput {

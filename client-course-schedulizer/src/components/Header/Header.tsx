@@ -1,8 +1,8 @@
 import { AppBar, Toolbar, Typography } from "@material-ui/core";
+import Link from "@material-ui/core/Link";
+import { logo } from "assets";
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
-import Link from "@material-ui/core/Link";
-import { logo } from "../../../assets";
 import "./Header.scss";
 
 /* Header is the top bar that persists across the app */

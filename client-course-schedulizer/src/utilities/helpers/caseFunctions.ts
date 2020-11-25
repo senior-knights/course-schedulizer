@@ -1,5 +1,5 @@
 import moment from "moment";
-import { Course, Day, Meeting, Section, SemesterLength, Term } from "../interfaces/dataInterfaces";
+import { Course, Day, Meeting, Section, SemesterLength, Term } from "utilities/interfaces";
 
 export interface CaseCallbackParams {
   course: Course;

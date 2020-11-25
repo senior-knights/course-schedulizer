@@ -1,5 +1,5 @@
 import forEach from "lodash/forEach";
-import { Schedule } from "../interfaces/dataInterfaces";
+import { Schedule } from "utilities";
 
 // Get list of unique rooms.
 export const getRooms = (schedule: Schedule): string[] => {

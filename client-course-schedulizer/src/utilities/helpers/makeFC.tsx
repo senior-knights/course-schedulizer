@@ -1,5 +1,5 @@
 import React, { ComponentProps, ElementType, FC, forwardRef, ReactNode } from "react";
-import { getChildByName } from "./utils";
+import { getChildByName } from "utilities";
 
 /* Options props to pass when creating a component. */
 interface ComponentOptions<T extends ElementType = "div"> {

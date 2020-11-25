@@ -1,6 +1,6 @@
-import * as di from "../interfaces/dataInterfaces";
+import { Schedule } from "utilities/interfaces";
 
-export const scheduleToCSVString = (schedule: di.Schedule): string => {
+export const scheduleToCSVString = (schedule: Schedule): string => {
   let csvStr =
     "name,prefixes,number,section,studentHours,facultyHours,startTime,duration,location,roomCapacity,year,term,semesterLength,days,globalMax,localMax,anticipatedSize,instructors,comments";
   schedule.courses.forEach((course) => {

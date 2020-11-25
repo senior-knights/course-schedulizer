@@ -1,8 +1,5 @@
+import { AddSectionButton, ColorSelector, Searchbar, SemesterSelector } from "components";
 import React from "react";
-import { AddSectionButton } from "../../reuseables/AddSectionButton";
-import { ColorSelector } from "../ColorSelector/ColorSelector";
-import { Searchbar } from "../Searchbar";
-import { SemesterSelector } from "../SemesterSelector";
 import "./ScheduleToolbar.scss";
 
 export const ScheduleToolbar = () => {

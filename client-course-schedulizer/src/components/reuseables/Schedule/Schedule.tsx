@@ -1,21 +1,17 @@
 import { CalendarOptions, EventClickArg } from "@fullcalendar/react";
 import { Popover } from "@material-ui/core";
+import { AddSectionPopover, AsyncComponent, Calendar, ScheduleToolbar } from "components";
 import { bindPopover, usePopupState } from "material-ui-popup-state/hooks";
 import React, { useCallback, useContext, useMemo, useState } from "react";
 import Stick from "react-stick";
 import StickyNode from "react-stickynode";
-import { AppContext } from "../../../utilities/services/appContext";
+import { AppContext, ScheduleContext } from "utilities/contexts";
 import {
-  GroupedEvents,
-  getHoursArr,
   filterEventsByTerm,
   filterHeadersWithNoEvents,
-} from "../../../utilities/services/schedule";
-import { ScheduleContext } from "../../../utilities/services/scheduleContext";
-import { ScheduleToolbar } from "../../Toolbar/ScheduleToolbar";
-import { AddSectionPopover } from "../AddSectionPopover";
-import { AsyncComponent } from "../AsyncComponent";
-import { Calendar } from "../Calendar";
+  getHoursArr,
+  GroupedEvents,
+} from "utilities/services";
 import "./Schedule.scss";
 
 interface ScheduleBase extends CalendarOptions {
