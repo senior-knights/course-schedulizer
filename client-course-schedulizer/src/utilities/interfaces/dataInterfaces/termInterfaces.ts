@@ -32,4 +32,5 @@ export enum SemesterLengthOption {
   FullSemester = "Full",
   HalfSemester = "Half",
   IntensiveSemester = "Intensive",
+  CustomSemester = "Custom",
 }
