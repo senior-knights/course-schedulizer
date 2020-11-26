@@ -1,41 +1,87 @@
-import { Schedule } from "utilities/interfaces";
+import moment from "moment";
+import { Schedule, Term } from "utilities/interfaces";
 
 export const scheduleToCSVString = (schedule: Schedule): string => {
+  const numericReg = RegExp("[0-9]");
   let csvStr =
-    "name,prefixes,number,section,studentHours,facultyHours,startTime,duration,location,roomCapacity,year,term,semesterLength,days,globalMax,localMax,anticipatedSize,instructors,comments";
+    "Department,Term,TermStart,AcademicYear,SectionName,SubjectCode,CourseNum,SectionCode,CourseLevelCode,MinimumCredits,FacultyLoad,Used,Day10Used,LocalMax,Global Max,RoomCapacity,BuildingAndRoom,MeetingDays,MeetingTime,SectionStartDate,SectionEndDate,Building,RoomNumber,MeetingStart,MeetingStartInternal,DurationMinutes,MeetingEnd,MeetingEndInternal,Monday,Tuesday,Wednesday,Thursday,Friday,ShortTitle,Faculty,SectionStatus,InstructionalMethod";
   schedule.courses.forEach((course) => {
     course.sections.forEach((section) => {
       // Iterate through meetings to construct relevant strings
-      let startTimeStr = "";
-      let durationStr = "";
-      let locationStr = "";
+      let startMoment;
+      let meetingTimeStr = "";
+      let meetingStartStr = "";
+      let meetingStartInternalStr = "";
+      let meetingEndStr = "";
+      let meetingEndInternalStr = "";
+      let durationMinutesStr = "";
+      let buildingStr = "";
+      let roomNumberStr = "";
+      let buildingAndRoomStr = "";
       let roomCapacityStr = "";
       let daysStr = "";
       section.meetings.forEach((meeting) => {
-        startTimeStr += `${meeting.startTime}\n`;
-        durationStr += `${meeting.duration}\n`;
-        locationStr += meeting.location.roomNumber
+        startMoment = moment(meeting.startTime, "h:mma");
+        if (startMoment.isValid()) {
+          meetingTimeStr += `${startMoment.format("h:mma")}-${startMoment
+            .add(meeting.duration, "minutes")
+            .format("h:mma")}`;
+          meetingStartStr += `${startMoment.format("h:mm a")}\n`;
+          meetingStartInternalStr += `${startMoment.format("H:mm:ss")}\n`;
+          meetingEndStr += `${startMoment.add(meeting.duration, "minutes").format("h:mm a")}\n`;
+          meetingEndInternalStr += `${startMoment
+            .add(meeting.duration, "minutes")
+            .format("H:mm:ss")}\n`;
+        } else {
+          meetingTimeStr += "\n";
+          meetingStartStr += "\n";
+          meetingStartInternalStr += "\n";
+          meetingEndStr += "\n";
+          meetingEndInternalStr += "\n";
+        }
+        durationMinutesStr += `${meeting.duration}\n`;
+        buildingStr += `${meeting.location.building}\n`;
+        roomNumberStr += `${meeting.location.roomNumber}\n`;
+        buildingAndRoomStr += meeting.location.roomNumber
           ? `${meeting.location.building} ${meeting.location.roomNumber}\n`
           : `${meeting.location.building}\n`;
         roomCapacityStr += `${meeting.location.roomCapacity}\n`;
         daysStr += `${meeting.days.join("")}\n`;
       });
       // Remove trailing newlines
-      startTimeStr = startTimeStr.slice(0, -1);
-      durationStr = durationStr.slice(0, -1);
-      locationStr = locationStr.slice(0, -1);
+      meetingStartStr = meetingStartStr.slice(0, -1);
+      durationMinutesStr = durationMinutesStr.slice(0, -1);
+      buildingAndRoomStr = buildingAndRoomStr.slice(0, -1);
       roomCapacityStr = roomCapacityStr.slice(0, -1);
       daysStr = daysStr.slice(0, -1);
+      // Create strings for fields that need to be constructed
+      const termStr = `${
+        typeof section.year === "number"
+          ? section.term === Term.Fall
+            ? String(section.year).slice(-2)
+            : String(section.year + 1).slice(-2)
+          : section.term === Term.Fall
+          ? String(Number(section.year.slice(-2)) - 1)
+          : section.year.slice(-2)
+      }/${section.term}`;
+      const sectionNameStr = `${course.prefixes.length ? course.prefixes[0] : ""}-${
+        course.number
+      }-${section.letter}`;
+      const courseLevelCodeStr = numericReg.test(course.number[0])
+        ? `${course.number[0]}00`
+        : "100";
+
       // TODO: Be wary of commas in strings?
-      csvStr += `\n"${course.name}",${course.prefixes.join(";")},${course.number},${
+      // Construct a row in the output CSV
+      csvStr += `\nTODO Department,${termStr},TODO TermStart,${
+        section.year
+      },${sectionNameStr},${course.prefixes.join(";")},${course.number},${
         section.letter
-      },${section.studentHours ?? course.studentHours},${
+      },${courseLevelCodeStr},${section.studentHours ?? course.studentHours},${
         section.facultyHours ?? course.facultyHours
-      },"${startTimeStr}","${durationStr}","${locationStr}","${roomCapacityStr}",${section.year},${
-        section.term
-      },${section.semesterLength},"${daysStr}",${section.globalMax},${section.localMax},${
-        section.anticipatedSize
-      },${section.instructors.join(";")},${section.comments},`;
+      },TODO Used,TODO Day10Used,${section.localMax},${
+        section.globalMax
+      },"${roomCapacityStr}","${buildingAndRoomStr}","${daysStr}","${meetingTimeStr}",TODO SectionStartDate,TODO SectionEndDate,"${buildingStr}","${roomNumberStr}","${meetingStartStr}","${meetingStartInternalStr}","${durationMinutesStr}","${meetingEndStr}","${meetingEndInternalStr}",`;
     });
   });
   return csvStr;
