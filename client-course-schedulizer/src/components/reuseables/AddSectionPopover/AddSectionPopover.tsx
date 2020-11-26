@@ -169,7 +169,13 @@ export const AddSectionPopover = () => {
           textFieldProps={{ multiline: true, name: "comments", rows: 4 }}
         />
       </Grid>
-      <Grid container justify="flex-end">
+      <Grid alignItems="flex-end" container justify="space-between">
+        <Grid item>
+          <Typography variant="caption">
+            Use <b>tab</b> and <b>shift + tab</b> to navigate, <b>space bar</b> to select Days, and{" "}
+            <b>return</b> to submit.
+          </Typography>
+        </Grid>
         <Grid item>
           <Button color="primary" onClick={handleSubmit(onSubmit)} variant="contained">
             Submit
