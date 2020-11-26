@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Button, Grid, Typography } from "@material-ui/core";
+import { Box, Button, Grid, InputAdornment, Typography } from "@material-ui/core";
 import { GridItemCheckboxGroup, GridItemRadioGroup, GridItemTextField } from "components";
 import React, { ChangeEvent, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -44,6 +44,10 @@ export const AddSectionPopover = () => {
     setSemesterLength(e.target.value as SemesterLengthOption);
   };
 
+  const isHalfSemester = semesterLength === SemesterLengthOption.HalfSemester;
+  const isIntensiveSemester = semesterLength === SemesterLengthOption.IntensiveSemester;
+  const isCustomSemester = semesterLength === SemesterLengthOption.CustomSemester;
+
   return (
     <form className="popover-container">
       <Box mb={SPACING}>
@@ -87,7 +91,15 @@ export const AddSectionPopover = () => {
             type: "time",
           }}
         />
-        <GridItemTextField label="Duration" register={register} />
+        <GridItemTextField
+          label="Duration"
+          register={register}
+          textFieldProps={{
+            InputProps: {
+              endAdornment: <InputAdornment position="end">min</InputAdornment>,
+            },
+          }}
+        />
       </Grid>
       <Grid container spacing={SPACING}>
         <GridItemCheckboxGroup
@@ -113,7 +125,7 @@ export const AddSectionPopover = () => {
           register={register}
         />
         <Grid item xs>
-          {semesterLength === SemesterLengthOption.HalfSemester && (
+          {isHalfSemester && (
             <GridItemRadioGroup
               control={control}
               defaultValue={SemesterLength.HalfFirst}
@@ -124,7 +136,7 @@ export const AddSectionPopover = () => {
               register={register}
             />
           )}
-          {semesterLength === SemesterLengthOption.IntensiveSemester && (
+          {isIntensiveSemester && (
             <GridItemRadioGroup
               control={control}
               defaultValue={SemesterLength.IntensiveA}
@@ -135,7 +147,7 @@ export const AddSectionPopover = () => {
               register={register}
             />
           )}
-          {semesterLength === SemesterLengthOption.CustomSemester && (
+          {isCustomSemester && (
             <Grid container direction="column" spacing={SPACING}>
               {/* TODO: add support for custom */}
               <GridItemTextField
@@ -172,8 +184,8 @@ export const AddSectionPopover = () => {
       <Grid alignItems="flex-end" container justify="space-between">
         <Grid item>
           <Typography variant="caption">
-            Use <b>tab</b> and <b>shift + tab</b> to navigate, <b>space bar</b> to select Days, and{" "}
-            <b>return</b> to submit.
+            Tip: use <b>tab</b> and <b>shift + tab</b> to navigate, <b>space bar</b> to select days,{" "}
+            <b>arrow keys</b> to select term and others, and <b>return</b> to submit.
           </Typography>
         </Grid>
         <Grid item>
