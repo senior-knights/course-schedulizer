@@ -41,6 +41,7 @@ const registrarSpreadsheetFields: ValidFields = {
   GlobalMax: cf.globalMaxCallback,
   LocalMax: cf.localMaxCallback,
   MeetingDays: cf.daysCallback,
+  MeetingDurationMinutes: cf.durationCallback,
   MeetingStart: cf.startTimeCallback,
   MeetingTime: cf.durationCallback,
   MinimumCredits: cf.studentHoursCallback,

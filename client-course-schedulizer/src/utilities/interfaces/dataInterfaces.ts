@@ -20,10 +20,10 @@ export enum Day {
   Monday = "M",
   Tuesday = "T",
   Wednesday = "W",
-  Thursday = "Th",
+  Thursday = "TH",
   Friday = "F",
   Saturday = "S",
-  Sunday = "Su",
+  Sunday = "SU",
 }
 
 export enum Half {
@@ -56,7 +56,7 @@ export interface Meeting {
   // In minutes (usually 50)
   duration: number;
   location: Location;
-  // Like "8:00AM" or "12:30PM"
+  // Like "8:00 AM" or "12:30 PM"
   startTime: string;
 }
 

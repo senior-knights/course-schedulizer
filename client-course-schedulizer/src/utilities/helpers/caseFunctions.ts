@@ -150,7 +150,7 @@ export const sectionEndCallback = (value: string, { section }: CaseCallbackParam
 };
 
 export const startTimeCase = (value: string): string => {
-  return moment(value, "h:mma").isValid() ? value : "";
+  return moment(value, "h:mm A").isValid() ? value : "";
 };
 
 export const locationCase = (value: string): string[] => {
@@ -283,8 +283,8 @@ export const durationCase = (value: string): number => {
     return Number(value);
   }
   const [startTime, endTime] = value.split(" ").join("").split("-");
-  const startTimeMoment = moment(startTime, "h:mma");
-  const endTimeMoment = moment(endTime, "h:mma");
+  const startTimeMoment = moment(startTime, "h:mmA");
+  const endTimeMoment = moment(endTime, "h:mmA");
   return endTimeMoment.diff(startTimeMoment, "minutes");
 };
 
