@@ -4,7 +4,13 @@ import { GridItemCheckboxGroup, GridItemRadioGroup, GridItemTextField } from "co
 import moment from "moment";
 import React, { ChangeEvent, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import { emptyCourse, emptyMeeting, emptySection } from "utilities";
+import {
+  convertFromSemesterLength,
+  convertToSemesterLength,
+  emptyCourse,
+  emptyMeeting,
+  emptySection,
+} from "utilities";
 import { AppContext } from "utilities/contexts";
 import {
   insertSectionCourse,
@@ -64,27 +70,6 @@ interface AddSectionPopover {
   values?: CourseSectionMeeting;
 }
 
-const convertToSemesterLength = (
-  sl: Half | Intensive | SemesterLengthOption | undefined,
-): SemesterLength => {
-  switch (sl) {
-    case Half.First:
-      return SemesterLength.HalfFirst;
-    case Half.Second:
-      return SemesterLength.HalfSecond;
-    case Intensive.A:
-      return SemesterLength.IntensiveA;
-    case Intensive.B:
-      return SemesterLength.IntensiveB;
-    case Intensive.C:
-      return SemesterLength.IntensiveC;
-    case Intensive.D:
-      return SemesterLength.IntensiveD;
-    default:
-      return SemesterLength.Full;
-  }
-};
-
 export const AddSectionPopover = ({ values }: AddSectionPopover) => {
   const {
     appState: { schedule },
@@ -106,7 +91,9 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
   const { register, handleSubmit, control } = useForm<SectionInput>({
     resolver: yupResolver(schema),
   });
-  const [semesterLength, setSemesterLength] = useState("full");
+  const [semesterLength, setSemesterLength] = useState(
+    convertFromSemesterLength(values?.section.semesterLength).toLowerCase(),
+  );
 
   const onSubmit = (data: SectionInput) => {
     setIsCSVLoading(true);
@@ -261,7 +248,7 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
         />
         <GridItemRadioGroup
           control={control}
-          defaultValue={convertToSemesterLength(values?.section.semesterLength).toLowerCase()}
+          defaultValue={convertFromSemesterLength(values?.section.semesterLength).toLowerCase()}
           label="Semester Length"
           lowercase
           name="semesterLength"
