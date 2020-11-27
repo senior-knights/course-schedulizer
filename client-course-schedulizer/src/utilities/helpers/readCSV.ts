@@ -35,10 +35,14 @@ const pruimSpreadsheetFields: ValidFields = {
 const registrarSpreadsheetFields: ValidFields = {
   AcademicYear: cf.yearCallback,
   BuildingAndRoom: cf.locationCallback,
+  Comments: cf.commentsCallback,
   CourseNum: cf.numberCallback,
+  Day10Used: cf.day10UsedCallback,
+  Department: cf.departmentCallback,
   Faculty: cf.instructorCallback,
   FacultyLoad: cf.facultyHoursCallback,
   GlobalMax: cf.globalMaxCallback,
+  InstructionalMethod: cf.instructionalMethodCallback,
   LocalMax: cf.localMaxCallback,
   MeetingDays: cf.daysCallback,
   MeetingDurationMinutes: cf.durationCallback,
@@ -47,12 +51,14 @@ const registrarSpreadsheetFields: ValidFields = {
   MinimumCredits: cf.studentHoursCallback,
   RoomCapacity: cf.roomCapacityCallback,
   SectionCode: cf.letterCallback,
-  SectionEndDate: cf.sectionEndCallback,
-  SectionStartDate: cf.sectionStartCallback,
+  SectionEndDate: cf.endDateCallback,
+  SectionStartDate: cf.startDateCallback,
+  SectionStatus: cf.statusCallback,
   ShortTitle: cf.nameCallback,
   SubjectCode: cf.prefixCallback,
   Term: cf.termCallback,
-  Used: cf.anticipatedSizeCallback,
+  TermStart: cf.termStartCallback,
+  Used: cf.usedCallback,
 };
 
 const callbacks: ValidFields = {
@@ -82,7 +88,10 @@ export const csvStringToSchedule = (csvString: string): Schedule => {
     section = {
       anticipatedSize: 0,
       comments: "",
+      day10Used: 0,
+      endDate: "",
       globalMax: 0,
+      instructionalMethod: "",
       instructors: [],
       letter: "",
       localMax: 0,
@@ -95,12 +104,17 @@ export const csvStringToSchedule = (csvString: string): Schedule => {
         },
       ],
       semesterLength: SemesterLength.Full,
+      startDate: "",
+      status: "",
       term: Term.Fall,
+      termStart: "",
+      used: 0,
       year: new Date().getFullYear(),
     };
 
     const { meetings } = section;
     const course: Course = {
+      department: "",
       facultyHours: 0,
       name: "",
       number: "",
@@ -110,6 +124,7 @@ export const csvStringToSchedule = (csvString: string): Schedule => {
     };
 
     // Iterate through the fields of the CSV, and parse their values for this object
+    // TODO: Create a sense of priority for MeetingDurationMinutes over MeetingTime and SemesterLength over SemesterEndDate - SemesterStartDate
     if (fields) {
       fields.forEach((field) => {
         const value = String(object[field]);

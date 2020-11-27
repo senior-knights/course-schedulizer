@@ -4,7 +4,7 @@ import { Day, Schedule, Term } from "utilities/interfaces";
 export const scheduleToCSVString = (schedule: Schedule): string => {
   const numericReg = RegExp("[0-9]");
   let csvStr =
-    "Department,Term,TermStart,AcademicYear,SectionName,SubjectCode,CourseNum,SectionCode,CourseLevelCode,MinimumCredits,FacultyLoad,Used,Day10Used,LocalMax,Global Max,RoomCapacity,BuildingAndRoom,MeetingDays,MeetingTime,SectionStartDate,SectionEndDate,Building,RoomNumber,MeetingStart,MeetingStartInternal,MeetingDurationMinutes,MeetingEnd,MeetingEndInternal,Monday,Tuesday,Wednesday,Thursday,Friday,ShortTitle,Faculty,SectionStatus,InstructionalMethod";
+    "Department,Term,TermStart,AcademicYear,SectionName,SubjectCode,CourseNum,SectionCode,CourseLevelCode,MinimumCredits,FacultyLoad,Used,Day10Used,LocalMax,Global Max,RoomCapacity,BuildingAndRoom,MeetingDays,MeetingTime,SectionStartDate,SectionEndDate,SemesterLength,Building,RoomNumber,MeetingStart,MeetingStartInternal,MeetingDurationMinutes,MeetingEnd,MeetingEndInternal,Monday,Tuesday,Wednesday,Thursday,Friday,ShortTitle,Faculty,SectionStatus,InstructionalMethod,Comments";
   schedule.courses.forEach((course) => {
     course.sections.forEach((section) => {
       // Iterate through meetings to construct relevant strings
@@ -93,17 +93,23 @@ export const scheduleToCSVString = (schedule: Schedule): string => {
         : "100";
 
       // Construct a row in the output CSV
-      csvStr += `\nTODO Department,${termStr},TODO TermStart,${
+      csvStr += `\n"${course.department}",${termStr},${section.termStart},${
         section.year
       },"${sectionNameStr}",${course.prefixes.join(";")},${course.number},${
         section.letter
       },${courseLevelCodeStr},${section.studentHours ?? course.studentHours},${
         section.facultyHours ?? course.facultyHours
-      },TODO Used,TODO Day10Used,${section.localMax},${
+      },${section.used},${section.day10Used},${section.localMax},${
         section.globalMax
-      },"${roomCapacityStr}","${buildingAndRoomStr}","${daysStr}","${meetingTimeStr}",TODO SectionStartDate,TODO SectionEndDate,"${buildingStr}","${roomNumberStr}","${meetingStartStr}","${meetingStartInternalStr}","${meetingDurationMinutesStr}","${meetingEndStr}","${meetingEndInternalStr}","${monStr}","${tuesStr}","${wedStr}","${thursStr}","${friStr}","${
+      },"${roomCapacityStr}","${buildingAndRoomStr}","${daysStr}","${meetingTimeStr}",${
+        section.startDate
+      },${section.endDate},${
+        section.semesterLength
+      },"${buildingStr}","${roomNumberStr}","${meetingStartStr}","${meetingStartInternalStr}","${meetingDurationMinutesStr}","${meetingEndStr}","${meetingEndInternalStr}","${monStr}","${tuesStr}","${wedStr}","${thursStr}","${friStr}","${
         course.name
-      }",${section.instructors.join(";")},TODO SectionStatus,TODO InstructionalMethod`;
+      }",${section.instructors.join(";")},"${section.status}","${section.instructionalMethod}",${
+        section.comments
+      },`;
     });
   });
   return csvStr;

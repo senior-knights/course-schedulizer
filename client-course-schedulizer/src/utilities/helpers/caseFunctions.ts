@@ -141,12 +141,37 @@ export const roomCapacityCallback = (value: string, params: CaseCallbackParams) 
   });
 };
 
-export const sectionStartCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.startSectionDate = value;
+export const departmentCallback = (value: string, { course }: CaseCallbackParams) => {
+  course.department = value;
 };
 
-export const sectionEndCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.semesterLength = sectionEndCase(value, section.startSectionDate);
+export const termStartCallback = (value: string, { section }: CaseCallbackParams) => {
+  section.termStart = value;
+};
+
+export const usedCallback = (value: string, { section }: CaseCallbackParams) => {
+  section.used = numberDefaultZeroCase(value);
+};
+
+export const day10UsedCallback = (value: string, { section }: CaseCallbackParams) => {
+  section.day10Used = numberDefaultZeroCase(value);
+};
+
+export const startDateCallback = (value: string, { section }: CaseCallbackParams) => {
+  section.startDate = value;
+};
+
+export const endDateCallback = (value: string, { section }: CaseCallbackParams) => {
+  section.endDate = value;
+  section.semesterLength = endDateCase(value, section.startDate);
+};
+
+export const statusCallback = (value: string, { section }: CaseCallbackParams) => {
+  section.status = value;
+};
+
+export const instructionalMethodCallback = (value: string, { section }: CaseCallbackParams) => {
+  section.instructionalMethod = value;
 };
 
 export const startTimeCase = (value: string): string => {
@@ -249,7 +274,7 @@ export const instructorCase = (value: string): string[] => {
   });
 };
 
-export const sectionEndCase = (
+export const endDateCase = (
   value: string,
   startSectionDate: string | undefined,
 ): SemesterLength => {
