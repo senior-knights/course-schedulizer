@@ -64,7 +64,9 @@ interface AddSectionPopover {
   values?: CourseSectionMeeting;
 }
 
-const convertToSemesterLength = (sl: Half | Intensive | SemesterLengthOption): SemesterLength => {
+const convertToSemesterLength = (
+  sl: Half | Intensive | SemesterLengthOption | undefined,
+): SemesterLength => {
   switch (sl) {
     case Half.First:
       return SemesterLength.HalfFirst;
