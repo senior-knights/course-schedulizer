@@ -1,6 +1,6 @@
 import fetch from "isomorphic-fetch";
-import { csvStringToSchedule } from "./readCSV";
 import { Course, Day, Schedule, Section, SemesterLength, Term } from "../interfaces/dataInterfaces";
+import { csvStringToSchedule } from "./readCSV";
 
 let schedule: Schedule;
 let basicCourse: Course;
@@ -38,6 +38,10 @@ describe("parses basic course", () => {
     expect(basicCourse).toBeDefined();
   });
 
+  it("parses department", () => {
+    expect(basicCourse.department).toEqual("Mathematics and Statistics");
+  });
+
   it("parses faculty hours", () => {
     expect(basicCourse.facultyHours).toEqual(3);
   });
@@ -69,8 +73,32 @@ describe("parses basic section", () => {
     expect(basicSection).toBeDefined();
   });
 
-  it("parses anticipated size", () => {
-    expect(basicSection.anticipatedSize).toEqual(32);
+  it("parses used", () => {
+    expect(basicSection.used).toEqual(32);
+  });
+
+  it("parses day 10 used", () => {
+    expect(basicSection.day10Used).toEqual(0);
+  });
+
+  it("parses term start", () => {
+    expect(basicSection.termStart).toEqual("2/3/2020");
+  });
+
+  it("parses start date", () => {
+    expect(basicSection.startDate).toEqual("2/3/2020");
+  });
+
+  it("parses end date", () => {
+    expect(basicSection.endDate).toEqual("5/21/2020");
+  });
+
+  it("parses status", () => {
+    expect(basicSection.status).toEqual("Active");
+  });
+
+  it("parses instructional method", () => {
+    expect(basicSection.instructionalMethod).toEqual("LEC");
   });
 
   it("parses global max", () => {
