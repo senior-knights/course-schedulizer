@@ -3,6 +3,17 @@ import React, { ChangeEvent } from "react";
 import { Controller, useForm } from "react-hook-form";
 import "./GridItemRadioGroup.scss";
 
+interface GridItemRadioGroup {
+  control: ReturnType<typeof useForm>["control"];
+  defaultValue: string;
+  label: string;
+  lowercase?: boolean;
+  name?: string;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  options: string[];
+  register: ReturnType<typeof useForm>["register"];
+}
+
 export const GridItemRadioGroup = ({
   control,
   defaultValue,
@@ -12,16 +23,7 @@ export const GridItemRadioGroup = ({
   onChange,
   options,
   register,
-}: {
-  control: ReturnType<typeof useForm>["control"];
-  defaultValue: string;
-  label: string;
-  lowercase?: boolean;
-  name?: string;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
-  options: string[];
-  register: ReturnType<typeof useForm>["register"];
-}) => {
+}: GridItemRadioGroup) => {
   return (
     <Grid item xs>
       <FormLabel component="legend">{label}</FormLabel>

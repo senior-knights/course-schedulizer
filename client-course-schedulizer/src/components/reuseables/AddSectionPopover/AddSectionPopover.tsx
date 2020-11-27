@@ -252,27 +252,25 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
         />
         <GridItemRadioGroup
           control={control}
-          defaultValue="FA"
+          defaultValue={values?.section.term || "FA"}
           label="Term"
           options={Object.values(Term)}
           register={register}
-          // value={values?.section.term}
         />
         <GridItemRadioGroup
           control={control}
-          defaultValue="full"
+          defaultValue={convertToSemesterLength(values?.section.semesterLength).toLowerCase()}
           label="Semester Length"
           lowercase
           name="semesterLength"
           onChange={onSemesterLengthChange}
           options={Object.values(SemesterLengthOption)}
           register={register}
-          // value={values?.section.semesterLength}
         />
         {semesterLength === "half" && (
           <GridItemRadioGroup
             control={control}
-            defaultValue="First"
+            defaultValue={values?.section.semesterLength || "First"}
             label="Half Semester"
             lowercase
             name="half"
@@ -280,20 +278,18 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
               return Object.values(Half).includes(h);
             })}
             register={register}
-            // value={values?.section.semesterLength}
           />
         )}
         {semesterLength === "intensive" && (
           <GridItemRadioGroup
             control={control}
-            defaultValue="A"
+            defaultValue={values?.section.semesterLength || "A"}
             label="Intensive Semester"
             name="intensive"
             options={Object.values(SemesterLength).filter((i) => {
               return Object.values(Intensive).includes(i);
             })}
             register={register}
-            // value={values?.section.semesterLength}
           />
         )}
         <GridItemTextField
