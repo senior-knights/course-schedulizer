@@ -1,4 +1,11 @@
-import { FormControlLabel, FormLabel, Grid, Radio, RadioGroup } from "@material-ui/core";
+import {
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Grid,
+  Radio,
+  RadioGroup,
+} from "@material-ui/core";
 import { camelCase } from "lodash";
 import React, { ChangeEvent } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -7,52 +14,51 @@ import "./GridItemRadioGroup.scss";
 export interface GridItemRadioGroup {
   control: ReturnType<typeof useForm>["control"];
   defaultValue: string;
-  disabled?: boolean;
   label: string;
-  lowercase?: boolean;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   options: string[];
   register: ReturnType<typeof useForm>["register"];
 }
 
+/* Renders a group of radio buttons for a form.
+Ref: https://stackoverflow.com/questions/64042394/react-hook-form-and-material-ui-formcontrol */
 export const GridItemRadioGroup = ({
   control,
   defaultValue,
-  disabled,
   label,
-  lowercase,
   onChange,
   options,
   register,
 }: GridItemRadioGroup) => {
   return (
     <Grid item xs>
-      <FormLabel component="legend">{label}</FormLabel>
-      <Controller
-        ref={register}
-        as={RadioGroup}
-        control={control}
-        defaultValue={defaultValue}
-        name={camelCase(label)}
-      >
-        {options.map((o) => {
-          return (
-            <FormControlLabel
-              key={o.toLowerCase()}
-              control={<Radio onChange={onChange} />}
-              disabled={disabled}
-              label={o}
-              value={lowercase ? o.toLowerCase() : o}
-            />
-          );
-        })}
-      </Controller>
+      <FormControl component="fieldset">
+        <FormLabel component="legend">{label}</FormLabel>
+        <Controller
+          ref={register}
+          as={
+            <RadioGroup>
+              {options.map((opt) => {
+                return (
+                  <FormControlLabel
+                    key={opt}
+                    control={<Radio onChange={onChange} />}
+                    label={opt}
+                    value={opt}
+                  />
+                );
+              })}
+            </RadioGroup>
+          }
+          control={control}
+          defaultValue={defaultValue}
+          name={camelCase(label)}
+        />
+      </FormControl>
     </Grid>
   );
 };
 
 GridItemRadioGroup.defaultProps = {
-  disabled: false,
-  lowercase: false,
   onChange: undefined,
 };

@@ -1,25 +1,33 @@
 import { Grid, StandardTextFieldProps, TextField } from "@material-ui/core";
-import { camelCase } from "lodash";
+import { SectionInput, useInput } from "components";
 import React from "react";
-import { useForm } from "react-hook-form";
+import { UseFormMethods } from "react-hook-form";
 import "./GridItemTextField.scss";
 
 interface GridItemTextField {
+  hookForm: UseFormMethods<SectionInput>;
   label: string;
-  register: ReturnType<typeof useForm>["register"];
   textFieldProps?: StandardTextFieldProps;
 }
 
-export const GridItemTextField = ({ label, register, textFieldProps }: GridItemTextField) => {
+/* A text field to be used on forms */
+export const GridItemTextField = ({ label, hookForm, textFieldProps }: GridItemTextField) => {
+  const { register, errors } = hookForm;
+  const { name, errorMessage } = useInput(label, errors);
+
   return (
-    <Grid item xs>
-      <TextField
-        inputRef={register}
-        label={label}
-        name={camelCase(label)}
-        {...textFieldProps}
-        variant="outlined"
-      />
+    <Grid container direction="column" item xs>
+      <Grid item xs>
+        <TextField
+          inputRef={register}
+          label={label}
+          name={name}
+          {...textFieldProps}
+          error={!!errorMessage}
+          helperText={errorMessage}
+          variant="outlined"
+        />
+      </Grid>
     </Grid>
   );
 };

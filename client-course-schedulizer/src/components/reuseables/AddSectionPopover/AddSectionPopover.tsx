@@ -14,7 +14,11 @@ import {
   Weekday,
 } from "utilities/interfaces";
 import "./AddSectionPopover.scss";
-import { schema, SectionInput, updateScheduleWithNewSection } from "./AddSectionPopoverService";
+import {
+  addSectionSchema,
+  SectionInput,
+  updateScheduleWithNewSection,
+} from "./AddSectionPopoverService";
 
 const SPACING = 2;
 
@@ -26,8 +30,9 @@ export const AddSectionPopover = () => {
     appDispatch,
     setIsCSVLoading,
   } = useContext(AppContext);
-  const { register, handleSubmit, control } = useForm<SectionInput>({
-    resolver: yupResolver(schema),
+  const hookForm = useForm<SectionInput>({
+    criteriaMode: "all",
+    resolver: yupResolver(addSectionSchema),
   });
   const [semesterLength, setSemesterLength] = useState<SemesterLengthOption>(
     SemesterLengthOption.FullSemester,
@@ -44,12 +49,14 @@ export const AddSectionPopover = () => {
     setSemesterLength(e.target.value as SemesterLengthOption);
   };
 
+  // const vars
+  const { register, handleSubmit, control } = hookForm;
   const isHalfSemester = semesterLength === SemesterLengthOption.HalfSemester;
   const isIntensiveSemester = semesterLength === SemesterLengthOption.IntensiveSemester;
   const isCustomSemester = semesterLength === SemesterLengthOption.CustomSemester;
 
   return (
-    <form className="popover-container">
+    <form className="popover-container" onSubmit={handleSubmit(onSubmit)}>
       <Box mb={SPACING}>
         <Typography className="popover-title" variant="h4">
           Add Section
@@ -58,33 +65,33 @@ export const AddSectionPopover = () => {
       <Grid container spacing={SPACING}>
         {/* TODO: Dropdown for courses already in system */}
         <GridItemTextField
+          hookForm={hookForm}
           label="Prefix"
-          register={register}
           textFieldProps={{ autoFocus: true }}
         />
-        <GridItemTextField label="Number" register={register} />
-        <GridItemTextField label="Section" register={register} />
-        <GridItemTextField label="Class Name" register={register} />
+        <GridItemTextField hookForm={hookForm} label="Number" />
+        <GridItemTextField hookForm={hookForm} label="Section" />
+        <GridItemTextField hookForm={hookForm} label="Course Name" />
         <Grid item xs>
           <span>{/* TODO: add error messages? */}</span>
         </Grid>
       </Grid>
       <Grid container spacing={SPACING}>
         {/* TODO: Dropdown for instructors with option to add new one */}
-        <GridItemTextField label="Instructor" register={register} />
-        <GridItemTextField label="Student Hours" register={register} />
-        <GridItemTextField label="Faculty Hours" register={register} />
+        <GridItemTextField hookForm={hookForm} label="Instructor" />
+        <GridItemTextField hookForm={hookForm} label="Student Hours" />
+        <GridItemTextField hookForm={hookForm} label="Faculty Hours" />
         {/* TODO: Dropdown for rooms with option to add new one */}
-        <GridItemTextField label="Location" register={register} />
-        <GridItemTextField label="Room Capacity" register={register} />
+        <GridItemTextField hookForm={hookForm} label="Location" />
+        <GridItemTextField hookForm={hookForm} label="Room Capacity" />
       </Grid>
       <Grid container spacing={SPACING}>
-        <GridItemTextField label="Anticipated Size" register={register} />
-        <GridItemTextField label="Global Max" register={register} />
-        <GridItemTextField label="Local Max" register={register} />
+        <GridItemTextField hookForm={hookForm} label="Anticipated Size" />
+        <GridItemTextField hookForm={hookForm} label="Global Max" />
+        <GridItemTextField hookForm={hookForm} label="Local Max" />
         <GridItemTextField
+          hookForm={hookForm}
           label="Start Time"
-          register={register}
           textFieldProps={{
             defaultValue: "08:00",
             fullWidth: true,
@@ -92,8 +99,8 @@ export const AddSectionPopover = () => {
           }}
         />
         <GridItemTextField
+          hookForm={hookForm}
           label="Duration"
-          register={register}
           textFieldProps={{
             InputProps: {
               endAdornment: <InputAdornment position="end">min</InputAdornment>,
@@ -103,11 +110,11 @@ export const AddSectionPopover = () => {
       </Grid>
       <Grid container spacing={SPACING}>
         <GridItemCheckboxGroup
+          hookForm={hookForm}
           label="Days"
           options={Object.values(Day).filter((day) => {
             return Object.values(Weekday).includes(day);
           })}
-          register={register}
         />
         <GridItemRadioGroup
           control={control}
@@ -151,8 +158,8 @@ export const AddSectionPopover = () => {
             <Grid container direction="column" spacing={SPACING}>
               {/* TODO: add support for custom */}
               <GridItemTextField
+                hookForm={hookForm}
                 label="Start Date"
-                register={register}
                 textFieldProps={{
                   defaultValue: "2020-20-20",
                   disabled: true,
@@ -161,8 +168,8 @@ export const AddSectionPopover = () => {
                 }}
               />
               <GridItemTextField
+                hookForm={hookForm}
                 label="End Date"
-                register={register}
                 textFieldProps={{
                   defaultValue: "2020-20-20",
                   disabled: true,
@@ -176,8 +183,8 @@ export const AddSectionPopover = () => {
           )}
         </Grid>
         <GridItemTextField
+          hookForm={hookForm}
           label="Notes"
-          register={register}
           textFieldProps={{ multiline: true, name: "comments", rows: 4 }}
         />
       </Grid>
@@ -189,7 +196,7 @@ export const AddSectionPopover = () => {
           </Typography>
         </Grid>
         <Grid item>
-          <Button color="primary" onClick={handleSubmit(onSubmit)} variant="contained">
+          <Button color="primary" type="submit" variant="contained">
             Submit
           </Button>
         </Grid>

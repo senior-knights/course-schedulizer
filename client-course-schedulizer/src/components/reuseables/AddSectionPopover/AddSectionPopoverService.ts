@@ -1,3 +1,6 @@
+import { camelCase } from "lodash";
+import moment from "moment";
+import { DeepMap, FieldError } from "react-hook-form";
 import {
   insertSectionCourse,
   instructorCase,
@@ -18,7 +21,7 @@ import {
   SemesterLength,
   SemesterLengthOption,
 } from "utilities/interfaces";
-import { array, object } from "yup";
+import { array, number, object, string } from "yup";
 
 // Defines interface for the section popover input
 export interface SectionInput {
@@ -66,13 +69,38 @@ export const convertToSemesterLength = (
   }
 };
 
-// Remove false values from days array. Used by useForm()
-export const schema = object().shape({
-  days: array().transform((d) => {
-    return d.filter((day: boolean | string) => {
-      return day;
-    });
-  }),
+/* A schema to provide form validation for the AddSectionPopover.
+NOTE: fields with default values are not check: semester and time. */
+export const addSectionSchema = object().shape({
+  anticipatedSize: number().typeError("global max must be a number").positive().integer(),
+  courseName: string().required(),
+  days: array()
+    // Removes unchecked days from the list
+    .transform((d) => {
+      return d.filter((day: boolean | string) => {
+        return day;
+      });
+    })
+    .min(1),
+  duration: number().typeError("duration must be a number").required().positive().integer(),
+  facultyHours: number()
+    .typeError("faculty hours must be a number")
+    .required()
+    .positive()
+    .integer(),
+  globalMax: number().typeError("global max must be a number").positive().integer(),
+  instructor: string().required(),
+  localMax: number().typeError("global max must be a number").positive().integer(),
+  location: string().required(),
+  number: number().typeError("number must be a number").required().positive().integer(),
+  prefix: string().required().uppercase(),
+  roomCapacity: number().typeError("global max must be a number").positive().integer(),
+  section: string().required().uppercase(),
+  studentHours: number()
+    .typeError("student hours must be a number")
+    .required()
+    .positive()
+    .integer(),
 });
 
 /* Used to map the input from the popover form to the
@@ -103,7 +131,7 @@ export const mapInputToInternalTypes = (data: SectionInput) => {
     semesterLength: semesterType,
     studentHours: Number(data.studentHours),
     term: data.term,
-    year: "2021-2022",
+    year: `${moment().year()}-${moment().add(1, "year").year()}`,
   };
 
   const newCourse: Course = {
@@ -127,4 +155,12 @@ export const updateScheduleWithNewSection = (data: SectionInput, schedule: Sched
 
   // Insert the Section to the Schedule, either as a new Course or to an existing Course
   insertSectionCourse(schedule, newSection, newCourse);
+};
+
+// a helper to provide consistent naming and retrieve error messages
+export const useInput = <T>(label: string, errors: DeepMap<T, FieldError>) => {
+  const name = camelCase(label);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const errorMessage = (errors[name as keyof T] as any)?.message;
+  return { errorMessage, name };
 };
