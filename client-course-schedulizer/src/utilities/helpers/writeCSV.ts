@@ -109,7 +109,7 @@ export const scheduleToCSVString = (schedule: Schedule): string => {
         course.name
       }",${section.instructors.join(";")},"${section.status}","${section.instructionalMethod}",${
         section.comments
-      },`;
+      }`;
     });
   });
   return csvStr;
