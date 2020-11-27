@@ -34,7 +34,7 @@ export const getEvents = (schedule: Schedule, groups: "faculty" | "room"): Group
         forEach(section.meetings, (meeting) => {
           const room = `${meeting.location.building} ${meeting.location.roomNumber}`;
           const group = groups === "faculty" ? prof : room;
-          const startTimeMoment = moment(meeting.startTime, "h:mma");
+          const startTimeMoment = moment(meeting.startTime, "h:mm A");
           const endTimeMoment = moment(startTimeMoment).add(meeting.duration, "minutes");
           forEach(meeting.days, (day) => {
             const dayOfWeek = moment(INITIAL_DATE)
@@ -71,10 +71,10 @@ export const getMinAndMaxTimes = (schedule: Schedule) => {
   const sections: Section[] = flatten(map(schedule.courses, "sections"));
   const meetings: Meeting[] = flatten(map(sections, "meetings"));
   const startTimes = map(meetings, (meeting) => {
-    return moment(meeting.startTime, "h:mma");
+    return moment(meeting.startTime, "h:mm A");
   });
   const endTimes = map(meetings, (meeting) => {
-    return moment(meeting.startTime, "h:mma").add(meeting.duration, "minutes").format("HH:mm");
+    return moment(meeting.startTime, "h:mm A").add(meeting.duration, "minutes").format("HH:mm");
   });
   const minTime = minBy(startTimes)?.format("HH:mm") || "6:00";
   const maxTime = maxBy(endTimes) || "22:00";
