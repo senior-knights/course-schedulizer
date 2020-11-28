@@ -9,6 +9,7 @@ export const scheduleToCSVString = (schedule: Schedule): string => {
     course.sections.forEach((section) => {
       // Iterate through meetings to construct relevant strings
       let startMoment;
+      let endMoment;
       let meetingTimeStr = "";
       let meetingStartStr = "";
       let meetingStartInternalStr = "";
@@ -27,16 +28,13 @@ export const scheduleToCSVString = (schedule: Schedule): string => {
       let friStr = "";
       section.meetings.forEach((meeting) => {
         startMoment = moment(meeting.startTime, "h:mm A");
+        endMoment = startMoment.clone().add(meeting.duration, "minutes");
         if (startMoment.isValid()) {
-          meetingTimeStr += `${startMoment.format("h:mmA")} - ${startMoment
-            .add(meeting.duration, "minutes")
-            .format("h:mm A")}\n`;
+          meetingTimeStr += `${startMoment.format("h:mmA")} - ${endMoment.format("h:mmA")}\n`;
           meetingStartStr += `${startMoment.format("h:mm A")}\n`;
           meetingStartInternalStr += `${startMoment.format("H:mm:ss")}\n`;
-          meetingEndStr += `${startMoment.add(meeting.duration, "minutes").format("h:mm A")}\n`;
-          meetingEndInternalStr += `${startMoment
-            .add(meeting.duration, "minutes")
-            .format("H:mm:ss")}\n`;
+          meetingEndStr += `${endMoment.format("h:mm A")}\n`;
+          meetingEndInternalStr += `${endMoment.format("H:mm:ss")}\n`;
         } else {
           meetingTimeStr += "\n";
           meetingStartStr += "\n";
