@@ -7,21 +7,20 @@ import {
   FormLabel,
   Grid,
 } from "@material-ui/core";
-import { SectionInput, useInput } from "components";
+import { useInput } from "components";
 import React from "react";
-import { UseFormMethods } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import "./GridItemCheckboxGroup.scss";
 
 interface GridItemCheckboxGroup {
-  hookForm: UseFormMethods<SectionInput>;
   label: string;
   options: string[];
 }
 
 /* Renders a group of check boxes.
 Ref: https://stackoverflow.com/questions/62291962/react-hook-forms-material-ui-checkboxes */
-export const GridItemCheckboxGroup = ({ label, options, hookForm }: GridItemCheckboxGroup) => {
-  const { register, errors } = hookForm;
+export const GridItemCheckboxGroup = ({ label, options }: GridItemCheckboxGroup) => {
+  const { register, errors } = useFormContext();
   const { name, errorMessage } = useInput(label, errors);
 
   return (

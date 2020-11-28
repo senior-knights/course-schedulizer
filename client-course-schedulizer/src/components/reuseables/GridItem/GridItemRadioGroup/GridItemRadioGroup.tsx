@@ -8,28 +8,26 @@ import {
 } from "@material-ui/core";
 import { camelCase } from "lodash";
 import React, { ChangeEvent } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import "./GridItemRadioGroup.scss";
 
 export interface GridItemRadioGroup {
-  control: ReturnType<typeof useForm>["control"];
   defaultValue: string;
   label: string;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   options: string[];
-  register: ReturnType<typeof useForm>["register"];
 }
 
 /* Renders a group of radio buttons for a form.
 Ref: https://stackoverflow.com/questions/64042394/react-hook-form-and-material-ui-formcontrol */
 export const GridItemRadioGroup = ({
-  control,
   defaultValue,
   label,
   onChange,
   options,
-  register,
 }: GridItemRadioGroup) => {
+  const { register, control } = useFormContext();
+
   return (
     <Grid item xs>
       <FormControl component="fieldset">
