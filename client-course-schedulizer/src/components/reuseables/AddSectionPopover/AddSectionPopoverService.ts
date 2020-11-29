@@ -1,5 +1,6 @@
 import { camelCase } from "lodash";
 import moment from "moment";
+import { useContext } from "react";
 import { DeepMap, FieldError } from "react-hook-form";
 import {
   insertSectionCourse,
@@ -8,6 +9,7 @@ import {
   prefixCase,
   startTimeCase,
 } from "utilities";
+import { AppContext } from "utilities/contexts";
 import {
   Course,
   Half,
@@ -16,7 +18,6 @@ import {
   Location,
   Meeting,
   Prefix,
-  Schedule,
   Section,
   SemesterLength,
   SemesterLengthOption,
@@ -27,6 +28,8 @@ import { array, number, object, string } from "yup";
 export interface SectionInput {
   anticipatedSize: Section["anticipatedSize"];
   comments: Section["comments"];
+  // TODO: make the types better so changing in one place makes you aware or add tests
+  courseName: Course["name"];
   days: Meeting["days"];
   duration: Meeting["duration"];
   facultyHours: Section["facultyHours"];
@@ -36,7 +39,6 @@ export interface SectionInput {
   intensive?: Intensive;
   localMax: Section["localMax"];
   location: string;
-  name: Course["name"];
   number: Course["number"];
   prefix: Prefix;
   roomCapacity: Location["roomCapacity"];
@@ -136,7 +138,7 @@ export const mapInputToInternalTypes = (data: SectionInput) => {
 
   const newCourse: Course = {
     facultyHours: Number(data.facultyHours),
-    name: data.name,
+    name: data.courseName,
     number: data.number,
     prefixes: prefixCase(data.prefix),
     // The newSection will be added later in insertSectionCourse()
@@ -146,15 +148,32 @@ export const mapInputToInternalTypes = (data: SectionInput) => {
   return { newCourse, newSection };
 };
 
-// Update the schedule via pass by sharing.
-export const updateScheduleWithNewSection = (data: SectionInput, schedule: Schedule) => {
-  const {
-    newSection,
-    newCourse,
-  }: { newCourse: Course; newSection: Section } = mapInputToInternalTypes(data);
+interface MappedSection {
+  newCourse: Course;
+  newSection: Section;
+}
 
-  // Insert the Section to the Schedule, either as a new Course or to an existing Course
-  insertSectionCourse(schedule, newSection, newCourse);
+export const useAddSectionToSchedule = () => {
+  const {
+    appState: { schedule },
+    appDispatch,
+    setIsCSVLoading,
+  } = useContext(AppContext);
+
+  // Update the schedule via pass by sharing.
+  const addSectionToSchedule = (data: SectionInput) => {
+    const { newSection, newCourse }: MappedSection = mapInputToInternalTypes(data);
+
+    setIsCSVLoading(true);
+
+    // Insert the Section to the Schedule, either as a new Course or to an existing Course
+    insertSectionCourse(schedule, newSection, newCourse);
+
+    appDispatch({ payload: { schedule }, type: "setScheduleData" });
+    setIsCSVLoading(false);
+  };
+
+  return { addSectionToSchedule };
 };
 
 // a helper to provide consistent naming and retrieve error messages

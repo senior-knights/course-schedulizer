@@ -33,7 +33,7 @@ export const GridItemRadioGroup = ({
       <FormControl component="fieldset">
         <FormLabel component="legend">{label}</FormLabel>
         <Controller
-          ref={register}
+          ref={register()}
           as={
             <RadioGroup>
               {options.map((opt) => {

@@ -174,4 +174,6 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
     course.sections.push(section);
     schedule.courses.push(course);
   }
+
+  return schedule;
 };

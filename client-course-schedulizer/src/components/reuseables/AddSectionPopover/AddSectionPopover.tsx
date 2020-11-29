@@ -1,9 +1,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Grid, InputAdornment, Typography } from "@material-ui/core";
 import { GridItemCheckboxGroup, GridItemRadioGroup, GridItemTextField } from "components";
-import React, { ChangeEvent, useContext, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { AppContext } from "utilities/contexts";
 import {
   Day,
   Half,
@@ -17,7 +16,7 @@ import "./AddSectionPopover.scss";
 import {
   addSectionSchema,
   SectionInput,
-  updateScheduleWithNewSection,
+  useAddSectionToSchedule,
 } from "./AddSectionPopoverService";
 
 const SPACING = 2;
@@ -25,11 +24,6 @@ const SPACING = 2;
 /* A form to input information to add a schedule */
 export const AddSectionPopover = () => {
   // hooks
-  const {
-    appState: { schedule },
-    appDispatch,
-    setIsCSVLoading,
-  } = useContext(AppContext);
   const methods = useForm<SectionInput>({
     criteriaMode: "all",
     resolver: yupResolver(addSectionSchema),
@@ -37,13 +31,11 @@ export const AddSectionPopover = () => {
   const [semesterLength, setSemesterLength] = useState<SemesterLengthOption>(
     SemesterLengthOption.FullSemester,
   );
+  const { addSectionToSchedule } = useAddSectionToSchedule();
 
   // handlers
   const onSubmit = (data: SectionInput) => {
-    setIsCSVLoading(true);
-    updateScheduleWithNewSection(data, schedule);
-    appDispatch({ payload: { schedule }, type: "setScheduleData" });
-    setIsCSVLoading(false);
+    addSectionToSchedule(data);
   };
   const onSemesterLengthChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSemesterLength(e.target.value as SemesterLengthOption);
