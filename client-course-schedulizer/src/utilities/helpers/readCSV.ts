@@ -1,6 +1,7 @@
 import { cloneDeep } from "lodash";
 import papa from "papaparse";
 import { Course, emptyCourse, emptySection, Meeting, Schedule, Section } from "utilities";
+import { getCourse, getSection } from "utilities/services";
 import * as cf from "./caseFunctions";
 
 interface ValidFields {
@@ -111,26 +112,23 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
   });
 
   // Check if there is already a course in the schedule with the same prefix and number
-  const existingCourse: Course[] = schedule.courses.filter((c) => {
-    return (
-      c.prefixes.some((p) => {
-        return course.prefixes.includes(p);
-      }) && c.number === course.number
-    );
-  });
+  const existingCourse = getCourse(schedule, course.prefixes, course.number);
 
   // If there is, first check if there is already a section for that course with the same letter and term
-  if (existingCourse.length > 0) {
-    const existingCourseIndex = schedule.courses.indexOf(existingCourse[0]);
-    const existingSection: Section[] = existingCourse[0].sections.filter((s) => {
-      // TODO: Should we check year and/or semesterLength here as well?
-      return s.letter === section.letter && s.term === section.term;
-    });
+  if (existingCourse) {
+    const existingCourseIndex = schedule.courses.indexOf(existingCourse);
+    const existingSection = getSection(
+      schedule,
+      course.prefixes,
+      course.number,
+      section.letter,
+      section.term,
+    );
 
     // If there is, add the new meeting(s) to the existing course
-    if (existingSection.length > 0) {
+    if (existingSection) {
       const existingSectionIndex = schedule.courses[existingCourseIndex].sections.indexOf(
-        existingSection[0],
+        existingSection,
       );
       // TODO: Avoid duplicate meetings?
       schedule.courses[existingCourseIndex].sections[

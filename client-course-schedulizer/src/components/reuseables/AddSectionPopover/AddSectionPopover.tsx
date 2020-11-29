@@ -1,6 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Grid, Typography } from "@material-ui/core";
 import { GridItemCheckboxGroup, GridItemRadioGroup, GridItemTextField } from "components";
+import { indexOf } from "lodash";
 import moment from "moment";
 import React, { ChangeEvent, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -10,6 +11,9 @@ import {
   emptyCourse,
   emptyMeeting,
   emptySection,
+  getCourse,
+  getSection,
+  removeSection,
 } from "utilities";
 import { AppContext } from "utilities/contexts";
 import {
@@ -137,6 +141,20 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
       studentHours: Number(data.studentHours),
     };
 
+    // Remove the old version of the section if there is one
+    const oldSection = getSection(
+      schedule,
+      newCourse.prefixes,
+      newCourse.number,
+      newSection.letter,
+      newSection.term,
+    );
+    if (oldSection) {
+      const oldCourse = getCourse(schedule, newCourse.prefixes, newCourse.number);
+      const courseIndex = indexOf(schedule.courses, oldCourse);
+      removeSection(schedule, newSection.letter, newSection.term, courseIndex);
+    }
+
     // Insert the Section to the Schedule, either as a new Course or to an existing Course
     insertSectionCourse(schedule, newSection, newCourse);
 
@@ -148,7 +166,7 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
   };
 
   return (
-    <form className="popover-container">
+    <form className="popover-container" onSubmit={handleSubmit(onSubmit)}>
       <Typography className="add-section-title" variant="h4">
         Add/Update Section
       </Typography>
@@ -290,7 +308,7 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
       </Grid>
       <Grid container>
         <Grid item xs>
-          <Button color="primary" onClick={handleSubmit(onSubmit)} variant="contained">
+          <Button color="primary" type="submit" variant="contained">
             Submit
           </Button>
         </Grid>
