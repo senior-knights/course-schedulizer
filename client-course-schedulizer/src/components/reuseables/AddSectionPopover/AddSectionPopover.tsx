@@ -141,7 +141,7 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
       studentHours: Number(data.studentHours),
     };
 
-    // Remove the old version of the section if there is one
+    // Remove the old version of the Section if there is one
     const oldSection = getSection(
       schedule,
       newCourse.prefixes,
