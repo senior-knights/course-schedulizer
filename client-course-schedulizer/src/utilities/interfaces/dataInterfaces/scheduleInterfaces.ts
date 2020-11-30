@@ -1,48 +1,5 @@
 /* eslint-disable typescript-sort-keys/string-enum */
-export enum Term {
-  Fall = "FA",
-  Interim = "IN", // TODO: Remove?
-  Spring = "SP",
-  Summer = "SU", // TODO: Is this a thing?
-}
-
-export enum SemesterLength {
-  Full = "Full",
-  HalfFirst = "First",
-  HalfSecond = "Second",
-  IntensiveA = "A",
-  IntensiveB = "B",
-  IntensiveC = "C",
-  IntensiveD = "D",
-}
-
-export enum Day {
-  Monday = "M",
-  Tuesday = "T",
-  Wednesday = "W",
-  Thursday = "TH",
-  Friday = "F",
-  Saturday = "S",
-  Sunday = "SU",
-}
-
-export enum Half {
-  First = SemesterLength.HalfFirst,
-  Second = SemesterLength.HalfSecond,
-}
-
-export enum Intensive {
-  A = SemesterLength.IntensiveA,
-  B = SemesterLength.IntensiveB,
-  C = SemesterLength.IntensiveC,
-  D = SemesterLength.IntensiveD,
-}
-
-export enum SemesterLengthOption {
-  FullSemester = "Full",
-  HalfSemester = "Half",
-  IntensiveSemester = "Intensive",
-}
+import { Day, SemesterLength, Term } from ".";
 
 export interface Location {
   building: string;
@@ -60,15 +17,19 @@ export interface Meeting {
   startTime: string;
 }
 
+export type Prefix = string;
+
 export interface Course {
   department: string;
   facultyHours: number;
   name: string;
   number: string;
-  prefixes: string[];
+  prefixes: Prefix[];
   sections: Section[];
   studentHours: number;
 }
+
+export type Instructor = string;
 
 export interface Section {
   anticipatedSize?: number;
@@ -81,7 +42,7 @@ export interface Section {
   facultyHours?: number;
   globalMax: number;
   instructionalMethod: string;
-  instructors: string[];
+  instructors: Instructor[];
   letter: string;
   localMax: number;
   // Multiple Meetings possible if time/room differs on different days
