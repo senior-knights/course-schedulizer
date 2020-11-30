@@ -1,4 +1,5 @@
 import { Checkbox, FormControlLabel, FormLabel, Grid } from "@material-ui/core";
+import { camelCase } from "lodash";
 import React from "react";
 import { useForm } from "react-hook-form";
 import "./GridItemCheckboxGroup.scss";
@@ -21,18 +22,22 @@ export const GridItemCheckboxGroup = ({
   return (
     <Grid item xs>
       <FormLabel component="legend">{label}</FormLabel>
-      {options.map((o, i) => {
-        return (
-          <FormControlLabel
-            key={o.toLowerCase()}
-            control={<Checkbox defaultChecked={value?.includes(o)} />}
-            inputRef={register}
-            label={o}
-            name={`${name || label.toLowerCase()}[${i}]`}
-            value={o}
-          />
-        );
-      })}
+      <Grid container direction="column">
+        {options.map((o, i) => {
+          return (
+            <Grid key={o.toLowerCase()} item>
+              <FormControlLabel
+                key={o.toLowerCase()}
+                control={<Checkbox defaultChecked={value?.includes(o)} />}
+                inputRef={register}
+                label={o}
+                name={`${name || camelCase(label)}[${i}]`}
+                value={o}
+              />
+            </Grid>
+          );
+        })}
+      </Grid>
     </Grid>
   );
 };

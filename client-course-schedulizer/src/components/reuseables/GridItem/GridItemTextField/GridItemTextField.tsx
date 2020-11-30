@@ -1,4 +1,5 @@
 import { Grid, StandardTextFieldProps, TextField } from "@material-ui/core";
+import { camelCase } from "lodash";
 import React from "react";
 import { useForm } from "react-hook-form";
 import "./GridItemTextField.scss";
@@ -22,8 +23,9 @@ export const GridItemTextField = ({
         defaultValue={value}
         inputRef={register}
         label={label}
-        name={label.toLowerCase()}
+        name={camelCase(label)}
         {...textFieldProps}
+        variant="outlined"
       />
     </Grid>
   );
