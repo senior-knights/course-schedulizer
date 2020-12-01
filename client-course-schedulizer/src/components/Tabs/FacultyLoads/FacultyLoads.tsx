@@ -10,8 +10,8 @@ import {
 } from "@material-ui/core";
 import React, { useContext, useMemo } from "react";
 import { Column, useTable } from "react-table";
-import { Course, Schedule, Section, Term } from "../../../utilities/interfaces/dataInterfaces";
-import { AppContext } from "../../../utilities/services/appContext";
+import { Course, getSectionName, Schedule, Section, Term } from "utilities";
+import { AppContext } from "utilities/contexts";
 
 type hourKeys = "fallHours" | "springHours" | "summerHours" | "totalHours" | "otherHours";
 type sectionKeys = "fallCourseSections" | "springCourseSections" | "summerCourseSections";
@@ -66,8 +66,8 @@ const createTable = (schedule: Schedule): FacultyRow[] => {
   const newTableData: FacultyRow[] = [];
   schedule.courses.forEach((course) => {
     course.sections.forEach((section) => {
+      const sectionName = getSectionName(course, section);
       section.instructors.forEach((instructor) => {
-        const sectionName = `${course.prefixes[0]}-${course.number}-${section.letter}`;
         const newFacultyRow: FacultyRow = {
           faculty: instructor,
         };

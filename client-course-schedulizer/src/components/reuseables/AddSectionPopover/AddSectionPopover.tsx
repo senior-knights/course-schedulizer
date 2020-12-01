@@ -1,253 +1,257 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Grid, Typography } from "@material-ui/core";
-import React, { ChangeEvent, useState } from "react";
+import { Box, Button, Grid, InputAdornment, Typography } from "@material-ui/core";
+import { GridItemCheckboxGroup, GridItemRadioGroup, GridItemTextField } from "components";
+import moment from "moment";
+import React, { ChangeEvent, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import { array, object } from "yup";
 import {
-  Course,
+  convertFromSemesterLength,
+  schema,
+  SectionInput,
+  updateScheduleWithNewSection,
+} from "utilities";
+import { AppContext } from "utilities/contexts";
+import {
+  CourseSectionMeeting,
   Day,
   Half,
   Intensive,
-  Meeting,
-  Section,
   SemesterLength,
   SemesterLengthOption,
   Term,
-} from "../../../utilities/interfaces/dataInterfaces";
-import { GridItemCheckboxGroup } from "../GridItem/GridItemCheckboxGroup";
-import { GridItemRadioGroup } from "../GridItem/GridItemRadioGroup";
-import { GridItemTextField } from "../GridItem/GridItemTextField";
+  Weekday,
+} from "utilities/interfaces";
 import "./AddSectionPopover.scss";
 
-// TODO: make all these dependent types. See comments and days
-interface SectionInput {
-  anticipatedSize: string;
-  comments: Section["comments"];
-  days: Meeting["days"];
-  duration: string;
-  facultyHours: string;
-  globalMax: string;
-  half: Half;
-  instructor: string;
-  intensive?: Intensive;
-  localMax: string;
-  location: string;
-  name: string;
-  number: string;
-  prefix: string;
-  section: string;
-  semesterLength: SemesterLengthOption;
-  startTime: string;
-  studentHours: string;
-  term: Term;
+interface AddSectionPopover {
+  values?: CourseSectionMeeting;
 }
+const SPACING = 2;
 
-enum Weekday {
-  Monday = Day.Monday,
-  Tuesday = Day.Tuesday,
-  Wednesday = Day.Wednesday,
-  Thursday = Day.Thursday,
-  Friday = Day.Friday,
-}
-
-const convertToSemesterLength = (sl: Half | Intensive | SemesterLengthOption): SemesterLength => {
-  switch (sl) {
-    case Half.First:
-      return SemesterLength.HalfFirst;
-    case Half.Second:
-      return SemesterLength.HalfSecond;
-    case Intensive.A:
-      return SemesterLength.IntensiveA;
-    case Intensive.B:
-      return SemesterLength.IntensiveB;
-    case Intensive.C:
-      return SemesterLength.IntensiveC;
-    case Intensive.D:
-      return SemesterLength.IntensiveD;
-    default:
-      return SemesterLength.Full;
-  }
-};
-
-export const AddSectionPopover = () => {
-  const spacing = 4;
-
-  // remove false values from days array
-  const schema = object().shape({
-    days: array().transform((d) => {
-      return d.filter((day: boolean | string) => {
-        return day;
-      });
-    }),
-  });
-
+/* A form to input information to add a schedule */
+export const AddSectionPopover = ({ values }: AddSectionPopover) => {
+  const {
+    appState: { schedule },
+    appDispatch,
+    setIsCSVLoading,
+  } = useContext(AppContext);
   const { register, handleSubmit, control } = useForm<SectionInput>({
     resolver: yupResolver(schema),
   });
-  const [semesterLength, setSemesterLength] = useState("full");
+  const [semesterLength, setSemesterLength] = useState<SemesterLengthOption>(
+    convertFromSemesterLength(values?.section.semesterLength).toLowerCase() as SemesterLengthOption,
+  );
 
+  // handlers
   const onSubmit = (data: SectionInput) => {
-    const location = data.location.split(" ");
-    const semesterType = convertToSemesterLength(
-      data.intensive || data.half || data.semesterLength,
-    );
-    const newSection: Section = {
-      anticipatedSize: Number(data.anticipatedSize),
-      comments: data.comments,
-      globalMax: Number(data.globalMax),
-      instructors: data.instructor.split(/[;,\n]/),
-      letter: data.section,
-      localMax: Number(data.localMax),
-      meetings: [
-        {
-          days: data.days,
-          duration: Number(data.duration),
-          location: {
-            building: location[0],
-            roomNumber: location[1],
-          },
-          startTime: data.startTime,
-        },
-      ],
-      semesterLength: semesterType,
-      term: data.term,
-      year: "2021-2022",
-    };
-
-    // TODO: Append section to previously existing course if a course has already been created
-    const newCourse: Course = {
-      facultyHours: Number(data.facultyHours),
-      name: data.name,
-      number: data.number,
-      prefixes: [data.prefix],
-      sections: [newSection],
-      studentHours: Number(data.studentHours),
-    };
-    // eslint-disable-next-line no-console
-    return console.log(newCourse);
+    setIsCSVLoading(true);
+    updateScheduleWithNewSection(data, schedule);
+    appDispatch({ payload: { schedule }, type: "setScheduleData" });
+    setIsCSVLoading(false);
   };
   const onSemesterLengthChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSemesterLength(e.target.value);
+    setSemesterLength(e.target.value as SemesterLengthOption);
   };
 
+  const isHalfSemester = semesterLength === SemesterLengthOption.HalfSemester;
+  const isIntensiveSemester = semesterLength === SemesterLengthOption.IntensiveSemester;
+  const isCustomSemester = semesterLength === SemesterLengthOption.CustomSemester;
+
+  const locationValue =
+    (values && `${values?.meeting.location.building} ${values?.meeting.location.roomNumber}`) || "";
+
   return (
-    <form className="popover-container" onSubmit={handleSubmit(onSubmit)}>
-      <Typography className="title" variant="h4">
-        Add/Update Section
-      </Typography>
-      <Grid container spacing={spacing}>
-        {/* TODO: Allow for multiple prefixes */}
+    <form className="popover-container">
+      <Box mb={SPACING}>
+        <Typography className="popover-title" variant="h4">
+          Add Section
+        </Typography>
+      </Box>
+      <Grid container spacing={SPACING}>
         {/* TODO: Dropdown for courses already in system */}
-        <GridItemTextField label="Prefix" register={register} />
-        <GridItemTextField label="Number" register={register} />
-        <GridItemTextField label="Section" register={register} />
-        <GridItemTextField label="Name" register={register} />
+        <GridItemTextField
+          label="Prefix"
+          register={register}
+          textFieldProps={{ autoFocus: true }}
+          value={values?.course.prefixes.join()}
+        />
+        <GridItemTextField label="Number" register={register} value={values?.course.number} />
+        <GridItemTextField label="Section" register={register} value={values?.section.letter} />
+        <GridItemTextField label="Name" register={register} value={values?.course.name} />
+        <Grid item xs>
+          <span>{/* TODO: add error messages? */}</span>
+        </Grid>
       </Grid>
-      <Grid container spacing={spacing}>
-        {/* TODO: Allow for multiple instructors */}
+      <Grid container spacing={SPACING}>
         {/* TODO: Dropdown for instructors with option to add new one */}
-        <GridItemTextField label="Instructor" register={register} />
-        {/* TODO: Room capacity? */}
+        <GridItemTextField
+          label="Instructor"
+          register={register}
+          value={values?.section.instructors.join()}
+        />
         {/* TODO: Dropdown for rooms with option to add new one */}
-        <GridItemTextField label="Location" register={register} />
-        {/* TODO: Allow facultyHours and studentHours to be set separately for a section */}
+        <GridItemTextField label="Location" register={register} value={locationValue} />
+        <GridItemTextField
+          label="Room Capacity"
+          register={register}
+          textFieldProps={{ name: "roomCapacity" }}
+          value={(values?.meeting.location.roomCapacity || "").toString()}
+        />
         <GridItemTextField
           label="Faculty Hours"
           register={register}
           textFieldProps={{ name: "facultyHours" }}
+          value={(values?.section.facultyHours || values?.course.facultyHours || "").toString()}
         />
         <GridItemTextField
           label="Student Hours"
           register={register}
           textFieldProps={{ name: "studentHours" }}
+          value={(values?.section.studentHours || values?.course.studentHours || "").toString()}
         />
       </Grid>
-      <Grid container spacing={spacing}>
+      <Grid container spacing={SPACING}>
         <GridItemTextField
           label="Anticipated Size"
           register={register}
-          textFieldProps={{ multiline: true, name: "anticipatedSize", rows: 2 }}
-        />
-        <GridItemTextField
-          label="Global Max"
-          register={register}
-          textFieldProps={{ name: "globalMax" }}
+          textFieldProps={{ name: "anticipatedSize" }}
+          value={(values?.section.anticipatedSize || "").toString()}
         />
         <GridItemTextField
           label="Local Max"
           register={register}
           textFieldProps={{ name: "localMax" }}
+          value={(values?.section.localMax || "").toString()}
         />
-        <GridItemTextField label="Duration" register={register} />
+        <GridItemTextField
+          label="Global Max"
+          register={register}
+          textFieldProps={{ name: "globalMax" }}
+          value={(values?.section.globalMax || "").toString()}
+        />
         <GridItemTextField
           label="Start Time"
           register={register}
-          textFieldProps={{ defaultValue: "08:00", name: "startTime", type: "time" }}
+          textFieldProps={{ fullWidth: true, name: "startTime", type: "time" }}
+          value={
+            values?.meeting.startTime
+              ? moment(values?.meeting.startTime, "h:mma").format("HH:mm")
+              : "08:00"
+          }
+        />
+        <GridItemTextField
+          label="Duration"
+          register={register}
+          textFieldProps={{
+            InputProps: {
+              endAdornment: <InputAdornment position="end">min</InputAdornment>,
+            },
+          }}
+          value={(values?.meeting.duration || "").toString()}
         />
       </Grid>
-      <Grid container spacing={spacing}>
+      <Grid container spacing={SPACING}>
         <GridItemCheckboxGroup
           label="Days"
           options={Object.values(Day).filter((day) => {
             return Object.values(Weekday).includes(day);
           })}
           register={register}
+          value={values?.meeting.days}
         />
         <GridItemRadioGroup
           control={control}
-          defaultValue="FA"
+          defaultValue={values?.section.term || Term.Fall}
           label="Term"
           options={Object.values(Term)}
           register={register}
         />
         <GridItemRadioGroup
           control={control}
-          defaultValue="full"
+          defaultValue={convertFromSemesterLength(values?.section.semesterLength)}
           label="Semester Length"
-          lowercase
-          name="semesterLength"
           onChange={onSemesterLengthChange}
           options={Object.values(SemesterLengthOption)}
           register={register}
         />
-        {semesterLength === "half" && (
-          <GridItemRadioGroup
-            control={control}
-            defaultValue="First"
-            label="Half Semester"
-            lowercase
-            name="half"
-            options={Object.values(SemesterLength).filter((h) => {
-              return Object.values(Half).includes(h);
-            })}
-            register={register}
-          />
-        )}
-        {semesterLength === "intensive" && (
-          <GridItemRadioGroup
-            control={control}
-            defaultValue="A"
-            label="Intensive Semester"
-            name="intensive"
-            options={Object.values(SemesterLength).filter((i) => {
-              return Object.values(Intensive).includes(i);
-            })}
-            register={register}
-          />
-        )}
+        <Grid item xs>
+          {isHalfSemester && (
+            <GridItemRadioGroup
+              control={control}
+              defaultValue={values?.section.semesterLength || SemesterLength.HalfFirst}
+              label="Half Semester"
+              lowercase
+              name="half"
+              options={Object.values(SemesterLength).filter((h) => {
+                return Object.values(Half).includes(h);
+              })}
+              register={register}
+            />
+          )}
+          {isIntensiveSemester && (
+            <GridItemRadioGroup
+              control={control}
+              defaultValue={values?.section.semesterLength || SemesterLength.IntensiveA}
+              label="Intensive Semester"
+              name="intensive"
+              options={Object.values(SemesterLength).filter((i) => {
+                return Object.values(Intensive).includes(i);
+              })}
+              register={register}
+            />
+          )}
+          {isCustomSemester && (
+            <Grid container direction="column" spacing={SPACING}>
+              {/* TODO: add support for custom */}
+              <GridItemTextField
+                label="Start Date"
+                register={register}
+                textFieldProps={{
+                  defaultValue: "2020-20-20",
+                  disabled: true,
+                  fullWidth: true,
+                  // type: "date",
+                }}
+              />
+              <GridItemTextField
+                label="End Date"
+                register={register}
+                textFieldProps={{
+                  defaultValue: "2020-20-20",
+                  disabled: true,
+                  // type: "date",
+                }}
+              />
+              <Typography variant="caption">
+                Custom semester lengths are not support yet.
+              </Typography>
+            </Grid>
+          )}
+        </Grid>
         <GridItemTextField
           label="Notes"
           register={register}
           textFieldProps={{ multiline: true, name: "comments", rows: 4 }}
+          value={values?.section.comments}
         />
       </Grid>
-      <Grid container>
-        <Grid item xs>
-          <Button color="primary" type="submit" variant="contained">
+      <Grid alignItems="flex-end" container justify="space-between">
+        <Grid item>
+          <Typography variant="caption">
+            Tip: use <b>tab</b> and <b>shift + tab</b> to navigate, <b>space bar</b> to select days,{" "}
+            <b>arrow keys</b> to select term and others, and <b>return</b> to submit.
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Button color="primary" onClick={handleSubmit(onSubmit)} variant="contained">
             Submit
           </Button>
         </Grid>
       </Grid>
     </form>
   );
+};
+
+AddSectionPopover.defaultProps = {
+  values: undefined,
 };

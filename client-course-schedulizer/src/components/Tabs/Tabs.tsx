@@ -1,60 +1,36 @@
-import { Box, Tabs as MUITabs, Paper, Tab, Typography } from "@material-ui/core";
-import React, { ChangeEvent, PropsWithChildren, useContext, useState } from "react";
-import { FacultySchedule } from "./FacultySchedule";
-import { ScheduleToolbar } from "../Toolbar/ScheduleToolbar";
+import { Container, Tab, Tabs as MUITabs } from "@material-ui/core";
+import { AsyncComponent } from "components";
+import { FacultyLoads, FacultySchedule, RoomsSchedule } from "components/Tabs";
+import React, { ChangeEvent, useContext, useState } from "react";
+import { AppContext } from "utilities/contexts";
+import { CSVActions, NoCoursesHeader, TabPanel } from "./tabComponents";
 import "./Tabs.scss";
-import { AppContext } from "../../utilities/services/appContext";
-import { AddSectionButton } from "../reuseables/AddSectionButton";
-import { AsyncComponent } from "../reuseables/AsyncComponent";
-import { FacultyLoads } from "./FacultyLoads";
 
-interface TabPanelProps {
-  index: number;
-  value: number;
-}
+const DEFAULT_TAB = 0;
 
-const TabPanel = (props: PropsWithChildren<TabPanelProps>) => {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      aria-labelledby={`simple-tab-${index}`}
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      role="tabpanel"
-      {...other}
-    >
-      {value === index && (
-        <Box p={3}>
-          <Typography component="div">{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-};
-
+/* A navigator between the different features of the app */
 export const Tabs = () => {
-  const [tabValue, setTabValue] = useState(0);
+  const [tabValue, setTabValue] = useState(DEFAULT_TAB);
   const {
     appState: { schedule },
-    isLoading,
+    isCSVLoading,
   } = useContext(AppContext);
 
   const handleTabChange = (event: ChangeEvent<{}>, newValue: number) => {
     setTabValue(newValue);
   };
 
+  const scheduleHasCourses = schedule.courses.length > 0;
+
   return (
-    <Paper>
-      <AsyncComponent isLoading={isLoading}>
-        <>
-          {schedule.courses.length === 0 ? (
-            <>
-              <h2>No schedule selected. Please import a CSV to start Editing.</h2>
-              <AddSectionButton isIcon={false} />
-            </>
-          ) : (
-            <>
+    <AsyncComponent isLoading={isCSVLoading}>
+      <AsyncComponent.Loading>Parsing CSV...</AsyncComponent.Loading>
+      <AsyncComponent.Loaded>
+        {scheduleHasCourses ? (
+          <>
+            <Container className="schedulizer-header" maxWidth={false}>
+              <CSVActions />
+
               <MUITabs
                 centered
                 indicatorColor="primary"
@@ -67,22 +43,25 @@ export const Tabs = () => {
                 <Tab label="Teaching Loads" />
                 <Tab label="Conflicts" />
               </MUITabs>
-              <TabPanel index={0} value={tabValue}>
-                <FacultySchedule />
-              </TabPanel>
-              <TabPanel index={1} value={tabValue}>
-                <ScheduleToolbar />
-              </TabPanel>
-              <TabPanel index={2} value={tabValue}>
-                <FacultyLoads />
-              </TabPanel>
-              <TabPanel index={3} value={tabValue}>
-                Item Four
-              </TabPanel>
-            </>
-          )}
-        </>
-      </AsyncComponent>
-    </Paper>
+              <span>{/* Empty */}</span>
+            </Container>
+            <TabPanel index={0} value={tabValue}>
+              <FacultySchedule />
+            </TabPanel>
+            <TabPanel index={1} value={tabValue}>
+              <RoomsSchedule />
+            </TabPanel>
+            <TabPanel index={2} value={tabValue}>
+              <FacultyLoads />
+            </TabPanel>
+            <TabPanel index={3} value={tabValue}>
+              Item Four
+            </TabPanel>
+          </>
+        ) : (
+          <NoCoursesHeader />
+        )}
+      </AsyncComponent.Loaded>
+    </AsyncComponent>
   );
 };

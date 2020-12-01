@@ -27,6 +27,7 @@ $header-offset: 8;
   padding-left: $header-offset * $spacing;
   margin-right: -$header-offset * $spacing;
   padding-right: $header-offset * $spacing;
+  margin-top: $spacing;
   background-color: $bg-header;
 }
 

@@ -1,7 +1,19 @@
 import { FormControlLabel, FormLabel, Grid, Radio, RadioGroup } from "@material-ui/core";
+import { camelCase } from "lodash";
 import React, { ChangeEvent } from "react";
 import { Controller, useForm } from "react-hook-form";
 import "./GridItemRadioGroup.scss";
+
+interface GridItemRadioGroup {
+  control: ReturnType<typeof useForm>["control"];
+  defaultValue: string;
+  label: string;
+  lowercase?: boolean;
+  name?: string;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  options: string[];
+  register: ReturnType<typeof useForm>["register"];
+}
 
 export const GridItemRadioGroup = ({
   control,
@@ -12,16 +24,7 @@ export const GridItemRadioGroup = ({
   onChange,
   options,
   register,
-}: {
-  control: ReturnType<typeof useForm>["control"];
-  defaultValue: string;
-  label: string;
-  lowercase?: boolean;
-  name?: string;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
-  options: string[];
-  register: ReturnType<typeof useForm>["register"];
-}) => {
+}: GridItemRadioGroup) => {
   return (
     <Grid item xs>
       <FormLabel component="legend">{label}</FormLabel>
@@ -30,16 +33,11 @@ export const GridItemRadioGroup = ({
         as={RadioGroup}
         control={control}
         defaultValue={defaultValue}
-        name={name || label.toLowerCase()}
+        name={name || camelCase(label)}
       >
         {options.map((o) => {
           return (
-            <FormControlLabel
-              key={o.toLowerCase()}
-              control={<Radio onChange={onChange} />}
-              label={o}
-              value={lowercase ? o.toLowerCase() : o}
-            />
+            <FormControlLabel key={o} control={<Radio onChange={onChange} />} label={o} value={o} />
           );
         })}
       </Controller>

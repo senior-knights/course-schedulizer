@@ -1,19 +1,20 @@
-import { Button, IconButton, Popover } from "@material-ui/core";
+import { Button, ButtonProps, IconButton, Popover } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
+import { AddSectionPopover } from "components";
 import { bindPopover, bindTrigger, usePopupState } from "material-ui-popup-state/hooks";
 import React from "react";
-import { AddSectionPopover } from "../AddSectionPopover";
 import "./AddSectionButton.scss";
 
-interface AddSectionButton {
+interface AddSectionButton extends ButtonProps {
   isIcon?: boolean;
 }
 
-export const AddSectionButton = ({ isIcon }: AddSectionButton) => {
+export const AddSectionButton = (props: AddSectionButton) => {
   const popupState = usePopupState({
     popupId: "addSection",
     variant: "popover",
   });
+  const { isIcon, ...buttonProps } = props;
 
   return (
     <>
@@ -22,7 +23,7 @@ export const AddSectionButton = ({ isIcon }: AddSectionButton) => {
           <Add />
         </IconButton>
       ) : (
-        <Button color="primary" variant="contained" {...bindTrigger(popupState)}>
+        <Button color="secondary" variant="contained" {...buttonProps} {...bindTrigger(popupState)}>
           Add Section
         </Button>
       )}
@@ -32,7 +33,7 @@ export const AddSectionButton = ({ isIcon }: AddSectionButton) => {
           horizontal: "left",
           vertical: "bottom",
         }}
-        PaperProps={{ style: { maxWidth: "50%", minWidth: "500px" } }}
+        PaperProps={{ style: { minWidth: "500px" } }}
         transformOrigin={{
           horizontal: "right",
           vertical: "top",

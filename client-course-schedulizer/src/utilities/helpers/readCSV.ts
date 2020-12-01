@@ -1,5 +1,7 @@
+import { cloneDeep } from "lodash";
 import papa from "papaparse";
-import * as di from "../interfaces/dataInterfaces";
+import { Course, emptyCourse, emptySection, Meeting, Schedule, Section } from "utilities";
+import { getCourse, getSection } from "utilities/services";
 import * as cf from "./caseFunctions";
 
 interface ValidFields {
@@ -7,52 +9,51 @@ interface ValidFields {
 }
 
 const pruimSpreadsheetFields: ValidFields = {
-  anticipatedSize: cf.anticipatedSizeCase,
-  comments: cf.commentsCase,
-  days: cf.daysCase,
-  duration: cf.durationCase,
-  facultyHours: cf.facultyHoursCase,
-  globalMax: cf.globalMaxCase,
-  half: cf.semesterLengthCase,
-  instructor: cf.instructorCase,
-  instructors: cf.instructorCase,
-  localMax: cf.localMaxCase,
-  location: cf.locationCase,
-  name: cf.nameCase,
-  number: cf.numberCase,
-  prefix: cf.prefixCase,
-  prefixes: cf.prefixCase,
-  roomCapacity: cf.roomCapacityCase,
-  section: cf.letterCase,
-  semesterLength: cf.semesterLengthCase,
-  startTime: cf.startTimeCase,
-  startTimeStr: cf.startTimeCase,
-  studentHours: cf.studentHoursCase,
-  term: cf.termCase,
-  year: cf.yearCase,
+  anticipatedSize: cf.anticipatedSizeCallback,
+  comments: cf.commentsCallback,
+  days: cf.daysCallback,
+  duration: cf.durationCallback,
+  facultyHours: cf.facultyHoursCallback,
+  globalMax: cf.globalMaxCallback,
+  half: cf.semesterLengthCallback,
+  instructor: cf.instructorCallback,
+  instructors: cf.instructorCallback,
+  localMax: cf.localMaxCallback,
+  location: cf.locationCallback,
+  name: cf.nameCallback,
+  number: cf.numberCallback,
+  prefix: cf.prefixCallback,
+  prefixes: cf.prefixCallback,
+  roomCapacity: cf.roomCapacityCallback,
+  section: cf.letterCallback,
+  semesterLength: cf.semesterLengthCallback,
+  startTime: cf.startTimeCallback,
+  startTimeStr: cf.startTimeCallback,
+  studentHours: cf.studentHoursCallback,
+  term: cf.termCallback,
+  year: cf.yearCallback,
 };
 
-// TODO: parse duration and semester length
 const registrarSpreadsheetFields: ValidFields = {
-  AcademicYear: cf.yearCase,
-  BuildingAndRoom: cf.locationCase,
-  CourseNum: cf.numberCase,
-  Faculty: cf.instructorCase,
-  FacultyLoad: cf.facultyHoursCase,
-  GlobalMax: cf.globalMaxCase,
-  LocalMax: cf.localMaxCase,
-  MeetingDays: cf.daysCase,
-  MeetingStart: cf.startTimeCase,
-  MeetingTime: cf.durationCase,
-  MinimumCredits: cf.studentHoursCase,
-  RoomCapacity: cf.roomCapacityCase,
-  SectionCode: cf.letterCase,
-  SectionEndDate: cf.sectionEndCase,
-  SectionStartDate: cf.sectionStartCase,
-  ShortTitle: cf.nameCase,
-  SubjectCode: cf.prefixCase,
-  Term: cf.termCase,
-  Used: cf.anticipatedSizeCase,
+  AcademicYear: cf.yearCallback,
+  BuildingAndRoom: cf.locationCallback,
+  CourseNum: cf.numberCallback,
+  Faculty: cf.instructorCallback,
+  FacultyLoad: cf.facultyHoursCallback,
+  GlobalMax: cf.globalMaxCallback,
+  LocalMax: cf.localMaxCallback,
+  MeetingDays: cf.daysCallback,
+  MeetingStart: cf.startTimeCallback,
+  MeetingTime: cf.durationCallback,
+  MinimumCredits: cf.studentHoursCallback,
+  RoomCapacity: cf.roomCapacityCallback,
+  SectionCode: cf.letterCallback,
+  SectionEndDate: cf.sectionEndCallback,
+  SectionStartDate: cf.sectionStartCallback,
+  ShortTitle: cf.nameCallback,
+  SubjectCode: cf.prefixCallback,
+  Term: cf.termCallback,
+  Used: cf.anticipatedSizeCallback,
 };
 
 const callbacks: ValidFields = {
@@ -60,15 +61,14 @@ const callbacks: ValidFields = {
   ...registrarSpreadsheetFields,
 };
 
-export const csvStringToSchedule = (csvString: string): di.Schedule => {
+export const csvStringToSchedule = (csvString: string): Schedule => {
   const objects: papa.ParseResult<never> = papa.parse(csvString, {
     header: true,
     skipEmptyLines: true,
   });
 
   // Define variables for Schedule creation
-  let section: di.Section;
-  const schedule: di.Schedule = {
+  const schedule: Schedule = {
     courses: [],
   };
 
@@ -79,36 +79,9 @@ export const csvStringToSchedule = (csvString: string): di.Schedule => {
   // Parse each row of the CSV as an object
   data.forEach((object) => {
     // Reset defaults
-    section = {
-      anticipatedSize: 0,
-      comments: "",
-      globalMax: 0,
-      instructors: [],
-      letter: "",
-      localMax: 0,
-      meetings: [
-        {
-          days: [],
-          duration: 0,
-          location: { building: "", roomCapacity: 0, roomNumber: "" },
-          startTime: "",
-        },
-      ],
-      semesterLength: di.SemesterLength.Full,
-      term: di.Term.Fall,
-      year: new Date().getFullYear(),
-    };
-
-    const { meetings } = section;
-    const course: di.Course = {
-      facultyHours: 0,
-      name: "",
-      number: "",
-      prefixes: [],
-      sections: [],
-      studentHours: 0,
-    };
-    const [firstMeeting] = meetings;
+    const section = cloneDeep(emptySection);
+    const meetings: Meeting[] = [];
+    const course: Course = cloneDeep(emptyCourse);
 
     // Iterate through the fields of the CSV, and parse their values for this object
     if (fields) {
@@ -116,35 +89,62 @@ export const csvStringToSchedule = (csvString: string): di.Schedule => {
         const value = String(object[field]);
         field = field.replace(/\s/g, "");
         if (field in callbacks) {
-          callbacks[field as keyof ValidFields](value, { course, firstMeeting, section });
+          callbacks[field as keyof ValidFields](value, { course, meetings, section });
         }
       });
 
-      // Check if the meeting is empty, and should be removed
-      if (firstMeeting.days === [] || firstMeeting.duration === 0) {
-        section.meetings = [];
-      }
-
-      // Check if there is already a course in the schedule with the same prefix and number
-      const existingCourse: di.Course[] = schedule.courses.filter((c) => {
-        return (
-          c.prefixes.some((p) => {
-            return course.prefixes.includes(p);
-          }) && c.number === course.number
-        );
-      });
-
-      // If there is, add the new section to that course
-      if (existingCourse.length > 0) {
-        const existingCourseIndex = schedule.courses.indexOf(existingCourse[0]);
-        schedule.courses[existingCourseIndex].sections.push(section);
-      }
-      // Otherwise, add the new course to the schedule
-      else {
-        course.sections.push(section);
-        schedule.courses.push(course);
-      }
+      // Insert the Section to the Schedule, either as a new Course or to an existing Course
+      section.meetings = meetings;
+      insertSectionCourse(schedule, section, course);
     }
   });
   return schedule;
+};
+
+export const insertSectionCourse = (schedule: Schedule, section: Section, course: Course) => {
+  const { meetings } = section;
+
+  // Check if any meetings are empty, and should be removed
+  // TODO: What about TBA meetings where the location is specified but not the time
+  //       (currently allowing these causes the app to crash)
+  section.meetings = meetings.filter((meeting) => {
+    return meeting.days.length > 0 && meeting.duration > 0;
+  });
+
+  // Check if there is already a course in the schedule with the same prefix and number
+  const existingCourse = getCourse(schedule, course.prefixes, course.number);
+
+  // If there is, first check if there is already a section for that course with the same letter and term
+  if (existingCourse) {
+    const existingCourseIndex = schedule.courses.indexOf(existingCourse);
+    const existingSection = getSection(
+      schedule,
+      course.prefixes,
+      course.number,
+      section.letter,
+      section.term,
+    );
+
+    // If there is, add the new meeting(s) to the existing course
+    if (existingSection) {
+      const existingSectionIndex = schedule.courses[existingCourseIndex].sections.indexOf(
+        existingSection,
+      );
+      // TODO: Avoid duplicate meetings?
+      schedule.courses[existingCourseIndex].sections[
+        existingSectionIndex
+      ].meetings = schedule.courses[existingCourseIndex].sections[
+        existingSectionIndex
+      ].meetings.concat(section.meetings);
+    }
+    // Otherwise, add the new section to the existing course
+    else {
+      schedule.courses[existingCourseIndex].sections.push(section);
+    }
+  }
+  // Otherwise, add the new course to the schedule
+  else {
+    course.sections.push(section);
+    schedule.courses.push(course);
+  }
 };

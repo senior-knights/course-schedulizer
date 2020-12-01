@@ -1,0 +1,30 @@
+.toolbar {
+  justify-content: space-between;
+}
+
+.org-logo {
+  width: 60px;
+  height: auto;
+}
+
+.toolbar-group {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+}
+
+// Style all children of .links parent
+.links > * {
+  margin-left: 1em !important;
+  color: white !important;
+}
+
+// Style all children of .title parent
+.title > * {
+  margin-right: 1em !important;
+}
+
+.title {
+  text-decoration: none;
+  color: white;
+}

@@ -1,18 +1,19 @@
+import { Schedule } from "components";
 import React, { useContext } from "react";
+import { getEvents } from "utilities";
+import { AppContext } from "utilities/contexts";
 import "./FacultySchedule.scss";
-import { Schedule } from "../../reuseables/Schedule";
-import { AppContext } from "../../../utilities/services/appContext";
 
 /* Creates a list of Calendars to create the Faculty Schedule
  */
 export const FacultySchedule = () => {
   const {
-    appState: { professors },
+    appState: { professors, schedule },
   } = useContext(AppContext);
 
   return (
     <>
-      <Schedule calendarHeaders={professors} slotMaxTime="22:00" slotMinTime="6:00" />
+      <Schedule calendarHeaders={professors} groupedEvents={getEvents(schedule, "faculty")} />
     </>
   );
 };

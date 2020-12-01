@@ -1,29 +1,11 @@
-/* eslint-disable sort-imports */
-import FullCalendar, { EventInput } from "@fullcalendar/react";
-import moment from "moment";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import FullCalendar from "01/../@fullcalendar/react";
 import { CalendarOptions } from "@fullcalendar/common";
-
-// Plugins
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
 import timeGridPlugin from "@fullcalendar/timegrid";
-
 import React from "react";
+import { INITIAL_DATE } from "utilities/constants";
 import "./Calendar.scss";
-
-export const initialDate = "2000-01-02";
-// TODO: remove
-const events: EventInput = [
-  {
-    description: "Lecture",
-    end: `${moment(initialDate).add(1, "days").format("YYYY-MM-DD")}T11:30:00`,
-    extendedProps: {
-      department: "CS",
-      professor: "VanderLinden",
-    },
-    start: `${moment(initialDate).add(1, "days").format("YYYY-MM-DD")}T10:30:00`,
-    title: "CS262",
-  },
-];
 
 export const Calendar = (props: CalendarOptions) => {
   return (
@@ -36,12 +18,11 @@ export const Calendar = (props: CalendarOptions) => {
 Calendar.defaultProps = {
   allDaySlot: false,
   dayHeaderFormat: { weekday: "short" },
-  droppable: true,
-  editable: true,
-  events,
+  droppable: false,
+  editable: false, // TODO: Change to true if we can lock section meeting times
   headerToolbar: false,
   height: "auto",
-  initialDate,
+  initialDate: INITIAL_DATE,
   initialView: "timeGridWeek",
   nowIndicator: false,
   plugins: [interactionPlugin, timeGridPlugin],
