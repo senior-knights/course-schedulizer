@@ -4,12 +4,12 @@ import React, { ChangeEvent } from "react";
 import { Controller, useForm } from "react-hook-form";
 import "./GridItemRadioGroup.scss";
 
-export interface GridItemRadioGroup {
+interface GridItemRadioGroup {
   control: ReturnType<typeof useForm>["control"];
   defaultValue: string;
-  disabled?: boolean;
   label: string;
   lowercase?: boolean;
+  name?: string;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   options: string[];
   register: ReturnType<typeof useForm>["register"];
@@ -18,9 +18,9 @@ export interface GridItemRadioGroup {
 export const GridItemRadioGroup = ({
   control,
   defaultValue,
-  disabled,
   label,
   lowercase,
+  name,
   onChange,
   options,
   register,
@@ -33,17 +33,11 @@ export const GridItemRadioGroup = ({
         as={RadioGroup}
         control={control}
         defaultValue={defaultValue}
-        name={camelCase(label)}
+        name={name || camelCase(label)}
       >
         {options.map((o) => {
           return (
-            <FormControlLabel
-              key={o.toLowerCase()}
-              control={<Radio onChange={onChange} />}
-              disabled={disabled}
-              label={o}
-              value={lowercase ? o.toLowerCase() : o}
-            />
+            <FormControlLabel key={o} control={<Radio onChange={onChange} />} label={o} value={o} />
           );
         })}
       </Controller>
@@ -52,7 +46,7 @@ export const GridItemRadioGroup = ({
 };
 
 GridItemRadioGroup.defaultProps = {
-  disabled: false,
   lowercase: false,
+  name: undefined,
   onChange: undefined,
 };

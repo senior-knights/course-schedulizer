@@ -8,12 +8,19 @@ interface GridItemTextField {
   label: string;
   register: ReturnType<typeof useForm>["register"];
   textFieldProps?: StandardTextFieldProps;
+  value?: string;
 }
 
-export const GridItemTextField = ({ label, register, textFieldProps }: GridItemTextField) => {
+export const GridItemTextField = ({
+  label,
+  register,
+  textFieldProps,
+  value,
+}: GridItemTextField) => {
   return (
     <Grid item xs>
       <TextField
+        defaultValue={value}
         inputRef={register}
         label={label}
         name={camelCase(label)}
@@ -26,4 +33,5 @@ export const GridItemTextField = ({ label, register, textFieldProps }: GridItemT
 
 GridItemTextField.defaultProps = {
   textFieldProps: undefined,
+  value: "",
 };

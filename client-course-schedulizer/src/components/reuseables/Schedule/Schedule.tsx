@@ -1,8 +1,11 @@
-import { CalendarOptions } from "@fullcalendar/react";
-import { AsyncComponent, Calendar, ScheduleToolbar } from "components";
-import React, { useContext, useMemo, useState } from "react";
+import { CalendarOptions, EventClickArg } from "@fullcalendar/react";
+import { Popover } from "@material-ui/core";
+import { AddSectionPopover, AsyncComponent, Calendar, ScheduleToolbar } from "components";
+import { bindPopover, usePopupState } from "material-ui-popup-state/hooks";
+import React, { useCallback, useContext, useMemo, useState } from "react";
 import Stick from "react-stick";
 import StickyNode from "react-stickynode";
+import { CourseSectionMeeting } from "utilities";
 import { AppContext, ScheduleContext } from "utilities/contexts";
 import {
   filterEventsByTerm,
@@ -43,6 +46,20 @@ const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Sc
   const {
     appState: { selectedTerm, slotMaxTime, slotMinTime },
   } = useContext(AppContext);
+  const [popupData, setPopupData] = useState<CourseSectionMeeting>();
+
+  const popupState = usePopupState({
+    popupId: "addSection",
+    variant: "popover",
+  });
+
+  const handleEventClick = useCallback(
+    (arg: EventClickArg) => {
+      setPopupData(arg.event.extendedProps as CourseSectionMeeting);
+      popupState.open(arg.el);
+    },
+    [popupState],
+  );
 
   const times = {
     slotMaxTime,
@@ -79,7 +96,12 @@ const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Sc
               {calenderHeadersNoEmptyInTerm.map((header) => {
                 return (
                   <div key={header} className="calendar-width hide-axis">
-                    <Calendar {...calendarOptions} key={header} events={filteredEvents[header]} />
+                    <Calendar
+                      {...calendarOptions}
+                      key={header}
+                      eventClick={handleEventClick}
+                      events={filteredEvents[header]}
+                    />
                   </div>
                 );
               })}
@@ -87,6 +109,20 @@ const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Sc
           </Stick>
         </div>
       </div>
+      <Popover
+        {...bindPopover(popupState)}
+        anchorOrigin={{
+          horizontal: "left",
+          vertical: "bottom",
+        }}
+        PaperProps={{ style: { maxWidth: "50%", minWidth: "500px" } }}
+        transformOrigin={{
+          horizontal: "right",
+          vertical: "top",
+        }}
+      >
+        <AddSectionPopover values={popupData} />
+      </Popover>
     </>
   );
 };

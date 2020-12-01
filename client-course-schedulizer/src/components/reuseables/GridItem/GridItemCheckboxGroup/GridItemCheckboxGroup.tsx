@@ -6,11 +6,19 @@ import "./GridItemCheckboxGroup.scss";
 
 interface GridItemCheckboxGroup {
   label: string;
+  name?: string;
   options: string[];
   register: ReturnType<typeof useForm>["register"];
+  value?: string[];
 }
 
-export const GridItemCheckboxGroup = ({ label, options, register }: GridItemCheckboxGroup) => {
+export const GridItemCheckboxGroup = ({
+  label,
+  name,
+  options,
+  register,
+  value,
+}: GridItemCheckboxGroup) => {
   return (
     <Grid item xs>
       <FormLabel component="legend">{label}</FormLabel>
@@ -19,11 +27,11 @@ export const GridItemCheckboxGroup = ({ label, options, register }: GridItemChec
           return (
             <Grid key={o.toLowerCase()} item>
               <FormControlLabel
-                control={<Checkbox />}
-                defaultChecked={false}
+                key={o.toLowerCase()}
+                control={<Checkbox defaultChecked={value?.includes(o)} />}
                 inputRef={register}
                 label={o}
-                name={`${camelCase(label)}[${i}]`}
+                name={`${name || camelCase(label)}[${i}]`}
                 value={o}
               />
             </Grid>
@@ -34,4 +42,7 @@ export const GridItemCheckboxGroup = ({ label, options, register }: GridItemChec
   );
 };
 
-GridItemCheckboxGroup.defaultProps = {};
+GridItemCheckboxGroup.defaultProps = {
+  name: undefined,
+  value: [],
+};

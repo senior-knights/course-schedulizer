@@ -1,10 +1,18 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Grid, InputAdornment, Typography } from "@material-ui/core";
 import { GridItemCheckboxGroup, GridItemRadioGroup, GridItemTextField } from "components";
+import moment from "moment";
 import React, { ChangeEvent, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
+import {
+  convertFromSemesterLength,
+  schema,
+  SectionInput,
+  updateScheduleWithNewSection,
+} from "utilities";
 import { AppContext } from "utilities/contexts";
 import {
+  CourseSectionMeeting,
   Day,
   Half,
   Intensive,
@@ -14,13 +22,14 @@ import {
   Weekday,
 } from "utilities/interfaces";
 import "./AddSectionPopover.scss";
-import { schema, SectionInput, updateScheduleWithNewSection } from "./AddSectionPopoverService";
 
+interface AddSectionPopover {
+  values?: CourseSectionMeeting;
+}
 const SPACING = 2;
 
 /* A form to input information to add a schedule */
-export const AddSectionPopover = () => {
-  // hooks
+export const AddSectionPopover = ({ values }: AddSectionPopover) => {
   const {
     appState: { schedule },
     appDispatch,
@@ -30,7 +39,7 @@ export const AddSectionPopover = () => {
     resolver: yupResolver(schema),
   });
   const [semesterLength, setSemesterLength] = useState<SemesterLengthOption>(
-    SemesterLengthOption.FullSemester,
+    convertFromSemesterLength(values?.section.semesterLength).toLowerCase() as SemesterLengthOption,
   );
 
   // handlers
@@ -48,6 +57,9 @@ export const AddSectionPopover = () => {
   const isIntensiveSemester = semesterLength === SemesterLengthOption.IntensiveSemester;
   const isCustomSemester = semesterLength === SemesterLengthOption.CustomSemester;
 
+  const locationValue =
+    (values && `${values?.meeting.location.building} ${values?.meeting.location.roomNumber}`) || "";
+
   return (
     <form className="popover-container">
       <Box mb={SPACING}>
@@ -61,35 +73,71 @@ export const AddSectionPopover = () => {
           label="Prefix"
           register={register}
           textFieldProps={{ autoFocus: true }}
+          value={values?.course.prefixes.join()}
         />
-        <GridItemTextField label="Number" register={register} />
-        <GridItemTextField label="Section" register={register} />
-        <GridItemTextField label="Class Name" register={register} />
+        <GridItemTextField label="Number" register={register} value={values?.course.number} />
+        <GridItemTextField label="Section" register={register} value={values?.section.letter} />
+        <GridItemTextField label="Name" register={register} value={values?.course.name} />
         <Grid item xs>
           <span>{/* TODO: add error messages? */}</span>
         </Grid>
       </Grid>
       <Grid container spacing={SPACING}>
         {/* TODO: Dropdown for instructors with option to add new one */}
-        <GridItemTextField label="Instructor" register={register} />
-        <GridItemTextField label="Student Hours" register={register} />
-        <GridItemTextField label="Faculty Hours" register={register} />
+        <GridItemTextField
+          label="Instructor"
+          register={register}
+          value={values?.section.instructors.join()}
+        />
         {/* TODO: Dropdown for rooms with option to add new one */}
-        <GridItemTextField label="Location" register={register} />
-        <GridItemTextField label="Room Capacity" register={register} />
+        <GridItemTextField label="Location" register={register} value={locationValue} />
+        <GridItemTextField
+          label="Room Capacity"
+          register={register}
+          textFieldProps={{ name: "roomCapacity" }}
+          value={(values?.meeting.location.roomCapacity || "").toString()}
+        />
+        <GridItemTextField
+          label="Faculty Hours"
+          register={register}
+          textFieldProps={{ name: "facultyHours" }}
+          value={(values?.section.facultyHours || values?.course.facultyHours || "").toString()}
+        />
+        <GridItemTextField
+          label="Student Hours"
+          register={register}
+          textFieldProps={{ name: "studentHours" }}
+          value={(values?.section.studentHours || values?.course.studentHours || "").toString()}
+        />
       </Grid>
       <Grid container spacing={SPACING}>
-        <GridItemTextField label="Anticipated Size" register={register} />
-        <GridItemTextField label="Global Max" register={register} />
-        <GridItemTextField label="Local Max" register={register} />
+        <GridItemTextField
+          label="Anticipated Size"
+          register={register}
+          textFieldProps={{ name: "anticipatedSize" }}
+          value={(values?.section.anticipatedSize || "").toString()}
+        />
+        <GridItemTextField
+          label="Local Max"
+          register={register}
+          textFieldProps={{ name: "localMax" }}
+          value={(values?.section.localMax || "").toString()}
+        />
+        <GridItemTextField
+          label="Global Max"
+          register={register}
+          textFieldProps={{ name: "globalMax" }}
+          value={(values?.section.globalMax || "").toString()}
+        />
         <GridItemTextField
           label="Start Time"
           register={register}
-          textFieldProps={{
-            defaultValue: "08:00",
-            fullWidth: true,
-            type: "time",
-          }}
+          textFieldProps={{ fullWidth: true, name: "startTime", type: "time" }}
+          value={
+            values?.meeting.startTime
+              ? moment(values?.meeting.startTime, "h:mma").format("HH:mm")
+              : "08:00"
+          }
         />
         <GridItemTextField
           label="Duration"
@@ -99,6 +147,7 @@ export const AddSectionPopover = () => {
               endAdornment: <InputAdornment position="end">min</InputAdornment>,
             },
           }}
+          value={(values?.meeting.duration || "").toString()}
         />
       </Grid>
       <Grid container spacing={SPACING}>
@@ -108,17 +157,18 @@ export const AddSectionPopover = () => {
             return Object.values(Weekday).includes(day);
           })}
           register={register}
+          value={values?.meeting.days}
         />
         <GridItemRadioGroup
           control={control}
-          defaultValue={Term.Fall}
+          defaultValue={values?.section.term || Term.Fall}
           label="Term"
           options={Object.values(Term)}
           register={register}
         />
         <GridItemRadioGroup
           control={control}
-          defaultValue={SemesterLengthOption.FullSemester}
+          defaultValue={convertFromSemesterLength(values?.section.semesterLength)}
           label="Semester Length"
           onChange={onSemesterLengthChange}
           options={Object.values(SemesterLengthOption)}
@@ -128,8 +178,10 @@ export const AddSectionPopover = () => {
           {isHalfSemester && (
             <GridItemRadioGroup
               control={control}
-              defaultValue={SemesterLength.HalfFirst}
+              defaultValue={values?.section.semesterLength || SemesterLength.HalfFirst}
               label="Half Semester"
+              lowercase
+              name="half"
               options={Object.values(SemesterLength).filter((h) => {
                 return Object.values(Half).includes(h);
               })}
@@ -139,8 +191,9 @@ export const AddSectionPopover = () => {
           {isIntensiveSemester && (
             <GridItemRadioGroup
               control={control}
-              defaultValue={SemesterLength.IntensiveA}
+              defaultValue={values?.section.semesterLength || SemesterLength.IntensiveA}
               label="Intensive Semester"
+              name="intensive"
               options={Object.values(SemesterLength).filter((i) => {
                 return Object.values(Intensive).includes(i);
               })}
@@ -179,6 +232,7 @@ export const AddSectionPopover = () => {
           label="Notes"
           register={register}
           textFieldProps={{ multiline: true, name: "comments", rows: 4 }}
+          value={values?.section.comments}
         />
       </Grid>
       <Grid alignItems="flex-end" container justify="space-between">
@@ -196,4 +250,8 @@ export const AddSectionPopover = () => {
       </Grid>
     </form>
   );
+};
+
+AddSectionPopover.defaultProps = {
+  values: undefined,
 };
