@@ -29,7 +29,6 @@ import { array, number, object, string } from "yup";
 export interface SectionInput {
   anticipatedSize: Section["anticipatedSize"];
   comments: Section["comments"];
-  courseName: Course["name"];
   days: Meeting["days"];
   duration: Meeting["duration"];
   facultyHours: Section["facultyHours"];
@@ -39,6 +38,7 @@ export interface SectionInput {
   intensive?: Intensive;
   localMax: Section["localMax"];
   location: string;
+  name: Course["name"];
   number: Course["number"];
   prefix: Prefix;
   roomCapacity: Location["roomCapacity"];
@@ -85,7 +85,6 @@ export const convertToSemesterLength = (
 NOTE: fields with default values are not check: semester and time. */
 export const addSectionSchema = object().shape({
   anticipatedSize: number().typeError("global max must be a number").positive().integer(),
-  courseName: string().required(),
   days: array()
     // Removes unchecked days from the list
     .transform((d) => {
@@ -104,6 +103,7 @@ export const addSectionSchema = object().shape({
   instructor: string().required(),
   localMax: number().typeError("global max must be a number").positive().integer(),
   location: string().required(),
+  name: string().required(),
   number: number().typeError("number must be a number").required().positive().integer(),
   prefix: string().required().uppercase(),
   roomCapacity: number().typeError("global max must be a number").positive().integer(),
@@ -191,7 +191,7 @@ export const mapInputToInternalTypes = (data: SectionInput) => {
 
   const newCourse: Course = {
     facultyHours: Number(data.facultyHours),
-    name: data.courseName,
+    name: data.name,
     number: data.number,
     prefixes: prefixCase(data.prefix),
     // The newSection will be added later in insertSectionCourse()
