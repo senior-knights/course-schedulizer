@@ -7,37 +7,36 @@ import {
   FormLabel,
   Grid,
 } from "@material-ui/core";
-import { useInput } from "components";
 import React from "react";
 import { useFormContext } from "react-hook-form";
+import { useInput } from "utilities";
 import "./GridItemCheckboxGroup.scss";
 
 interface GridItemCheckboxGroup {
   label: string;
+  name?: string;
   options: string[];
+  value?: string[];
 }
 
-/* Renders a group of check boxes.
-Ref: https://stackoverflow.com/questions/62291962/react-hook-forms-material-ui-checkboxes */
-export const GridItemCheckboxGroup = ({ label, options }: GridItemCheckboxGroup) => {
+export const GridItemCheckboxGroup = ({ label, name, options, value }: GridItemCheckboxGroup) => {
   const { register, errors } = useFormContext();
-  const { name, errorMessage } = useInput(label, errors);
+  const { name: nameFallback, errorMessage } = useInput(label, errors);
 
   return (
     <Grid item xs>
       <FormControl component="fieldset" error={!!errorMessage}>
         <FormLabel component="legend">{label}</FormLabel>
         <FormGroup>
-          <Grid container direction="column" justify="center">
+          <Grid container direction="column">
             {options.map((opt, i) => {
               return (
                 <Grid key={opt} item>
                   <FormControlLabel
-                    control={<Checkbox />}
-                    defaultChecked={false}
+                    control={<Checkbox defaultChecked={value?.includes(opt)} />}
                     inputRef={register}
                     label={opt}
-                    name={`${name}[${i}]`}
+                    name={`${name || nameFallback}[${i}]`}
                     value={opt}
                   />
                 </Grid>
@@ -51,4 +50,7 @@ export const GridItemCheckboxGroup = ({ label, options }: GridItemCheckboxGroup)
   );
 };
 
-GridItemCheckboxGroup.defaultProps = {};
+GridItemCheckboxGroup.defaultProps = {
+  name: undefined,
+  value: [],
+};

@@ -53,3 +53,9 @@ export interface Section {
 export interface Schedule {
   courses: Course[];
 }
+
+export interface CourseSectionMeeting {
+  course: Course;
+  meeting: Meeting;
+  section: Section;
+}

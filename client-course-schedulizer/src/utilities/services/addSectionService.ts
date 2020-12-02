@@ -1,15 +1,15 @@
-import { camelCase } from "lodash";
+import { camelCase, filter, indexOf, isEqual } from "lodash";
 import moment from "moment";
 import { useContext } from "react";
 import { DeepMap, FieldError } from "react-hook-form";
+import { AppContext } from "utilities/contexts";
 import {
   insertSectionCourse,
   instructorCase,
   locationCase,
   prefixCase,
   startTimeCase,
-} from "utilities";
-import { AppContext } from "utilities/contexts";
+} from "utilities/helpers";
 import {
   Course,
   Half,
@@ -18,6 +18,7 @@ import {
   Location,
   Meeting,
   Prefix,
+  Schedule,
   Section,
   SemesterLength,
   SemesterLengthOption,
@@ -28,7 +29,6 @@ import { array, number, object, string } from "yup";
 export interface SectionInput {
   anticipatedSize: Section["anticipatedSize"];
   comments: Section["comments"];
-  // TODO: make the types better so changing in one place makes you aware or add tests
   courseName: Course["name"];
   days: Meeting["days"];
   duration: Meeting["duration"];
@@ -49,7 +49,17 @@ export interface SectionInput {
   term: Section["term"];
 }
 
-// A helpful function to convert the semester length from the input
+export const convertFromSemesterLength = (sl: SemesterLength | undefined): SemesterLengthOption => {
+  if (sl === SemesterLength.Full || !sl) {
+    return SemesterLengthOption.FullSemester;
+  }
+  if (sl === SemesterLength.HalfFirst || sl === SemesterLength.HalfSecond) {
+    return SemesterLengthOption.HalfSemester;
+  }
+
+  return SemesterLengthOption.IntensiveSemester;
+};
+
 export const convertToSemesterLength = (
   sl: Half | Intensive | SemesterLengthOption,
 ): SemesterLength => {
@@ -104,6 +114,49 @@ export const addSectionSchema = object().shape({
     .positive()
     .integer(),
 });
+
+export const getSectionName = (course: Course, section: Section) => {
+  return `${course.prefixes[0]}-${course.number}-${section.letter}`;
+};
+
+export const getCourse = (
+  schedule: Schedule,
+  prefixes: Course["prefixes"],
+  courseNumber: Course["number"],
+) => {
+  const courses = filter(schedule.courses, (course) => {
+    return isEqual(course.prefixes, prefixes) && course.number === courseNumber;
+  });
+  return courses.length > 0 ? courses[0] : undefined;
+};
+
+export const getSection = (
+  schedule: Schedule,
+  prefixes: Course["prefixes"],
+  courseNumber: Course["number"],
+  letter: Section["letter"],
+  term: Section["term"],
+) => {
+  const course = getCourse(schedule, prefixes, courseNumber);
+  const sections = filter(course?.sections, (section) => {
+    return section.letter === letter && section.term === term;
+  });
+  return sections.length > 0 ? sections[0] : undefined;
+};
+
+export const removeSection = (
+  schedule: Schedule,
+  letter: Section["letter"],
+  term: Section["term"],
+  courseIndex: number,
+) => {
+  schedule.courses[courseIndex].sections = filter(
+    schedule.courses[courseIndex].sections,
+    (section) => {
+      return section.letter !== letter || section.term !== term;
+    },
+  );
+};
 
 /* Used to map the input from the popover form to the
  internal JSON object type.  */
@@ -165,6 +218,20 @@ export const useAddSectionToSchedule = () => {
     const { newSection, newCourse }: MappedSection = mapInputToInternalTypes(data);
 
     setIsCSVLoading(true);
+
+    // Remove the old version of the Section if there is one
+    const oldSection = getSection(
+      schedule,
+      newCourse.prefixes,
+      newCourse.number,
+      newSection.letter,
+      newSection.term,
+    );
+    if (oldSection) {
+      const oldCourse = getCourse(schedule, newCourse.prefixes, newCourse.number);
+      const courseIndex = indexOf(schedule.courses, oldCourse);
+      removeSection(schedule, newSection.letter, newSection.term, courseIndex);
+    }
 
     // Insert the Section to the Schedule, either as a new Course or to an existing Course
     insertSectionCourse(schedule, newSection, newCourse);

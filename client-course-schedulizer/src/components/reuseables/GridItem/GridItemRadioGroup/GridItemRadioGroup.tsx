@@ -11,9 +11,10 @@ import React, { ChangeEvent } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import "./GridItemRadioGroup.scss";
 
-export interface GridItemRadioGroup {
+interface GridItemRadioGroup {
   defaultValue: string;
   label: string;
+  name?: string;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   options: string[];
 }
@@ -23,6 +24,7 @@ Ref: https://stackoverflow.com/questions/64042394/react-hook-form-and-material-u
 export const GridItemRadioGroup = ({
   defaultValue,
   label,
+  name,
   onChange,
   options,
 }: GridItemRadioGroup) => {
@@ -50,7 +52,7 @@ export const GridItemRadioGroup = ({
           }
           control={control}
           defaultValue={defaultValue}
-          name={camelCase(label)}
+          name={name || camelCase(label)}
         />
       </FormControl>
     </Grid>
@@ -58,5 +60,6 @@ export const GridItemRadioGroup = ({
 };
 
 GridItemRadioGroup.defaultProps = {
+  name: undefined,
   onChange: undefined,
 };
