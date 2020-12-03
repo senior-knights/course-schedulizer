@@ -101,6 +101,7 @@ export const csvStringToSchedule = (csvString: string): Schedule => {
   return schedule;
 };
 
+// Insert the Section to the Schedule, either as a new Course or to an existing Course
 export const insertSectionCourse = (schedule: Schedule, section: Section, course: Course) => {
   const { meetings } = section;
 

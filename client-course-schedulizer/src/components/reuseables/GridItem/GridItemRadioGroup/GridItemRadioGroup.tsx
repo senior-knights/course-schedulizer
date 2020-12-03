@@ -52,7 +52,7 @@ export const GridItemRadioGroup = ({
           }
           control={control}
           defaultValue={defaultValue}
-          name={name || camelCase(label)}
+          name={name ?? camelCase(label)}
         />
       </FormControl>
     </Grid>

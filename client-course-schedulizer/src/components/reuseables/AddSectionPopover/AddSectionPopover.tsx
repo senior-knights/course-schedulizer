@@ -38,7 +38,6 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
   );
   const { addSectionToSchedule } = useAddSectionToSchedule();
 
-  // handlers
   const onSubmit = (data: SectionInput) => {
     addSectionToSchedule(data);
   };
@@ -46,7 +45,6 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
     setSemesterLength(e.target.value as SemesterLengthOption);
   };
 
-  // const vars
   const isHalfSemester = semesterLength === SemesterLengthOption.HalfSemester;
   const isIntensiveSemester = semesterLength === SemesterLengthOption.IntensiveSemester;
   const isCustomSemester = semesterLength === SemesterLengthOption.CustomSemester;

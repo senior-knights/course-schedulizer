@@ -36,7 +36,7 @@ export const GridItemCheckboxGroup = ({ label, name, options, value }: GridItemC
                     control={<Checkbox defaultChecked={value?.includes(opt)} />}
                     inputRef={register}
                     label={opt}
-                    name={`${name || nameFallback}[${i}]`}
+                    name={`${name ?? nameFallback}[${i}]`}
                     value={opt}
                   />
                 </Grid>

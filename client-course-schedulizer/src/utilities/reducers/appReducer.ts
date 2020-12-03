@@ -10,7 +10,7 @@ export const reducer = (state: AppState, action: AppAction): AppState => {
     case "setScheduleData": {
       let { schedule } = action.payload;
       schedule = schedule || { courses: [] };
-      const times = getMinAndMaxTimes(schedule); // This causes a bug! (#61)
+      const times = getMinAndMaxTimes(schedule);
       return {
         ...state,
         professors: getProfs(schedule),

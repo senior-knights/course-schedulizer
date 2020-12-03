@@ -23,7 +23,7 @@ export const GridItemTextField = ({ label, textFieldProps, value, name }: GridIt
           defaultValue={value}
           inputRef={register}
           label={label}
-          name={name || nameFallback}
+          name={name ?? nameFallback}
           {...textFieldProps}
           error={!!errorMessage}
           helperText={errorMessage}
