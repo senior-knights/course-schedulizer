@@ -1,5 +1,4 @@
 import { camelCase, filter, indexOf, isEqual } from "lodash";
-import moment from "moment";
 import { useContext } from "react";
 import { DeepMap, FieldError } from "react-hook-form";
 import { AppContext } from "utilities/contexts";
@@ -23,7 +22,6 @@ import {
   SemesterLength,
   SemesterLengthOption,
 } from "utilities/interfaces";
-import { array, number, object, string } from "yup";
 
 // Defines interface for the section popover input
 export interface SectionInput {
@@ -81,40 +79,6 @@ export const convertToSemesterLength = (
   }
 };
 
-/* A schema to provide form validation for the AddSectionPopover.
-NOTE: fields with default values are not check: semester and time. */
-export const addSectionSchema = object().shape({
-  anticipatedSize: number().typeError("global max must be a number").positive().integer(),
-  days: array()
-    // Removes unchecked days from the list
-    .transform((d) => {
-      return d.filter((day: boolean | string) => {
-        return day;
-      });
-    })
-    .min(1),
-  duration: number().typeError("duration must be a number").required().positive().integer(),
-  facultyHours: number()
-    .typeError("faculty hours must be a number")
-    .required()
-    .positive()
-    .integer(),
-  globalMax: number().typeError("global max must be a number").positive().integer(),
-  instructor: string().required(),
-  localMax: number().typeError("global max must be a number").positive().integer(),
-  location: string().required(),
-  name: string().required(),
-  number: number().typeError("number must be a number").required().positive().integer(),
-  prefix: string().required().uppercase(),
-  roomCapacity: number().typeError("global max must be a number").positive().integer(),
-  section: string().required().uppercase(),
-  studentHours: number()
-    .typeError("student hours must be a number")
-    .required()
-    .positive()
-    .integer(),
-});
-
 export const getSectionName = (course: Course, section: Section) => {
   return `${course.prefixes[0]}-${course.number}-${section.letter}`;
 };
@@ -163,41 +127,9 @@ export const removeSection = (
 export const mapInputToInternalTypes = (data: SectionInput) => {
   const location = locationCase(data.location);
   const semesterType = convertToSemesterLength(data.intensive || data.half || data.semesterLength);
-  const newSection: Section = {
-    anticipatedSize: Number(data.anticipatedSize),
-    comments: data.comments,
-    facultyHours: Number(data.facultyHours),
-    globalMax: Number(data.globalMax),
-    instructors: instructorCase(data.instructor),
-    letter: data.section,
-    localMax: Number(data.localMax),
-    meetings: [
-      {
-        days: data.days,
-        duration: Number(data.duration),
-        location: {
-          building: location[0],
-          roomCapacity: Number(data.roomCapacity),
-          roomNumber: location[1],
-        },
-        startTime: startTimeCase(data.startTime),
-      },
-    ],
-    semesterLength: semesterType,
-    studentHours: Number(data.studentHours),
-    term: data.term,
-    year: `${moment().year()}-${moment().add(1, "year").year()}`,
-  };
+  const newSection: Section = createNewSectionFromInput(data, location, semesterType);
 
-  const newCourse: Course = {
-    facultyHours: Number(data.facultyHours),
-    name: data.name,
-    number: data.number,
-    prefixes: prefixCase(data.prefix),
-    // The newSection will be added later in insertSectionCourse()
-    sections: [],
-    studentHours: Number(data.studentHours),
-  };
+  const newCourse: Course = createNewCourseFromInput(data);
   return { newCourse, newSection };
 };
 
@@ -216,26 +148,9 @@ export const useAddSectionToSchedule = () => {
   // Update the schedule via pass by sharing.
   const addSectionToSchedule = (data: SectionInput) => {
     const { newSection, newCourse }: MappedSection = mapInputToInternalTypes(data);
-
     setIsCSVLoading(true);
-
-    // Remove the old version of the Section if there is one
-    const oldSection = getSection(
-      schedule,
-      newCourse.prefixes,
-      newCourse.number,
-      newSection.letter,
-      newSection.term,
-    );
-    if (oldSection) {
-      const oldCourse = getCourse(schedule, newCourse.prefixes, newCourse.number);
-      const courseIndex = indexOf(schedule.courses, oldCourse);
-      removeSection(schedule, newSection.letter, newSection.term, courseIndex);
-    }
-
-    // Insert the Section to the Schedule, either as a new Course or to an existing Course
+    removeOldSection(schedule, newCourse, newSection);
     insertSectionCourse(schedule, newSection, newCourse);
-
     appDispatch({ payload: { schedule }, type: "setScheduleData" });
     setIsCSVLoading(false);
   };
@@ -249,4 +164,68 @@ export const useInput = <T>(label: string, errors: DeepMap<T, FieldError>) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const errorMessage = (errors[name as keyof T] as any)?.message;
   return { errorMessage, name };
+};
+
+// Remove the old version of the Section if there is one
+const removeOldSection = (schedule: Schedule, newCourse: Course, newSection: Section) => {
+  const oldSection = getSection(
+    schedule,
+    newCourse.prefixes,
+    newCourse.number,
+    newSection.letter,
+    newSection.term,
+  );
+  if (oldSection) {
+    const oldCourse = getCourse(schedule, newCourse.prefixes, newCourse.number);
+    const courseIndex = indexOf(schedule.courses, oldCourse);
+    removeSection(schedule, newSection.letter, newSection.term, courseIndex);
+  }
+};
+
+const createNewSectionFromInput = (
+  data: SectionInput,
+  location: string[],
+  semesterType: SemesterLength,
+): Section => {
+  const building = location[0];
+  const roomNumber = location[1];
+
+  return {
+    anticipatedSize: Number(data.anticipatedSize),
+    comments: data.comments,
+    facultyHours: Number(data.facultyHours),
+    globalMax: Number(data.globalMax),
+    instructors: instructorCase(data.instructor),
+    letter: data.section,
+    localMax: Number(data.localMax),
+    meetings: [
+      {
+        days: data.days,
+        duration: Number(data.duration),
+        location: {
+          building,
+          roomCapacity: Number(data.roomCapacity),
+          roomNumber,
+        },
+        startTime: startTimeCase(data.startTime),
+      },
+    ],
+    semesterLength: semesterType,
+    studentHours: Number(data.studentHours),
+    term: data.term,
+    // TODO: there currently isn't a way to get the year for this Section.
+    year: `${"hello"}`,
+  };
+};
+
+const createNewCourseFromInput = (data: SectionInput): Course => {
+  return {
+    facultyHours: Number(data.facultyHours),
+    name: data.name,
+    number: data.number,
+    prefixes: prefixCase(data.prefix),
+    // The newSection will be added later in insertSectionCourse()
+    sections: [],
+    studentHours: Number(data.studentHours),
+  };
 };
