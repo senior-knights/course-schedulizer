@@ -93,7 +93,7 @@ export const scheduleToCSVString = (schedule: Schedule): string => {
       // Construct a row in the output CSV
       csvStr += `\n"${course.department}",${termStr},${section.termStart},${
         section.year
-      },"${sectionNameStr}",${course.prefixes.join(";")},${course.number},${
+      },"${sectionNameStr}","${course.prefixes.join("\n")}",${course.number},${
         section.letter
       },${courseLevelCodeStr},${section.studentHours ?? course.studentHours},${
         section.facultyHours ?? course.facultyHours
@@ -105,7 +105,7 @@ export const scheduleToCSVString = (schedule: Schedule): string => {
         section.semesterLength
       },"${buildingStr}","${roomNumberStr}","${meetingStartStr}","${meetingStartInternalStr}","${meetingDurationMinutesStr}","${meetingEndStr}","${meetingEndInternalStr}","${monStr}","${tuesStr}","${wedStr}","${thursStr}","${friStr}","${
         course.name
-      }",${section.instructors.join(";")},"${section.status}","${section.instructionalMethod}",${
+      }","${section.instructors.join("\n")}","${section.status}","${section.instructionalMethod}",${
         section.comments
       }`;
     });

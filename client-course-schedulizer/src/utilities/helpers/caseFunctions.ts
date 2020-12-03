@@ -263,8 +263,6 @@ export const daysCase = (value: string) => {
 };
 
 export const instructorCase = (value: string): string[] => {
-  // TODO: Instead of splitting at newlines here, instructors should be on a per meeting level
-  //       with newlines separating between the instructor(s) for each meeting (see other meeting relative fields)
   const instructors = value.split(/[;,\n]/);
   return instructors.map((instructor) => {
     return instructor.trim();
@@ -293,7 +291,7 @@ export const endDateCase = (
 };
 
 export const prefixCase = (value: string): string[] => {
-  return value.replace(" ", "").split(/[;,]/);
+  return value.replace(" ", "").split(/[;,\n]/);
 };
 
 export const numberDefaultZeroCase = (value: string): number => {
