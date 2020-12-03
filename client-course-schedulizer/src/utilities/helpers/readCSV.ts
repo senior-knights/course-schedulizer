@@ -95,7 +95,7 @@ export const csvStringToSchedule = (csvString: string): Schedule => {
     if (fields) {
       fields.forEach((field) => {
         const value = String(object[field]);
-        field = field.replace(/\s/g, "");
+        field = field.replace(/\s/g, "").replace("ï»¿", "");
         if (field in callbacks) {
           callbacks[field as keyof ValidFields](value, { course, meetings, section });
         }
