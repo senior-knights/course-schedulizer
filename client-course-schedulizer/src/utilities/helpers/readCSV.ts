@@ -37,23 +37,30 @@ const pruimSpreadsheetFields: ValidFields = {
 const registrarSpreadsheetFields: ValidFields = {
   AcademicYear: cf.yearCallback,
   BuildingAndRoom: cf.locationCallback,
+  Comments: cf.commentsCallback,
   CourseNum: cf.numberCallback,
+  Day10Used: cf.day10UsedCallback,
+  Department: cf.departmentCallback,
   Faculty: cf.instructorCallback,
   FacultyLoad: cf.facultyHoursCallback,
   GlobalMax: cf.globalMaxCallback,
+  InstructionalMethod: cf.instructionalMethodCallback,
   LocalMax: cf.localMaxCallback,
   MeetingDays: cf.daysCallback,
+  MeetingDurationMinutes: cf.durationCallback,
   MeetingStart: cf.startTimeCallback,
   MeetingTime: cf.durationCallback,
   MinimumCredits: cf.studentHoursCallback,
   RoomCapacity: cf.roomCapacityCallback,
   SectionCode: cf.letterCallback,
-  SectionEndDate: cf.sectionEndCallback,
-  SectionStartDate: cf.sectionStartCallback,
+  SectionEndDate: cf.endDateCallback,
+  SectionStartDate: cf.startDateCallback,
+  SectionStatus: cf.statusCallback,
   ShortTitle: cf.nameCallback,
   SubjectCode: cf.prefixCallback,
   Term: cf.termCallback,
-  Used: cf.anticipatedSizeCallback,
+  TermStart: cf.termStartCallback,
+  Used: cf.usedCallback,
 };
 
 const callbacks: ValidFields = {
@@ -84,10 +91,11 @@ export const csvStringToSchedule = (csvString: string): Schedule => {
     const course: Course = cloneDeep(emptyCourse);
 
     // Iterate through the fields of the CSV, and parse their values for this object
+    // TODO: Create a sense of priority for MeetingDurationMinutes over MeetingTime and SemesterLength over SemesterEndDate - SemesterStartDate
     if (fields) {
       fields.forEach((field) => {
         const value = String(object[field]);
-        field = field.replace(/\s/g, "");
+        field = field.replace(/\s/g, "").replace("ï»¿", "");
         if (field in callbacks) {
           callbacks[field as keyof ValidFields](value, { course, meetings, section });
         }

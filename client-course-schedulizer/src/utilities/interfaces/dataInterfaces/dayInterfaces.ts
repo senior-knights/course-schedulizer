@@ -4,10 +4,10 @@ export enum Day {
   Monday = "M",
   Tuesday = "T",
   Wednesday = "W",
-  Thursday = "Th",
+  Thursday = "TH",
   Friday = "F",
   Saturday = "S",
-  Sunday = "Su",
+  Sunday = "SU",
 }
 
 export enum Weekday {
