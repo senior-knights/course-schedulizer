@@ -1,6 +1,7 @@
 import fetch from "isomorphic-fetch";
 import { Course, Day, Schedule, Section, SemesterLength, Term } from "../interfaces/dataInterfaces";
 import { csvStringToSchedule } from "./readCSV";
+import { scheduleToCSVString } from "./writeCSV";
 
 let schedule: Schedule;
 let basicCourse: Course;
@@ -9,18 +10,29 @@ let noMeetingSection: Section;
 let multipleInstructorSection: Section;
 let interimSection: Section;
 let firstHalfSection: Section;
+let outputCSV: string;
+let intermediateSchedule: Schedule;
+let secondOutputCSV: string;
+let expectedOutputCSV: string;
 
 beforeAll(async () => {
-  const csv = await fetch(
+  let csv = await fetch(
     "https://raw.githubusercontent.com/senior-knights/course-schedulizer/develop/client-course-schedulizer/public/math-schedule.csv",
   );
   const csvString: string = await csv.text();
+  csv = await fetch(
+    "https://raw.githubusercontent.com/senior-knights/course-schedulizer/develop/client-course-schedulizer/public/math-schedule-export.csv",
+  );
+  expectedOutputCSV = await csv.text();
   schedule = csvStringToSchedule(csvString);
   [basicCourse] = schedule.courses;
   [basicSection, noMeetingSection] = basicCourse.sections;
   [multipleInstructorSection] = schedule.courses[6].sections;
   [interimSection] = schedule.courses[3].sections;
   [firstHalfSection] = schedule.courses[13].sections;
+  outputCSV = scheduleToCSVString(schedule);
+  intermediateSchedule = csvStringToSchedule(outputCSV);
+  secondOutputCSV = scheduleToCSVString(intermediateSchedule);
 });
 
 // TODO: add section to test file with second half semester length and Intensive B-D
@@ -141,7 +153,7 @@ describe("parses basic section", () => {
   });
 
   it("parses time", () => {
-    expect(basicSection.meetings[0].startTime).toEqual("12:30PM");
+    expect(basicSection.meetings[0].startTime).toEqual("12:30 PM");
     expect(basicSection.meetings[0].duration).toEqual(50);
   });
 
@@ -173,7 +185,7 @@ describe("parses interim section", () => {
   });
 
   it("parses time", () => {
-    expect(interimSection.meetings[0].startTime).toEqual("8:30AM");
+    expect(interimSection.meetings[0].startTime).toEqual("8:30 AM");
     expect(interimSection.meetings[0].duration).toEqual(510);
   });
 
@@ -188,4 +200,16 @@ it("handles sections with no meeting time", () => {
 
 it("parses first half semester length", () => {
   expect(firstHalfSection.semesterLength).toEqual(SemesterLength.HalfFirst);
+});
+
+it("exports the proper csv", () => {
+  expect(outputCSV).toEqual(expectedOutputCSV);
+});
+
+it("reimports the export with same structure", () => {
+  expect(intermediateSchedule).toEqual(schedule);
+});
+
+it("preserves information on second export", () => {
+  expect(secondOutputCSV).toEqual(expectedOutputCSV);
 });
