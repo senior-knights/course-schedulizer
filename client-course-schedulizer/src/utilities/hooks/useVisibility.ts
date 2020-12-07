@@ -16,7 +16,7 @@ export const useVisibility = <Element extends HTMLElement>(
   offset = 0,
   throttleMilliseconds = 100,
 ): [boolean, RefObject<Element>] => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const currentElement = createRef<Element>();
 
   const onScroll = throttle(() => {

@@ -19,12 +19,14 @@ export const AnimateShowAndHide = ({ children }: PropsWithChildren<{}>) => {
   const { height } = springProps;
 
   return (
-    <div ref={firstRef} className="trails-main">
-      <div>
-        <animated.div className="trails-text" style={springProps}>
-          <animated.div style={{ height }}>{children}</animated.div>
-        </animated.div>
-      </div>
+    <div
+      ref={firstRef}
+      className="trails-main"
+      style={{ display: "flex", justifyContent: "flex-start" }}
+    >
+      <animated.div className="trails-text" style={springProps}>
+        <animated.div style={{ height }}>{children}</animated.div>
+      </animated.div>
     </div>
   );
 };
