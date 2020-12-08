@@ -57,8 +57,10 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
   const isIntensiveSemester = semesterLength === SemesterLengthOption.IntensiveSemester;
   const isCustomSemester = semesterLength === SemesterLengthOption.CustomSemester;
 
-  const locationValue =
-    (values && `${values?.meeting.location.building} ${values?.meeting.location.roomNumber}`) || "";
+  const locationValue = (
+    (values && `${values?.meeting.location.building} ${values?.meeting.location.roomNumber}`) ||
+    ""
+  ).trim();
 
   // TODO: Make fields for department, termStart, used, day10Used, startDate, endDate, status, and/or instructionalMethod?
   return (
@@ -136,7 +138,7 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
           textFieldProps={{ fullWidth: true, name: "startTime", type: "time" }}
           value={
             values?.meeting.startTime
-              ? moment(values?.meeting.startTime, "h:mma").format("HH:mm")
+              ? moment(values?.meeting.startTime, "h:mm A").format("HH:mm")
               : "08:00"
           }
         />
