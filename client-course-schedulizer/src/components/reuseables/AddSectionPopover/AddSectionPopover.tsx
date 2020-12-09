@@ -43,7 +43,14 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
   );
 
   // Handlers
-  const onSubmit = (data: SectionInput) => {
+  // TODO: Why doesn't it show up???
+  const onSubmitUpdate = (data: SectionInput) => {
+    setIsCSVLoading(true);
+    updateScheduleWithNewSection(data, schedule, values, true);
+    appDispatch({ payload: { schedule }, type: "setScheduleData" });
+    setIsCSVLoading(false);
+  };
+  const onSubmitAdd = (data: SectionInput) => {
     setIsCSVLoading(true);
     updateScheduleWithNewSection(data, schedule, values);
     appDispatch({ payload: { schedule }, type: "setScheduleData" });
@@ -63,6 +70,35 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
   ).trim();
 
   const title = values ? "Update Section" : "Add Section";
+  const buttons = values ? (
+    <div>
+      <Button
+        className="update-button"
+        color="primary"
+        onClick={handleSubmit(onSubmitUpdate)}
+        variant="contained"
+      >
+        Update Section
+      </Button>
+      <Button
+        className="add-button"
+        color="primary"
+        onClick={handleSubmit(onSubmitAdd)}
+        variant="contained"
+      >
+        Add Section
+      </Button>
+    </div>
+  ) : (
+    <Button
+      className="submit-button"
+      color="primary"
+      onClick={handleSubmit(onSubmitAdd)}
+      variant="contained"
+    >
+      Submit
+    </Button>
+  );
 
   // TODO: Make fields for termStart, startDate, and endDate?
   return (
@@ -287,11 +323,7 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
             <b>arrow keys</b> to select term and others, and <b>return</b> to submit.
           </Typography>
         </Grid>
-        <Grid item>
-          <Button color="primary" onClick={handleSubmit(onSubmit)} variant="contained">
-            Submit
-          </Button>
-        </Grid>
+        <Grid item>{buttons}</Grid>
       </Grid>
     </form>
   );

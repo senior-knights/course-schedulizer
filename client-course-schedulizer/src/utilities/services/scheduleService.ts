@@ -19,7 +19,12 @@ export interface GroupedEvents {
 
 const eventExistsInEventList = (event: EventInput, eventList: EventInput[]): boolean => {
   return eventList.some((e) => {
-    return e.title === event.title && e.start === event.start && e.end === event.end;
+    return (
+      e.title === event.title &&
+      e.start === event.start &&
+      e.end === event.end &&
+      e.term === event.term
+    );
   });
 };
 
@@ -49,10 +54,12 @@ export const getEvents = (schedule: Schedule, groups: "faculty" | "room"): Group
                 section,
               },
               start: `${dayOfWeek}T${startTimeMoment.format("HH:mm")}`,
+              term: section.term,
               title: sectionName,
             };
             if (events[group]) {
               // Only add the event if it hasn't already been added
+              // TODO: Will this conceal conflicts (specifically duplicated courses/sections/meetings)?
               if (!eventExistsInEventList(newEvent, events[group])) {
                 events[group].push(newEvent);
               }

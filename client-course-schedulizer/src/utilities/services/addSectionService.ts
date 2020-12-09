@@ -194,6 +194,7 @@ export const updateScheduleWithNewSection = (
   data: SectionInput,
   schedule: Schedule,
   oldData: CourseSectionMeeting | undefined,
+  removeOldSection = false,
 ) => {
   const {
     newSection,
@@ -216,15 +217,17 @@ export const updateScheduleWithNewSection = (
     }
 
     // Remove the old version of the Section
-    const oldCourse = oldData?.course;
-    const courseIndex = indexOf(schedule.courses, oldCourse);
-    removeSection(
-      schedule,
-      oldSection.letter,
-      oldSection.term,
-      oldSection.instructors,
-      courseIndex,
-    );
+    if (removeOldSection) {
+      const oldCourse = oldData?.course;
+      const courseIndex = indexOf(schedule.courses, oldCourse);
+      removeSection(
+        schedule,
+        oldSection.letter,
+        oldSection.term,
+        oldSection.instructors,
+        courseIndex,
+      );
+    }
   }
 
   // Insert the Section to the Schedule, either as a new Course or to an existing Course
