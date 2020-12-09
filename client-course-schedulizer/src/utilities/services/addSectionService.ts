@@ -1,6 +1,7 @@
 import { filter, indexOf, isEqual } from "lodash";
 import {
   Course,
+  CourseSectionMeeting,
   Half,
   insertSectionCourse,
   instructorCase,
@@ -12,6 +13,7 @@ import {
   SemesterLength,
   SemesterLengthOption,
   startTimeCase,
+  yearCase,
 } from "utilities";
 import { Instructor, Location, Meeting, Prefix } from "utilities/interfaces";
 import { array, object } from "yup";
@@ -20,11 +22,14 @@ import { array, object } from "yup";
 export interface SectionInput {
   anticipatedSize: Section["anticipatedSize"];
   comments: Section["comments"];
+  day10Used: Section["day10Used"];
   days: Meeting["days"];
+  department: Course["department"];
   duration: Meeting["duration"];
   facultyHours: Section["facultyHours"];
   globalMax: Section["globalMax"];
   half: Half;
+  instructionalMethod: Section["instructionalMethod"];
   instructor: Instructor;
   intensive?: Intensive;
   localMax: Section["localMax"];
@@ -36,8 +41,11 @@ export interface SectionInput {
   section: Section["letter"];
   semesterLength: SemesterLengthOption;
   startTime: Meeting["startTime"];
+  status: Section["status"];
   studentHours: Section["studentHours"];
   term: Section["term"];
+  used: Section["used"];
+  year: string; // Assume string till yearCase() decides
 }
 
 export const convertFromSemesterLength = (sl: SemesterLength | undefined): SemesterLengthOption => {
@@ -102,10 +110,13 @@ export const getSection = (
   number: Course["number"],
   letter: Section["letter"],
   term: Section["term"],
+  instructors: Section["instructors"],
 ) => {
   const course = getCourse(schedule, prefixes, number);
   const sections = filter(course?.sections, (section) => {
-    return section.letter === letter && section.term === term;
+    return (
+      section.letter === letter && section.term === term && section.instructors === instructors
+    );
   });
   return sections.length > 0 ? sections[0] : undefined;
 };
@@ -114,12 +125,15 @@ export const removeSection = (
   schedule: Schedule,
   letter: Section["letter"],
   term: Section["term"],
+  instructors: Section["instructors"],
   courseIndex: number,
 ) => {
   schedule.courses[courseIndex].sections = filter(
     schedule.courses[courseIndex].sections,
     (section) => {
-      return section.letter !== letter || section.term !== term;
+      return (
+        section.letter !== letter || section.term !== term || section.instructors !== instructors
+      );
     },
   );
 };
@@ -132,11 +146,11 @@ export const mapInputToInternalTypes = (data: SectionInput) => {
   const newSection: Section = {
     anticipatedSize: Number(data.anticipatedSize),
     comments: data.comments,
-    day10Used: 0,
+    day10Used: Number(data.day10Used),
     endDate: "",
     facultyHours: Number(data.facultyHours),
     globalMax: Number(data.globalMax),
-    instructionalMethod: "LEC",
+    instructionalMethod: data.instructionalMethod,
     instructors: instructorCase(data.instructor),
     letter: data.section,
     localMax: Number(data.localMax),
@@ -154,16 +168,16 @@ export const mapInputToInternalTypes = (data: SectionInput) => {
     ],
     semesterLength: semesterType,
     startDate: "",
-    status: "Active",
+    status: data.status,
     studentHours: Number(data.studentHours),
     term: data.term,
     termStart: "",
-    used: 0,
-    year: "2021-2022",
+    used: Number(data.used),
+    year: yearCase(data.year),
   };
 
   const newCourse: Course = {
-    department: "",
+    department: data.department,
     facultyHours: Number(data.facultyHours),
     name: data.name,
     number: data.number,
@@ -176,24 +190,41 @@ export const mapInputToInternalTypes = (data: SectionInput) => {
 };
 
 // Update the schedule via pass by sharing.
-export const updateScheduleWithNewSection = (data: SectionInput, schedule: Schedule) => {
+export const updateScheduleWithNewSection = (
+  data: SectionInput,
+  schedule: Schedule,
+  oldData: CourseSectionMeeting | undefined,
+) => {
   const {
     newSection,
     newCourse,
   }: { newCourse: Course; newSection: Section } = mapInputToInternalTypes(data);
 
-  // Remove the old version of the Section if there is one
-  const oldSection = getSection(
-    schedule,
-    newCourse.prefixes,
-    newCourse.number,
-    newSection.letter,
-    newSection.term,
-  );
+  // If there is an old version of the Section...
+  const oldSection = oldData?.section;
   if (oldSection) {
-    const oldCourse = getCourse(schedule, newCourse.prefixes, newCourse.number);
+    // If the year, term, and semester length haven't changed...
+    if (
+      String(newSection.year) === String(oldSection.year) &&
+      newSection.term === oldSection.term &&
+      newSection.semesterLength === oldSection.semesterLength
+    ) {
+      // Update the new Section to match the date fields of the old Section
+      newSection.termStart = oldSection.termStart;
+      newSection.startDate = oldSection.startDate;
+      newSection.endDate = oldSection.endDate;
+    }
+
+    // Remove the old version of the Section
+    const oldCourse = oldData?.course;
     const courseIndex = indexOf(schedule.courses, oldCourse);
-    removeSection(schedule, newSection.letter, newSection.term, courseIndex);
+    removeSection(
+      schedule,
+      oldSection.letter,
+      oldSection.term,
+      oldSection.instructors,
+      courseIndex,
+    );
   }
 
   // Insert the Section to the Schedule, either as a new Course or to an existing Course
