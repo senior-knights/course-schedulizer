@@ -105,9 +105,9 @@ export const scheduleToCSVString = (schedule: Schedule): string => {
         section.semesterLength
       },"${buildingStr}","${roomNumberStr}","${meetingStartStr}","${meetingStartInternalStr}","${meetingDurationMinutesStr}","${meetingEndStr}","${meetingEndInternalStr}","${monStr}","${tuesStr}","${wedStr}","${thursStr}","${friStr}","${
         course.name
-      }","${section.instructors.join("\n")}","${section.status}","${section.instructionalMethod}",${
-        section.comments
-      }\n`;
+      }","${section.instructors.join("\n")}","${section.status}","${
+        section.instructionalMethod
+      }","${section.comments}"\n`;
     });
   });
   return csvStr;
