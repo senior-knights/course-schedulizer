@@ -44,7 +44,7 @@ export const Schedule = (props: ScheduleBase) => {
 */
 const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: ScheduleBase) => {
   const {
-    appState: { selectedTerm, slotMaxTime, slotMinTime, schedule },
+    appState: { selectedTerm, slotMaxTime, slotMinTime },
   } = useContext(AppContext);
   const [popupData, setPopupData] = useState<CourseSectionMeeting>();
 
