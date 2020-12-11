@@ -8,7 +8,7 @@ import "./Header.scss";
 /* Header is the top bar that persists across the app */
 export const Header = () => {
   return (
-    <AppBar position="static">
+    <AppBar elevation={0} position="static">
       <Toolbar className="toolbar">
         <RouterLink className="toolbar-group title" to="/">
           <img alt="Org Logo" className="org-logo" src={logo} />

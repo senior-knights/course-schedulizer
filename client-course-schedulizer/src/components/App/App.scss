@@ -1,3 +1,9 @@
 .App {
   text-align: center;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.content-container {
+  flex: 1 0 auto;
 }
