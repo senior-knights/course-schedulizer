@@ -1,14 +1,15 @@
-// ref: https://codesandbox.io/embed/zn2q57vn13
+// ref styles from: https://codesandbox.io/embed/zn2q57vn13
 
 @import url("https://rsms.me/inter/inter.css");
 
-.trails-main {
+.show-and-hide-main {
   font-family: "Inter", sans-serif;
   position: relative;
   height: 110px;
+  margin-bottom: 1.5em;
 }
 
-.trails-text {
+.show-and-hide-text {
   position: relative;
   height: 110px;
   line-height: 110px;
@@ -20,7 +21,7 @@
   overflow: hidden;
 }
 
-.trails-text > div {
+.show-and-hide-text > div {
   overflow: hidden;
   padding-right: 2em;
 }

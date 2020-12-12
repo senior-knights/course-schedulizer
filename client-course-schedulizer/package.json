@@ -29,6 +29,7 @@
     "js-file-download": "^0.4.12",
     "lodash": "4.17.20",
     "lodash.throttle": "4.1.1",
+    "material-ui-image": "3.3.1",
     "material-ui-popup-state": "^1.7.0",
     "moment": "2.29.1",
     "node-sass": "4.14.1",
@@ -41,6 +42,7 @@
     "react-stick": "4.1.1",
     "react-stickynode": "3.0.4",
     "react-table": "^7.6.1",
+    "react-visibility-sensor": "5.1.1",
     "runtypes": "5.0.1",
     "yup": "^0.29.3"
   },
