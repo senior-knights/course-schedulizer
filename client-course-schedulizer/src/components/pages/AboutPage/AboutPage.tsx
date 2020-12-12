@@ -46,10 +46,30 @@ const AboutVision = () => {
             <li>Faculty teaching loads cannot be “too high” or “too low”</li>
           </ul>
           These constraints make it extremely difficult for the department chair to create a
-          schedule without a tool to help them. For an Honors Project, Charles is completing an
-          honors project alongside the Course Schedulizer project. By employing constraint
-          satisfaction techniques, Charles hopes to allow department chairs to upload a list of
-          classes, professors, rooms, and times to create a schedule with no conflicts.
+          schedule without a tool to help them. We propose building a web application, named the
+          Course Schedulizer, that will allow department chairs to visualize and manipulate their
+          department course schedules. It will provide:
+          <ul>
+            <li>The ability to upload and export department schedules via CSV</li>
+            <li>Integration with the spreadsheets provided and required by the Registrar</li>
+            <li>Two views to visualize the schedule data (by location and by instructor)</li>
+            <li>Options to color the data by level, instructor, location, or prefix</li>
+            <li>Functionality to create, read, update, and delete class sections</li>
+            <li>A load summary for each instructor in the department</li>
+            <li>Schedule conflict detection and resolution suggestions (for honors portion)</li>
+            <li>An optimized user interface with an efficient use of screen space</li>
+            <li>An extensible interface to integrate with future systems (e.g. Workday)</li>
+          </ul>
+          By offering these features and improvements on the functionality previously implemented by
+          Professor Pruim and Professor VanderLinden, the Course Schedulizer will allow department
+          chairs to easily create their schedules.
+          <br />
+          <br />
+          For an Honors Project, Charles is completing a second project relating to constraint
+          problem satisfaction alongside the Course Schedulizer. By employing constraint
+          satisfaction techniques, Charles hopes to allow department chairs the ability to upload a
+          list of classes, professors, rooms, and times to the Course Schedulizer web application
+          and have the system create a schedule with no conflicts.
         </>
       }
       title="Vision"
