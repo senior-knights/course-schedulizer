@@ -33,7 +33,7 @@ export const team: TeamMember[] = [
   },
   {
     bio:
-      "Computer Science Professor and Department Chair at Calvin University. Keith's research interests are in Natural Language Engineering and Human-Computer Interaction.",
+      "Computer Science Professor and Department Chair at Calvin University. VanderLinden's research interests are in Natural Language Engineering and Human-Computer Interaction.",
     name: "Professor Keith VanderLinden",
     photo:
       "https://avatars0.githubusercontent.com/u/4930536?s=460&u=216f27d175496fec82a87e0c1c1c1514f73997da&v=4",
@@ -41,7 +41,7 @@ export const team: TeamMember[] = [
   },
   {
     bio:
-      "Mathematics and Statistics Professor and Department Chair at Calvin University. Randall's research interests are in Computational Statistics, Scientific Computing, and Statistics Education.",
+      "Mathematics and Statistics Professor and Department Chair at Calvin University. Pruim's research interests are in Computational Statistics, Scientific Computing, and Statistics Education.",
     name: "Professor Randall Pruim",
     photo: "https://www.statistics.com/wp-content/uploads/2019/05/dr-randall-pruim.jpg",
     website: "https://calvin.edu/directory/people/randall-pruim",
