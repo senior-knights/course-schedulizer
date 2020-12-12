@@ -63,7 +63,7 @@ const AboutTeam = () => {
       body={
         <Grid container direction="column" justify="flex-start" spacing={2}>
           {team.map((member: TeamMember) => {
-            return <TeamMemberProfile key={member.name} {...member} />;
+            return <TeamMemberProfile key={member.name} member={member} />;
           })}
         </Grid>
       }
@@ -128,8 +128,9 @@ const AboutResources = () => {
       body={
         <ul>
           <li>
-            <NewTabLink href="https://computing.calvin.edu/">Computing@Calvin</NewTabLink> -
-            Department Website
+            <NewTabLink href="https://computing.calvin.edu/">
+              Computing@Calvin Department Website
+            </NewTabLink>
           </li>
           <li>
             <NewTabLink href="https://web.microsoftstream.com/video/cee6b774-a010-4220-a0d8-c6a6c5240d84?st=2456">
