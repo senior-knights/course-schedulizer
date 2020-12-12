@@ -1,4 +1,4 @@
-import { Header } from "components";
+import { Footer, Header } from "components";
 import { AboutPage, HelpPage, SchedulizerPage } from "components/pages";
 import React, { useReducer, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
@@ -15,18 +15,21 @@ export const App = () => {
       <Router>
         <Header />
         <AppContext.Provider value={{ appDispatch, appState, isCSVLoading, setIsCSVLoading }}>
-          <Switch>
-            <Route path="/about">
-              <AboutPage />
-            </Route>
-            <Route path="/help">
-              <HelpPage />
-            </Route>
-            <Route path="/">
-              <SchedulizerPage />
-            </Route>
-          </Switch>
+          <div className="content-container">
+            <Switch>
+              <Route path="/about">
+                <AboutPage />
+              </Route>
+              <Route path="/help">
+                <HelpPage />
+              </Route>
+              <Route path="/">
+                <SchedulizerPage />
+              </Route>
+            </Switch>
+          </div>
         </AppContext.Provider>
+        <Footer />
       </Router>
     </div>
   );
