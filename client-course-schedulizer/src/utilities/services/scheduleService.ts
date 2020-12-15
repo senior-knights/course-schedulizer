@@ -84,10 +84,11 @@ export const getMinAndMaxTimes = (schedule: Schedule) => {
     return moment(meeting.startTime, "h:mm A").add(meeting.duration, "minutes");
   });
   const minTime = (minBy(startTimes) || moment("06:00", "HH:mm")).startOf("hour").format("HH:mm");
-  const maxTime = (maxBy(endTimes) || moment("22:00", "HH:mm"))
+  let maxTime = (maxBy(endTimes) || moment("22:00", "HH:mm"))
     .add(1, "hours")
     .startOf("hour")
     .format("HH:mm");
+  maxTime = maxTime === "00:00" ? "24:00" : maxTime;
   return {
     maxTime,
     minTime,
