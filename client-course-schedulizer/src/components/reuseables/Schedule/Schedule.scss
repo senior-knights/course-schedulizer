@@ -43,7 +43,7 @@ $header-offset: 8;
 .time-slot {
   display: flex;
   justify-content: flex-end;
-  margin-top: -1.5 * $spacing;
+  height: 50px; // TODO: Calculate or use constant?
   padding-right: 0.5 * $spacing;
 }
 
@@ -51,7 +51,6 @@ $header-offset: 8;
   background-color: $bg-header;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
   width: 6 * $spacing;
   padding-top: 28px; // Offset for the day headers
 }
