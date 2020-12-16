@@ -1,18 +1,21 @@
 import { Footer, Header } from "components";
 import { AboutPage, HelpPage, SchedulizerPage } from "components/pages";
 import React, { useReducer, useState } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { HashRouter, Route, Switch } from "react-router-dom";
 import { initialAppState, reducer } from "utilities";
 import { AppContext } from "utilities/contexts";
 import "./App.scss";
 
+/* App with a HashRouter.
+Ref: https://medium.com/@bennirus/deploying-a-create-react-app-with-routing-to-github-pages-f386b6ce84c2
+*/
 export const App = () => {
   const [isCSVLoading, setIsCSVLoading] = useState(false);
   const [appState, appDispatch] = useReducer(reducer, initialAppState);
 
   return (
     <div className="App">
-      <Router>
+      <HashRouter basename="/">
         <Header />
         <AppContext.Provider value={{ appDispatch, appState, isCSVLoading, setIsCSVLoading }}>
           <div className="content-container">
@@ -30,7 +33,7 @@ export const App = () => {
           </div>
         </AppContext.Provider>
         <Footer />
-      </Router>
+      </HashRouter>
     </div>
   );
 };
