@@ -1,4 +1,5 @@
 /* eslint-disable typescript-sort-keys/string-enum */
+
 export enum Term {
   Fall = "FA",
   Interim = "IN", // TODO: Remove?

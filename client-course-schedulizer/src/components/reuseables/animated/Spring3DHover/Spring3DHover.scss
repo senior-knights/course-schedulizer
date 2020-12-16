@@ -1,0 +1,26 @@
+.spring-3d-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spring-3d-content {
+  width: 200px;
+  height: 200px;
+  background: grey;
+  border-radius: 5px;
+  box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3);
+  transition: box-shadow 0.5s;
+  will-change: transform;
+  border-radius: 100%;
+}
+
+.spring-3d-image {
+  border-radius: 100% !important;
+  width: 200px;
+  height: 200px;
+}
+
+.spring-3d-content:hover {
+  box-shadow: 0px 30px 100px -10px rgba(0, 0, 0, 0.4);
+}

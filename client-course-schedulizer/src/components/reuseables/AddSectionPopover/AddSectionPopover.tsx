@@ -60,6 +60,7 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
   const locationValue =
     (values && `${values?.meeting.location.building} ${values?.meeting.location.roomNumber}`) || "";
 
+  // TODO: Make fields for department, termStart, used, day10Used, startDate, endDate, status, and/or instructionalMethod?
   return (
     <form className="popover-container">
       <Box mb={SPACING}>

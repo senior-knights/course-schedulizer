@@ -1,0 +1,27 @@
+// ref styles from: https://codesandbox.io/embed/zn2q57vn13
+
+@import url("https://rsms.me/inter/inter.css");
+
+.show-and-hide-main {
+  font-family: "Inter", sans-serif;
+  position: relative;
+  height: 110px;
+  margin-bottom: 1.5em;
+}
+
+.show-and-hide-text {
+  position: relative;
+  height: 110px;
+  line-height: 110px;
+  color: black;
+  font-size: 8em;
+  font-weight: 800;
+  letter-spacing: -9px;
+  will-change: transform, opacity;
+  overflow: hidden;
+}
+
+.show-and-hide-text > div {
+  overflow: hidden;
+  padding-right: 2em;
+}

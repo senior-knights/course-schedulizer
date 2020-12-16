@@ -132,8 +132,11 @@ export const mapInputToInternalTypes = (data: SectionInput) => {
   const newSection: Section = {
     anticipatedSize: Number(data.anticipatedSize),
     comments: data.comments,
+    day10Used: 0,
+    endDate: "",
     facultyHours: Number(data.facultyHours),
     globalMax: Number(data.globalMax),
+    instructionalMethod: "LEC",
     instructors: instructorCase(data.instructor),
     letter: data.section,
     localMax: Number(data.localMax),
@@ -150,12 +153,17 @@ export const mapInputToInternalTypes = (data: SectionInput) => {
       },
     ],
     semesterLength: semesterType,
+    startDate: "",
+    status: "Active",
     studentHours: Number(data.studentHours),
     term: data.term,
+    termStart: "",
+    used: 0,
     year: "2021-2022",
   };
 
   const newCourse: Course = {
+    department: "",
     facultyHours: Number(data.facultyHours),
     name: data.name,
     number: data.number,

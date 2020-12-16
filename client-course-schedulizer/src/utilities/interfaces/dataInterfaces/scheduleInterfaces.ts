@@ -13,13 +13,14 @@ export interface Meeting {
   // In minutes (usually 50)
   duration: number;
   location: Location;
-  // Like "8:00AM" or "12:30PM"
+  // Like "8:00 AM" or "12:30 PM"
   startTime: string;
 }
 
 export type Prefix = string;
 
 export interface Course {
+  department: string;
   facultyHours: number;
   name: string;
   number: string;
@@ -31,11 +32,16 @@ export interface Course {
 export type Instructor = string;
 
 export interface Section {
-  anticipatedSize: number;
+  anticipatedSize?: number;
   comments: string;
+  // Number of students enrolled in this section 10 days into the course
+  day10Used: number;
+  // Like 2/3/2020
+  endDate: string;
   // Overrides Course value
   facultyHours?: number;
   globalMax: number;
+  instructionalMethod: string;
   instructors: Instructor[];
   letter: string;
   localMax: number;
@@ -43,10 +49,16 @@ export interface Section {
   // Asynchronous classes should have an empty array of meeting times
   meetings: Meeting[];
   semesterLength: SemesterLength;
-  startSectionDate?: string;
+  // Like 5/21/2020
+  startDate: string;
+  status: string;
   // Overrides Course value
   studentHours?: number;
   term: Term;
+  // Like 9/3/2019
+  termStart: string;
+  // Number of students enrolled in this section at the end of the course
+  used: number;
   year: number | string;
 }
 

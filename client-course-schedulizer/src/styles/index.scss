@@ -13,3 +13,10 @@ code {
 html {
   overflow-x: hidden;
 }
+
+html,
+body,
+#root,
+.App {
+  height: 100%;
+}
