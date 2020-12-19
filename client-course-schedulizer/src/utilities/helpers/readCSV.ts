@@ -122,7 +122,7 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
   // Check if there is already a course in the schedule with the same prefix and number
   const existingCourse = getCourse(schedule, course.prefixes, course.number);
 
-  // If there is, first check if there is already a section for that course with the same letter and term
+  // If there is, first check if there is already a section for that course with the same letter, instructors, and term
   if (existingCourse) {
     const existingCourseIndex = schedule.courses.indexOf(existingCourse);
     const existingSection = getSection(
@@ -131,6 +131,7 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
       course.number,
       section.letter,
       section.term,
+      section.instructors,
     );
 
     // If there is, add the new meeting(s) to the existing course
