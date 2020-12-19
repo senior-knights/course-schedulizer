@@ -43,7 +43,6 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
   );
 
   // Handlers
-  // TODO: Why doesn't it show up???
   const onSubmitUpdate = (data: SectionInput) => {
     setIsCSVLoading(true);
     updateScheduleWithNewSection(data, schedule, values, true);
