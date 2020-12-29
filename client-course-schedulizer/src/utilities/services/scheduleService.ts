@@ -19,7 +19,12 @@ export interface GroupedEvents {
 
 const eventExistsInEventList = (event: EventInput, eventList: EventInput[]): boolean => {
   return eventList.some((e) => {
-    return e.title === event.title && e.start === event.start && e.end === event.end;
+    return (
+      e.title === event.title &&
+      e.start === event.start &&
+      e.end === event.end &&
+      e.term === event.term
+    );
   });
 };
 
@@ -34,7 +39,7 @@ export const getEvents = (schedule: Schedule, groups: "faculty" | "room"): Group
         forEach(section.meetings, (meeting) => {
           const room = `${meeting.location.building} ${meeting.location.roomNumber}`;
           const group = groups === "faculty" ? prof : room;
-          const startTimeMoment = moment(meeting.startTime, "h:mma");
+          const startTimeMoment = moment(meeting.startTime, "h:mm A");
           const endTimeMoment = moment(startTimeMoment).add(meeting.duration, "minutes");
           forEach(meeting.days, (day) => {
             const dayOfWeek = moment(INITIAL_DATE)
@@ -49,10 +54,12 @@ export const getEvents = (schedule: Schedule, groups: "faculty" | "room"): Group
                 section,
               },
               start: `${dayOfWeek}T${startTimeMoment.format("HH:mm")}`,
+              term: section.term,
               title: sectionName,
             };
             if (events[group]) {
               // Only add the event if it hasn't already been added
+              // TODO: Will this conceal conflicts (specifically duplicated courses/sections/meetings)?
               if (!eventExistsInEventList(newEvent, events[group])) {
                 events[group].push(newEvent);
               }
@@ -71,16 +78,17 @@ export const getMinAndMaxTimes = (schedule: Schedule) => {
   const sections: Section[] = flatten(map(schedule.courses, "sections"));
   const meetings: Meeting[] = flatten(map(sections, "meetings"));
   const startTimes = map(meetings, (meeting) => {
-    return moment(meeting.startTime, "h:mma");
+    return moment(meeting.startTime, "h:mm A");
   });
   const endTimes = map(meetings, (meeting) => {
-    return moment(meeting.startTime, "h:mma").add(meeting.duration, "minutes");
+    return moment(meeting.startTime, "h:mm A").add(meeting.duration, "minutes");
   });
   const minTime = (minBy(startTimes) || moment("06:00", "HH:mm")).startOf("hour").format("HH:mm");
-  const maxTime = (maxBy(endTimes) || moment("22:00", "HH:mm"))
+  let maxTime = (maxBy(endTimes) || moment("22:00", "HH:mm"))
     .add(1, "hours")
     .startOf("hour")
     .format("HH:mm");
+  maxTime = maxTime === "00:00" ? "24:00" : maxTime;
   return {
     maxTime,
     minTime,

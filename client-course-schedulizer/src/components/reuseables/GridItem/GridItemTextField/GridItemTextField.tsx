@@ -21,6 +21,7 @@ export const GridItemTextField = ({ label, textFieldProps, value, name }: GridIt
       <Grid item xs>
         <TextField
           defaultValue={value}
+          fullWidth
           inputRef={register}
           label={label}
           name={name ?? nameFallback}

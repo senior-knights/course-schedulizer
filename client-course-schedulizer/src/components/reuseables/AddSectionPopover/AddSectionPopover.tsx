@@ -38,9 +38,12 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
   );
   const { addSectionToSchedule } = useAddSectionToSchedule();
 
-  const onSubmit = (data: SectionInput) => {
-    addSectionToSchedule(data);
+  const onSubmit = (removeOldSection: boolean) => {
+    return (data: SectionInput) => {
+      addSectionToSchedule(data, values, removeOldSection);
+    };
   };
+
   const onSemesterLengthChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSemesterLength(e.target.value as SemesterLengthOption);
   };
@@ -48,31 +51,65 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
   const isHalfSemester = semesterLength === SemesterLengthOption.HalfSemester;
   const isIntensiveSemester = semesterLength === SemesterLengthOption.IntensiveSemester;
   const isCustomSemester = semesterLength === SemesterLengthOption.CustomSemester;
+  const title = values ? "Update Section" : "Add Section";
 
-  const locationValue =
-    (values && `${values?.meeting.location.building} ${values?.meeting.location.roomNumber}`) || "";
+  const locationValue = (
+    (values && `${values?.meeting.location.building} ${values?.meeting.location.roomNumber}`) ||
+    ""
+  ).trim();
 
+  const buttons = () => {
+    const addTitle = values ? "Add New Section" : "Add Section";
+    return (
+      <>
+        {values && (
+          <Button
+            className="update-button"
+            color="primary"
+            onClick={methods.handleSubmit(onSubmit(true))}
+            variant="contained"
+          >
+            Update Section
+          </Button>
+        )}
+        <Button
+          className="add-button"
+          color={values ? "secondary" : "primary"}
+          onClick={methods.handleSubmit(onSubmit(false))}
+          variant="contained"
+        >
+          {addTitle}
+        </Button>
+      </>
+    );
+  };
+
+  // TODO: Make fields for termStart, startDate, and endDate?
   return (
     <FormProvider {...methods}>
-      <form className="popover-container" onSubmit={methods.handleSubmit(onSubmit)}>
+      <form className="popover-container">
         <Box mb={SPACING}>
           <Typography className="popover-title" variant="h4">
-            Add Section
+            {title}
           </Typography>
         </Box>
         <Grid container spacing={SPACING}>
-          {/* TODO: Dropdown for courses already in system */}
           <GridItemTextField
-            label="Prefix"
+            label="Department"
             textFieldProps={{ autoFocus: true }}
-            value={values?.course.prefixes.join()}
+            value={values?.course.department}
           />
+        </Grid>
+        <Grid container spacing={SPACING}>
+          {/* TODO: Dropdown for courses already in system */}
+          <GridItemTextField label="Prefix" value={values?.course.prefixes.join()} />
           <GridItemTextField label="Number" value={values?.course.number} />
           <GridItemTextField label="Section" value={values?.section.letter} />
           <GridItemTextField label="Name" value={values?.course.name} />
-          <Grid item xs>
-            <span>{/* empty for spacing */}</span>
-          </Grid>
+          <GridItemTextField
+            label="Instructional Method"
+            value={values?.section.instructionalMethod ?? "LEC"}
+          />
         </Grid>
         <Grid container spacing={SPACING}>
           {/* TODO: Dropdown for instructors with option to add new one */}
@@ -97,6 +134,11 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
             label="Anticipated Size"
             value={(values?.section.anticipatedSize || "").toString()}
           />
+          <GridItemTextField label="Used" value={(values?.section.used || "").toString()} />
+          <GridItemTextField
+            label="Day 10 Used"
+            value={(values?.section.day10Used || "").toString()}
+          />
           <GridItemTextField
             label="Local Max"
             value={(values?.section.localMax || "").toString()}
@@ -105,12 +147,14 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
             label="Global Max"
             value={(values?.section.globalMax || "").toString()}
           />
+        </Grid>
+        <Grid container spacing={SPACING}>
           <GridItemTextField
             label="Start Time"
             textFieldProps={{ fullWidth: true, type: "time" }}
             value={
               values?.meeting.startTime
-                ? moment(values?.meeting.startTime, "h:mma").format("HH:mm")
+                ? moment(values?.meeting.startTime, "h:mm A").format("HH:mm")
                 : "08:00"
             }
           />
@@ -123,6 +167,10 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
             }}
             value={(values?.meeting.duration || "").toString()}
           />
+          <GridItemTextField label="Year" value={(values?.section.year || "").toString()} />
+          <GridItemTextField label="Status" value={values?.section.status ?? "Active"} />
+          {/* This empty item just fills space */}
+          <Grid item xs />
         </Grid>
         <Grid container spacing={SPACING}>
           <GridItemCheckboxGroup
@@ -193,10 +241,8 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
               days, <b>arrow keys</b> to select term and others, and <b>return</b> to submit.
             </Typography>
           </Grid>
-          <Grid item>
-            <Button color="primary" type="submit" variant="contained">
-              Submit
-            </Button>
+          <Grid className="popover-buttons" item>
+            {buttons()}
           </Grid>
         </Grid>
       </form>

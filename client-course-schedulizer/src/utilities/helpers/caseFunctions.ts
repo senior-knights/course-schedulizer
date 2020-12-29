@@ -138,16 +138,42 @@ export const roomCapacityCallback = (value: string, params: CaseCallbackParams) 
   });
 };
 
-export const sectionStartCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.startSectionDate = value;
+export const departmentCallback = (value: string, { course }: CaseCallbackParams) => {
+  course.department = value;
 };
 
-export const sectionEndCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.semesterLength = sectionEndCase(value, section.startSectionDate);
+export const termStartCallback = (value: string, { section }: CaseCallbackParams) => {
+  section.termStart = value;
+};
+
+export const usedCallback = (value: string, { section }: CaseCallbackParams) => {
+  section.used = numberDefaultZeroCase(value);
+};
+
+export const day10UsedCallback = (value: string, { section }: CaseCallbackParams) => {
+  section.day10Used = numberDefaultZeroCase(value);
+};
+
+export const startDateCallback = (value: string, { section }: CaseCallbackParams) => {
+  section.startDate = value;
+};
+
+export const endDateCallback = (value: string, { section }: CaseCallbackParams) => {
+  section.endDate = value;
+  section.semesterLength = endDateCase(value, section.startDate);
+};
+
+export const statusCallback = (value: string, { section }: CaseCallbackParams) => {
+  section.status = value;
+};
+
+export const instructionalMethodCallback = (value: string, { section }: CaseCallbackParams) => {
+  section.instructionalMethod = value;
 };
 
 export const startTimeCase = (value: string): string => {
-  return moment(value, "h:mma").isValid() ? value : "";
+  const startMoment = moment(value, "h:mm A");
+  return startMoment.isValid() ? startMoment.format("h:mm A") : "";
 };
 
 export const locationCase = (value: string): string[] => {
@@ -238,15 +264,13 @@ export const daysCase = (value: string) => {
 };
 
 export const instructorCase = (value: string): string[] => {
-  // TODO: Instead of splitting at newlines here, instructors should be on a per meeting level
-  //       with newlines separating between the instructor(s) for each meeting (see other meeting relative fields)
   const instructors = value.split(/[;,\n]/);
   return instructors.map((instructor) => {
     return instructor.trim();
   });
 };
 
-export const sectionEndCase = (
+export const endDateCase = (
   value: string,
   startSectionDate: string | undefined,
 ): SemesterLength => {
@@ -268,7 +292,7 @@ export const sectionEndCase = (
 };
 
 export const prefixCase = (value: string): string[] => {
-  return value.replace(" ", "").split(/[;,]/);
+  return value.replace(" ", "").split(/[;,\n]/);
 };
 
 export const numberDefaultZeroCase = (value: string): number => {
@@ -280,8 +304,8 @@ export const durationCase = (value: string): number => {
     return Number(value);
   }
   const [startTime, endTime] = value.split(" ").join("").split("-");
-  const startTimeMoment = moment(startTime, "h:mma");
-  const endTimeMoment = moment(endTime, "h:mma");
+  const startTimeMoment = moment(startTime, "h:mmA");
+  const endTimeMoment = moment(endTime, "h:mmA");
   return endTimeMoment.diff(startTimeMoment, "minutes");
 };
 
