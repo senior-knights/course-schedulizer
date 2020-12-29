@@ -20,6 +20,14 @@ const removeUncheckedValues = (valueArr: string[]) => {
   });
 };
 
+/*
+  Tests that a number is an integer or a decimal.
+  Ref: https://stackoverflow.com/questions/59269772/formik-yup-how-to-check-is-decimal-number
+*/
+const decimalRegex = (value: number | null | undefined): boolean => {
+  return Boolean(`${value || ""}`.match(/^\d*\.?\d*$/)) || false;
+};
+
 /* A schema to provide form validation for the AddSectionPopover.
 NOTE: fields with default values are not check: semester and time. */
 export const addSectionSchema = object().shape({
@@ -29,35 +37,57 @@ export const addSectionSchema = object().shape({
     .integer()
     .transform(emptyStringToNull)
     .nullable(),
-  days: array().transform(removeUncheckedValues).min(1),
-  duration: number().typeError("duration must be a number").required().positive().integer(),
+  days: array().transform(removeUncheckedValues),
+  department: string(),
+  duration: number()
+    .typeError("duration must be a number")
+    .positive()
+    .integer()
+    .transform(emptyStringToNull)
+    .nullable(),
   facultyHours: number()
     .typeError("faculty hours must be a number")
-    .required()
     .positive()
-    .integer(),
+    .test("is-decimal", "invalid decimal", decimalRegex)
+    .transform(emptyStringToNull)
+    .nullable(),
   globalMax: number()
     .typeError("global max must be a number")
     .positive()
     .integer()
     .transform(emptyStringToNull)
     .nullable(),
-  instructor: string().required(),
+  instructionalMethod: string(),
+  instructor: string(),
   localMax: number()
     .typeError("global max must be a number")
     .positive()
     .integer()
     .transform(emptyStringToNull)
     .nullable(),
-  location: string().required(),
-  name: string().required(),
+  location: string(),
+  name: string(),
   number: number().typeError("number must be a number").required().positive().integer(),
   prefix: string().required().uppercase(),
-  roomCapacity: number().typeError("global max must be a number").positive().integer(),
+  roomCapacity: number()
+    .typeError("room capacity must be a number")
+    .positive()
+    .integer()
+    .transform(emptyStringToNull)
+    .nullable(),
   section: string().required().uppercase(),
+  status: string(),
   studentHours: number()
     .typeError("student hours must be a number")
-    .required()
     .positive()
-    .integer(),
+    .integer()
+    .test("is-decimal", "invalid decimal", decimalRegex)
+    .transform(emptyStringToNull)
+    .nullable(),
+  year: number()
+    .typeError("year must be a number")
+    .positive()
+    .integer()
+    .transform(emptyStringToNull)
+    .nullable(),
 });
