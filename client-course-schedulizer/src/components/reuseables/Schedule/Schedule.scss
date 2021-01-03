@@ -10,7 +10,6 @@
   cursor: pointer;
 }
 
-// Ref: https://stackoverflow.com/questions/38340054/react-virtualized-autosizer-calculates-height-as-0-for-virtualscroll
 .adjacent {
   width: fit-content;
   display: flex;
@@ -26,13 +25,7 @@
 .calendar-title {
   padding-top: $spacing;
   padding-bottom: $spacing;
-}
-
-.schedule-header-row {
   background-color: $bg-header;
-  background-color: lightblue;
-  // position: sticky;
-  // top: 100;
 }
 
 .schedule-time-axis-wrapper {
@@ -46,9 +39,6 @@
   height: 50px; // TODO: Calculate or use constant?
   padding-right: 0.5 * $spacing;
 }
-
-// $day-header-height: 28px;
-// $title-header-height: 1.5em (height) + 2em (top and bottom padding);
 
 .left-time-axis {
   background-color: $bg-header;

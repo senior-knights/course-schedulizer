@@ -11,7 +11,7 @@ export const App = () => {
   const [appState, appDispatch] = useReducer(reducer, initialAppState);
 
   return (
-    <div className="App" data-sticky-container>
+    <div className="App">
       <Router>
         <Header />
         <AppContext.Provider value={{ appDispatch, appState, isCSVLoading, setIsCSVLoading }}>
