@@ -1,8 +1,9 @@
 import { CalendarOptions, EventClickArg } from "@fullcalendar/react";
+import { Calendar } from "components";
 import React, { memo } from "react";
 import { areEqual } from "react-window";
 import { GroupedEvents } from "utilities";
-import { Calendar, ScheduleHeader } from "../..";
+import { ScheduleHeader } from ".";
 
 interface ScheduleColumn {
   data: ScheduleColumnData;

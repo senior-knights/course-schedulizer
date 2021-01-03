@@ -5,19 +5,13 @@ import { bindPopover, usePopupState } from "material-ui-popup-state/hooks";
 import React, { ReactNode, useCallback, useContext, useMemo, useState } from "react";
 import AutoSizer, { Size } from "react-virtualized-auto-sizer";
 import { FixedSizeList } from "react-window";
-import { ArrayElementType } from "types";
 import { CourseSectionMeeting } from "utilities";
 import { AppContext, ScheduleContext } from "utilities/contexts";
-import {
-  filterEventsByTerm,
-  filterHeadersWithNoEvents,
-  getHoursArr,
-  GroupedEvents,
-} from "utilities/services";
+import { filterEventsByTerm, filterHeadersWithNoEvents, GroupedEvents } from "utilities/services";
 import "./Schedule.scss";
-import { ScheduleColumn, ScheduleColumnData } from "./scheduleComponents/ScheduleColumn";
+import { LeftTimeAxis, ScheduleColumn, ScheduleColumnData } from "./scheduleComponents";
 
-interface ScheduleBase extends CalendarOptions {
+export interface ScheduleBase extends CalendarOptions {
   calendarHeaders: string[];
   groupedEvents: GroupedEvents;
 }
@@ -119,23 +113,6 @@ const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Sc
               }}
             </AutoSizer>
           </div>
-          {/* <div className="adjacent">
-            {calenderHeadersNoEmptyInTerm.map((header) => {
-              return (
-                <Grid key={header} container direction="column">
-                  <ScheduleHeader header={header} />
-                  <div className="calendar-width hide-axis">
-                    <Calendar
-                      {...calendarOptions}
-                      key={header}
-                      eventClick={handleEventClick}
-                      events={filteredEvents[header]}
-                    />
-                  </div>
-                </Grid>
-              );
-            })}
-          </div> */}
         </div>
       </div>
       <Popover
@@ -153,42 +130,5 @@ const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Sc
         <AddSectionPopover values={popupData} />
       </Popover>
     </>
-  );
-};
-
-interface LeftTimeAxis {
-  slotMaxTime: string;
-  slotMinTime: string;
-}
-
-/* Display the hours on the left axis of the schedule
- */
-const LeftTimeAxis = ({ slotMinTime: min, slotMaxTime: max }: LeftTimeAxis) => {
-  return (
-    <div className="left-time-axis">
-      {getHoursArr(min, max).map((time) => {
-        return (
-          <div key={time} className="time-slot">
-            <span>{`${time}:00`}</span>
-          </div>
-        );
-      })}
-    </div>
-  );
-};
-
-interface ScheduleHeader {
-  header: ArrayElementType<ScheduleBase["calendarHeaders"]>;
-}
-
-/*
-  StickyHeader is used to keep the Schedule header sticky to the
-  top of the view port.
-*/
-export const ScheduleHeader = ({ header }: ScheduleHeader) => {
-  return (
-    <div key={header} className="calendar-width calendar-title">
-      {header}
-    </div>
   );
 };
