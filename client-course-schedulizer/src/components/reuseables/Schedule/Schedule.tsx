@@ -1,10 +1,14 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { CalendarOptions, EventClickArg } from "@fullcalendar/react";
 import { Popover } from "@material-ui/core";
+// import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import { AddSectionPopover, AsyncComponent, Calendar, ScheduleToolbar } from "components";
 import { bindPopover, usePopupState } from "material-ui-popup-state/hooks";
-import React, { useCallback, useContext, useMemo, useState } from "react";
-import Stick from "react-stick";
-import StickyNode from "react-stickynode";
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import Sticky from "sticky-js";
+// import StickyNode from "react-stickynode";
+// import { Sticky, StickyContainer } from "react-sticky";
 import { CourseSectionMeeting } from "utilities";
 import { AppContext, ScheduleContext } from "utilities/contexts";
 import {
@@ -82,20 +86,68 @@ const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Sc
     return filterHeadersWithNoEvents(filteredEvents, calendarHeaders);
   }, [filteredEvents, calendarHeaders]);
 
+  // // TODO: remove this from the component
+  // const Column = ({ data, index, style }: Thing) => {
+  //   const header = data[index];
+
+  //   return (
+  //     <div style={style}>
+  //       <ScheduleHeader header={header} />
+  //       <div className="calendar-width hide-axis">
+  //         <Calendar
+  //           {...calendarOptions}
+  //           key={header}
+  //           eventClick={handleEventClick}
+  //           events={filteredEvents[header]}
+  //         />
+  //       </div>
+  //     </div>
+  //   );
+  // };
+
+  // const elementRef = useRef<HTMLDivElement>(document.createElement("div"));
+  // const boundingElementRef = useRef<HTMLDivElement>(document.createElement("div"));
+
+  // useScrollPosition(
+  //   ({ prevPos, currPos }) => {
+  //     console.log(currPos.x);
+  //     console.log(currPos.y);
+  //   },
+  //   undefined,
+  //   elementRef,
+  //   undefined,
+  //   undefined,
+  //   boundingElementRef,
+  // );
+
   return (
-    <>
+    <div className="cool">
       <ScheduleToolbar />
       <div className="schedule-time-axis-wrapper">
         <LeftTimeAxis {...times} />
         <div className="schedule-wrapper">
-          <Stick
-            node={<ScheduleHeader headers={calenderHeadersNoEmptyInTerm} />}
-            position="top left"
-          >
-            <div className="adjacent">
-              {calenderHeadersNoEmptyInTerm.map((header) => {
+          <div className="adjacent">
+            {/* <AutoSizer>
+              {({ height, width }: Size): ReactNode => {
                 return (
-                  <div key={header} className="calendar-width hide-axis">
+                  <FixedSizeList
+                    height={height}
+                    itemCount={calenderHeadersNoEmptyInTerm.length}
+                    itemData={calenderHeadersNoEmptyInTerm}
+                    itemSize={window.innerWidth / 4}
+                    layout="horizontal"
+                    width={width}
+                  >
+                    {Column}
+                  </FixedSizeList>
+                );
+              }}
+            </AutoSizer> */}
+            {calenderHeadersNoEmptyInTerm.map((header) => {
+              return (
+                <div key={header} style={{ display: "flex", flexDirection: "column" }}>
+                  <ScheduleHeader header={header} />
+                  <div className="calendar-width hide-axis">
                     <Calendar
                       {...calendarOptions}
                       key={header}
@@ -103,10 +155,10 @@ const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Sc
                       events={filteredEvents[header]}
                     />
                   </div>
-                );
-              })}
-            </div>
-          </Stick>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
       <Popover
@@ -123,9 +175,18 @@ const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Sc
       >
         <AddSectionPopover values={popupData} />
       </Popover>
-    </>
+    </div>
   );
 };
+
+interface Thing {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  index: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  style: any;
+}
 
 interface LeftTimeAxis {
   slotMaxTime: string;
@@ -148,8 +209,13 @@ const LeftTimeAxis = ({ slotMinTime: min, slotMaxTime: max }: LeftTimeAxis) => {
   );
 };
 
+// https://stackoverflow.com/a/57447842/9931154
+// TODO: add this to the utils.
+type ArrayElementType<A> = A extends readonly (infer T)[] ? T : never;
+
 interface ScheduleHeader {
-  headers: ScheduleBase["calendarHeaders"];
+  header: ArrayElementType<ScheduleBase["calendarHeaders"]>;
+  // ref: React.MutableRefObject<HTMLDivElement>;
 }
 
 const tenVH = window.innerHeight / 10;
@@ -158,18 +224,95 @@ const tenVH = window.innerHeight / 10;
   StickyHeader is used to keep the Schedule header sticky to the
   top of the view port.
 */
-const ScheduleHeader = ({ headers }: ScheduleHeader) => {
+// const ScheduleHeader = ({ header }: ScheduleHeader) => {
+//   return (
+//     <StickyNode innerZ={4} top={window.innerHeight / 6}>
+//       <div className="schedule-header-row">
+//         <div key={header} className="calendar-width calendar-title">
+//           {header}
+//         </div>
+//       </div>
+//     </StickyNode>
+//   );
+// };
+
+const ScheduleHeader = ({ header }: ScheduleHeader) => {
+  const sticky_thing = new Sticky(".cool-sticky");
+
+  useEffect(() => {
+    return () => {
+      sticky_thing.destroy();
+    };
+  }, [sticky_thing]);
+
+  // useEffect(() => {
+  //   window.addEventListener('scroll', listenScrollEvent);
+
+  //   return () =>
+  //     window.removeEventListener('scroll', listenScrollEvent);
+  // }, []);
+
+  const refThing = useRef(document.createElement("div"));
+  const [headerStyle, setHeaderStyle] = useState({});
+
+  const thing = () => {
+    const { left } = refThing.current.getBoundingClientRect();
+    const shouldBeStyle = {
+      left,
+    };
+
+    if (JSON.stringify(shouldBeStyle) === JSON.stringify(headerStyle)) return;
+
+    setHeaderStyle(shouldBeStyle);
+  };
+
+  // useScrollPosition(() => {
+  //   thing();
+  // });
+
   return (
-    <StickyNode top={tenVH}>
-      <div className="adjacent schedule-header-row">
-        {headers.map((header) => {
-          return (
-            <div key={header} className="calendar-width calendar-title">
-              {header}
-            </div>
-          );
-        })}
+    <div
+      ref={refThing}
+      onClick={() => {
+        console.log(refThing.current.getBoundingClientRect());
+      }}
+      onScroll={() => {
+        sticky_thing.update();
+        thing();
+      }}
+    >
+      <div className="schedule-header-row cool-sticky" data-sticky-wrap>
+        <div key={header} className="calendar-width calendar-title" style={headerStyle}>
+          {header}
+        </div>
       </div>
-    </StickyNode>
+    </div>
   );
 };
+
+// const ScheduleHeader = ({ header }: ScheduleHeader) => {
+//   return (
+//     <StickyContainer>
+//       <Sticky>
+//         {({
+//           style,
+
+//           // the following are also available but unused in this example
+//           // isSticky,
+//           // wasSticky,
+//           // distanceFromTop,
+//           // distanceFromBottom,
+//           // calculatedHeight,
+//         }) => {
+//           return (
+//             <div className="schedule-header-row">
+//               <div key={header} className="calendar-width calendar-title">
+//                 {header}
+//               </div>
+//             </div>
+//           );
+//         }}
+//       </Sticky>
+//     </StickyContainer>
+//   );
+// };

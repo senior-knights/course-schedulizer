@@ -2,17 +2,21 @@
 
 .schedule-wrapper {
   overflow-x: auto;
+  display: flex;
+  flex: 1;
 }
 
 .fc-event {
   cursor: pointer;
 }
 
+// Ref: https://stackoverflow.com/questions/38340054/react-virtualized-autosizer-calculates-height-as-0-for-virtualscroll
 .adjacent {
   width: fit-content;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
+  flex: 1;
 }
 
 .calendar-width {
@@ -24,15 +28,11 @@
   padding-bottom: $spacing;
 }
 
-$header-offset: 8;
-
 .schedule-header-row {
-  margin-left: -$header-offset * $spacing;
-  padding-left: $header-offset * $spacing;
-  margin-right: -$header-offset * $spacing;
-  padding-right: $header-offset * $spacing;
-  margin-top: $spacing;
   background-color: $bg-header;
+  background-color: lightblue;
+  // position: sticky;
+  // top: 100;
 }
 
 .schedule-time-axis-wrapper {
@@ -47,10 +47,13 @@ $header-offset: 8;
   padding-right: 0.5 * $spacing;
 }
 
+// $day-header-height: 28px;
+// $title-header-height: 1.5em (height) + 2em (top and bottom padding);
+
 .left-time-axis {
   background-color: $bg-header;
   display: flex;
   flex-direction: column;
   width: 6 * $spacing;
-  padding-top: 28px; // Offset for the day headers
+  padding-top: calc(28px + 3.5em); // Offset for the day headers and title headers
 }
