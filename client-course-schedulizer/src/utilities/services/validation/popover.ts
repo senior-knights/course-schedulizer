@@ -37,6 +37,12 @@ export const addSectionSchema = object().shape({
     .integer()
     .transform(emptyStringToNull)
     .nullable(),
+  day10Used: number()
+    .typeError("day 10 used must be a number")
+    .positive()
+    .integer()
+    .transform(emptyStringToNull)
+    .nullable(),
   days: array().transform(removeUncheckedValues),
   department: string(),
   duration: number()
@@ -67,7 +73,7 @@ export const addSectionSchema = object().shape({
     .nullable(),
   location: string(),
   name: string(),
-  number: number().typeError("number must be a number").required().positive().integer(),
+  number: string().required(),
   prefix: string().required().uppercase(),
   roomCapacity: number()
     .typeError("room capacity must be a number")
@@ -82,6 +88,12 @@ export const addSectionSchema = object().shape({
     .positive()
     .integer()
     .test("is-decimal", "invalid decimal", decimalRegex)
+    .transform(emptyStringToNull)
+    .nullable(),
+  used: number()
+    .typeError("used must be a number")
+    .positive()
+    .integer()
     .transform(emptyStringToNull)
     .nullable(),
   year: number()
