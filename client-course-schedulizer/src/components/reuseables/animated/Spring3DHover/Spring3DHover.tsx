@@ -3,7 +3,7 @@ import Image from "material-ui-image";
 import React from "react";
 import { animated, useSpring } from "react-spring";
 import { TeamMember } from "utilities";
-import { calc, trans } from ".";
+import { calc, trans } from "./index";
 import "./Spring3DHover.scss";
 
 interface Spring3DCard {

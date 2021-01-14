@@ -2,8 +2,8 @@ import { Box, Grid, Typography } from "@material-ui/core";
 import { NewTabLink } from "components/reuseables";
 import React from "react";
 import { team, TeamMember } from "utilities";
-import { TeamMemberProfile, TextSection } from ".";
 import "./AboutPage.scss";
+import { TeamMemberProfile, TextSection } from "./index";
 
 /* A page with information about the project
   with references */

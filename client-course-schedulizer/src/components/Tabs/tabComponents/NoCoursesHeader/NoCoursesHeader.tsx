@@ -7,7 +7,7 @@ import "./NoCoursesHeader.scss";
 export const NoCoursesHeader = () => {
   return (
     <>
-      <h2>No schedule data.</h2>
+      <h2>No schedule data!</h2>
       <p>
         Please import a CSV of an existing schedule or start building the schedule from scratch by
         adding your first section.

@@ -1,0 +1,15 @@
+{
+  "extends": "@snowpack/app-scripts-react",
+  "scripts": {},
+  "plugins": [],
+  "alias": {
+    "assets": "./src/assets/",
+    "components": "./src/components/",
+    "utilities": "./src/utilities/"
+  },
+  "baseUrl": "./src",
+  "mount": {
+    "public": "/",
+    "src": "/_dist_"
+  }
+}
