@@ -85,4 +85,4 @@ Code reviews are done on every PR merged into the two persistent branches. A PR 
 
 Because the application is open source, we use free minutes of GitHub actions to perform CI/CD. `ci.yml` tests on any push or PR against `develop` or `production`.
 
-`.vscode/` contains the directory settings. It most notably uses Prettier to format code on save. Formatting will fix ES Lint issues, organize imports, and then fix Editor Config and Prettier issues. `.editorconfig` and `.prettierrc.js` are located in the root and `.eslint.js` is specific to each application. For example, the client config in location inside the client folder.
+`.vscode/` contains the directory settings. It most notably uses Prettier to format code on save. Formatting will fix ESLint issues, organize imports, and then fix Editor Config and Prettier issues. `.editorconfig` and `.prettierrc.js` are located in the root and `.eslint.js` is specific to each application. For example, the client config in location inside the client folder.
