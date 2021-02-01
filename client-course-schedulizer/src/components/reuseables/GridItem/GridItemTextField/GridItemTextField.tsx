@@ -21,6 +21,7 @@ export const GridItemTextField = ({
     <Grid item xs>
       <TextField
         defaultValue={value}
+        fullWidth
         inputRef={register}
         label={label}
         name={camelCase(label)}
