@@ -17,11 +17,11 @@ let expectedOutputCSV: string;
 
 beforeAll(async () => {
   let csv = await fetch(
-    "https://raw.githubusercontent.com/senior-knights/course-schedulizer/develop/client-course-schedulizer/public/math-schedule.csv",
+    "https://raw.githubusercontent.com/senior-knights/course-schedulizer/develop/client-course-schedulizer/csv/math-schedule.csv",
   );
   const csvString: string = await csv.text();
   csv = await fetch(
-    "https://raw.githubusercontent.com/senior-knights/course-schedulizer/develop/client-course-schedulizer/public/math-schedule-export.csv",
+    "https://raw.githubusercontent.com/senior-knights/course-schedulizer/develop/client-course-schedulizer/csv/math-schedule-export.csv",
   );
   expectedOutputCSV = await csv.text();
   schedule = csvStringToSchedule(csvString);
