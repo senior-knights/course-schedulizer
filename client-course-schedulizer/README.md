@@ -57,7 +57,7 @@ Builds the app for production to the `build` folder. It correctly bundles React 
 
 ### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!** Would not recommend using this. Use [craco](https://github.com/gsoft-inc/craco) instead of ejecting. `
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!** Would not recommend using this. Use [craco](https://github.com/gsoft-inc/craco) instead of ejecting.
 
 ### `npm run deploy`
 
