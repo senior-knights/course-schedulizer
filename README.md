@@ -26,7 +26,7 @@ For more information, please visit the [About Page](https://senior-knights.githu
 
 ## How to use
 
-Detailed information can be found on our [Help Page](https://senior-knights.github.io/course-schedulizer/#/help) (once we make it).Access our production website and upload a CSV following the prescribed specifications:
+Detailed information can be found on our [Help Page](https://senior-knights.github.io/course-schedulizer/#/help) (once we make it). Access our production website and upload a CSV following the prescribed specifications:
 
 - Department: string
 - Term: [0-9][0-9]/(FA | SP | IN)
