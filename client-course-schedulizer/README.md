@@ -87,4 +87,4 @@ Every folder contains `index.ts` that exports all from every file in the folder 
 
 ### Packages
 
-Typically use packages rather than rolling your own features. This saves times and catches more edge cases, typically.
+We typically use packages rather than rolling our own features. This saves times and catches more edge cases, typically.
