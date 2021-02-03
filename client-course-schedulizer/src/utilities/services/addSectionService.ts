@@ -1,22 +1,25 @@
 import { filter, indexOf, isEqual } from "lodash";
 import {
+  instructorCase,
+  locationCase,
+  prefixCase,
+  startTimeCase,
+  yearCase,
+} from "utilities/helpers";
+import {
   Course,
   CourseSectionMeeting,
   Half,
-  insertSectionCourse,
-  instructorCase,
+  Instructor,
   Intensive,
-  locationCase,
-  prefixCase,
+  Location,
+  Meeting,
+  Prefix,
   Schedule,
   Section,
   SemesterLength,
   SemesterLengthOption,
-  startTimeCase,
-  yearCase,
-} from "utilities";
-import { Instructor, Location, Meeting, Prefix } from "utilities/interfaces";
-import { array, object } from "yup";
+} from "utilities/interfaces";
 
 // Defines interface for the section popover input
 export interface SectionInput {
@@ -59,9 +62,7 @@ export const convertFromSemesterLength = (sl: SemesterLength | undefined): Semes
   return SemesterLengthOption.IntensiveSemester;
 };
 
-export const convertToSemesterLength = (
-  sl: Half | Intensive | SemesterLengthOption,
-): SemesterLength => {
+const convertToSemesterLength = (sl: Half | Intensive | SemesterLengthOption): SemesterLength => {
   switch (sl) {
     case Half.First:
       return SemesterLength.HalfFirst;
@@ -80,15 +81,6 @@ export const convertToSemesterLength = (
   }
 };
 
-// Remove false values from days array. Used by useForm()
-export const schema = object().shape({
-  days: array().transform((d) => {
-    return d.filter((day: boolean | string) => {
-      return day;
-    });
-  }),
-});
-
 export const getSectionName = (course: Course, section: Section) => {
   return `${course.prefixes[0]}-${course.number}-${section.letter}`;
 };
@@ -96,10 +88,10 @@ export const getSectionName = (course: Course, section: Section) => {
 export const getCourse = (
   schedule: Schedule,
   prefixes: Course["prefixes"],
-  number: Course["number"],
+  courseNumber: Course["number"],
 ) => {
   const courses = filter(schedule.courses, (course) => {
-    return isEqual(course.prefixes, prefixes) && course.number === number;
+    return isEqual(course.prefixes, prefixes) && course.number === courseNumber;
   });
   return courses.length > 0 ? courses[0] : undefined;
 };
@@ -107,12 +99,12 @@ export const getCourse = (
 export const getSection = (
   schedule: Schedule,
   prefixes: Course["prefixes"],
-  number: Course["number"],
+  courseNumber: Course["number"],
   letter: Section["letter"],
   term: Section["term"],
   instructors: Section["instructors"],
 ) => {
-  const course = getCourse(schedule, prefixes, number);
+  const course = getCourse(schedule, prefixes, courseNumber);
   const sections = filter(course?.sections, (section) => {
     return (
       section.letter === letter && section.term === term && section.instructors === instructors
@@ -121,7 +113,7 @@ export const getSection = (
   return sections.length > 0 ? sections[0] : undefined;
 };
 
-export const removeSection = (
+const removeSection = (
   schedule: Schedule,
   letter: Section["letter"],
   term: Section["term"],
@@ -141,9 +133,20 @@ export const removeSection = (
 /* Used to map the input from the popover form to the
  internal JSON object type.  */
 export const mapInputToInternalTypes = (data: SectionInput) => {
+  const newSection: Section = createNewSectionFromInput(data);
+  const newCourse: Course = createNewCourseFromInput(data);
+
+  return { newCourse, newSection };
+};
+
+const createNewSectionFromInput = (data: SectionInput): Section => {
   const location = locationCase(data.location);
   const semesterType = convertToSemesterLength(data.intensive || data.half || data.semesterLength);
-  const newSection: Section = {
+
+  const building = location[0];
+  const roomNumber = location[1];
+
+  return {
     anticipatedSize: Number(data.anticipatedSize),
     comments: data.comments,
     day10Used: Number(data.day10Used),
@@ -159,9 +162,9 @@ export const mapInputToInternalTypes = (data: SectionInput) => {
         days: data.days,
         duration: Number(data.duration),
         location: {
-          building: location[0],
+          building,
           roomCapacity: Number(data.roomCapacity),
-          roomNumber: location[1],
+          roomNumber,
         },
         startTime: startTimeCase(data.startTime),
       },
@@ -175,8 +178,10 @@ export const mapInputToInternalTypes = (data: SectionInput) => {
     used: Number(data.used),
     year: yearCase(data.year),
   };
+};
 
-  const newCourse: Course = {
+const createNewCourseFromInput = (data: SectionInput): Course => {
+  return {
     department: data.department,
     facultyHours: Number(data.facultyHours),
     name: data.name,
@@ -186,22 +191,15 @@ export const mapInputToInternalTypes = (data: SectionInput) => {
     sections: [],
     studentHours: Number(data.studentHours),
   };
-  return { newCourse, newSection };
 };
 
-// Update the schedule via pass by sharing.
-export const updateScheduleWithNewSection = (
-  data: SectionInput,
-  schedule: Schedule,
+// If there is an old version of the Section...
+export const handleOldSection = (
   oldData: CourseSectionMeeting | undefined,
-  removeOldSection = false,
+  newSection: Section,
+  removeOldSection: boolean,
+  schedule: Schedule,
 ) => {
-  const {
-    newSection,
-    newCourse,
-  }: { newCourse: Course; newSection: Section } = mapInputToInternalTypes(data);
-
-  // If there is an old version of the Section...
   const oldSection = oldData?.section;
   if (oldSection) {
     // If the year, term, and semester length haven't changed...
@@ -218,18 +216,17 @@ export const updateScheduleWithNewSection = (
 
     // Remove the old version of the Section
     if (removeOldSection) {
-      const oldCourse = oldData?.course;
-      const courseIndex = indexOf(schedule.courses, oldCourse);
-      removeSection(
-        schedule,
-        oldSection.letter,
-        oldSection.term,
-        oldSection.instructors,
-        courseIndex,
-      );
+      removeOldSectionFromSchedule(oldData, schedule, oldSection);
     }
   }
+};
 
-  // Insert the Section to the Schedule, either as a new Course or to an existing Course
-  insertSectionCourse(schedule, newSection, newCourse);
+const removeOldSectionFromSchedule = (
+  oldData: CourseSectionMeeting | undefined,
+  schedule: Schedule,
+  oldSection: Section,
+) => {
+  const oldCourse = oldData?.course;
+  const courseIndex = indexOf(schedule.courses, oldCourse);
+  removeSection(schedule, oldSection.letter, oldSection.term, oldSection.instructors, courseIndex);
 };
