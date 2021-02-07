@@ -2,6 +2,38 @@
   "name": "client-course-schedulizer",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
+  "scripts": {
+    "build": "react-scripts build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "eject": "react-scripts eject",
+    "start": "react-scripts start",
+    "test": "react-scripts test"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,tsx,ts,css,md}": "prettier --write"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
   "dependencies": {
     "@fullcalendar/common": "5.3.1",
     "@fullcalendar/interaction": "5.3.1",
@@ -44,30 +76,6 @@
     "runtypes": "5.0.1",
     "yup": "^0.29.3"
   },
-  "homepage": ".",
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
   "devDependencies": {
     "@types/jest": "24.9.1",
     "@types/papaparse": "^5.2.4",
@@ -88,13 +96,5 @@
     "prettier": "2.1.2",
     "react-scripts": "3.4.4",
     "typescript": "3.7.5"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{js,jsx,tsx,ts,css,md}": "prettier --write"
   }
 }

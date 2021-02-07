@@ -109,6 +109,7 @@ export const csvStringToSchedule = (csvString: string): Schedule => {
   return schedule;
 };
 
+// Insert the Section to the Schedule, either as a new Course or to an existing Course
 export const insertSectionCourse = (schedule: Schedule, section: Section, course: Course) => {
   const { meetings } = section;
 
@@ -116,13 +117,13 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
   // TODO: What about TBA meetings where the location is specified but not the time
   //       (currently allowing these causes the app to crash)
   section.meetings = meetings.filter((meeting) => {
-    return meeting.days.length > 0 && meeting.duration > 0;
+    return meeting.days?.length > 0 && meeting.duration > 0;
   });
 
   // Check if there is already a course in the schedule with the same prefix and number
   const existingCourse = getCourse(schedule, course.prefixes, course.number);
 
-  // If there is, first check if there is already a section for that course with the same letter and term
+  // If there is, first check if there is already a section for that course with the same letter, instructors, and term
   if (existingCourse) {
     const existingCourseIndex = schedule.courses.indexOf(existingCourse);
     const existingSection = getSection(
@@ -131,6 +132,7 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
       course.number,
       section.letter,
       section.term,
+      section.instructors,
     );
 
     // If there is, add the new meeting(s) to the existing course
@@ -155,4 +157,6 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
     course.sections.push(section);
     schedule.courses.push(course);
   }
+
+  return schedule;
 };
