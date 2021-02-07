@@ -12,7 +12,7 @@ export const useExportFullCSV = () => {
   } = useContext(AppContext);
 
   const onFullExportClick = () => {
-    // TODO: maybe generate a cool title like schedule-fall-2020.csv
+    // TODO: maybe generate a cool title like full-schedule-fall-2020.csv
     download(scheduleToFullCSVString(schedule), `full_schedule_${moment().format()}.csv`);
   };
   return onFullExportClick;
