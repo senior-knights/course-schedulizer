@@ -1,4 +1,5 @@
-import fetch from "isomorphic-fetch";
+import { readFileSync } from "fs";
+import { join } from "path";
 import { Course, Day, Schedule, Section, SemesterLength, Term } from "../interfaces/dataInterfaces";
 import { csvStringToSchedule } from "./readCSV";
 import { scheduleToCSVString } from "./writeCSV";
@@ -19,18 +20,19 @@ let expectedFullOutputCSV: string;
 let expectedOutputCSV: string;
 
 beforeAll(async () => {
-  let csv = await fetch(
-    "https://raw.githubusercontent.com/senior-knights/course-schedulizer/develop/client-course-schedulizer/csv/math-schedule-full.csv",
+  // File read from https://stackoverflow.com/questions/32705219/nodejs-accessing-file-with-relative-path
+  const fullCSVString: string = readFileSync(
+    join(__dirname, "..", "..", "..", "csv", "math-schedule-full.csv"),
+    "utf8",
   );
-  const fullCSVString: string = await csv.text();
-  csv = await fetch(
-    "https://raw.githubusercontent.com/senior-knights/course-schedulizer/develop/client-course-schedulizer/csv/math-schedule-full-export.csv",
+  expectedFullOutputCSV = readFileSync(
+    join(__dirname, "..", "..", "..", "csv", "math-schedule-full-export.csv"),
+    "utf8",
   );
-  expectedFullOutputCSV = await csv.text();
-  csv = await fetch(
-    "https://raw.githubusercontent.com/senior-knights/course-schedulizer/develop/client-course-schedulizer/csv/math-schedule-export.csv",
+  expectedOutputCSV = readFileSync(
+    join(__dirname, "..", "..", "..", "csv", "math-schedule-export.csv"),
+    "utf8",
   );
-  expectedOutputCSV = await csv.text();
   schedule = csvStringToSchedule(fullCSVString);
   [basicCourse] = schedule.courses;
   [basicSection, noMeetingSection] = basicCourse.sections;
