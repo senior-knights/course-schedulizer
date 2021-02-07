@@ -2,7 +2,7 @@ import { Button, ButtonProps } from "@material-ui/core";
 import React from "react";
 import { useExportCSV } from "utilities";
 
-/* A button that will export the current schedule as a CSV.
+/* A button that will export the current schedule as a CSV with the current simplified format.
   Can style with Mat UI props.
 */
 export const ExportButton = (btnProps: ButtonProps) => {
