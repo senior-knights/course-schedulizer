@@ -78,7 +78,7 @@ const callbacks: ValidFields = {
 };
 
 export const csvStringToSchedule = (csvString: string): Schedule => {
-  // Remove title rows from template spreadsheet
+  // Remove title rows from template spreadsheet. Perhaps there is a better way to check if it is in the template format
   if (csvString.startsWith("2")) {
     csvString = csvString.split("\n").slice(2).join("\n");
   }
