@@ -185,7 +185,7 @@ export const timeCallback = (value: string, params: CaseCallbackParams) => {
 };
 
 export const startTimeCase = (value: string): string => {
-  const startMoment = moment(value, "h:mmA");
+  const startMoment = moment(value, "h:mm A");
   return startMoment.isValid() ? startMoment.format("h:mm A") : "";
 };
 
