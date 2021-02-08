@@ -128,6 +128,8 @@ export const facultyHoursCallback = (value: string, { course }: CaseCallbackPara
 
 export const durationCallback = (value: string, params: CaseCallbackParams) => {
   assignWithMeetings(value, params, (duration, i, meetings) => {
+    const [startTime] = value.split(" ").join("").split("-");
+    meetings[i].startTime = startTime;
     meetings[i].duration = durationCase(duration);
   });
 };
@@ -169,6 +171,13 @@ export const statusCallback = (value: string, { section }: CaseCallbackParams) =
 
 export const instructionalMethodCallback = (value: string, { section }: CaseCallbackParams) => {
   section.instructionalMethod = value;
+};
+
+export const sectionCallback = (value: string, params: CaseCallbackParams) => {
+  const sectionParts = value.split("-");
+  prefixCallback(sectionParts[0], params);
+  numberCallback(sectionParts[1], params);
+  letterCallback(sectionParts[2], params);
 };
 
 export const startTimeCase = (value: string): string => {

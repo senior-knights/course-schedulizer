@@ -63,15 +63,29 @@ const registrarSpreadsheetFields: ValidFields = {
   Used: cf.usedCallback,
 };
 
+const templateSpreadsheetFields: ValidFields = {
+  Days: cf.daysCallback,
+  FacLoad: cf.facultyHoursCallback,
+  Room: cf.locationCallback,
+  SectionName: cf.sectionCallback,
+  StuCred: cf.studentHoursCallback,
+};
+
 const callbacks: ValidFields = {
   ...pruimSpreadsheetFields,
   ...registrarSpreadsheetFields,
+  ...templateSpreadsheetFields,
 };
 
 export const csvStringToSchedule = (csvString: string): Schedule => {
+  // Remove title rows from template spreadsheet
+  if (csvString.startsWith("2")) {
+    csvString = csvString.split("\n").slice(2).join("\n");
+  }
+
   const objects: papa.ParseResult<never> = papa.parse(csvString, {
     header: true,
-    skipEmptyLines: true,
+    skipEmptyLines: "greedy",
   });
 
   // Define variables for Schedule creation
