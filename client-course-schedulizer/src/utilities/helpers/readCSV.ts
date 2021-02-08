@@ -85,7 +85,7 @@ export const csvStringToSchedule = (csvString: string): Schedule => {
 
   const objects: papa.ParseResult<never> = papa.parse(csvString, {
     header: true,
-    skipEmptyLines: "greedy",
+    skipEmptyLines: true,
   });
 
   // Define variables for Schedule creation
