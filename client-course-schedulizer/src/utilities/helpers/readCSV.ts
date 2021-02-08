@@ -49,7 +49,7 @@ const registrarSpreadsheetFields: ValidFields = {
   MeetingDays: cf.daysCallback,
   MeetingDurationMinutes: cf.durationCallback,
   MeetingStart: cf.startTimeCallback,
-  MeetingTime: cf.durationCallback,
+  MeetingTime: cf.timeCallback,
   MinimumCredits: cf.studentHoursCallback,
   RoomCapacity: cf.roomCapacityCallback,
   SectionCode: cf.letterCallback,
@@ -85,7 +85,7 @@ export const csvStringToSchedule = (csvString: string): Schedule => {
 
   const objects: papa.ParseResult<never> = papa.parse(csvString, {
     header: true,
-    skipEmptyLines: true,
+    skipEmptyLines: "greedy",
   });
 
   // Define variables for Schedule creation

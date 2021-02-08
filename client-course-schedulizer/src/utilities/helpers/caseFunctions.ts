@@ -128,8 +128,6 @@ export const facultyHoursCallback = (value: string, { course }: CaseCallbackPara
 
 export const durationCallback = (value: string, params: CaseCallbackParams) => {
   assignWithMeetings(value, params, (duration, i, meetings) => {
-    const [startTime] = value.split(" ").join("").split("-");
-    meetings[i].startTime = startTime;
     meetings[i].duration = durationCase(duration);
   });
 };
@@ -180,8 +178,14 @@ export const sectionCallback = (value: string, params: CaseCallbackParams) => {
   letterCallback(sectionParts[2], params);
 };
 
+export const timeCallback = (value: string, params: CaseCallbackParams) => {
+  const [startTime] = value.split(" ").join("").split("-");
+  startTimeCallback(startTime, params);
+  durationCallback(value, params);
+};
+
 export const startTimeCase = (value: string): string => {
-  const startMoment = moment(value, "h:mm A");
+  const startMoment = moment(value, "h:mmA");
   return startMoment.isValid() ? startMoment.format("h:mm A") : "";
 };
 
