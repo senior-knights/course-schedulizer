@@ -128,6 +128,7 @@ const removeSection = (
       );
     },
   );
+  // TODO: Delete course if no sections left?
 };
 
 /* Used to map the input from the popover form to the
@@ -216,17 +217,17 @@ export const handleOldSection = (
 
     // Remove the old version of the Section
     if (removeOldSection) {
-      removeOldSectionFromSchedule(oldData, schedule, oldSection);
+      removeSectionFromSchedule(oldData, schedule, oldSection);
     }
   }
 };
 
-const removeOldSectionFromSchedule = (
-  oldData: CourseSectionMeeting | undefined,
+export const removeSectionFromSchedule = (
+  data: CourseSectionMeeting | undefined,
   schedule: Schedule,
-  oldSection: Section,
+  section: Section,
 ) => {
-  const oldCourse = oldData?.course;
+  const oldCourse = data?.course;
   const courseIndex = indexOf(schedule.courses, oldCourse);
-  removeSection(schedule, oldSection.letter, oldSection.term, oldSection.instructors, courseIndex);
+  removeSection(schedule, section.letter, section.term, section.instructors, courseIndex);
 };
