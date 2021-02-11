@@ -1,5 +1,6 @@
 import moment from "moment";
-import { Day, Schedule, Term } from "utilities/interfaces";
+import { getMeetingTimeStr, getTermStr } from "utilities/helpers";
+import { Day, Schedule } from "utilities/interfaces";
 
 // TODO: Deprecate and/or delete this function, replacing it with scheduleToCSVString() from writeCSV.ts?
 export const scheduleToFullCSVString = (schedule: Schedule): string => {
@@ -31,7 +32,7 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
         startMoment = moment(meeting.startTime, "h:mm A");
         endMoment = startMoment.clone().add(meeting.duration, "minutes");
         if (startMoment.isValid()) {
-          meetingTimeStr += `${startMoment.format("h:mmA")} - ${endMoment.format("h:mmA")}\n`;
+          meetingTimeStr += getMeetingTimeStr(startMoment, endMoment);
           meetingStartStr += `${startMoment.format("h:mm A")}\n`;
           meetingStartInternalStr += `${startMoment.format("H:mm:ss")}\n`;
           meetingEndStr += `${endMoment.format("h:mm A")}\n`;
@@ -75,15 +76,7 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
       thursStr = thursStr.slice(0, -1);
       friStr = friStr.slice(0, -1);
       // Create strings for fields that need to be constructed
-      const termStr = `${
-        typeof section.year === "number"
-          ? section.term === Term.Fall
-            ? String(section.year).slice(-2)
-            : String(section.year + 1).slice(-2)
-          : section.term === Term.Fall
-          ? String(Number(section.year.slice(-2)) - 1)
-          : section.year.slice(-2)
-      }/${section.term}`;
+      const termStr = getTermStr(section);
       const sectionNameStr = `${course.prefixes.length ? course.prefixes[0] : ""}-${
         course.number
       }-${section.letter}`;
