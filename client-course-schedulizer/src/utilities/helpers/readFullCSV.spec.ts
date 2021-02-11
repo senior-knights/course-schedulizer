@@ -1,7 +1,9 @@
-import fetch from "isomorphic-fetch";
+import { readFileSync } from "fs";
+import { join } from "path";
 import { Course, Day, Schedule, Section, SemesterLength, Term } from "../interfaces/dataInterfaces";
 import { csvStringToSchedule } from "./readCSV";
 import { scheduleToCSVString } from "./writeCSV";
+import { scheduleToFullCSVString } from "./writeFullCSV";
 
 let schedule: Schedule;
 let basicCourse: Course;
@@ -10,29 +12,37 @@ let noMeetingSection: Section;
 let multipleInstructorSection: Section;
 let interimSection: Section;
 let firstHalfSection: Section;
+let fullOutputCSV: string;
 let outputCSV: string;
 let intermediateSchedule: Schedule;
-let secondOutputCSV: string;
+let secondFullOutputCSV: string;
+let expectedFullOutputCSV: string;
 let expectedOutputCSV: string;
 
 beforeAll(async () => {
-  let csv = await fetch(
-    "https://raw.githubusercontent.com/senior-knights/course-schedulizer/develop/client-course-schedulizer/csv/math-schedule.csv",
+  // File read from https://stackoverflow.com/questions/32705219/nodejs-accessing-file-with-relative-path
+  const fullCSVString: string = readFileSync(
+    join(__dirname, "..", "..", "..", "csv", "math-schedule-full.csv"),
+    "utf8",
   );
-  const csvString: string = await csv.text();
-  csv = await fetch(
-    "https://raw.githubusercontent.com/senior-knights/course-schedulizer/develop/client-course-schedulizer/csv/math-schedule-export.csv",
+  expectedFullOutputCSV = readFileSync(
+    join(__dirname, "..", "..", "..", "csv", "math-schedule-full-export.csv"),
+    "utf8",
   );
-  expectedOutputCSV = await csv.text();
-  schedule = csvStringToSchedule(csvString);
+  expectedOutputCSV = readFileSync(
+    join(__dirname, "..", "..", "..", "csv", "math-schedule-export.csv"),
+    "utf8",
+  );
+  schedule = csvStringToSchedule(fullCSVString);
   [basicCourse] = schedule.courses;
   [basicSection, noMeetingSection] = basicCourse.sections;
   [multipleInstructorSection] = schedule.courses[6].sections;
   [interimSection] = schedule.courses[3].sections;
   [firstHalfSection] = schedule.courses[13].sections;
+  fullOutputCSV = scheduleToFullCSVString(schedule);
+  intermediateSchedule = csvStringToSchedule(fullOutputCSV);
+  secondFullOutputCSV = scheduleToFullCSVString(intermediateSchedule);
   outputCSV = scheduleToCSVString(schedule);
-  intermediateSchedule = csvStringToSchedule(outputCSV);
-  secondOutputCSV = scheduleToCSVString(intermediateSchedule);
 });
 
 // TODO: add section to test file with second half semester length and Intensive B-D
@@ -206,10 +216,14 @@ it("exports the proper csv", () => {
   expect(outputCSV).toEqual(expectedOutputCSV);
 });
 
-it("reimports the export with same structure", () => {
+it("exports the proper full csv", () => {
+  expect(fullOutputCSV).toEqual(expectedFullOutputCSV);
+});
+
+it("reimports the full export with same structure", () => {
   expect(intermediateSchedule).toEqual(schedule);
 });
 
-it("preserves information on second export", () => {
-  expect(secondOutputCSV).toEqual(expectedOutputCSV);
+it("preserves information on second full export", () => {
+  expect(secondFullOutputCSV).toEqual(expectedFullOutputCSV);
 });
