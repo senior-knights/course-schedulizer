@@ -33,10 +33,10 @@ export const CSVActions = () => {
           <ImportInputWrapper>IMPORT CSV</ImportInputWrapper>
         </MenuItem>
         <MenuItem button className="MuiButton-textSecondary" onClick={onExportClick}>
-          EXPORT CSV
+          EXPORT FINAL CSV
         </MenuItem>
         <MenuItem button className="MuiButton-textSecondary" onClick={onFullExportClick}>
-          EXPORT FULL CSV
+          EXPORT DRAFT CSV
         </MenuItem>
       </Menu>
     </>
