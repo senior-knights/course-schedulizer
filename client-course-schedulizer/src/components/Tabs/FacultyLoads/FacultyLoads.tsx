@@ -12,7 +12,7 @@ import React, { useContext, useMemo } from "react";
 import { Column, useTable } from "react-table";
 import { Course, getSectionName, Schedule, Section, Term } from "utilities";
 import { AppContext } from "utilities/contexts";
-import { AddSectionButton } from "../../reuseables";
+import { AddNonTeachingLoadPopover, PopoverButton } from "../../reuseables";
 
 type hourKeys = "fallHours" | "springHours" | "summerHours" | "totalHours" | "otherHours";
 type sectionKeys = "fallCourseSections" | "springCourseSections" | "summerCourseSections";
@@ -151,7 +151,9 @@ export const FacultyLoads = () => {
     // apply the table props
     <TableContainer component={Paper}>
       <Table {...getTableProps()}>
-        <AddSectionButton />
+        <PopoverButton buttonTitle="Add Non-Teaching Load" popupId="addNonTeachingLoad">
+          <AddNonTeachingLoadPopover />
+        </PopoverButton>
         <TableHead>
           {
             // Loop over the header rows
