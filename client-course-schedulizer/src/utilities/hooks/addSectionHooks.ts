@@ -44,7 +44,6 @@ export const useAddSectionToSchedule = () => {
     // handleOldSection(oldData, newSection, removeOldSection, schedule);
     insertSectionCourse(schedule, newSection, newCourse);
     appDispatch({ payload: { schedule }, type: "setScheduleData" });
-    console.log(schedule);
     setIsCSVLoading(false);
   };
 

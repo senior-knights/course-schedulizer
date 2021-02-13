@@ -184,6 +184,10 @@ export const timeCallback = (value: string, params: CaseCallbackParams) => {
   durationCallback(value, params);
 };
 
+export const isNonTeachingCallback = (value: string, { section }: CaseCallbackParams) => {
+  section.isNonTeaching = value === "true";
+};
+
 export const startTimeCase = (value: string): string => {
   const startMoment = moment(value, "h:mm A");
   return startMoment.isValid() ? startMoment.format("h:mm A") : "";

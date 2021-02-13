@@ -6,7 +6,7 @@ import { Day, Schedule } from "utilities/interfaces";
 export const scheduleToFullCSVString = (schedule: Schedule): string => {
   const numericReg = RegExp("[0-9]");
   let csvStr =
-    "Department,Term,TermStart,AcademicYear,SectionName,SubjectCode,CourseNum,SectionCode,CourseLevelCode,MinimumCredits,FacultyLoad,Used,Day10Used,LocalMax,GlobalMax,RoomCapacity,BuildingAndRoom,MeetingDays,MeetingTime,SectionStartDate,SectionEndDate,SemesterLength,Building,RoomNumber,MeetingStart,MeetingStartInternal,MeetingDurationMinutes,MeetingEnd,MeetingEndInternal,Monday,Tuesday,Wednesday,Thursday,Friday,ShortTitle,Faculty,SectionStatus,InstructionalMethod,Comments\n";
+    "Department,Term,TermStart,AcademicYear,SectionName,SubjectCode,CourseNum,SectionCode,CourseLevelCode,MinimumCredits,FacultyLoad,Used,Day10Used,LocalMax,GlobalMax,RoomCapacity,BuildingAndRoom,MeetingDays,MeetingTime,SectionStartDate,SectionEndDate,SemesterLength,Building,RoomNumber,MeetingStart,MeetingStartInternal,MeetingDurationMinutes,MeetingEnd,MeetingEndInternal,Monday,Tuesday,Wednesday,Thursday,Friday,ShortTitle,Faculty,SectionStatus,InstructionalMethod,Comments,IsNonTeaching\n";
   schedule.courses.forEach((course) => {
     course.sections.forEach((section) => {
       // Iterate through meetings to construct relevant strings
@@ -101,7 +101,7 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
         course.name
       }","${section.instructors.join("\n")}","${section.status}","${
         section.instructionalMethod
-      }","${section.comments}"\n`;
+      }","${section.comments}","${Boolean(section.isNonTeaching)}"\n`;
     });
   });
   return csvStr;
