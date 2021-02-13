@@ -103,3 +103,15 @@ export const addSectionSchema = object().shape({
     .transform(emptyStringToNull)
     .nullable(),
 });
+
+export const addNonTeachingLoadSchema = object().shape({
+  facultyHours: number()
+    .required()
+    .typeError("faculty hours must be a number")
+    .positive()
+    .test("is-decimal", "invalid decimal", decimalRegex)
+    .transform(emptyStringToNull)
+    .nullable(),
+  instructor: string().required(),
+  name: string().required(),
+});

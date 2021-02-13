@@ -43,6 +43,7 @@ export interface Section {
   globalMax: number;
   instructionalMethod: string;
   instructors: Instructor[];
+  isNonTeaching?: boolean;
   letter: string;
   localMax: number;
   // Multiple Meetings possible if time/room differs on different days

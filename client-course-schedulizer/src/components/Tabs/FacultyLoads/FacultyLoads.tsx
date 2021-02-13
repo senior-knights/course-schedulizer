@@ -15,7 +15,11 @@ import { AppContext } from "utilities/contexts";
 import { AddNonTeachingLoadPopover, PopoverButton } from "../../reuseables";
 
 type hourKeys = "fallHours" | "springHours" | "summerHours" | "totalHours" | "otherHours";
-type sectionKeys = "fallCourseSections" | "springCourseSections" | "summerCourseSections";
+type sectionKeys =
+  | "fallCourseSections"
+  | "springCourseSections"
+  | "summerCourseSections"
+  | "otherDuties";
 
 type FacultyRow = {
   [key in hourKeys]?: number;
@@ -34,7 +38,7 @@ interface UpdateRowParams {
   prevRow: FacultyRow;
   section: Section;
   sectionName: string;
-  termName?: "fall" | "spring" | "summer";
+  termName?: "fall" | "spring" | "summer" | "other";
 }
 
 const updateRow = ({
@@ -45,21 +49,28 @@ const updateRow = ({
   sectionName,
   termName,
 }: UpdateRowParams) => {
-  const termCourseSectionProp = `${termName}CourseSections` as sectionKeys;
+  const termCourseSectionProp =
+    termName === "other" ? "otherDuties" : (`${termName}CourseSections` as sectionKeys);
   const termHoursProp = `${termName}Hours` as hourKeys;
+  const facultyHours = (section.facultyHours || course.facultyHours) / section.instructors.length;
   if (prevRow) {
     prevRow[termCourseSectionProp] = prevRow[termCourseSectionProp]
       ? (prevRow[termCourseSectionProp] = `${prevRow[termCourseSectionProp]}, ${sectionName}`)
       : (prevRow[termCourseSectionProp] = sectionName);
 
     prevRow[termHoursProp] = prevRow[termHoursProp]
-      ? (Number(prevRow[termHoursProp]) + (section.facultyHours || course.facultyHours)) /
-        section.instructors.length
-      : (section.facultyHours || course.facultyHours) / section.instructors.length;
+      ? Number(prevRow[termHoursProp]) / section.instructors.length + facultyHours
+      : facultyHours;
+
+    if (termName === "other") {
+      prevRow[termCourseSectionProp] += ` (${facultyHours})`;
+    }
   } else {
     newRow[termCourseSectionProp] = sectionName;
-    newRow[termHoursProp] =
-      (section.facultyHours || course.facultyHours) / section.instructors.length;
+    newRow[termHoursProp] = facultyHours;
+    if (termName === "other") {
+      newRow[termCourseSectionProp] += ` (${facultyHours})`;
+    }
   }
 };
 
@@ -82,21 +93,25 @@ const createTable = (schedule: Schedule): FacultyRow[] => {
           section,
           sectionName,
         };
-        switch (section.term) {
-          case Term.Fall:
-            updateRow({ ...updateArgs, termName: "fall" });
-            break;
-          case Term.Spring:
-            updateRow({ ...updateArgs, termName: "spring" });
-            break;
-          case Term.Summer:
-          case Term.Interim:
-            updateRow({ ...updateArgs, termName: "summer" });
-            break;
-          default:
-            // eslint-disable-next-line no-console
-            console.log(`Fell through case statement with value ${section.term}`);
-            break;
+        if (section.isNonTeaching) {
+          updateRow({ ...updateArgs, sectionName: section.instructionalMethod, termName: "other" });
+        } else {
+          switch (section.term) {
+            case Term.Fall:
+              updateRow({ ...updateArgs, termName: "fall" });
+              break;
+            case Term.Spring:
+              updateRow({ ...updateArgs, termName: "spring" });
+              break;
+            case Term.Summer:
+            case Term.Interim:
+              updateRow({ ...updateArgs, termName: "summer" });
+              break;
+            default:
+              // eslint-disable-next-line no-console
+              console.log(`Fell through case statement with value ${section.term}`);
+              break;
+          }
         }
         if (prevAddedFacultyRow) {
           newTableData[newTableData.indexOf(prevAddedFacultyRow)] = prevAddedFacultyRow;
@@ -110,7 +125,11 @@ const createTable = (schedule: Schedule): FacultyRow[] => {
     .map((row) => {
       return {
         ...row,
-        totalHours: (row.fallHours || 0) + (row.springHours || 0) + (row.summerHours || 0),
+        totalHours:
+          (row.fallHours || 0) +
+          (row.springHours || 0) +
+          (row.summerHours || 0) +
+          (row.otherHours || 0),
       };
     })
     .sort((a, b) => {

@@ -51,6 +51,12 @@ export interface SectionInput {
   year: string; // Assume string till yearCase() decides
 }
 
+export interface NonTeachingLoadInput {
+  facultyHours: Section["facultyHours"];
+  instructor: Instructor;
+  name: Course["name"];
+}
+
 export const convertFromSemesterLength = (sl: SemesterLength | undefined): SemesterLengthOption => {
   if (sl === SemesterLength.Full || !sl) {
     return SemesterLengthOption.FullSemester;

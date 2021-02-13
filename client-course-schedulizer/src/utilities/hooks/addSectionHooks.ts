@@ -4,7 +4,13 @@ import { DeepMap, FieldError } from "react-hook-form";
 import { insertSectionCourse } from "utilities";
 import { AppContext } from "utilities/contexts";
 import { Course, CourseSectionMeeting, Section } from "utilities/interfaces";
-import { handleOldSection, mapInputToInternalTypes, SectionInput } from "utilities/services";
+import {
+  handleOldSection,
+  mapInputToInternalTypes,
+  NonTeachingLoadInput,
+  SectionInput,
+} from "utilities/services";
+import { mapNonTeachingLoadInput } from "utilities/services/addNonTeachingLoadService";
 
 interface MappedSection {
   newCourse: Course;
@@ -32,7 +38,17 @@ export const useAddSectionToSchedule = () => {
     setIsCSVLoading(false);
   };
 
-  return { addSectionToSchedule };
+  const addNonTeachingLoadToSchedule = (data: NonTeachingLoadInput) => {
+    setIsCSVLoading(true);
+    const { newSection, newCourse }: MappedSection = mapNonTeachingLoadInput(data);
+    // handleOldSection(oldData, newSection, removeOldSection, schedule);
+    insertSectionCourse(schedule, newSection, newCourse);
+    appDispatch({ payload: { schedule }, type: "setScheduleData" });
+    console.log(schedule);
+    setIsCSVLoading(false);
+  };
+
+  return { addNonTeachingLoadToSchedule, addSectionToSchedule };
 };
 
 // a helper to provide consistent naming and retrieve error messages
