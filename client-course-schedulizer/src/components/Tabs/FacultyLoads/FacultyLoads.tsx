@@ -12,6 +12,7 @@ import React, { useContext, useMemo } from "react";
 import { Column, useTable } from "react-table";
 import { Course, getSectionName, Schedule, Section, Term } from "utilities";
 import { AppContext } from "utilities/contexts";
+import { AddSectionButton } from "../../reuseables";
 
 type hourKeys = "fallHours" | "springHours" | "summerHours" | "totalHours" | "otherHours";
 type sectionKeys = "fallCourseSections" | "springCourseSections" | "summerCourseSections";
@@ -130,13 +131,15 @@ export const FacultyLoads = () => {
   const columns = useMemo<Column<FacultyRow>[]>(() => {
     return [
       { Header: "Faculty", accessor: "faculty" },
+      { Header: "Total Hours", accessor: "totalHours" },
       { Header: "Fall Course Sections", accessor: "fallCourseSections" },
       { Header: "Fall Hours", accessor: "fallHours" },
       { Header: "Spring Course Sections", accessor: "springCourseSections" },
       { Header: "Spring Hours", accessor: "springHours" },
       { Header: "Summer Course Sections", accessor: "summerCourseSections" },
       { Header: "Summer Hours", accessor: "summerHours" },
-      { Header: "Total Hours", accessor: "totalHours" },
+      { Header: "Other Duties", accessor: "otherDuties" },
+      { Header: "Other Hours", accessor: "otherHours" },
     ];
   }, []);
   const tableInstance = useTable({ columns, data });
@@ -148,6 +151,7 @@ export const FacultyLoads = () => {
     // apply the table props
     <TableContainer component={Paper}>
       <Table {...getTableProps()}>
+        <AddSectionButton />
         <TableHead>
           {
             // Loop over the header rows
