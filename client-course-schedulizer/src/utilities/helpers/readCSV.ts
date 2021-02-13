@@ -49,7 +49,7 @@ const registrarSpreadsheetFields: ValidFields = {
   MeetingDays: cf.daysCallback,
   MeetingDurationMinutes: cf.durationCallback,
   MeetingStart: cf.startTimeCallback,
-  MeetingTime: cf.durationCallback,
+  MeetingTime: cf.timeCallback,
   MinimumCredits: cf.studentHoursCallback,
   RoomCapacity: cf.roomCapacityCallback,
   SectionCode: cf.letterCallback,
@@ -63,15 +63,29 @@ const registrarSpreadsheetFields: ValidFields = {
   Used: cf.usedCallback,
 };
 
+const templateSpreadsheetFields: ValidFields = {
+  Days: cf.daysCallback,
+  FacLoad: cf.facultyHoursCallback,
+  Room: cf.locationCallback,
+  SectionName: cf.sectionCallback,
+  StuCred: cf.studentHoursCallback,
+};
+
 const callbacks: ValidFields = {
   ...pruimSpreadsheetFields,
   ...registrarSpreadsheetFields,
+  ...templateSpreadsheetFields,
 };
 
 export const csvStringToSchedule = (csvString: string): Schedule => {
+  // Remove title rows from template spreadsheet. Perhaps there is a better way to check if it is in the template format
+  if (csvString.startsWith("2")) {
+    csvString = csvString.split("\n").slice(2).join("\n");
+  }
+
   const objects: papa.ParseResult<never> = papa.parse(csvString, {
     header: true,
-    skipEmptyLines: true,
+    skipEmptyLines: "greedy",
   });
 
   // Define variables for Schedule creation
