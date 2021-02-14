@@ -9,6 +9,7 @@ import {
   convertFromSemesterLength,
   SectionInput,
   useAddSectionToSchedule,
+  useDeleteSectionFromSchedule,
 } from "utilities";
 import {
   CourseSectionMeeting,
@@ -37,10 +38,17 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
     convertFromSemesterLength(values?.section.semesterLength).toLowerCase() as SemesterLengthOption,
   );
   const { addSectionToSchedule } = useAddSectionToSchedule();
+  const { deleteSectionFromSchedule } = useDeleteSectionFromSchedule();
 
   const onSubmit = (removeOldSection: boolean) => {
     return (data: SectionInput) => {
       addSectionToSchedule(data, values, removeOldSection);
+    };
+  };
+
+  const deleteSection = () => {
+    return () => {
+      deleteSectionFromSchedule(values);
     };
   };
 
@@ -67,6 +75,7 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
             className="update-button"
             color="primary"
             onClick={methods.handleSubmit(onSubmit(true))}
+            type="submit"
             variant="contained"
           >
             Update Section
@@ -74,12 +83,23 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
         )}
         <Button
           className="add-button"
-          color={values ? "secondary" : "primary"}
+          color="primary"
           onClick={methods.handleSubmit(onSubmit(false))}
+          type="submit"
           variant="contained"
         >
           {addTitle}
         </Button>
+        {values && (
+          <Button
+            className="delete-button"
+            color="secondary"
+            onClick={methods.handleSubmit(deleteSection())}
+            variant="contained"
+          >
+            Delete Section
+          </Button>
+        )}
       </>
     );
   };

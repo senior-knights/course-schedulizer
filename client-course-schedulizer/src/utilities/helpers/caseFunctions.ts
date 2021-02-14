@@ -171,6 +171,19 @@ export const instructionalMethodCallback = (value: string, { section }: CaseCall
   section.instructionalMethod = value;
 };
 
+export const sectionCallback = (value: string, params: CaseCallbackParams) => {
+  const sectionParts = value.split("-");
+  prefixCallback(sectionParts[0], params);
+  numberCallback(sectionParts[1], params);
+  letterCallback(sectionParts[2], params);
+};
+
+export const timeCallback = (value: string, params: CaseCallbackParams) => {
+  const [startTime] = value.split(" ").join("").split("-");
+  startTimeCallback(startTime, params);
+  durationCallback(value, params);
+};
+
 export const startTimeCase = (value: string): string => {
   const startMoment = moment(value, "h:mm A");
   return startMoment.isValid() ? startMoment.format("h:mm A") : "";
