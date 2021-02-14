@@ -169,10 +169,10 @@ export const FacultyLoads = () => {
   return (
     // apply the table props
     <TableContainer component={Paper}>
+      <PopoverButton buttonTitle="Add Non-Teaching Load" popupId="addNonTeachingLoad">
+        <AddNonTeachingLoadPopover />
+      </PopoverButton>
       <Table {...getTableProps()}>
-        <PopoverButton buttonTitle="Add Non-Teaching Load" popupId="addNonTeachingLoad">
-          <AddNonTeachingLoadPopover />
-        </PopoverButton>
         <TableHead>
           {
             // Loop over the header rows
