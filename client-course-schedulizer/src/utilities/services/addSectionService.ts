@@ -107,7 +107,9 @@ export const getSection = (
   const course = getCourse(schedule, prefixes, courseNumber);
   const sections = filter(course?.sections, (section) => {
     return (
-      section.letter === letter && section.term === term && section.instructors === instructors
+      section.letter === letter &&
+      section.term === term &&
+      isEqual(section.instructors, instructors)
     );
   });
   return sections.length > 0 ? sections[0] : undefined;
