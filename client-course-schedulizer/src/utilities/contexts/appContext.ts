@@ -1,7 +1,7 @@
 import { createContext, Dispatch, SetStateAction } from "react";
 import { AppAction, AppState, initialAppState, voidFn } from "utilities";
 
-interface AppContext {
+export interface AppContext {
   appDispatch: Dispatch<AppAction> | (() => void);
   appState: AppState;
   isCSVLoading: boolean;
