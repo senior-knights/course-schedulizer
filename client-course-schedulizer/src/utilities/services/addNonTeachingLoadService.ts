@@ -9,5 +9,6 @@ export const mapNonTeachingLoadInput = (data: NonTeachingLoadInput) => {
   newSection.facultyHours = data.facultyHours;
   newSection.instructors = [data.instructor];
   newSection.isNonTeaching = true;
+  newSection.term = data.terms;
   return { newCourse, newSection };
 };

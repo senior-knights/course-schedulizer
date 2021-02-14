@@ -1,4 +1,4 @@
-import { cloneDeep } from "lodash";
+import { cloneDeep, forEach } from "lodash";
 import moment from "moment";
 import { emptyMeeting } from "utilities/constants";
 import { Course, Day, Meeting, Section, SemesterLength, Term } from "utilities/interfaces";
@@ -65,7 +65,16 @@ export const locationCallback = (value: string, params: CaseCallbackParams) => {
 };
 
 export const termCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.term = termCase(value);
+  if (value.includes(",")) {
+    const terms = value.split(",");
+    const termsArr: Term[] = [];
+    forEach(terms, (term) => {
+      termsArr.push(termCase(term));
+    });
+    section.term = termsArr;
+  } else {
+    section.term = termCase(value);
+  }
 };
 
 export const semesterLengthCallback = (value: string, { section }: CaseCallbackParams) => {

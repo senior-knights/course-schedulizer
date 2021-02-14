@@ -114,4 +114,5 @@ export const addNonTeachingLoadSchema = object().shape({
     .nullable(),
   instructor: string().required(),
   name: string().required(),
+  terms: array().transform(removeUncheckedValues),
 });

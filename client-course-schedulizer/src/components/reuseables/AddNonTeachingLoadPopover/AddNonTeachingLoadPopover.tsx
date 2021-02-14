@@ -1,9 +1,14 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Typography } from "@material-ui/core";
-import { GridItemTextField } from "components";
+import { GridItemCheckboxGroup, GridItemTextField } from "components";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { addNonTeachingLoadSchema, NonTeachingLoadInput, useAddSectionToSchedule } from "utilities";
+import {
+  addNonTeachingLoadSchema,
+  NonTeachingLoadInput,
+  Term,
+  useAddSectionToSchedule,
+} from "utilities";
 
 export const AddNonTeachingLoadPopover = () => {
   const { addNonTeachingLoadToSchedule } = useAddSectionToSchedule();
@@ -29,6 +34,7 @@ export const AddNonTeachingLoadPopover = () => {
         <GridItemTextField label="Name" />
         <GridItemTextField label="Instructor" />
         <GridItemTextField label="Faculty Hours" />
+        <GridItemCheckboxGroup label="Terms" options={Object.values(Term)} />
         <Button color="primary" onClick={methods.handleSubmit(onSubmit())} variant="contained">
           Submit
         </Button>

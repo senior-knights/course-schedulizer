@@ -1,3 +1,4 @@
+import { forEach } from "lodash";
 import moment, { Moment } from "moment";
 import { Schedule, Section, Term } from "utilities/interfaces";
 
@@ -32,7 +33,7 @@ export const scheduleToCSVString = (schedule: Schedule): string => {
         buildingAndRoomStr = buildingAndRoomStr.slice(0, -1);
         daysStr = daysStr.slice(0, -1);
         // Create strings for fields that need to be constructed
-        const termStr = getTermStr(section);
+        const termStr = getTermsStr(section);
         const sectionNameStr = `${course.prefixes.length ? course.prefixes[0] : ""}-${
           course.number
         }-${section.letter}`;
@@ -58,7 +59,7 @@ export const scheduleToNonTeachingCSVString = (schedule: Schedule): string => {
     if (!((course.prefixes.length && course.prefixes[0]) || course.number)) {
       course.sections.forEach((section) => {
         // Create strings for fields that need to be constructed
-        const termStr = getTermStr(section);
+        const termStr = getTermsStr(section);
 
         // TODO: Should instructionalMethod be used for Non-Teaching Activity or should we add a new field?
         // Construct a row in the output CSV
@@ -71,16 +72,27 @@ export const scheduleToNonTeachingCSVString = (schedule: Schedule): string => {
   return csvStr;
 };
 
-export const getTermStr = (section: Section): string => {
+export const getTermsStr = (section: Section): string => {
+  if (Array.isArray(section.term)) {
+    let termsStr = '"';
+    forEach(section.term, (term) => {
+      termsStr += `${getTermStr(section.year, term)}, `;
+    });
+    return `${termsStr.slice(0, -2)}"`;
+  }
+  return getTermStr(section.year, section.term);
+};
+
+const getTermStr = (year: Section["year"], term: Term) => {
   return `${
-    typeof section.year === "number"
-      ? section.term === Term.Fall
-        ? String(section.year).slice(-2)
-        : String(section.year + 1).slice(-2)
-      : section.term === Term.Fall
-      ? String(Number(section.year.slice(-2)) - 1)
-      : section.year.slice(-2)
-  }/${section.term}`;
+    typeof year === "number"
+      ? term === Term.Fall
+        ? String(year).slice(-2)
+        : String(year + 1).slice(-2)
+      : term === Term.Fall
+      ? String(Number(year.slice(-2)) - 1)
+      : year.slice(-2)
+  }/${term}`;
 };
 
 export const getMeetingTimeStr = (startMoment: Moment, endMoment: Moment): string => {

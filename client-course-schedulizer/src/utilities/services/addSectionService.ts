@@ -19,6 +19,7 @@ import {
   Section,
   SemesterLength,
   SemesterLengthOption,
+  Term,
 } from "utilities/interfaces";
 
 // Defines interface for the section popover input
@@ -55,6 +56,7 @@ export interface NonTeachingLoadInput {
   facultyHours: Section["facultyHours"];
   instructor: Instructor;
   name: Course["name"];
+  terms: Term[];
 }
 
 export const convertFromSemesterLength = (sl: SemesterLength | undefined): SemesterLengthOption => {
