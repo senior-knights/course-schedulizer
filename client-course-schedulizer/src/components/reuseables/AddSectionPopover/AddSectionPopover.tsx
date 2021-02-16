@@ -212,7 +212,13 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
           <Grid item xs>
             {isHalfSemester && (
               <GridItemRadioGroup
-                defaultValue={values?.section.semesterLength || SemesterLength.HalfFirst}
+                defaultValue={
+                  values?.section.semesterLength &&
+                  convertFromSemesterLength(values?.section.semesterLength) ===
+                    SemesterLengthOption.HalfSemester
+                    ? values?.section.semesterLength
+                    : SemesterLength.HalfFirst
+                }
                 label="Half Semester"
                 options={Object.values(SemesterLength).filter((h) => {
                   return Object.values(Half).includes(h);
@@ -221,7 +227,13 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
             )}
             {isIntensiveSemester && (
               <GridItemRadioGroup
-                defaultValue={values?.section.semesterLength || SemesterLength.IntensiveA}
+                defaultValue={
+                  values?.section.semesterLength &&
+                  convertFromSemesterLength(values?.section.semesterLength) ===
+                    SemesterLengthOption.IntensiveSemester
+                    ? values?.section.semesterLength
+                    : SemesterLength.IntensiveA
+                }
                 label="Intensive Semester"
                 options={Object.values(SemesterLength).filter((i) => {
                   return Object.values(Intensive).includes(i);
