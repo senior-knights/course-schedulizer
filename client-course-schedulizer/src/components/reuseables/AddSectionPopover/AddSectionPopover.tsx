@@ -75,6 +75,7 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
             className="update-button"
             color="primary"
             onClick={methods.handleSubmit(onSubmit(true))}
+            type="submit"
             variant="contained"
           >
             Update Section
@@ -84,6 +85,7 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
           className="add-button"
           color="primary"
           onClick={methods.handleSubmit(onSubmit(false))}
+          type="submit"
           variant="contained"
         >
           {addTitle}
