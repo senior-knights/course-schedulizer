@@ -35,7 +35,7 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
     resolver: yupResolver(addSectionSchema),
   });
   const [semesterLength, setSemesterLength] = useState<SemesterLengthOption>(
-    convertFromSemesterLength(values?.section.semesterLength).toLowerCase() as SemesterLengthOption,
+    convertFromSemesterLength(values?.section.semesterLength),
   );
   const { addSectionToSchedule } = useAddSectionToSchedule();
   const { deleteSectionFromSchedule } = useDeleteSectionFromSchedule();
