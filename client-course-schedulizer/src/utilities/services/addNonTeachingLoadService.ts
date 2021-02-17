@@ -5,7 +5,7 @@ import { emptyCourse, emptySection } from "utilities/constants";
 export const mapNonTeachingLoadInput = (data: NonTeachingLoadInput) => {
   const newSection: Section = cloneDeep(emptySection);
   const newCourse: Course = cloneDeep(emptyCourse);
-  newSection.instructionalMethod = data.name;
+  newSection.instructionalMethod = data.activity;
   newSection.facultyHours = data.facultyHours;
   newSection.instructors = [data.instructor];
   newSection.isNonTeaching = true;

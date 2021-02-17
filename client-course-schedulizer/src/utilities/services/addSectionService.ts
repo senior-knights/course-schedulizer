@@ -53,9 +53,9 @@ export interface SectionInput {
 }
 
 export interface NonTeachingLoadInput {
+  activity: Section["instructionalMethod"];
   facultyHours: Section["facultyHours"];
   instructor: Instructor;
-  name: Course["name"];
   terms: Term[];
 }
 

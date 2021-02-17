@@ -105,6 +105,7 @@ export const addSectionSchema = object().shape({
 });
 
 export const addNonTeachingLoadSchema = object().shape({
+  activity: string().required(),
   facultyHours: number()
     .required()
     .typeError("faculty hours must be a number")
@@ -113,6 +114,5 @@ export const addNonTeachingLoadSchema = object().shape({
     .transform(emptyStringToNull)
     .nullable(),
   instructor: string().required(),
-  name: string().required(),
   terms: array().transform(removeUncheckedValues),
 });

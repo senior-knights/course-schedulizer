@@ -30,11 +30,11 @@ export const AddNonTeachingLoadPopover = () => {
       <form className="popover-container">
         <Box>
           <Typography className="popover-title" variant="h4">
-            Add Non-Teaching Load
+            Add Non-Teaching Activity
           </Typography>
         </Box>
         <Grid container spacing={SPACING}>
-          <GridItemTextField label="Name" />
+          <GridItemTextField label="Activity" />
         </Grid>
         <Grid container spacing={SPACING}>
           <GridItemTextField label="Instructor" />

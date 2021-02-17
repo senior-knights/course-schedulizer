@@ -66,7 +66,7 @@ const registrarSpreadsheetFields: ValidFields = {
 const templateSpreadsheetFields: ValidFields = {
   Days: cf.daysCallback,
   FacLoad: cf.facultyHoursCallback,
-  NonTeachingActivity: cf.instructionalMethodCallback,
+  NonTeachingActivity: cf.nonTeachingActivityCallback,
   Room: cf.locationCallback,
   SectionName: cf.sectionCallback,
   StuCred: cf.studentHoursCallback,
@@ -80,6 +80,9 @@ const callbacks: ValidFields = {
 };
 
 export const csvStringToSchedule = (csvString: string): Schedule => {
+  // Remove junk from Excel export to CSV
+  csvString = csvString.replace("ï»¿", "");
+
   // Remove title rows from template spreadsheet. Perhaps there is a better way to check if it is in the template format
   if (csvString.startsWith("2")) {
     csvString = csvString.split("\n").slice(2).join("\n");
@@ -111,12 +114,7 @@ export const csvStringToSchedule = (csvString: string): Schedule => {
     if (fields) {
       fields.forEach((field) => {
         const value = String(object[field]);
-        field = field
-          .replace(/\s/g, "")
-          .replace("ï»¿", "")
-          .replace("(", "")
-          .replace(")", "")
-          .replace("-", "");
+        field = field.replace(/\s/g, "").replace("(", "").replace(")", "").replace("-", "");
         if (field in callbacks) {
           callbacks[field as keyof ValidFields](value, { course, meetings, section });
         }
