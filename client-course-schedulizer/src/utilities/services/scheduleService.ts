@@ -1,4 +1,5 @@
 import { EventInput } from "@fullcalendar/react";
+import { ColorBy } from "components";
 import { filter, flatten, forEach, forOwn, map, maxBy, minBy, range } from "lodash";
 import moment from "moment";
 import { enumArray } from "utilities";
@@ -110,4 +111,20 @@ export const filterHeadersWithNoEvents = (filteredEvents: GroupedEvents, headers
     const groupEvents = filteredEvents[header];
     return groupEvents?.length > 0;
   });
+};
+
+export const colorEventsByFeature = (groupedEvents: GroupedEvents, colorBy: ColorBy) => {
+  forOwn(groupedEvents, (_, key) => {
+    forEach(groupedEvents[key], (event) => {
+      event.color = "#3788d8"; // Default blue as placeholder
+      console.log(event.extendedProps?.course?.number);
+      console.log(
+        event.extendedProps?.meeting?.location?.building,
+        event.extendedProps?.meeting?.location?.roomNumber,
+      );
+      console.log(event.extendedProps?.section?.instructors);
+      console.log(event.extendedProps?.course?.prefixes);
+    });
+  });
+  return groupedEvents;
 };
