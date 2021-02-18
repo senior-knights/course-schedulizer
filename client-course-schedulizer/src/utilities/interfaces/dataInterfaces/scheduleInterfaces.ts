@@ -43,6 +43,7 @@ export interface Section {
   globalMax: number;
   instructionalMethod: string;
   instructors: Instructor[];
+  isNonTeaching?: boolean;
   letter: string;
   localMax: number;
   // Multiple Meetings possible if time/room differs on different days
@@ -54,7 +55,7 @@ export interface Section {
   status: string;
   // Overrides Course value
   studentHours?: number;
-  term: Term;
+  term: Term | Term[];
   // Like 9/3/2019
   termStart: string;
   // Number of students enrolled in this section at the end of the course

@@ -1,4 +1,4 @@
-import { cloneDeep } from "lodash";
+import { cloneDeep, forEach } from "lodash";
 import moment from "moment";
 import { emptyMeeting } from "utilities/constants";
 import { Course, Day, Meeting, Section, SemesterLength, Term } from "utilities/interfaces";
@@ -11,6 +11,7 @@ export interface CaseCallbackParams {
 
 export const MIN_HALF_LENGTH = 35;
 export const MAX_HALF_LENGTH = 80;
+const SEPARATORS = [",", ";", "\n"];
 
 // Define regexes for parsing
 // const timeReg = RegExp("(?<![1-9])(1[0-9]|2[0-3]|[0-9]):([0-5][0-9])");
@@ -65,7 +66,22 @@ export const locationCallback = (value: string, params: CaseCallbackParams) => {
 };
 
 export const termCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.term = termCase(value);
+  let separator = ",";
+  if (
+    SEPARATORS.some((s) => {
+      separator = s;
+      return value.includes(s);
+    })
+  ) {
+    const terms = value.split(separator);
+    const termsArr: Term[] = [];
+    forEach(terms, (term) => {
+      termsArr.push(termCase(term));
+    });
+    section.term = termsArr;
+  } else {
+    section.term = termCase(value);
+  }
 };
 
 export const semesterLengthCallback = (value: string, { section }: CaseCallbackParams) => {
@@ -172,16 +188,25 @@ export const instructionalMethodCallback = (value: string, { section }: CaseCall
 };
 
 export const sectionCallback = (value: string, params: CaseCallbackParams) => {
-  const sectionParts = value.split("-");
-  prefixCallback(sectionParts[0], params);
-  numberCallback(sectionParts[1], params);
-  letterCallback(sectionParts[2], params);
+  if (value === "--" || value.trim() === "") {
+    params.section.isNonTeaching = true;
+  } else {
+    const sectionParts = value.split("-");
+    prefixCallback(sectionParts[0], params);
+    numberCallback(sectionParts[1], params);
+    letterCallback(sectionParts[2], params);
+  }
 };
 
 export const timeCallback = (value: string, params: CaseCallbackParams) => {
   const [startTime] = value.split(" ").join("").split("-");
   startTimeCallback(startTime, params);
   durationCallback(value, params);
+};
+
+export const nonTeachingActivityCallback = (value: string, params: CaseCallbackParams) => {
+  params.section.isNonTeaching = true;
+  instructionalMethodCallback(value, params);
 };
 
 export const startTimeCase = (value: string): string => {

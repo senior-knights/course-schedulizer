@@ -65,6 +65,10 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
     (values && `${values?.meeting.location.building} ${values?.meeting.location.roomNumber}`) ||
     ""
   ).trim();
+  let defaultTerm = values?.section.term;
+  if (Array.isArray(defaultTerm)) {
+    [defaultTerm] = defaultTerm;
+  }
 
   const buttons = () => {
     const addTitle = values ? "Add New Section" : "Add Section";
@@ -201,7 +205,7 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
             value={values?.meeting.days}
           />
           <GridItemRadioGroup
-            defaultValue={values?.section.term || Term.Fall}
+            defaultValue={defaultTerm || Term.Fall}
             label="Term"
             options={Object.values(Term)}
           />
