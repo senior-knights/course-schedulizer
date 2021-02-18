@@ -10,7 +10,7 @@ export const ImportInputWrapper = ({ children }: PropsWithChildren<{}>) => {
   return (
     <label htmlFor="import-button">
       <input
-        accept=".csv"
+        accept=".csv, .xlsx"
         className="hidden"
         id="import-button"
         onChange={onInputChange}

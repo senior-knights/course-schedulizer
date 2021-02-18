@@ -75,6 +75,7 @@
     "react-table": "^7.6.1",
     "react-visibility-sensor": "5.1.1",
     "runtypes": "5.0.1",
+    "xlsx": "0.16.9",
     "yup": "^0.29.3"
   },
   "devDependencies": {
