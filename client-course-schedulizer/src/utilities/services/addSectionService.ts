@@ -31,10 +31,10 @@ export interface SectionInput {
   duration: Meeting["duration"];
   facultyHours: Section["facultyHours"];
   globalMax: Section["globalMax"];
-  half: Half;
+  halfSemester: Half;
   instructionalMethod: Section["instructionalMethod"];
   instructor: Instructor;
-  intensive?: Intensive;
+  intensiveSemester?: Intensive;
   localMax: Section["localMax"];
   location: string;
   name: Course["name"];
@@ -144,7 +144,9 @@ export const mapInputToInternalTypes = (data: SectionInput) => {
 
 const createNewSectionFromInput = (data: SectionInput): Section => {
   const location = locationCase(data.location);
-  const semesterType = convertToSemesterLength(data.intensive || data.half || data.semesterLength);
+  const semesterType = convertToSemesterLength(
+    data.intensiveSemester || data.halfSemester || data.semesterLength,
+  );
 
   const building = location[0];
   const roomNumber = location[1];

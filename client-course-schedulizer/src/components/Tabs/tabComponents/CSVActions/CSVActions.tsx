@@ -29,9 +29,11 @@ export const CSVActions = () => {
         }}
         {...bindMenu(popupState)}
       >
-        <MenuItem button className="MuiButton-textPrimary">
-          <ImportInputWrapper>IMPORT SCHEDULE</ImportInputWrapper>
-        </MenuItem>
+        <ImportInputWrapper>
+          <MenuItem button className="MuiButton-textPrimary">
+            IMPORT SCHEDULE
+          </MenuItem>
+        </ImportInputWrapper>
         <MenuItem button className="MuiButton-textSecondary" onClick={onExportClick}>
           EXPORT FINAL CSV
         </MenuItem>
