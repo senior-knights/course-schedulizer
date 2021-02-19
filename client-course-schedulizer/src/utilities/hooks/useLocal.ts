@@ -1,3 +1,5 @@
+// Note: Shout-out to CQL/Benchmark which was referenced while writing this
+
 /**
  * Get value from localStorage
  * @param key id for localStorage
@@ -31,7 +33,7 @@ export const removeLocal = (key: string) => {
  */
 export const useLocal = <T>(key: string) => {
   const load = () => {
-    loadLocal(key);
+    return loadLocal<T>(key);
   };
   const save = (item: T) => {
     saveLocal(key, item);
