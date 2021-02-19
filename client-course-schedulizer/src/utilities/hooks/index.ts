@@ -3,3 +3,4 @@ export * from "./deleteSectionHooks";
 export * from "./useExportCSV";
 export * from "./useExportFullCSV";
 export * from "./useImportFile";
+export * from "./useLocal";

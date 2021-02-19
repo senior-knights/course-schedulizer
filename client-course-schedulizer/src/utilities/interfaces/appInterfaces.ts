@@ -1,3 +1,4 @@
+import { loadLocal } from "utilities/hooks/useLocal";
 import { Schedule, Term } from "./dataInterfaces";
 
 // structure for the global app state
@@ -11,7 +12,7 @@ export interface AppState {
 }
 
 // Defaults for the app state when it launches
-export const initialAppState = {
+export const initialAppState: AppState = loadLocal("appState") || {
   professors: [],
   rooms: [],
   schedule: { courses: [] },
