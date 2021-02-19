@@ -3,17 +3,18 @@ import { Assignments } from "harmoniously";
 import React, { useContext } from "react";
 import { AppContext } from "utilities/contexts";
 
-// TODO: change this
+// TODO: allow this to be edited by users.
 const times = ["mwf800", "mwf900", "mwf1030", "mwf1130", "mwf1230", "mwf130", "mwf230", "mwf330"];
 
-const useInferredAssignments = (): Assignments => {
+// temporary hook used to get data from the imported schedule and generate fake assignments.
+const useInferredAssignments = () => {
   const {
     appState: { rooms, professors, classes },
   } = useContext(AppContext);
 
-  const thing: Assignments = {};
+  const inferredAssignments: Assignments = {};
   classes.forEach((cls) => {
-    thing[cls] = {
+    inferredAssignments[cls] = {
       // TODO: update this. https://stackoverflow.com/a/5915122/9931154
       professor: professors[Math.floor(Math.random() * professors.length)],
       rooms: [...rooms, "a", "b"],
@@ -21,12 +22,24 @@ const useInferredAssignments = (): Assignments => {
     };
   });
 
-  return thing;
+  return { inferredAssignments, professors, rooms };
 };
 
+/** Harmony returns a component to automatically create schedules and
+ *   gives metadata about the schedule.
+ */
 export const Harmony = () => {
-  const assignments = useInferredAssignments();
-  console.log(assignments);
+  const { inferredAssignments, professors, rooms } = useInferredAssignments();
 
-  return <H assignments={assignments} />;
+  return (
+    <>
+      <h2>
+        Note: This tab is in a <b>pre alpha</b> state. Output might not be perfect.
+      </h2>
+      <H assignments={inferredAssignments} />
+      <div>Professors: {professors}</div>
+      <div>Rooms: {rooms}</div>
+      <div>Times: {times}</div>
+    </>
+  );
 };
