@@ -11,7 +11,9 @@ export interface AppState {
   slotMinTime: string;
 }
 
-// Defaults for the app state when it launches
+// Defaults for the app state when it launches, will try to load
+//  previous appState to launch app from. If no previous state saved,
+//  will default to the object below.
 export const initialAppState: AppState = loadLocal("appState") || {
   professors: [],
   rooms: [],

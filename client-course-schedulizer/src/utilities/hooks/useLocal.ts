@@ -28,7 +28,7 @@ export const removeLocal = (key: string) => {
   localStorage.removeItem(key);
 };
 
-/** Hook provides call backs to load, remove, and save
+/** Hook provides callback functions to load, remove, and save
  *   values in localStorage.
  */
 export const useLocal = <T>(key: string) => {
