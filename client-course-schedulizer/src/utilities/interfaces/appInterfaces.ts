@@ -3,6 +3,7 @@ import { Schedule, Term } from "./dataInterfaces";
 
 // structure for the global app state
 export interface AppState {
+  classes: string[];
   professors: string[];
   rooms: string[];
   schedule: Schedule;
@@ -15,6 +16,7 @@ export interface AppState {
 //  previous appState to launch app from. If no previous state saved,
 //  will default to the object below.
 export const initialAppState: AppState = loadLocal("appState") || {
+  classes: [],
   professors: [],
   rooms: [],
   schedule: { courses: [] },
