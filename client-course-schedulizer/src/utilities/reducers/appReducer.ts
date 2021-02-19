@@ -1,5 +1,5 @@
 import { AppAction, AppState, Term } from "utilities/interfaces";
-import { getMinAndMaxTimes, getProfs, getRooms } from "utilities/services";
+import { getClasses, getMinAndMaxTimes, getProfs, getRooms } from "utilities/services";
 
 /*
   Provides a function to perform multiple setState updates
@@ -13,6 +13,7 @@ export const reducer = (state: AppState, action: AppAction): AppState => {
       const times = getMinAndMaxTimes(schedule);
       return {
         ...state,
+        classes: getClasses(schedule),
         professors: getProfs(schedule),
         rooms: getRooms(schedule),
         schedule,

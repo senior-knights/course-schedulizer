@@ -2,6 +2,7 @@ import { Schedule, Term } from "./dataInterfaces";
 
 // structure for the global app state
 export interface AppState {
+  classes: string[];
   professors: string[];
   rooms: string[];
   schedule: Schedule;
@@ -11,7 +12,8 @@ export interface AppState {
 }
 
 // Defaults for the app state when it launches
-export const initialAppState = {
+export const initialAppState: AppState = {
+  classes: [],
   professors: [],
   rooms: [],
   schedule: { courses: [] },
