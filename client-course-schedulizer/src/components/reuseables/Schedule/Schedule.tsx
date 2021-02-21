@@ -1,6 +1,6 @@
 import { CalendarOptions, EventClickArg } from "@fullcalendar/react";
 import { Popover } from "@material-ui/core";
-import { AddSectionPopover, AsyncComponent, Calendar, ColorBy, ScheduleToolbar } from "components";
+import { AddSectionPopover, AsyncComponent, Calendar, ScheduleToolbar } from "components";
 import { bindPopover, usePopupState } from "material-ui-popup-state/hooks";
 import React, { useCallback, useContext, useMemo, useState } from "react";
 import Stick from "react-stick";
@@ -45,7 +45,7 @@ export const Schedule = (props: ScheduleBase) => {
 */
 const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: ScheduleBase) => {
   const {
-    appState: { selectedTerm, slotMaxTime, slotMinTime },
+    appState: { colorBy, selectedTerm, slotMaxTime, slotMinTime },
   } = useContext(AppContext);
   const [popupData, setPopupData] = useState<CourseSectionMeeting>();
 
@@ -84,7 +84,7 @@ const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Sc
   }, [filteredEvents, calendarHeaders]);
 
   // Color events by the selected feature
-  colorEventsByFeature(filteredEvents, ColorBy.Instructor);
+  colorEventsByFeature(filteredEvents, colorBy);
 
   return (
     <>

@@ -2,6 +2,8 @@ import { EventInput } from "@fullcalendar/react";
 import { ColorBy } from "components";
 import { filter, flatten, forEach, forOwn, map, maxBy, minBy, range } from "lodash";
 import moment from "moment";
+import hash from "object-hash";
+import randomColor from "randomcolor";
 import { enumArray } from "utilities";
 import { INITIAL_DATE } from "utilities/constants";
 import { Day, Meeting, Schedule, Section, Term } from "utilities/interfaces";
@@ -114,17 +116,69 @@ export const filterHeadersWithNoEvents = (filteredEvents: GroupedEvents, headers
 };
 
 export const colorEventsByFeature = (groupedEvents: GroupedEvents, colorBy: ColorBy) => {
-  forOwn(groupedEvents, (_, key) => {
-    forEach(groupedEvents[key], (event) => {
-      event.color = "#3788d8"; // Default blue as placeholder
-      console.log(event.extendedProps?.course?.number);
-      console.log(
-        event.extendedProps?.meeting?.location?.building,
-        event.extendedProps?.meeting?.location?.roomNumber,
-      );
-      console.log(event.extendedProps?.section?.instructors);
-      console.log(event.extendedProps?.course?.prefixes);
-    });
-  });
+  // TODO: Multiple colors for multiple instructors/prefixes?
+  switch (colorBy) {
+    case ColorBy.Room:
+      forOwn(groupedEvents, (_, key) => {
+        forEach(groupedEvents[key], (event) => {
+          const building = event.extendedProps?.meeting?.location?.building;
+          const roomNum = event.extendedProps?.meeting?.location?.roomNumber;
+          const roomStr = `${building} ${roomNum}`;
+          event.color = randomColor({ luminosity: "light", seed: hash(roomStr) });
+          event.textColor = "black";
+        });
+      });
+      break;
+    case ColorBy.Instructor:
+      forOwn(groupedEvents, (_, key) => {
+        forEach(groupedEvents[key], (event) => {
+          let instructorStr = "";
+          forEach(event.extendedProps?.section?.instructors, (instructor) => {
+            instructorStr += `${instructor}, `;
+          });
+          event.color = randomColor({
+            luminosity: "light",
+            seed: hash(instructorStr),
+          });
+          event.textColor = "black";
+        });
+      });
+      break;
+    case ColorBy.Prefix:
+      forOwn(groupedEvents, (_, key) => {
+        forEach(groupedEvents[key], (event) => {
+          let prefixStr = "";
+          forEach(event.extendedProps?.course?.prefixes, (prefix) => {
+            prefixStr += `${prefix}, `;
+          });
+          event.color = randomColor({ luminosity: "light", seed: hash(prefixStr) });
+          event.textColor = "black";
+        });
+      });
+      break;
+    default:
+      forOwn(groupedEvents, (_, key) => {
+        forEach(groupedEvents[key], (event) => {
+          const levelStr = String(event.extendedProps?.course?.number)[0];
+          switch (levelStr) {
+            case "1":
+              // Pastel green (suggests easy difficulty)
+              event.color = "#c2ffc4";
+              break;
+            case "2":
+              // Pastel yellow (suggests medium difficulty)
+              event.color = "#fffec2";
+              break;
+            case "3":
+              // Pastel red (suggests hard difficulty)
+              event.color = "#ffc2c2";
+              break;
+            default:
+              event.color = randomColor({ luminosity: "light", seed: hash(levelStr) });
+          }
+          event.textColor = "black";
+        });
+      });
+  }
   return groupedEvents;
 };

@@ -1,3 +1,4 @@
+import { ColorBy } from "components";
 import { AppAction, AppState, Term } from "utilities/interfaces";
 import { getMinAndMaxTimes, getProfs, getRooms } from "utilities/services";
 
@@ -24,6 +25,11 @@ export const reducer = (state: AppState, action: AppAction): AppState => {
       let { term } = action.payload;
       term = term || Term.Fall;
       return { ...state, selectedTerm: term };
+    }
+    case "setColorBy": {
+      let { colorBy } = action.payload;
+      colorBy = colorBy || ColorBy.Level;
+      return { ...state, colorBy };
     }
     default:
       return state;
