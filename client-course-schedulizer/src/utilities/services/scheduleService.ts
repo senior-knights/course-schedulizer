@@ -117,6 +117,8 @@ export const filterHeadersWithNoEvents = (filteredEvents: GroupedEvents, headers
 
 export const colorEventsByFeature = (groupedEvents: GroupedEvents, colorBy: ColorBy) => {
   // TODO: Multiple colors for multiple instructors/prefixes?
+  // TODO: Pre-hashing strings too slow?
+  // Hash the strings before seeding the random color because it seemed that similar strings gave similar colors
   switch (colorBy) {
     case ColorBy.Room:
       forOwn(groupedEvents, (_, key) => {
