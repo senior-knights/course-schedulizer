@@ -1,5 +1,11 @@
-import { ColorBy } from "components";
 import { Schedule, Term } from "./dataInterfaces";
+
+export enum ColorBy {
+  Level,
+  Room,
+  Instructor,
+  Prefix,
+}
 
 // structure for the global app state
 export interface AppState {

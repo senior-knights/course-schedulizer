@@ -1,14 +1,8 @@
 import { InputLabel, MenuItem, Select } from "@material-ui/core";
 import React, { ChangeEvent, useContext } from "react";
 import { AppContext } from "utilities/contexts";
+import { ColorBy } from "utilities/interfaces";
 import "./ColorSelector.scss";
-
-export enum ColorBy {
-  Level,
-  Room,
-  Instructor,
-  Prefix,
-}
 
 export const ColorSelector = () => {
   const {

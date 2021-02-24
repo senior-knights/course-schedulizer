@@ -1,5 +1,4 @@
-import { ColorBy } from "components";
-import { AppAction, AppState, Term } from "utilities/interfaces";
+import { AppAction, AppState, ColorBy, Term } from "utilities/interfaces";
 import { getMinAndMaxTimes, getProfs, getRooms } from "utilities/services";
 
 /*

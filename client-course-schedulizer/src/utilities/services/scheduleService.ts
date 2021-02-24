@@ -1,12 +1,11 @@
 import { EventInput } from "@fullcalendar/react";
-import { ColorBy } from "components";
 import { filter, flatten, forEach, forOwn, map, maxBy, minBy, range } from "lodash";
 import moment from "moment";
 import hash from "object-hash";
 import randomColor from "randomcolor";
 import { enumArray } from "utilities";
 import { INITIAL_DATE } from "utilities/constants";
-import { Day, Meeting, Schedule, Section, Term } from "utilities/interfaces";
+import { ColorBy, Day, Meeting, Schedule, Section, Term } from "utilities/interfaces";
 
 // Returns a list of hours to display on the Schedule
 // TODO: add better types for timing, maybe: https://stackoverflow.com/questions/51445767/how-to-define-a-regex-matched-string-type-in-typescript
