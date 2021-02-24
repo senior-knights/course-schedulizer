@@ -15,6 +15,7 @@ import { Course, CourseSectionMeeting, getSectionName, Schedule, Section, Term }
 import { AppContext } from "utilities/contexts";
 import { findSection } from "utilities/services/facultyLoadsService";
 import { AddNonTeachingLoadPopover, AddSectionPopover, PopoverButton } from "../../reuseables";
+import "./FacultyLoads.scss";
 
 type hourKeys = "fallHours" | "springHours" | "summerHours" | "totalHours" | "otherHours";
 type sectionKeys =
@@ -201,78 +202,79 @@ export const FacultyLoads = () => {
 
   // https://react-table.tanstack.com/docs/quick-start
   return (
-    // apply the table props
-    <TableContainer component={Paper}>
-      <PopoverButton buttonTitle="Add Non-Teaching Load" popupId="addNonTeachingLoad">
-        <AddNonTeachingLoadPopover />
-      </PopoverButton>
-      <Modal onClose={handleClose} open={open} style={{ overflowY: "scroll" }}>
-        <Paper>
+    <>
+      <Modal className="add-section-modal" onClose={handleClose} open={open}>
+        <Paper className="add-section-modal-paper">
           <AddSectionPopover values={modalValues} />
         </Paper>
       </Modal>
-      <Table {...getTableProps()}>
-        <TableHead>
-          {
-            // Loop over the header rows
-            headerGroups.map((headerGroup) => {
-              return (
-                // Apply the header row props
-                <FacultyRow {...headerGroup.getHeaderGroupProps()}>
-                  {
-                    // Loop over the headers in each row
-                    headerGroup.headers.map((column) => {
-                      return (
-                        // Apply the header cell props
-                        <TableCell {...column.getHeaderProps()}>
-                          {
-                            // Render the header
-                            column.render("Header")
-                          }
-                        </TableCell>
-                      );
-                    })
-                  }
-                </FacultyRow>
-              );
-            })
-          }
-        </TableHead>
-        {/* Apply the table body props */}
-        <TableBody {...getTableBodyProps()}>
-          {
-            // Loop over the table rows
-            rows.map((row) => {
-              // Prepare the row for display
-              prepareRow(row);
-              return (
-                // Apply the row props
-                <FacultyRow {...row.getRowProps()}>
-                  {
-                    // Loop over the rows cells
-                    row.cells.map((cell) => {
-                      // Apply the cell props
-                      return (
-                        <TableCell
-                          {...cell.getCellProps()}
-                          onClick={() => {
-                            handleCellClick(cell);
-                          }}
-                        >
-                          {
-                            // Render the cell contents
-                            cell.render("Cell")
-                          }
-                        </TableCell>
-                      );
-                    })
-                  }
-                </FacultyRow>
-              );
-            })
-          }
-        </TableBody>
-      </Table>
-    </TableContainer>
+      <TableContainer component={Paper}>
+        <PopoverButton buttonTitle="Add Non-Teaching Load" popupId="addNonTeachingLoad">
+          <AddNonTeachingLoadPopover />
+        </PopoverButton>
+        <Table {...getTableProps()}>
+          <TableHead>
+            {
+              // Loop over the header rows
+              headerGroups.map((headerGroup) => {
+                return (
+                  // Apply the header row props
+                  <FacultyRow {...headerGroup.getHeaderGroupProps()}>
+                    {
+                      // Loop over the headers in each row
+                      headerGroup.headers.map((column) => {
+                        return (
+                          // Apply the header cell props
+                          <TableCell {...column.getHeaderProps()}>
+                            {
+                              // Render the header
+                              column.render("Header")
+                            }
+                          </TableCell>
+                        );
+                      })
+                    }
+                  </FacultyRow>
+                );
+              })
+            }
+          </TableHead>
+          {/* Apply the table body props */}
+          <TableBody {...getTableBodyProps()}>
+            {
+              // Loop over the table rows
+              rows.map((row) => {
+                // Prepare the row for display
+                prepareRow(row);
+                return (
+                  // Apply the row props
+                  <FacultyRow {...row.getRowProps()}>
+                    {
+                      // Loop over the rows cells
+                      row.cells.map((cell) => {
+                        // Apply the cell props
+                        return (
+                          <TableCell
+                            {...cell.getCellProps()}
+                            onClick={() => {
+                              handleCellClick(cell);
+                            }}
+                          >
+                            {
+                              // Render the cell contents
+                              cell.render("Cell")
+                            }
+                          </TableCell>
+                        );
+                      })
+                    }
+                  </FacultyRow>
+                );
+              })
+            }
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 };

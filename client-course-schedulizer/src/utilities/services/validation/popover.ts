@@ -33,13 +33,11 @@ NOTE: fields with default values are not check: semester and time. */
 export const addSectionSchema = object().shape({
   anticipatedSize: number()
     .typeError("global max must be a number")
-    .positive()
     .integer()
     .transform(emptyStringToNull)
     .nullable(),
   day10Used: number()
     .typeError("day 10 used must be a number")
-    .positive()
     .integer()
     .transform(emptyStringToNull)
     .nullable(),
@@ -47,19 +45,17 @@ export const addSectionSchema = object().shape({
   department: string(),
   duration: number()
     .typeError("duration must be a number")
-    .positive()
     .integer()
     .transform(emptyStringToNull)
     .nullable(),
   facultyHours: number()
     .typeError("faculty hours must be a number")
-    .positive()
+    .integer()
     .test("is-decimal", "invalid decimal", decimalRegex)
     .transform(emptyStringToNull)
     .nullable(),
   globalMax: number()
     .typeError("global max must be a number")
-    .positive()
     .integer()
     .transform(emptyStringToNull)
     .nullable(),
@@ -67,7 +63,6 @@ export const addSectionSchema = object().shape({
   instructor: string(),
   localMax: number()
     .typeError("global max must be a number")
-    .positive()
     .integer()
     .transform(emptyStringToNull)
     .nullable(),
@@ -85,14 +80,12 @@ export const addSectionSchema = object().shape({
   status: string(),
   studentHours: number()
     .typeError("student hours must be a number")
-    .positive()
     .integer()
     .test("is-decimal", "invalid decimal", decimalRegex)
     .transform(emptyStringToNull)
     .nullable(),
   used: number()
     .typeError("used must be a number")
-    .positive()
     .integer()
     .transform(emptyStringToNull)
     .nullable(),

@@ -62,7 +62,9 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
   const title = values ? "Update Section" : "Add Section";
 
   const locationValue = (
-    (values && `${values?.meeting?.location.building} ${values?.meeting?.location.roomNumber}`) ||
+    (values &&
+      values.meeting &&
+      `${values?.meeting?.location.building} ${values?.meeting?.location.roomNumber}`) ||
     ""
   ).trim();
   let defaultTerm = values?.section.term;
