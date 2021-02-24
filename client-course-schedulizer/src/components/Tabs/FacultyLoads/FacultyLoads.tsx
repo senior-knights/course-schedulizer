@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-key */
 import {
+  Modal,
   Paper,
   Table,
   TableBody,
@@ -8,11 +9,12 @@ import {
   TableHead,
   TableRow as FacultyRow,
 } from "@material-ui/core";
-import React, { useContext, useMemo } from "react";
-import { Column, useTable } from "react-table";
-import { Course, getSectionName, Schedule, Section, Term } from "utilities";
+import React, { useContext, useMemo, useState } from "react";
+import { Cell, Column, useTable } from "react-table";
+import { Course, CourseSectionMeeting, getSectionName, Schedule, Section, Term } from "utilities";
 import { AppContext } from "utilities/contexts";
-import { AddNonTeachingLoadPopover, PopoverButton } from "../../reuseables";
+import { findSection } from "utilities/services/facultyLoadsService";
+import { AddNonTeachingLoadPopover, AddSectionPopover, PopoverButton } from "../../reuseables";
 
 type hourKeys = "fallHours" | "springHours" | "summerHours" | "totalHours" | "otherHours";
 type sectionKeys =
@@ -142,11 +144,34 @@ export const FacultyLoads = () => {
     appState: { schedule },
   } = useContext(AppContext);
 
+  const handleCellClick = (cell: Cell<FacultyRow>) => {
+    if (cell.value) {
+      const sectionNames = cell.value.split(", ");
+      switch (cell.column.Header) {
+        case "Fall Course Sections":
+          setModalValues(findSection(schedule, sectionNames[0], Term.Fall));
+          break;
+        case "Spring Course Sections":
+          setModalValues(findSection(schedule, sectionNames[0], Term.Spring));
+          break;
+        default:
+          break;
+      }
+      setOpen(true);
+    }
+  };
+
   const data = useMemo<FacultyRow[]>(() => {
     return createTable(schedule);
   }, [schedule]);
 
-  // TODO: Add Other Duties/Hours and Load Notes
+  const [open, setOpen] = useState(false);
+  const [modalValues, setModalValues] = useState<CourseSectionMeeting>();
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const columns = useMemo<Column<FacultyRow>[]>(() => {
     return [
       { Header: "Faculty", accessor: "faculty" },
@@ -172,6 +197,11 @@ export const FacultyLoads = () => {
       <PopoverButton buttonTitle="Add Non-Teaching Load" popupId="addNonTeachingLoad">
         <AddNonTeachingLoadPopover />
       </PopoverButton>
+      <Modal onClose={handleClose} open={open}>
+        <Paper>
+          <AddSectionPopover values={modalValues} />
+        </Paper>
+      </Modal>
       <Table {...getTableProps()}>
         <TableHead>
           {
@@ -214,7 +244,12 @@ export const FacultyLoads = () => {
                     row.cells.map((cell) => {
                       // Apply the cell props
                       return (
-                        <TableCell {...cell.getCellProps()}>
+                        <TableCell
+                          {...cell.getCellProps()}
+                          onClick={() => {
+                            handleCellClick(cell);
+                          }}
+                        >
                           {
                             // Render the cell contents
                             cell.render("Cell")
