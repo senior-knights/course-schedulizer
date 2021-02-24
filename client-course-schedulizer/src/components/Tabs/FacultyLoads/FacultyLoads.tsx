@@ -55,7 +55,9 @@ const updateRow = ({
   const termCourseSectionProp =
     termName === "other" ? "otherDuties" : (`${termName}CourseSections` as sectionKeys);
   const termHoursProp = `${termName}Hours` as hourKeys;
-  const facultyHours = (section.facultyHours || course.facultyHours) / section.instructors.length;
+  const facultyHours =
+    (section.facultyHours !== undefined ? section.facultyHours : course.facultyHours) /
+    section.instructors.length;
   if (prevRow) {
     prevRow[termCourseSectionProp] = prevRow[termCourseSectionProp]
       ? (prevRow[termCourseSectionProp] = `${prevRow[termCourseSectionProp]}, ${sectionName}`)

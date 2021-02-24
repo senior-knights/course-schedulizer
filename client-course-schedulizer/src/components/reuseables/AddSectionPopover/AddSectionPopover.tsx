@@ -148,11 +148,17 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
           />
           <GridItemTextField
             label="Faculty Hours"
-            value={(values?.section.facultyHours || values?.course.facultyHours || "").toString()}
+            value={(values?.section.facultyHours !== undefined
+              ? values?.section.facultyHours
+              : values?.course.facultyHours || ""
+            ).toString()}
           />
           <GridItemTextField
             label="Student Hours"
-            value={(values?.section.studentHours || values?.course.studentHours || "").toString()}
+            value={(values?.section.studentHours !== undefined
+              ? values?.section.studentHours
+              : values?.course.studentHours || ""
+            ).toString()}
           />
         </Grid>
         <Grid container spacing={SPACING}>
