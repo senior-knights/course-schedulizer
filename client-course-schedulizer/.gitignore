@@ -21,3 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Microsoft "lock" files. https://stackoverflow.com/a/59451263/9931154
+[~][$]*

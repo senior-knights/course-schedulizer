@@ -12,9 +12,14 @@ import React, { useContext, useMemo } from "react";
 import { Column, useTable } from "react-table";
 import { Course, getSectionName, Schedule, Section, Term } from "utilities";
 import { AppContext } from "utilities/contexts";
+import { AddNonTeachingLoadPopover, PopoverButton } from "../../reuseables";
 
 type hourKeys = "fallHours" | "springHours" | "summerHours" | "totalHours" | "otherHours";
-type sectionKeys = "fallCourseSections" | "springCourseSections" | "summerCourseSections";
+type sectionKeys =
+  | "fallCourseSections"
+  | "springCourseSections"
+  | "summerCourseSections"
+  | "otherDuties";
 
 type FacultyRow = {
   [key in hourKeys]?: number;
@@ -33,7 +38,7 @@ interface UpdateRowParams {
   prevRow: FacultyRow;
   section: Section;
   sectionName: string;
-  termName?: "fall" | "spring" | "summer";
+  termName?: "fall" | "spring" | "summer" | "other";
 }
 
 const updateRow = ({
@@ -44,21 +49,28 @@ const updateRow = ({
   sectionName,
   termName,
 }: UpdateRowParams) => {
-  const termCourseSectionProp = `${termName}CourseSections` as sectionKeys;
+  const termCourseSectionProp =
+    termName === "other" ? "otherDuties" : (`${termName}CourseSections` as sectionKeys);
   const termHoursProp = `${termName}Hours` as hourKeys;
+  const facultyHours = (section.facultyHours || course.facultyHours) / section.instructors.length;
   if (prevRow) {
     prevRow[termCourseSectionProp] = prevRow[termCourseSectionProp]
       ? (prevRow[termCourseSectionProp] = `${prevRow[termCourseSectionProp]}, ${sectionName}`)
       : (prevRow[termCourseSectionProp] = sectionName);
 
     prevRow[termHoursProp] = prevRow[termHoursProp]
-      ? (Number(prevRow[termHoursProp]) + (section.facultyHours || course.facultyHours)) /
-        section.instructors.length
-      : (section.facultyHours || course.facultyHours) / section.instructors.length;
+      ? Number(prevRow[termHoursProp]) / section.instructors.length + facultyHours
+      : facultyHours;
+
+    if (termName === "other") {
+      prevRow[termCourseSectionProp] += ` (${facultyHours})`;
+    }
   } else {
     newRow[termCourseSectionProp] = sectionName;
-    newRow[termHoursProp] =
-      (section.facultyHours || course.facultyHours) / section.instructors.length;
+    newRow[termHoursProp] = facultyHours;
+    if (termName === "other") {
+      newRow[termCourseSectionProp] += ` (${facultyHours})`;
+    }
   }
 };
 
@@ -81,21 +93,25 @@ const createTable = (schedule: Schedule): FacultyRow[] => {
           section,
           sectionName,
         };
-        switch (section.term) {
-          case Term.Fall:
-            updateRow({ ...updateArgs, termName: "fall" });
-            break;
-          case Term.Spring:
-            updateRow({ ...updateArgs, termName: "spring" });
-            break;
-          case Term.Summer:
-          case Term.Interim:
-            updateRow({ ...updateArgs, termName: "summer" });
-            break;
-          default:
-            // eslint-disable-next-line no-console
-            console.log(`Fell through case statement with value ${section.term}`);
-            break;
+        if (section.isNonTeaching) {
+          updateRow({ ...updateArgs, sectionName: section.instructionalMethod, termName: "other" });
+        } else {
+          switch (section.term) {
+            case Term.Fall:
+              updateRow({ ...updateArgs, termName: "fall" });
+              break;
+            case Term.Spring:
+              updateRow({ ...updateArgs, termName: "spring" });
+              break;
+            case Term.Summer:
+            case Term.Interim:
+              updateRow({ ...updateArgs, termName: "summer" });
+              break;
+            default:
+              // eslint-disable-next-line no-console
+              console.log(`Fell through case statement with value ${section.term}`);
+              break;
+          }
         }
         if (prevAddedFacultyRow) {
           newTableData[newTableData.indexOf(prevAddedFacultyRow)] = prevAddedFacultyRow;
@@ -109,7 +125,11 @@ const createTable = (schedule: Schedule): FacultyRow[] => {
     .map((row) => {
       return {
         ...row,
-        totalHours: (row.fallHours || 0) + (row.springHours || 0) + (row.summerHours || 0),
+        totalHours:
+          (row.fallHours || 0) +
+          (row.springHours || 0) +
+          (row.summerHours || 0) +
+          (row.otherHours || 0),
       };
     })
     .sort((a, b) => {
@@ -130,13 +150,15 @@ export const FacultyLoads = () => {
   const columns = useMemo<Column<FacultyRow>[]>(() => {
     return [
       { Header: "Faculty", accessor: "faculty" },
+      { Header: "Total Hours", accessor: "totalHours" },
       { Header: "Fall Course Sections", accessor: "fallCourseSections" },
       { Header: "Fall Hours", accessor: "fallHours" },
       { Header: "Spring Course Sections", accessor: "springCourseSections" },
       { Header: "Spring Hours", accessor: "springHours" },
       { Header: "Summer Course Sections", accessor: "summerCourseSections" },
       { Header: "Summer Hours", accessor: "summerHours" },
-      { Header: "Total Hours", accessor: "totalHours" },
+      { Header: "Other Duties", accessor: "otherDuties" },
+      { Header: "Other Hours", accessor: "otherHours" },
     ];
   }, []);
   const tableInstance = useTable({ columns, data });
@@ -147,6 +169,9 @@ export const FacultyLoads = () => {
   return (
     // apply the table props
     <TableContainer component={Paper}>
+      <PopoverButton buttonTitle="Add Non-Teaching Load" popupId="addNonTeachingLoad">
+        <AddNonTeachingLoadPopover />
+      </PopoverButton>
       <Table {...getTableProps()}>
         <TableHead>
           {

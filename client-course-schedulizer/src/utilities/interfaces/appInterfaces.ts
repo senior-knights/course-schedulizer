@@ -1,3 +1,4 @@
+import { loadLocal } from "utilities/hooks/useLocal";
 import { Schedule, Term } from "./dataInterfaces";
 
 export enum ColorBy {
@@ -9,6 +10,7 @@ export enum ColorBy {
 
 // structure for the global app state
 export interface AppState {
+  classes: string[];
   colorBy: ColorBy;
   professors: string[];
   rooms: string[];
@@ -18,8 +20,11 @@ export interface AppState {
   slotMinTime: string;
 }
 
-// Defaults for the app state when it launches
-export const initialAppState = {
+// Defaults for the app state when it launches, will try to load
+//  previous appState to launch app from. If no previous state saved,
+//  will default to the object below.
+export const initialAppState: AppState = loadLocal("appState") || {
+  classes: [],
   colorBy: 0,
   professors: [],
   rooms: [],

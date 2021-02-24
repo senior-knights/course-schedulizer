@@ -1,5 +1,5 @@
 import moment from "moment";
-import { getMeetingTimeStr, getTermStr } from "utilities/helpers";
+import { getMeetingTimeStr, getTermsStr } from "utilities/helpers";
 import { Day, Schedule } from "utilities/interfaces";
 
 // TODO: Deprecate and/or delete this function, replacing it with scheduleToCSVString() from writeCSV.ts?
@@ -76,7 +76,7 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
       thursStr = thursStr.slice(0, -1);
       friStr = friStr.slice(0, -1);
       // Create strings for fields that need to be constructed
-      const termStr = getTermStr(section);
+      const termStr = getTermsStr(section);
       const sectionNameStr = `${course.prefixes.length ? course.prefixes[0] : ""}-${
         course.number
       }-${section.letter}`;

@@ -2,7 +2,7 @@ import { Footer, Header } from "components";
 import { AboutPage, HelpPage, SchedulizerPage } from "components/pages";
 import React, { useReducer, useState } from "react";
 import { HashRouter, Route, Switch } from "react-router-dom";
-import { initialAppState, reducer } from "utilities";
+import { initialAppState, reducer, useLocal } from "utilities";
 import { AppContext } from "utilities/contexts";
 import "./App.scss";
 
@@ -11,7 +11,8 @@ Ref: https://medium.com/@bennirus/deploying-a-create-react-app-with-routing-to-g
 */
 export const App = () => {
   const [isCSVLoading, setIsCSVLoading] = useState(false);
-  const [appState, appDispatch] = useReducer(reducer, initialAppState);
+  const { save } = useLocal("appState");
+  const [appState, appDispatch] = useReducer(reducer(save), initialAppState);
 
   return (
     <div className="App">

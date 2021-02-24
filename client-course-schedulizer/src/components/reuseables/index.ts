@@ -1,3 +1,4 @@
+export * from "./AddNonTeachingLoadPopover";
 export * from "./AddSectionButton";
 export * from "./AddSectionPopover";
 export * from "./animated";
@@ -6,4 +7,5 @@ export * from "./Calendar";
 export * from "./GridItem";
 export * from "./ImportInputWrapper";
 export * from "./NewTabLink";
+export * from "./PopoverButton";
 export * from "./Schedule";

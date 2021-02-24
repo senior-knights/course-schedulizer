@@ -8,7 +8,7 @@ export const ImportButton = (btnProps: ButtonProps) => {
   return (
     <ImportInputWrapper>
       <Button color="primary" component="span" {...btnProps}>
-        Import CSV
+        Import Schedule
       </Button>
     </ImportInputWrapper>
   );
