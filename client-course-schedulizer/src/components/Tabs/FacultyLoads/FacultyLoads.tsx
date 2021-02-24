@@ -145,19 +145,28 @@ export const FacultyLoads = () => {
   } = useContext(AppContext);
 
   const handleCellClick = (cell: Cell<FacultyRow>) => {
-    if (cell.value) {
+    if (cell.value && typeof cell.value === "string") {
       const sectionNames = cell.value.split(", ");
       switch (cell.column.Header) {
         case "Fall Course Sections":
           setModalValues(findSection(schedule, sectionNames[0], Term.Fall));
+          setOpen(true);
           break;
         case "Spring Course Sections":
           setModalValues(findSection(schedule, sectionNames[0], Term.Spring));
+          setOpen(true);
+          break;
+        case "Summer Course Sections":
+          try {
+            setModalValues(findSection(schedule, sectionNames[0], Term.Summer));
+          } catch (e) {
+            setModalValues(findSection(schedule, sectionNames[0], Term.Interim));
+          }
+          setOpen(true);
           break;
         default:
           break;
       }
-      setOpen(true);
     }
   };
 
@@ -197,7 +206,7 @@ export const FacultyLoads = () => {
       <PopoverButton buttonTitle="Add Non-Teaching Load" popupId="addNonTeachingLoad">
         <AddNonTeachingLoadPopover />
       </PopoverButton>
-      <Modal onClose={handleClose} open={open}>
+      <Modal onClose={handleClose} open={open} style={{ overflowY: "scroll" }}>
         <Paper>
           <AddSectionPopover values={modalValues} />
         </Paper>

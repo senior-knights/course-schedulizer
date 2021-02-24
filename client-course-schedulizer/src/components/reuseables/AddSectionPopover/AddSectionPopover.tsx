@@ -62,7 +62,7 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
   const title = values ? "Update Section" : "Add Section";
 
   const locationValue = (
-    (values && `${values?.meeting.location.building} ${values?.meeting.location.roomNumber}`) ||
+    (values && `${values?.meeting?.location.building} ${values?.meeting?.location.roomNumber}`) ||
     ""
   ).trim();
   let defaultTerm = values?.section.term;
@@ -142,7 +142,7 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
           <GridItemTextField label="Location" value={locationValue} />
           <GridItemTextField
             label="Room Capacity"
-            value={(values?.meeting.location.roomCapacity || "").toString()}
+            value={(values?.meeting?.location.roomCapacity || "").toString()}
           />
           <GridItemTextField
             label="Faculty Hours"
@@ -177,8 +177,8 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
             label="Start Time"
             textFieldProps={{ fullWidth: true, type: "time" }}
             value={
-              values?.meeting.startTime
-                ? moment(values?.meeting.startTime, "h:mm A").format("HH:mm")
+              values?.meeting?.startTime
+                ? moment(values?.meeting?.startTime, "h:mm A").format("HH:mm")
                 : "08:00"
             }
           />
@@ -189,7 +189,7 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
                 endAdornment: <InputAdornment position="end">min</InputAdornment>,
               },
             }}
-            value={(values?.meeting.duration || "").toString()}
+            value={(values?.meeting?.duration || "").toString()}
           />
           <GridItemTextField label="Year" value={(values?.section.year || "").toString()} />
           <GridItemTextField label="Status" value={values?.section.status ?? "Active"} />
@@ -202,7 +202,7 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
             options={Object.values(Day).filter((day) => {
               return Object.values(Weekday).includes(day);
             })}
-            value={values?.meeting.days}
+            value={values?.meeting?.days}
           />
           <GridItemRadioGroup
             defaultValue={defaultTerm || Term.Fall}
