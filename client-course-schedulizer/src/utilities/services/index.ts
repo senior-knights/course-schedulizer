@@ -1,5 +1,6 @@
 export * from "./addNonTeachingLoadService";
 export * from "./addSectionService";
+export * from "./facultyLoadsService";
 export * from "./facultyScheduleService";
 export * from "./harmoniouslyService";
 export * from "./roomsScheduleService";
