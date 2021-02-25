@@ -9,43 +9,23 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
-import React, { useContext, useMemo, useState } from "react";
+import { Pagination } from "@material-ui/lab";
+import React, { ChangeEvent, useContext, useMemo, useState } from "react";
 import { Cell, Column, useTable } from "react-table";
 import { CourseSectionMeeting, createTable, FacultyRow, findSection, Term } from "utilities";
 import { AppContext } from "utilities/contexts";
 import { AddNonTeachingLoadPopover, AddSectionPopover, PopoverButton } from "../../reuseables";
 import "./FacultyLoads.scss";
 
+interface TermSections {
+  sections: string[];
+  term: Term;
+}
+
 export const FacultyLoads = () => {
   const {
     appState: { schedule },
   } = useContext(AppContext);
-
-  const handleCellClick = (cell: Cell<FacultyRow>) => {
-    if (cell.value && typeof cell.value === "string") {
-      const sectionNames = cell.value.split(", ");
-      switch (cell.column.Header) {
-        case "Fall Course Sections":
-          setModalValues(findSection(schedule, sectionNames[0], Term.Fall));
-          setOpen(true);
-          break;
-        case "Spring Course Sections":
-          setModalValues(findSection(schedule, sectionNames[0], Term.Spring));
-          setOpen(true);
-          break;
-        case "Summer Course Sections":
-          try {
-            setModalValues(findSection(schedule, sectionNames[0], Term.Summer));
-          } catch (e) {
-            setModalValues(findSection(schedule, sectionNames[0], Term.Interim));
-          }
-          setOpen(true);
-          break;
-        default:
-          break;
-      }
-    }
-  };
 
   const data = useMemo<FacultyRow[]>(() => {
     return createTable(schedule);
@@ -53,8 +33,62 @@ export const FacultyLoads = () => {
 
   const [open, setOpen] = useState(false);
   const [modalValues, setModalValues] = useState<CourseSectionMeeting>();
+  const [sectionNames, setSectionNames] = useState<TermSections>({ sections: [], term: Term.Fall });
+  const [page, setPage] = React.useState(1);
 
-  const handleClose = () => {
+  const handlePageChange = (event: ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+    const courseSectionMeeting = findSection(
+      schedule,
+      sectionNames.sections[value - 1],
+      sectionNames.term,
+    );
+    if (courseSectionMeeting !== null) {
+      setOpen(false);
+      setModalValues(courseSectionMeeting);
+      setOpen(true);
+    }
+  };
+
+  const handleCellClick = (cell: Cell<FacultyRow>) => {
+    const sectionStrList = cell.value.split(", ");
+    const courseSectionHeaders = [
+      "Fall Course Sections",
+      "Spring Course Sections",
+      "Summer Course Sections",
+    ];
+    if (courseSectionHeaders.includes(cell.column.Header as string)) {
+      let term: Term = Term.Fall;
+      switch (cell.column.Header) {
+        case "Fall Course Sections":
+          term = Term.Fall;
+          break;
+        case "Spring Course Sections":
+          term = Term.Spring;
+          break;
+        case "Summer Course Sections":
+          term = Term.Summer;
+          break;
+        default:
+          break;
+      }
+      let courseSectionMeeting = findSection(schedule, sectionStrList[0], term);
+      if (courseSectionMeeting === null) {
+        term = Term.Interim;
+        courseSectionMeeting = findSection(schedule, sectionStrList[0], Term.Interim);
+      }
+      if (courseSectionMeeting !== null) {
+        setModalValues(courseSectionMeeting);
+        setSectionNames({
+          sections: sectionStrList,
+          term,
+        });
+        setOpen(true);
+      }
+    }
+  };
+
+  const handleModalClose = () => {
     setOpen(false);
   };
 
@@ -79,8 +113,13 @@ export const FacultyLoads = () => {
   // https://react-table.tanstack.com/docs/quick-start
   return (
     <>
-      <Modal className="add-section-modal" onClose={handleClose} open={open}>
+      <Modal className="add-section-modal" onClose={handleModalClose} open={open}>
         <Paper className="add-section-modal-paper">
+          <Pagination
+            count={sectionNames.sections.length}
+            onChange={handlePageChange}
+            page={page}
+          />
           <AddSectionPopover values={modalValues} />
         </Paper>
       </Modal>

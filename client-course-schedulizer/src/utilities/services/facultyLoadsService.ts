@@ -138,14 +138,28 @@ export const findSection = (
   schedule: Schedule,
   sectionName: string,
   term: Term,
-): CourseSectionMeeting => {
+): CourseSectionMeeting | null => {
+  if (!sectionName) {
+    return null;
+  }
+
   const [prefix, number, letter] = sectionName.split("-");
-  const [course] = filter(schedule.courses, (c) => {
+  const courses = filter(schedule.courses, (c) => {
     return c.prefixes.includes(prefix) && c.number === number;
   });
-  const [section] = filter(course.sections, (s) => {
+  if (!courses.length) {
+    return null;
+  }
+  const [course] = courses;
+
+  const sections = filter(course.sections, (s) => {
     return s.letter === letter && s.term === term;
   });
+  if (!sections.length) {
+    return null;
+  }
+  const [section] = sections;
+
   return {
     course,
     meeting: section.meetings ? section.meetings[0] : emptyMeeting,
