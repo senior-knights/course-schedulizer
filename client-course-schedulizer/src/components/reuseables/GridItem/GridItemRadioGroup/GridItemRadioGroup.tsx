@@ -12,7 +12,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import "./GridItemRadioGroup.scss";
 
 interface GridItemRadioGroup {
-  defaultValue: string;
+  defaultValue?: string;
   label: string;
   name?: string;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -60,6 +60,7 @@ export const GridItemRadioGroup = ({
 };
 
 GridItemRadioGroup.defaultProps = {
+  defaultValue: undefined,
   name: undefined,
   onChange: undefined,
 };

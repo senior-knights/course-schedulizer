@@ -1,12 +1,12 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Grid, InputAdornment, Typography } from "@material-ui/core";
 import { GridItemCheckboxGroup, GridItemRadioGroup, GridItemTextField } from "components";
-import moment from "moment";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
   addSectionSchema,
   convertFromSemesterLength,
+  mapInternalTypesToInput,
   SectionInput,
   useAddSectionToSchedule,
   useDeleteSectionFromSchedule,
@@ -32,6 +32,7 @@ const SPACING = 2;
 export const AddSectionPopover = ({ values }: AddSectionPopover) => {
   const methods = useForm<SectionInput>({
     criteriaMode: "all",
+    defaultValues: mapInternalTypesToInput(values),
     resolver: yupResolver(addSectionSchema),
   });
   const [semesterLength, setSemesterLength] = useState<SemesterLengthOption>(
@@ -39,6 +40,14 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
   );
   const { addSectionToSchedule } = useAddSectionToSchedule();
   const { deleteSectionFromSchedule } = useDeleteSectionFromSchedule();
+
+  const { reset } = methods;
+
+  console.log(methods.getValues());
+
+  useEffect(() => {
+    reset(mapInternalTypesToInput(values));
+  }, [reset, values]);
 
   const onSubmit = (removeOldSection: boolean) => {
     return (data: SectionInput) => {
@@ -61,12 +70,6 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
   const isCustomSemester = semesterLength === SemesterLengthOption.CustomSemester;
   const title = values ? "Update Section" : "Add Section";
 
-  const locationValue = (
-    (values &&
-      values.meeting &&
-      `${values?.meeting?.location.building} ${values?.meeting?.location.roomNumber}`) ||
-    ""
-  ).trim();
   let defaultTerm = values?.section.term;
   if (Array.isArray(defaultTerm)) {
     [defaultTerm] = defaultTerm;
@@ -120,75 +123,36 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
           </Typography>
         </Box>
         <Grid container spacing={SPACING}>
-          <GridItemTextField
-            label="Department"
-            textFieldProps={{ autoFocus: true }}
-            value={values?.course.department}
-          />
+          <GridItemTextField label="Department" textFieldProps={{ autoFocus: true }} />
         </Grid>
         <Grid container spacing={SPACING}>
           {/* TODO: Dropdown for courses already in system */}
-          <GridItemTextField label="Prefix" value={values?.course.prefixes.join()} />
-          <GridItemTextField label="Number" value={values?.course.number} />
-          <GridItemTextField label="Section" value={values?.section.letter} />
-          <GridItemTextField label="Name" value={values?.course.name} />
-          <GridItemTextField
-            label="Instructional Method"
-            value={values?.section.instructionalMethod ?? "LEC"}
-          />
+          <GridItemTextField label="Prefix" />
+          <GridItemTextField label="Number" />
+          <GridItemTextField label="Section" />
+          <GridItemTextField label="Name" />
+          <GridItemTextField label="Instructional Method" />
         </Grid>
         <Grid container spacing={SPACING}>
           {/* TODO: Dropdown for instructors with option to add new one */}
-          <GridItemTextField label="Instructor" value={values?.section.instructors.join()} />
+          <GridItemTextField label="Instructor" />
           {/* TODO: Dropdown for rooms with option to add new one */}
-          <GridItemTextField label="Location" value={locationValue} />
-          <GridItemTextField
-            label="Room Capacity"
-            value={(values?.meeting?.location.roomCapacity || "").toString()}
-          />
-          <GridItemTextField
-            label="Faculty Hours"
-            value={(values?.section.facultyHours !== undefined
-              ? values?.section.facultyHours
-              : values?.course.facultyHours || ""
-            ).toString()}
-          />
-          <GridItemTextField
-            label="Student Hours"
-            value={(values?.section.studentHours !== undefined
-              ? values?.section.studentHours
-              : values?.course.studentHours || ""
-            ).toString()}
-          />
+          <GridItemTextField label="Location" />
+          <GridItemTextField label="Room Capacity" />
+          <GridItemTextField label="Faculty Hours" />
+          <GridItemTextField label="Student Hours" />
         </Grid>
         <Grid container spacing={SPACING}>
-          <GridItemTextField
-            label="Anticipated Size"
-            value={(values?.section.anticipatedSize || "").toString()}
-          />
-          <GridItemTextField label="Used" value={(values?.section.used || "").toString()} />
-          <GridItemTextField
-            label="Day 10 Used"
-            value={(values?.section.day10Used || "").toString()}
-          />
-          <GridItemTextField
-            label="Local Max"
-            value={(values?.section.localMax || "").toString()}
-          />
-          <GridItemTextField
-            label="Global Max"
-            value={(values?.section.globalMax || "").toString()}
-          />
+          <GridItemTextField label="Anticipated Size" />
+          <GridItemTextField label="Used" />
+          <GridItemTextField label="Day 10 Used" />
+          <GridItemTextField label="Local Max" />
+          <GridItemTextField label="Global Max" />
         </Grid>
         <Grid container spacing={SPACING}>
           <GridItemTextField
             label="Start Time"
             textFieldProps={{ fullWidth: true, type: "time" }}
-            value={
-              values?.meeting?.startTime
-                ? moment(values?.meeting?.startTime, "h:mm A").format("HH:mm")
-                : "08:00"
-            }
           />
           <GridItemTextField
             label="Duration"
@@ -197,10 +161,9 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
                 endAdornment: <InputAdornment position="end">min</InputAdornment>,
               },
             }}
-            value={(values?.meeting?.duration || "").toString()}
           />
-          <GridItemTextField label="Year" value={(values?.section.year || "").toString()} />
-          <GridItemTextField label="Status" value={values?.section.status ?? "Active"} />
+          <GridItemTextField label="Year" />
+          <GridItemTextField label="Status" />
           {/* This empty item just fills space */}
           <Grid item xs />
         </Grid>
@@ -212,13 +175,8 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
             })}
             value={values?.meeting?.days}
           />
+          <GridItemRadioGroup label="Term" options={Object.values(Term)} />
           <GridItemRadioGroup
-            defaultValue={defaultTerm || Term.Fall}
-            label="Term"
-            options={Object.values(Term)}
-          />
-          <GridItemRadioGroup
-            defaultValue={convertFromSemesterLength(values?.section.semesterLength)}
             label="Semester Length"
             onChange={onSemesterLengthChange}
             options={Object.values(SemesterLengthOption)}
@@ -226,13 +184,6 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
           <Grid item xs>
             {isHalfSemester && (
               <GridItemRadioGroup
-                defaultValue={
-                  values?.section.semesterLength &&
-                  convertFromSemesterLength(values?.section.semesterLength) ===
-                    SemesterLengthOption.HalfSemester
-                    ? values?.section.semesterLength
-                    : SemesterLength.HalfFirst
-                }
                 label="Half Semester"
                 options={Object.values(SemesterLength).filter((h) => {
                   return Object.values(Half).includes(h);
@@ -241,13 +192,6 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
             )}
             {isIntensiveSemester && (
               <GridItemRadioGroup
-                defaultValue={
-                  values?.section.semesterLength &&
-                  convertFromSemesterLength(values?.section.semesterLength) ===
-                    SemesterLengthOption.IntensiveSemester
-                    ? values?.section.semesterLength
-                    : SemesterLength.IntensiveA
-                }
                 label="Intensive Semester"
                 options={Object.values(SemesterLength).filter((i) => {
                   return Object.values(Intensive).includes(i);

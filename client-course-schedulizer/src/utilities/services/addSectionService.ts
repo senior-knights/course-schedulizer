@@ -1,4 +1,5 @@
 import { filter, indexOf, isEqual } from "lodash";
+import moment from "moment";
 import {
   instructorCase,
   locationCase,
@@ -24,31 +25,31 @@ import {
 
 // Defines interface for the section popover input
 export interface SectionInput {
-  anticipatedSize: Section["anticipatedSize"];
+  anticipatedSize?: Section["anticipatedSize"];
   comments: Section["comments"];
-  day10Used: Section["day10Used"];
+  day10Used?: Section["day10Used"];
   days: Meeting["days"];
   department: Course["department"];
-  duration: Meeting["duration"];
+  duration?: Meeting["duration"];
   facultyHours: Section["facultyHours"];
-  globalMax: Section["globalMax"];
+  globalMax?: Section["globalMax"];
   halfSemester: Half;
   instructionalMethod: Section["instructionalMethod"];
   instructor: Instructor;
-  intensiveSemester?: Intensive;
-  localMax: Section["localMax"];
+  intensiveSemester: Intensive;
+  localMax?: Section["localMax"];
   location: string;
   name: Course["name"];
   number: Course["number"];
   prefix: Prefix;
-  roomCapacity: Location["roomCapacity"];
+  roomCapacity?: Location["roomCapacity"];
   section: Section["letter"];
   semesterLength: SemesterLengthOption;
   startTime: Meeting["startTime"];
   status: Section["status"];
   studentHours: Section["studentHours"];
   term: Section["term"];
-  used: Section["used"];
+  used?: Section["used"];
   year: string; // Assume string till yearCase() decides
 }
 
@@ -148,6 +149,64 @@ export const mapInputToInternalTypes = (data: SectionInput) => {
   const newCourse: Course = createNewCourseFromInput(data);
 
   return { newCourse, newSection };
+};
+
+export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInput => {
+  const locationValue = (
+    (data &&
+      data.meeting &&
+      `${data?.meeting?.location.building} ${data?.meeting?.location.roomNumber}`) ||
+    ""
+  ).trim();
+
+  let defaultTerm = data?.section.term;
+  if (Array.isArray(defaultTerm)) {
+    [defaultTerm] = defaultTerm;
+  }
+
+  return {
+    anticipatedSize: data?.section.anticipatedSize,
+    comments: data?.section.comments ?? "",
+    day10Used: data?.section.day10Used,
+    days: data?.meeting?.days ?? [],
+    department: data?.course.department ?? "",
+    duration: data?.meeting?.duration,
+    facultyHours:
+      data?.section.facultyHours !== undefined
+        ? data?.section.facultyHours
+        : data?.course.facultyHours || 0,
+    globalMax: data?.section.globalMax,
+    halfSemester: ((data?.section.semesterLength &&
+    convertFromSemesterLength(data?.section.semesterLength) === SemesterLengthOption.HalfSemester
+      ? data?.section.semesterLength
+      : SemesterLength.HalfFirst) as unknown) as Half,
+    instructionalMethod: data?.section.instructionalMethod ?? "LEC",
+    instructor: data?.section.instructors.join() || "",
+    intensiveSemester: ((data?.section.semesterLength &&
+    convertFromSemesterLength(data?.section.semesterLength) ===
+      SemesterLengthOption.IntensiveSemester
+      ? data?.section.semesterLength
+      : SemesterLength.IntensiveA) as unknown) as Intensive,
+    localMax: data?.section.localMax,
+    location: locationValue,
+    name: data?.course.name || "",
+    number: data?.course.number || "",
+    prefix: data?.course.prefixes.join() || "",
+    roomCapacity: data?.meeting?.location.roomCapacity,
+    section: data?.section.letter || "",
+    semesterLength: convertFromSemesterLength(data?.section.semesterLength),
+    startTime: data?.meeting?.startTime
+      ? moment(data?.meeting?.startTime, "h:mm A").format("HH:mm")
+      : "08:00",
+    status: data?.section.status ?? "Active",
+    studentHours:
+      data?.section.studentHours !== undefined
+        ? data?.section.studentHours
+        : data?.course.studentHours || 0,
+    term: defaultTerm || Term.Fall,
+    used: data?.section.used,
+    year: data?.section.year?.toString() ?? "",
+  };
 };
 
 const createNewSectionFromInput = (data: SectionInput): Section => {
