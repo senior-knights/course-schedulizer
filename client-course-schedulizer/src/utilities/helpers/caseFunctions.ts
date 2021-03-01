@@ -209,9 +209,12 @@ export const nonTeachingActivityCallback = (value: string, params: CaseCallbackP
   instructionalMethodCallback(value, params);
 };
 
-export const startTimeCase = (value: string): string => {
-  const startMoment = moment(value, "h:mm A");
-  return startMoment.isValid() ? startMoment.format("h:mm A") : "";
+export const startTimeCase = (value?: string): string => {
+  if (value) {
+    const startMoment = moment(value, "h:mm A");
+    return startMoment.isValid() ? startMoment.format("h:mm A") : "";
+  }
+  return "";
 };
 
 export const locationCase = (value: string): string[] => {

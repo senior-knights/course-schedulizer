@@ -90,8 +90,8 @@ const getTermStr = (year: Section["year"], term: Term) => {
         ? String(year).slice(-2)
         : String(year + 1).slice(-2)
       : term === Term.Fall
-      ? String(Number(year.slice(-2)) - 1)
-      : year.slice(-2)
+      ? String(Number(year?.slice(-2)) - 1)
+      : year?.slice(-2)
   }/${term}`;
 };
 
