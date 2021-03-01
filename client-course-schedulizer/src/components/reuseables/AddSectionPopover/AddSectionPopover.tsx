@@ -43,8 +43,6 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
 
   const { reset } = methods;
 
-  console.log(methods.getValues());
-
   useEffect(() => {
     reset(mapInternalTypesToInput(values));
   }, [reset, values]);
@@ -169,11 +167,11 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
         </Grid>
         <Grid container spacing={SPACING}>
           <GridItemCheckboxGroup
+            initialValue={values?.meeting?.days}
             label="Days"
             options={Object.values(Day).filter((day) => {
               return Object.values(Weekday).includes(day);
             })}
-            value={values?.meeting?.days}
           />
           <GridItemRadioGroup label="Term" options={Object.values(Term)} />
           <GridItemRadioGroup

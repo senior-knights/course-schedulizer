@@ -7,21 +7,47 @@ import {
   FormLabel,
   Grid,
 } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useInput } from "utilities";
 import "./GridItemCheckboxGroup.scss";
 
 interface GridItemCheckboxGroup {
+  initialValue?: string[];
   label: string;
   name?: string;
   options: string[];
-  value?: string[];
 }
 
-export const GridItemCheckboxGroup = ({ label, name, options, value }: GridItemCheckboxGroup) => {
+export const GridItemCheckboxGroup = ({
+  label,
+  name,
+  options,
+  initialValue,
+}: GridItemCheckboxGroup) => {
   const { register, errors } = useFormContext();
   const { name: nameFallback, errorMessage } = useInput(label, errors);
+  const [value, onValueChange] = useState(initialValue);
+
+  useEffect(() => {
+    onValueChange(initialValue);
+  }, [initialValue]);
+
+  const onCheckboxChange = (opt: string) => {
+    return () => {
+      if (value) {
+        if (value?.includes(opt)) {
+          const valueCopy = [...value];
+          valueCopy.splice(valueCopy.indexOf(opt), 1);
+          onValueChange(valueCopy);
+        } else {
+          onValueChange([...value, opt]);
+        }
+      } else {
+        onValueChange([opt]);
+      }
+    };
+  };
 
   return (
     <Grid item xs>
@@ -33,7 +59,9 @@ export const GridItemCheckboxGroup = ({ label, name, options, value }: GridItemC
               return (
                 <Grid key={opt} item>
                   <FormControlLabel
-                    control={<Checkbox defaultChecked={value?.includes(opt)} />}
+                    control={
+                      <Checkbox checked={value?.includes(opt)} onChange={onCheckboxChange(opt)} />
+                    }
                     inputRef={register}
                     label={opt}
                     name={`${name ?? nameFallback}[${i}]`}
@@ -51,6 +79,6 @@ export const GridItemCheckboxGroup = ({ label, name, options, value }: GridItemC
 };
 
 GridItemCheckboxGroup.defaultProps = {
+  initialValue: [],
   name: undefined,
-  value: [],
 };

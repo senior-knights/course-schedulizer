@@ -28,14 +28,13 @@ export const GridItemRadioGroup = ({
   onChange,
   options,
 }: GridItemRadioGroup) => {
-  const { register, control } = useFormContext();
+  const { control } = useFormContext();
 
   return (
     <Grid item xs>
       <FormControl component="fieldset">
         <FormLabel component="legend">{label}</FormLabel>
         <Controller
-          ref={register()}
           as={
             <RadioGroup>
               {options.map((opt) => {
