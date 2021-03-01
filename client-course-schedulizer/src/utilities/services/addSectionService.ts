@@ -1,4 +1,4 @@
-import { filter, indexOf, isEqual } from "lodash";
+import { filter, indexOf, isEqual, map } from "lodash";
 import moment from "moment";
 import {
   instructorCase,
@@ -10,6 +10,7 @@ import {
 import {
   Course,
   CourseSectionMeeting,
+  Day,
   Half,
   Instructor,
   Intensive,
@@ -21,6 +22,7 @@ import {
   SemesterLength,
   SemesterLengthOption,
   Term,
+  Weekday,
 } from "utilities/interfaces";
 
 // Defines interface for the section popover input
@@ -164,11 +166,19 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
     [defaultTerm] = defaultTerm;
   }
 
+  const weekdays = Object.values(Day).filter((day) => {
+    return Object.values(Weekday).includes(day);
+  });
+
+  const days = (map(weekdays, (wd: Day) => {
+    return data?.meeting?.days?.includes(wd) ? wd : false;
+  }) as unknown) as Day[];
+
   return {
     anticipatedSize: data?.section.anticipatedSize,
     comments: data?.section.comments ?? "",
     day10Used: data?.section.day10Used,
-    days: data?.meeting?.days ?? [],
+    days,
     department: data?.course.department ?? "",
     duration: data?.meeting?.duration,
     facultyHours:

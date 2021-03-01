@@ -14,7 +14,7 @@ const emptyStringToNull = <T>(value: T, originalValue: T) => {
 /*
   Removes unchecked days from the list. Helper for yup
 */
-const removeUncheckedValues = (valueArr: string[]) => {
+export const removeUncheckedValues = (valueArr: string[]) => {
   return valueArr.filter((value: boolean | string) => {
     return value;
   });

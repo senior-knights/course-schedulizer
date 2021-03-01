@@ -1,12 +1,14 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Grid, InputAdornment, Typography } from "@material-ui/core";
 import { GridItemCheckboxGroup, GridItemRadioGroup, GridItemTextField } from "components";
+import { isEqual } from "lodash";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
   addSectionSchema,
   convertFromSemesterLength,
   mapInternalTypesToInput,
+  removeUncheckedValues,
   SectionInput,
   useAddSectionToSchedule,
   useDeleteSectionFromSchedule,
@@ -41,11 +43,18 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
   const { addSectionToSchedule } = useAddSectionToSchedule();
   const { deleteSectionFromSchedule } = useDeleteSectionFromSchedule();
 
-  const { reset } = methods;
+  const { reset, getValues } = methods;
 
   useEffect(() => {
-    reset(mapInternalTypesToInput(values));
-  }, [reset, values]);
+    const inputValues = mapInternalTypesToInput(values);
+    const formValues = getValues();
+    inputValues.days = removeUncheckedValues(inputValues.days as string[]) as Day[];
+
+    // Update the form values if they have changed
+    if (!isEqual(inputValues, formValues)) {
+      reset(inputValues);
+    }
+  }, [reset, getValues, values]);
 
   const onSubmit = (removeOldSection: boolean) => {
     return (data: SectionInput) => {

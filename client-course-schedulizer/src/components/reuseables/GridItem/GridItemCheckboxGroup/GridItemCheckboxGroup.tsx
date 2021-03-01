@@ -7,7 +7,7 @@ import {
   FormLabel,
   Grid,
 } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useInput } from "utilities";
 import "./GridItemCheckboxGroup.scss";
@@ -33,20 +33,19 @@ export const GridItemCheckboxGroup = ({
     onValueChange(initialValue);
   }, [initialValue]);
 
-  const onCheckboxChange = (opt: string) => {
-    return () => {
-      if (value) {
-        if (value?.includes(opt)) {
-          const valueCopy = [...value];
-          valueCopy.splice(valueCopy.indexOf(opt), 1);
-          onValueChange(valueCopy);
-        } else {
-          onValueChange([...value, opt]);
-        }
+  const onCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const opt = e.target.value;
+    if (value) {
+      if (value?.includes(opt)) {
+        const valueCopy = [...value];
+        valueCopy.splice(valueCopy.indexOf(opt), 1);
+        onValueChange(valueCopy);
       } else {
-        onValueChange([opt]);
+        onValueChange([...value, opt]);
       }
-    };
+    } else {
+      onValueChange([opt]);
+    }
   };
 
   return (
@@ -60,7 +59,10 @@ export const GridItemCheckboxGroup = ({
                 <Grid key={opt} item>
                   <FormControlLabel
                     control={
-                      <Checkbox checked={value?.includes(opt)} onChange={onCheckboxChange(opt)} />
+                      <Checkbox
+                        checked={value?.includes(opt) ?? false}
+                        onChange={onCheckboxChange}
+                      />
                     }
                     inputRef={register}
                     label={opt}
@@ -76,9 +78,4 @@ export const GridItemCheckboxGroup = ({
       </FormControl>
     </Grid>
   );
-};
-
-GridItemCheckboxGroup.defaultProps = {
-  initialValue: [],
-  name: undefined,
 };
