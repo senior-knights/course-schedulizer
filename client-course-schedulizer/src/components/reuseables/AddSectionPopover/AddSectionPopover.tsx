@@ -46,6 +46,7 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
   const { reset, getValues } = methods;
 
   useEffect(() => {
+    setSemesterLength(convertFromSemesterLength(values?.section.semesterLength));
     const inputValues = mapInternalTypesToInput(values);
     const formValues = getValues();
     inputValues.days = removeUncheckedValues(inputValues.days as string[]) as Day[];
