@@ -4,6 +4,7 @@ import { Schedule, Term } from "./dataInterfaces";
 // structure for the global app state
 export interface AppState {
   classes: string[];
+  fileUrl: string;
   professors: string[];
   rooms: string[];
   schedule: Schedule;
@@ -13,10 +14,11 @@ export interface AppState {
 }
 
 // Defaults for the app state when it launches, will try to load
-//  previous appState to launch app from. If no previous state saved,
-//  will default to the object below.
+//  previous appState (with cleared fileUrl) to launch app from.
+//  If no previous state saved, will default to the object below.
 export const initialAppState: AppState = loadLocal("appState") || {
   classes: [],
+  fileUrl: "",
   professors: [],
   rooms: [],
   schedule: { courses: [] },
@@ -28,8 +30,9 @@ export const initialAppState: AppState = loadLocal("appState") || {
 // structure of actions that can be sent to app dispatch
 export interface AppAction {
   payload: {
+    fileUrl?: string;
     schedule?: Schedule;
     term?: Term;
   };
-  type: "setScheduleData" | "setSelectedTerm"; // add | to add more actions in the future
+  type: "setScheduleData" | "setSelectedTerm" | "setFileUrl"; // add | to add more actions in the future
 }

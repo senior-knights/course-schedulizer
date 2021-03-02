@@ -76,7 +76,7 @@ export const useImportFile = () => {
   return onInputChange;
 };
 
-const updateScheduleInContext = async (
+export const updateScheduleInContext = async (
   schedule: Schedule,
   scheduleJSON: Schedule,
   appDispatch: AppContext["appDispatch"],
