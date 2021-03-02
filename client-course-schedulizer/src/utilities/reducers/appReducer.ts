@@ -1,5 +1,5 @@
 import { voidFn } from "utilities";
-import { AppAction, AppState, Term } from "utilities/interfaces";
+import { AppAction, AppState, ColorBy, Term } from "utilities/interfaces";
 import { getClasses, getMinAndMaxTimes, getProfs, getRooms } from "utilities/services";
 
 /*
@@ -37,6 +37,12 @@ export const reducer = (actionCallback: (item: AppState) => void = voidFn) => {
         let { fileUrl } = action.payload;
         fileUrl = fileUrl || "";
         newState = { ...state, fileUrl };
+        break;
+      }
+      case "setColorBy": {
+        let { colorBy } = action.payload;
+        colorBy = colorBy || ColorBy.Level;
+        newState = { ...state, colorBy };
         break;
       }
       default:
