@@ -115,6 +115,7 @@ export const FacultyLoads = () => {
   // https://react-table.tanstack.com/docs/quick-start
   return (
     <>
+      {/* TODO: Make this a component */}
       <Modal className="add-section-modal" onClose={handleModalClose} open={open}>
         <Paper className="add-section-modal-paper">
           <Pagination
