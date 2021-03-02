@@ -91,11 +91,7 @@ export const createTable = (schedule: Schedule): FacultyRow[] => {
           sectionName,
         };
         if (section.isNonTeaching) {
-          updateRow({
-            ...updateArgs,
-            sectionName: section.instructionalMethod ?? "",
-            termName: "other",
-          });
+          updateRow({ ...updateArgs, sectionName: section.instructionalMethod, termName: "other" });
         } else {
           switch (section.term) {
             case Term.Fall:

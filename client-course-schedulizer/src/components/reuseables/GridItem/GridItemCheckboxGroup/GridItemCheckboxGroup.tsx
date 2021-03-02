@@ -79,8 +79,3 @@ export const GridItemCheckboxGroup = ({
     </Grid>
   );
 };
-
-GridItemCheckboxGroup.defaultProps = {
-  initialValue: undefined,
-  name: undefined,
-};

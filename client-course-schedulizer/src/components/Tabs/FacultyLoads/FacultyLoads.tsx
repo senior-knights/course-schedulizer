@@ -51,41 +51,39 @@ export const FacultyLoads = () => {
   };
 
   const handleCellClick = (cell: Cell<FacultyRow>) => {
-    if (typeof cell.value === "string") {
-      const sectionStrList = cell.value.split(", ");
-      const courseSectionHeaders = [
-        "Fall Course Sections",
-        "Spring Course Sections",
-        "Summer Course Sections",
-      ];
-      if (courseSectionHeaders.includes(cell.column.Header as string)) {
-        let term: Term = Term.Fall;
-        switch (cell.column.Header) {
-          case "Fall Course Sections":
-            term = Term.Fall;
-            break;
-          case "Spring Course Sections":
-            term = Term.Spring;
-            break;
-          case "Summer Course Sections":
-            term = Term.Summer;
-            break;
-          default:
-            break;
-        }
-        let courseSectionMeeting = findSection(schedule, sectionStrList[0], term);
-        if (courseSectionMeeting === null) {
-          term = Term.Interim;
-          courseSectionMeeting = findSection(schedule, sectionStrList[0], Term.Interim);
-        }
-        if (courseSectionMeeting !== null) {
-          setModalValues(courseSectionMeeting);
-          setSectionNames({
-            sections: sectionStrList,
-            term,
-          });
-          setOpen(true);
-        }
+    const sectionStrList = cell.value.split(", ");
+    const courseSectionHeaders = [
+      "Fall Course Sections",
+      "Spring Course Sections",
+      "Summer Course Sections",
+    ];
+    if (courseSectionHeaders.includes(cell.column.Header as string)) {
+      let term: Term = Term.Fall;
+      switch (cell.column.Header) {
+        case "Fall Course Sections":
+          term = Term.Fall;
+          break;
+        case "Spring Course Sections":
+          term = Term.Spring;
+          break;
+        case "Summer Course Sections":
+          term = Term.Summer;
+          break;
+        default:
+          break;
+      }
+      let courseSectionMeeting = findSection(schedule, sectionStrList[0], term);
+      if (courseSectionMeeting === null) {
+        term = Term.Interim;
+        courseSectionMeeting = findSection(schedule, sectionStrList[0], Term.Interim);
+      }
+      if (courseSectionMeeting !== null) {
+        setModalValues(courseSectionMeeting);
+        setSectionNames({
+          sections: sectionStrList,
+          term,
+        });
+        setOpen(true);
       }
     }
   };

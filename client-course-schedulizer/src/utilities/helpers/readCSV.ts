@@ -136,7 +136,7 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
   // TODO: What about TBA meetings where the location is specified but not the time
   //       (currently allowing these causes the app to crash)
   section.meetings = meetings.filter((meeting) => {
-    return meeting.days?.length > 0 && meeting.duration && meeting.duration > 0;
+    return meeting.days?.length > 0 && meeting.duration > 0;
   });
 
   // Check if there is already a course in the schedule with the same prefix and number
