@@ -1,5 +1,4 @@
 import { filter } from "lodash";
-import { Cell } from "react-table";
 import {
   Course,
   CourseSectionMeeting,
@@ -168,7 +167,7 @@ export const findSection = (
   };
 };
 
-interface CourseSectionMeetingTermSections {
+export interface CourseSectionMeetingTermSections {
   csm: CourseSectionMeeting | null;
   sectionList: string[];
   term: Term;
@@ -176,17 +175,18 @@ interface CourseSectionMeetingTermSections {
 
 export const getCourseSectionMeetingFromCell = (
   schedule: Schedule,
-  cell: Cell<FacultyRow>,
+  cellValue: string,
+  cellHeader: string,
 ): CourseSectionMeetingTermSections => {
-  const sectionStrList = cell.value.split(", ");
+  const sectionStrList = cellValue.split(", ");
   const courseSectionHeaders = [
     "Fall Course Sections",
     "Spring Course Sections",
     "Summer Course Sections",
   ];
-  if (courseSectionHeaders.includes(cell.column.Header as string)) {
+  if (courseSectionHeaders.includes(cellHeader)) {
     let term: Term = Term.Fall;
-    switch (cell.column.Header) {
+    switch (cellHeader) {
       case "Fall Course Sections":
         term = Term.Fall;
         break;
@@ -218,5 +218,5 @@ export const getCourseSectionMeetingFromCell = (
 };
 
 export interface UpdateSectionModalPaginationRef {
-  handleModalOpen: (csm: CourseSectionMeeting, sectionList: string[], term: Term) => void;
+  handleModalOpen: (csmTermSections: CourseSectionMeetingTermSections) => void;
 }

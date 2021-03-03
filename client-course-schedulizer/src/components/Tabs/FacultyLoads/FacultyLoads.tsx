@@ -34,10 +34,13 @@ export const FacultyLoads = () => {
 
   const handleCellClick = (cell: Cell<FacultyRow>) => {
     if (typeof cell.value === "string") {
-      const { csm, sectionList, term } = getCourseSectionMeetingFromCell(schedule, cell);
-      if (csm !== null) {
-        // eslint-disable-next-line no-unused-expressions
-        updateSectionModalRef.current?.handleModalOpen(csm, sectionList, term);
+      const cellData = getCourseSectionMeetingFromCell(
+        schedule,
+        cell.value,
+        cell.column.Header as string,
+      );
+      if (cellData.csm && updateSectionModalRef.current) {
+        updateSectionModalRef.current.handleModalOpen(cellData);
       }
     }
   };

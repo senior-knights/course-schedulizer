@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import {
   CourseSectionMeeting,
+  CourseSectionMeetingTermSections,
   findSection,
   Term,
   UpdateSectionModalPaginationRef,
@@ -54,13 +55,15 @@ export const UpdateSectionModalPagination = forwardRef(
       setOpen(false);
     };
 
-    const handleModalOpen = (csm: CourseSectionMeeting, sectionList: string[], term: Term) => {
-      setModalValues(csm);
-      setSectionNames({
-        sections: sectionList,
-        term,
-      });
-      setOpen(true);
+    const handleModalOpen = ({ csm, sectionList, term }: CourseSectionMeetingTermSections) => {
+      if (csm) {
+        setModalValues(csm);
+        setSectionNames({
+          sections: sectionList,
+          term,
+        });
+        setOpen(true);
+      }
     };
 
     useImperativeHandle(ref, () => {
