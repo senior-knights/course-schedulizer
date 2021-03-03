@@ -17,6 +17,13 @@ interface MappedSection {
   newSection: Section;
 }
 
+interface AddToScheduleParams {
+  newCourse: Course;
+  newSection: Section;
+  oldData: CourseSectionMeeting | undefined;
+  removeOldSection: boolean;
+}
+
 export const useAddSectionToSchedule = () => {
   const {
     appState: { schedule },
@@ -32,16 +39,26 @@ export const useAddSectionToSchedule = () => {
   ) => {
     setIsCSVLoading(true);
     const { newSection, newCourse }: MappedSection = mapInputToInternalTypes(data);
-    handleOldSection(oldData, newSection, removeOldSection, schedule);
-    insertSectionCourse(schedule, newSection, newCourse);
-    appDispatch({ payload: { schedule }, type: "setScheduleData" });
-    setIsCSVLoading(false);
+    addToSchedule({ newCourse, newSection, oldData, removeOldSection });
   };
 
-  const addNonTeachingLoadToSchedule = (data: NonTeachingLoadInput) => {
+  const addNonTeachingLoadToSchedule = (
+    data: NonTeachingLoadInput,
+    oldData: CourseSectionMeeting | undefined,
+    removeOldSection = false,
+  ) => {
     setIsCSVLoading(true);
     const { newSection, newCourse }: MappedSection = mapNonTeachingLoadInput(data);
-    // handleOldSection(oldData, newSection, removeOldSection, schedule);
+    addToSchedule({ newCourse, newSection, oldData, removeOldSection });
+  };
+
+  const addToSchedule = ({
+    newCourse,
+    newSection,
+    oldData,
+    removeOldSection,
+  }: AddToScheduleParams) => {
+    handleOldSection(oldData, newSection, removeOldSection, schedule);
     insertSectionCourse(schedule, newSection, newCourse);
     appDispatch({ payload: { schedule }, type: "setScheduleData" });
     setIsCSVLoading(false);

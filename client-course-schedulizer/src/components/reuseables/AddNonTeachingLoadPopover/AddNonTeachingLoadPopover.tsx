@@ -12,7 +12,9 @@ import {
   removeUncheckedValues,
   Term,
   useAddSectionToSchedule,
+  useDeleteSectionFromSchedule,
 } from "utilities";
+import "./AddNonTeachingLoadPopover.scss";
 
 const SPACING = 2;
 
@@ -23,9 +25,9 @@ interface AddNonTeachingLoadPopover {
 export const AddNonTeachingLoadPopover = ({ values }: AddNonTeachingLoadPopover) => {
   const { addNonTeachingLoadToSchedule } = useAddSectionToSchedule();
 
-  const onSubmit = () => {
+  const onSubmit = (removeOldActivity: boolean) => {
     return (data: NonTeachingLoadInput) => {
-      addNonTeachingLoadToSchedule(data);
+      addNonTeachingLoadToSchedule(data, values, removeOldActivity);
     };
   };
 
@@ -33,6 +35,14 @@ export const AddNonTeachingLoadPopover = ({ values }: AddNonTeachingLoadPopover)
     criteriaMode: "all",
     resolver: yupResolver(addNonTeachingLoadSchema),
   });
+
+  const { deleteSectionFromSchedule } = useDeleteSectionFromSchedule();
+
+  const deleteSection = () => {
+    return () => {
+      deleteSectionFromSchedule(values);
+    };
+  };
 
   const { reset, getValues } = methods;
 
@@ -52,7 +62,7 @@ export const AddNonTeachingLoadPopover = ({ values }: AddNonTeachingLoadPopover)
       <form className="popover-container">
         <Box>
           <Typography className="popover-title" variant="h4">
-            Add Non-Teaching Activity
+            {values ? "Update Non-Teaching Activity" : "Add Non-Teaching Activity"}
           </Typography>
         </Box>
         <Grid container spacing={SPACING}>
@@ -71,9 +81,24 @@ export const AddNonTeachingLoadPopover = ({ values }: AddNonTeachingLoadPopover)
             options={Object.values(Term)}
           />
         </Grid>
-        <Button color="primary" onClick={methods.handleSubmit(onSubmit())} variant="contained">
-          Submit
-        </Button>
+        <Grid className="popover-buttons" item>
+          <Button
+            color="primary"
+            onClick={methods.handleSubmit(onSubmit(values !== undefined))}
+            variant="contained"
+          >
+            {values ? "Update Activity" : "Add Activity"}
+          </Button>
+          {values && (
+            <Button
+              color="secondary"
+              onClick={methods.handleSubmit(deleteSection())}
+              variant="contained"
+            >
+              Delete Activity
+            </Button>
+          )}
+        </Grid>
       </form>
     </FormProvider>
   );
