@@ -166,3 +166,57 @@ export const findSection = (
     section,
   };
 };
+
+export interface CourseSectionMeetingTermSections {
+  csm: CourseSectionMeeting | null;
+  sectionList: string[];
+  term: Term;
+}
+
+export const getCourseSectionMeetingFromCell = (
+  schedule: Schedule,
+  cellValue: string,
+  cellHeader: string,
+): CourseSectionMeetingTermSections => {
+  const sectionStrList = cellValue.split(", ");
+  const courseSectionHeaders = [
+    "Fall Course Sections",
+    "Spring Course Sections",
+    "Summer Course Sections",
+  ];
+  if (courseSectionHeaders.includes(cellHeader)) {
+    let term: Term = Term.Fall;
+    switch (cellHeader) {
+      case "Fall Course Sections":
+        term = Term.Fall;
+        break;
+      case "Spring Course Sections":
+        term = Term.Spring;
+        break;
+      case "Summer Course Sections":
+        term = Term.Summer;
+        break;
+      default:
+        break;
+    }
+    let courseSectionMeeting = findSection(schedule, sectionStrList[0], term);
+    if (courseSectionMeeting === null) {
+      term = Term.Interim;
+      courseSectionMeeting = findSection(schedule, sectionStrList[0], Term.Interim);
+    }
+    return {
+      csm: courseSectionMeeting,
+      sectionList: sectionStrList,
+      term,
+    };
+  }
+  return {
+    csm: null,
+    sectionList: sectionStrList,
+    term: Term.Fall,
+  };
+};
+
+export interface UpdateSectionModalPaginationRef {
+  handleModalOpen: (csmTermSections: CourseSectionMeetingTermSections) => void;
+}
