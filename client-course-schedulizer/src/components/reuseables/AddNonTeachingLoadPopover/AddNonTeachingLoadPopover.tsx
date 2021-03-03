@@ -1,18 +1,26 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Grid, Typography } from "@material-ui/core";
 import { GridItemCheckboxGroup, GridItemTextField } from "components";
-import React from "react";
+import { isEqual } from "lodash";
+import React, { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
   addNonTeachingLoadSchema,
+  CourseSectionMeeting,
+  mapNonTeachingLoadValuesToInput,
   NonTeachingLoadInput,
+  removeUncheckedValues,
   Term,
   useAddSectionToSchedule,
 } from "utilities";
 
 const SPACING = 2;
 
-export const AddNonTeachingLoadPopover = () => {
+interface AddNonTeachingLoadPopover {
+  values?: CourseSectionMeeting;
+}
+
+export const AddNonTeachingLoadPopover = ({ values }: AddNonTeachingLoadPopover) => {
   const { addNonTeachingLoadToSchedule } = useAddSectionToSchedule();
 
   const onSubmit = () => {
@@ -25,6 +33,20 @@ export const AddNonTeachingLoadPopover = () => {
     criteriaMode: "all",
     resolver: yupResolver(addNonTeachingLoadSchema),
   });
+
+  const { reset, getValues } = methods;
+
+  useEffect(() => {
+    const inputValues = mapNonTeachingLoadValuesToInput(values);
+    const formValues = getValues();
+    inputValues.terms = removeUncheckedValues(inputValues.terms as string[]) as Term[];
+
+    // Update the form values if they have changed
+    if (!isEqual(inputValues, formValues)) {
+      reset(inputValues);
+    }
+  }, [reset, getValues, values]);
+
   return (
     <FormProvider {...methods}>
       <form className="popover-container">
@@ -43,7 +65,11 @@ export const AddNonTeachingLoadPopover = () => {
           <GridItemTextField label="Faculty Hours" />
         </Grid>
         <Grid container spacing={SPACING}>
-          <GridItemCheckboxGroup label="Terms" options={Object.values(Term)} />
+          <GridItemCheckboxGroup
+            initialValue={values?.section.term as string[]}
+            label="Terms"
+            options={Object.values(Term)}
+          />
         </Grid>
         <Button color="primary" onClick={methods.handleSubmit(onSubmit())} variant="contained">
           Submit
@@ -51,4 +77,8 @@ export const AddNonTeachingLoadPopover = () => {
       </form>
     </FormProvider>
   );
+};
+
+AddNonTeachingLoadPopover.defaultProps = {
+  values: undefined,
 };

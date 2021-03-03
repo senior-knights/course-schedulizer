@@ -8,6 +8,7 @@ import {
   Section,
   Term,
 } from "utilities";
+import { Instructor } from "utilities/interfaces";
 
 type hourKeys = "fallHours" | "springHours" | "summerHours" | "totalHours" | "otherHours";
 type sectionKeys =
@@ -59,9 +60,9 @@ const updateRow = ({
       ? Number(prevRow[termHoursProp]) / section.instructors.length + facultyHours
       : facultyHours;
 
-    if (termName === "other") {
-      prevRow[termCourseSectionProp] += ` (${facultyHours})`;
-    }
+    // if (termName === "other") {
+    //   prevRow[termCourseSectionProp] += ` (${facultyHours})`;
+    // }
   } else {
     newRow[termCourseSectionProp] = sectionName;
     newRow[termHoursProp] = facultyHours;
@@ -219,4 +220,67 @@ export const getCourseSectionMeetingFromCell = (
 
 export interface UpdateSectionModalPaginationRef {
   handleModalOpen: (csmTermSections: CourseSectionMeetingTermSections) => void;
+}
+
+export const findNonTeachingLoad = (
+  schedule: Schedule,
+  nonTeachingLoad: string,
+  instructor: Instructor,
+): CourseSectionMeeting | null => {
+  if (!nonTeachingLoad) {
+    return null;
+  }
+
+  const courses = filter(schedule.courses, (c) => {
+    return c.prefixes.length === 0 && c.number === "";
+  });
+  if (!courses.length) {
+    return null;
+  }
+  const [course] = courses;
+
+  const sections = filter(course.sections, (s) => {
+    return (
+      s.isNonTeaching === true &&
+      s.instructionalMethod === nonTeachingLoad &&
+      s.instructors.includes(instructor)
+    );
+  });
+  if (!sections.length) {
+    return null;
+  }
+  const [section] = sections;
+
+  return {
+    course,
+    meeting: emptyMeeting,
+    section,
+  };
+};
+
+export interface CourseSectionMeetingInstructorNonTeachingLoads {
+  csm: CourseSectionMeeting | null;
+  instructor: Instructor;
+  nonTeachingLoads: string[];
+}
+
+export const getNonTeachingLoadsFromCell = (
+  schedule: Schedule,
+  cellValue: string,
+  instructor: Instructor,
+): CourseSectionMeetingInstructorNonTeachingLoads => {
+  const nonTeachingLoadStrList = cellValue.split(", ");
+  const courseSectionMeeting = findNonTeachingLoad(schedule, nonTeachingLoadStrList[0], instructor);
+
+  return {
+    csm: courseSectionMeeting,
+    instructor,
+    nonTeachingLoads: nonTeachingLoadStrList,
+  };
+};
+
+export interface UpdateNonTeachingLoadModalPaginationRef {
+  handleModalOpen: (
+    csmInstructorNonTeachingLoads: CourseSectionMeetingInstructorNonTeachingLoads,
+  ) => void;
 }

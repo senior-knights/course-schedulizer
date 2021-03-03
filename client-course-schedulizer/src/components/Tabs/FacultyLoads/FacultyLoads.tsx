@@ -8,18 +8,22 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
+import { UpdateNonTeachingLoadModalPagination, UpdateSectionModalPagination } from "components";
 import React, { useContext, useMemo, useRef } from "react";
 import { Cell, Column, useTable } from "react-table";
 import {
+  CourseSectionMeetingInstructorNonTeachingLoads,
+  CourseSectionMeetingTermSections,
   createTable,
   FacultyRow,
   getCourseSectionMeetingFromCell,
+  getNonTeachingLoadsFromCell,
+  UpdateNonTeachingLoadModalPaginationRef,
   UpdateSectionModalPaginationRef,
 } from "utilities";
 import { AppContext } from "utilities/contexts";
 import { AddNonTeachingLoadPopover, PopoverButton } from "../../reuseables";
 import "./FacultyLoads.scss";
-import { UpdateSectionModalPagination } from "./UpdateSectionModalPagination";
 
 export const FacultyLoads = () => {
   const {
@@ -31,16 +35,25 @@ export const FacultyLoads = () => {
   }, [schedule]);
 
   const updateSectionModalRef = useRef<UpdateSectionModalPaginationRef>(null);
+  const updateNonTeachingLoadModalRef = useRef<UpdateNonTeachingLoadModalPaginationRef>(null);
 
   const handleCellClick = (cell: Cell<FacultyRow>) => {
     if (typeof cell.value === "string") {
-      const cellData = getCourseSectionMeetingFromCell(
-        schedule,
-        cell.value,
-        cell.column.Header as string,
-      );
-      if (cellData.csm && updateSectionModalRef.current) {
-        updateSectionModalRef.current.handleModalOpen(cellData);
+      const cellHeader = cell.column.Header as string;
+      const isNonTeachingLoad = cellHeader === "Other Duties";
+      const cellData = isNonTeachingLoad
+        ? getNonTeachingLoadsFromCell(schedule, cell.value, cell.row.values.faculty)
+        : getCourseSectionMeetingFromCell(schedule, cell.value, cellHeader);
+      if (cellData.csm) {
+        if (isNonTeachingLoad && updateNonTeachingLoadModalRef.current) {
+          updateNonTeachingLoadModalRef.current.handleModalOpen(
+            cellData as CourseSectionMeetingInstructorNonTeachingLoads,
+          );
+        } else if (!isNonTeachingLoad && updateSectionModalRef.current) {
+          updateSectionModalRef.current.handleModalOpen(
+            cellData as CourseSectionMeetingTermSections,
+          );
+        }
       }
     }
   };
@@ -68,6 +81,7 @@ export const FacultyLoads = () => {
   return (
     <>
       <UpdateSectionModalPagination ref={updateSectionModalRef} />
+      <UpdateNonTeachingLoadModalPagination ref={updateNonTeachingLoadModalRef} />
       <TableContainer component={Paper}>
         <PopoverButton buttonTitle="Add Non-Teaching Load" popupId="addNonTeachingLoad">
           <AddNonTeachingLoadPopover />

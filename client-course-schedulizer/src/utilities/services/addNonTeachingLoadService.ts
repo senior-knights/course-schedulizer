@@ -1,6 +1,23 @@
-import { cloneDeep } from "lodash";
-import { Course, NonTeachingLoadInput, Section } from "utilities";
+import { cloneDeep, map } from "lodash";
+import { Course, CourseSectionMeeting, NonTeachingLoadInput, Section, Term } from "utilities";
 import { emptyCourse, emptySection } from "utilities/constants";
+
+export const mapNonTeachingLoadValuesToInput = (
+  data?: CourseSectionMeeting,
+): NonTeachingLoadInput => {
+  const loadTerm = data?.section.term;
+  const loadTermsArr = Array.isArray(loadTerm) ? loadTerm : [loadTerm];
+  const terms = (map(Object.values(Term), (t) => {
+    return loadTermsArr.includes(t) ? t : false;
+  }) as unknown) as Term[];
+
+  return {
+    activity: data?.section.instructionalMethod ?? "",
+    facultyHours: data?.section.facultyHours,
+    instructor: data?.section.instructors[0] ?? "",
+    terms,
+  };
+};
 
 export const mapNonTeachingLoadInput = (data: NonTeachingLoadInput) => {
   const newSection: Section = cloneDeep(emptySection);
