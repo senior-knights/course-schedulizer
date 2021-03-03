@@ -1,5 +1,5 @@
 import { Footer, Header } from "components";
-import { AboutPage, HelpPage, SchedulizerPage } from "components/pages";
+import { AboutPage, HarmonyPage, HelpPage, SchedulizerPage } from "components/pages";
 import React, { useReducer, useState } from "react";
 import { HashRouter, Route, Switch } from "react-router-dom";
 import { initialAppState, reducer, useLocal } from "utilities";
@@ -26,6 +26,9 @@ export const App = () => {
               </Route>
               <Route path="/help">
                 <HelpPage />
+              </Route>
+              <Route path="/harmony">
+                <HarmonyPage />
               </Route>
               <Route path="/">
                 <SchedulizerPage />

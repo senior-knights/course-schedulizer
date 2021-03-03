@@ -3,7 +3,6 @@ import { AsyncComponent } from "components";
 import { FacultyLoads, FacultySchedule, RoomsSchedule } from "components/Tabs";
 import React, { ChangeEvent, useContext, useState } from "react";
 import { AppContext } from "utilities/contexts";
-import { Harmony } from "./Harmony";
 import { CSVActions, NoCoursesHeader, TabPanel } from "./tabComponents";
 import "./Tabs.scss";
 
@@ -43,7 +42,6 @@ export const Tabs = () => {
                 <Tab label="Room Schedule" />
                 <Tab label="Teaching Loads" />
                 <Tab label="Conflicts" />
-                <Tab label="Harmoniously" />
               </MUITabs>
               <span>{/* Empty */}</span>
             </Container>
@@ -58,9 +56,6 @@ export const Tabs = () => {
             </TabPanel>
             <TabPanel index={3} value={tabValue}>
               Item Four
-            </TabPanel>
-            <TabPanel index={4} value={tabValue}>
-              <Harmony />
             </TabPanel>
           </>
         ) : (
