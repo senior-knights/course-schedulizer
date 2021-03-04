@@ -28,10 +28,7 @@ export const useImportFile = () => {
       case "xlsx": {
         file && reader.readAsArrayBuffer(file);
         reader.onloadend = async () => {
-          const uploadedData = new Uint8Array(reader.result as ArrayBufferLike);
-          const workBook = read(uploadedData, { type: "array" });
-          const firstSheet = workBook.Sheets[workBook.SheetNames[0]];
-          scheduleJSON = csvStringToSchedule(utils.sheet_to_csv(firstSheet));
+          scheduleJSON = csvStringToSchedule(getCSVFromXLSXData(reader.result as ArrayBufferLike));
           await updateScheduleInContext(schedule, scheduleJSON, appDispatch, setIsCSVLoading);
         };
         break;
@@ -54,11 +51,7 @@ export const useImportFile = () => {
     reader.onloadend = async () => {
       let scheduleString: string;
       if (fileType === "xlsx") {
-        const data = new Uint8Array(reader.result as ArrayBufferLike);
-        const workBook = read(data, { type: "array" });
-        const sheet = workBook.Sheets[workBook.SheetNames[0]];
-        const thing: string = utils.sheet_to_csv(sheet);
-        scheduleString = thing;
+        scheduleString = getCSVFromXLSXData(reader.result as ArrayBufferLike);
       } else {
         scheduleString = String(reader.result);
       }
@@ -88,4 +81,11 @@ export const updateScheduleInContext = async (
     await appDispatch({ payload: { schedule: scheduleJSON }, type: "setScheduleData" });
   }
   setIsCSVLoading(false);
+};
+
+export const getCSVFromXLSXData = (xlsxData: ArrayBufferLike): string => {
+  const data = new Uint8Array(xlsxData);
+  const workBook = read(data, { type: "array" });
+  const sheet = workBook.Sheets[workBook.SheetNames[0]];
+  return utils.sheet_to_csv(sheet);
 };

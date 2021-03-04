@@ -1,7 +1,6 @@
 import { useContext } from "react";
-import { csvStringToSchedule, updateScheduleInContext } from "utilities";
+import { csvStringToSchedule, getCSVFromXLSXData, updateScheduleInContext } from "utilities";
 import { AppContext } from "utilities/contexts";
-import { read, utils } from "xlsx";
 
 export const useImportRemoteFile = () => {
   const {
@@ -59,10 +58,9 @@ export const useImportRemoteFile = () => {
             .then(async (result) => {
               await appDispatch({ payload: { fileUrl: xlsxUrl }, type: "setFileUrl" });
               if (result) {
-                const uploadedData = new Uint8Array(result as ArrayBufferLike);
-                const workBook = read(uploadedData, { type: "array" });
-                const firstSheet = workBook.Sheets[workBook.SheetNames[0]];
-                const newSchedule = csvStringToSchedule(utils.sheet_to_csv(firstSheet));
+                const newSchedule = csvStringToSchedule(
+                  getCSVFromXLSXData(result as ArrayBufferLike),
+                );
                 await updateScheduleInContext(schedule, newSchedule, appDispatch, setIsCSVLoading);
               } else {
                 setIsCSVLoading(false);
