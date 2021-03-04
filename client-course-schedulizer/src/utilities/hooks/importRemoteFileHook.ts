@@ -20,10 +20,12 @@ export const useImportRemoteFile = () => {
       // eslint-disable-next-line no-restricted-globals
       const url = location.href;
       // TODO: We'll need to be more careful about this if we end up using more GET params
-      const csvIndex = url.indexOf("?csv=");
-      const xlsxIndex = url.indexOf("?xlsx=");
+      const getCSVStr = "?csv=";
+      const getXLSXStr = "?xlsx=";
+      const csvIndex = url.indexOf(getCSVStr);
+      const xlsxIndex = url.indexOf(getXLSXStr);
       if (csvIndex !== -1) {
-        const csvUrl = url.slice(csvIndex + 5);
+        const csvUrl = url.slice(csvIndex + getCSVStr.length);
         if (csvUrl !== "" && csvUrl !== fileUrl) {
           setIsCSVLoading(true);
           fetch(csvUrl)
@@ -44,7 +46,7 @@ export const useImportRemoteFile = () => {
             });
         }
       } else if (xlsxIndex !== -1) {
-        const xlsxUrl = url.slice(xlsxIndex + 6);
+        const xlsxUrl = url.slice(xlsxIndex + getXLSXStr.length);
         if (xlsxUrl !== "" && xlsxUrl !== fileUrl) {
           setIsCSVLoading(true);
           fetch(xlsxUrl)
