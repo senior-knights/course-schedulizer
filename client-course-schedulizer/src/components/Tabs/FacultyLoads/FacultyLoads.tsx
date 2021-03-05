@@ -83,7 +83,7 @@ export const FacultyLoads = () => {
       <UpdateSectionModalPagination ref={updateSectionModalRef} />
       <UpdateNonTeachingLoadModalPagination ref={updateNonTeachingLoadModalRef} />
       <TableContainer component={Paper}>
-        <div className="addNonTeachingActivityButton">
+        <div className="add-non-teaching-activity-button">
           <PopoverButton
             buttonTitle="Add Non-Teaching Activity"
             isIcon={false}
@@ -133,8 +133,15 @@ export const FacultyLoads = () => {
                       // Loop over the rows cells
                       row.cells.map((cell) => {
                         // Apply the cell props
+                        const cellClass = cell
+                          .getCellProps()
+                          .key.toString()
+                          .match(/(CourseSections)|(otherDuties)/g)
+                          ? "change-cursor"
+                          : "";
                         return (
                           <TableCell
+                            className={cellClass}
                             {...cell.getCellProps()}
                             onClick={() => {
                               handleCellClick(cell);
