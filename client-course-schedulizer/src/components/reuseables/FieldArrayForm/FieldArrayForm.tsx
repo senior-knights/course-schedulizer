@@ -37,6 +37,7 @@ export const FieldArrayForm = ({ fieldsName, defaultValue }: FieldArrayFormProps
       <form
         onSubmit={handleSubmit((data) => {
           // TODO: handle this.
+          // eslint-disable-next-line no-console
           console.log(data);
         })}
       >
