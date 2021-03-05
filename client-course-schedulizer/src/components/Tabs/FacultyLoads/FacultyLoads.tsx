@@ -83,9 +83,15 @@ export const FacultyLoads = () => {
       <UpdateSectionModalPagination ref={updateSectionModalRef} />
       <UpdateNonTeachingLoadModalPagination ref={updateNonTeachingLoadModalRef} />
       <TableContainer component={Paper}>
-        <PopoverButton buttonTitle="Add Non-Teaching Load" popupId="addNonTeachingLoad">
-          <AddNonTeachingLoadPopover />
-        </PopoverButton>
+        <div className="addNonTeachingActivityButton">
+          <PopoverButton
+            buttonTitle="Add Non-Teaching Activity"
+            isIcon={false}
+            popupId="addNonTeachingActivity"
+          >
+            <AddNonTeachingLoadPopover />
+          </PopoverButton>
+        </div>
         <Table {...getTableProps()}>
           <TableHead>
             {
