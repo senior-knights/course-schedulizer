@@ -50,7 +50,6 @@ export const addSectionSchema = object().shape({
     .nullable(),
   facultyHours: number()
     .typeError("faculty hours must be a number")
-    .integer()
     .test("is-decimal", "invalid decimal", decimalRegex)
     .transform(emptyStringToNull)
     .nullable(),
@@ -80,7 +79,6 @@ export const addSectionSchema = object().shape({
   status: string(),
   studentHours: number()
     .typeError("student hours must be a number")
-    .integer()
     .test("is-decimal", "invalid decimal", decimalRegex)
     .transform(emptyStringToNull)
     .nullable(),
