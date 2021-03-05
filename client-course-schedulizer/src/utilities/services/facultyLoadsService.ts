@@ -1,4 +1,4 @@
-import { filter } from "lodash";
+import { filter, sumBy } from "lodash";
 import {
   Course,
   CourseSectionMeeting,
@@ -57,7 +57,7 @@ const updateRow = ({
       : (prevRow[termCourseSectionProp] = sectionName);
 
     prevRow[termHoursProp] = prevRow[termHoursProp]
-      ? Number(prevRow[termHoursProp]) / section.instructors.length + facultyHours
+      ? Number(prevRow[termHoursProp]) + facultyHours
       : facultyHours;
   } else {
     newRow[termCourseSectionProp] = sectionName;
@@ -112,7 +112,7 @@ export const createTable = (schedule: Schedule): FacultyRow[] => {
       });
     });
   });
-  return newTableData
+  const sortedTableData = newTableData
     .map((row) => {
       return {
         ...row,
@@ -126,6 +126,8 @@ export const createTable = (schedule: Schedule): FacultyRow[] => {
     .sort((a, b) => {
       return b.totalHours - a.totalHours;
     });
+  sortedTableData.push({ faculty: "Total", totalHours: sumBy(sortedTableData, "totalHours") });
+  return sortedTableData;
 };
 
 export const findSection = (
