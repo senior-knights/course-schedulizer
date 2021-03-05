@@ -166,13 +166,10 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
     [defaultTerm] = defaultTerm;
   }
 
-  const weekdays = Object.values(Day).filter((day) => {
-    return Object.values(Weekday).includes(day);
-  });
+  const days = addFalseToDaysCheckboxList(data?.meeting?.days);
 
-  const days = (map(weekdays, (wd: Day) => {
-    return data?.meeting?.days?.includes(wd) ? wd : false;
-  }) as unknown) as Day[];
+  console.log("mapInternalTypesToInput");
+  console.log(days);
 
   return {
     anticipatedSize: data?.section.anticipatedSize,
@@ -311,4 +308,18 @@ export const removeSectionFromSchedule = (
   const oldCourse = data?.course;
   const courseIndex = indexOf(schedule.courses, oldCourse);
   removeSection(schedule, section.letter, section.term, section.instructors, courseIndex);
+};
+
+export const addFalseToDaysCheckboxList = (days?: Day[]): Day[] => {
+  if (!days) {
+    return ([false, false, false, false, false] as unknown) as Day[];
+  }
+
+  const weekdays = Object.values(Day).filter((day) => {
+    return Object.values(Weekday).includes(day);
+  });
+
+  return (map(weekdays, (wd: Day) => {
+    return days.includes(wd) ? wd : false;
+  }) as unknown) as Day[];
 };

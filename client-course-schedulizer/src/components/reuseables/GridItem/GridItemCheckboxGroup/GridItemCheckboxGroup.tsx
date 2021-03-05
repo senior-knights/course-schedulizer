@@ -29,6 +29,9 @@ export const GridItemCheckboxGroup = ({
   const { name: nameFallback, errorMessage } = useInput(label, errors);
   const [value, onValueChange] = useState(initialValue);
 
+  console.log("checkbox group");
+  console.log(value);
+
   useEffect(() => {
     onValueChange(initialValue);
   }, [initialValue]);
@@ -36,12 +39,13 @@ export const GridItemCheckboxGroup = ({
   const onCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     const opt = e.target.value;
     if (value) {
+      const valueCopy = [...value];
       if (value?.includes(opt)) {
-        const valueCopy = [...value];
-        valueCopy.splice(valueCopy.indexOf(opt), 1);
+        valueCopy.splice(options.indexOf(opt), 1, "false");
         onValueChange(valueCopy);
       } else {
-        onValueChange([...value, opt]);
+        valueCopy.splice(options.indexOf(opt), 1, opt);
+        onValueChange(valueCopy);
       }
     } else {
       onValueChange([opt]);

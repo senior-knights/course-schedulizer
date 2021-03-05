@@ -58,6 +58,8 @@ export const useAddSectionToSchedule = () => {
     oldData,
     removeOldSection,
   }: AddToScheduleParams) => {
+    console.log("addToSchedule");
+    console.log(newSection.meetings[0].days);
     handleOldSection(oldData, newSection, removeOldSection, schedule);
     insertSectionCourse(schedule, newSection, newCourse);
     appDispatch({ payload: { schedule }, type: "setScheduleData" });
