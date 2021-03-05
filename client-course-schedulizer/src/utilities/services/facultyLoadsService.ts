@@ -59,16 +59,9 @@ const updateRow = ({
     prevRow[termHoursProp] = prevRow[termHoursProp]
       ? Number(prevRow[termHoursProp]) / section.instructors.length + facultyHours
       : facultyHours;
-
-    // if (termName === "other") {
-    //   prevRow[termCourseSectionProp] += ` (${facultyHours})`;
-    // }
   } else {
     newRow[termCourseSectionProp] = sectionName;
     newRow[termHoursProp] = facultyHours;
-    if (termName === "other") {
-      newRow[termCourseSectionProp] += ` (${facultyHours})`;
-    }
   }
 };
 
