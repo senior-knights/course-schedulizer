@@ -1,5 +1,6 @@
 import { filter, indexOf, isEqual, map } from "lodash";
 import moment from "moment";
+import { CheckboxTerms } from "utilities";
 import {
   instructorCase,
   locationCase,
@@ -25,12 +26,14 @@ import {
   Weekday,
 } from "utilities/interfaces";
 
+type CheckboxDays = (Day | boolean)[];
+
 // Defines interface for the section popover input
 export interface SectionInput {
   anticipatedSize?: Section["anticipatedSize"];
   comments: Section["comments"];
   day10Used?: Section["day10Used"];
-  days: Meeting["days"];
+  days: CheckboxDays;
   department: Course["department"];
   duration?: Meeting["duration"];
   facultyHours: Section["facultyHours"];
@@ -59,7 +62,7 @@ export interface NonTeachingLoadInput {
   activity: Section["instructionalMethod"];
   facultyHours: Section["facultyHours"];
   instructor: Instructor;
-  terms: Term[];
+  terms: CheckboxTerms;
 }
 
 export const convertFromSemesterLength = (sl: SemesterLength | undefined): SemesterLengthOption => {
@@ -168,9 +171,6 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
 
   const days = addFalseToDaysCheckboxList(data?.meeting?.days);
 
-  console.log("mapInternalTypesToInput");
-  console.log(days);
-
   return {
     anticipatedSize: data?.section.anticipatedSize,
     comments: data?.section.comments ?? "",
@@ -238,7 +238,7 @@ const createNewSectionFromInput = (data: SectionInput): Section => {
     localMax: Number(data.localMax),
     meetings: [
       {
-        days: data.days,
+        days: data.days as Day[],
         duration: Number(data.duration),
         location: {
           building,
@@ -310,16 +310,16 @@ export const removeSectionFromSchedule = (
   removeSection(schedule, section.letter, section.term, section.instructors, courseIndex);
 };
 
-export const addFalseToDaysCheckboxList = (days?: Day[]): Day[] => {
-  if (!days) {
-    return ([false, false, false, false, false] as unknown) as Day[];
-  }
-
+export const addFalseToDaysCheckboxList = (days?: Day[]): CheckboxDays => {
   const weekdays = Object.values(Day).filter((day) => {
     return Object.values(Weekday).includes(day);
   });
 
-  return (map(weekdays, (wd: Day) => {
+  if (!days) {
+    return new Array(weekdays.length).fill(false);
+  }
+
+  return map(weekdays, (wd: Day) => {
     return days.includes(wd) ? wd : false;
-  }) as unknown) as Day[];
+  });
 };

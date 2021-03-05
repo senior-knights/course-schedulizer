@@ -5,6 +5,7 @@ import { isEqual } from "lodash";
 import React, { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
+  addFalseToTermsCheckboxList,
   addNonTeachingLoadSchema,
   CourseSectionMeeting,
   mapNonTeachingLoadValuesToInput,
@@ -76,7 +77,7 @@ export const AddNonTeachingLoadPopover = ({ values }: AddNonTeachingLoadPopover)
         </Grid>
         <Grid container spacing={SPACING}>
           <GridItemCheckboxGroup
-            initialValue={values?.section.term as string[]}
+            initialValue={addFalseToTermsCheckboxList(values?.section.term as Term[]) as string[]}
             label="Terms"
             options={Object.values(Term)}
           />

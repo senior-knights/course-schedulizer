@@ -52,8 +52,6 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
     const formValues = getValues();
     inputValues.days = removeUncheckedValues(inputValues.days as string[]) as Day[];
 
-    console.log("values");
-    console.log(values?.meeting?.days);
     // Update the form values if they have changed
     if (!isEqual(inputValues, formValues)) {
       reset(inputValues);
@@ -180,7 +178,7 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
         </Grid>
         <Grid container spacing={SPACING}>
           <GridItemCheckboxGroup
-            initialValue={addFalseToDaysCheckboxList(values?.meeting?.days)}
+            initialValue={addFalseToDaysCheckboxList(values?.meeting?.days) as string[]}
             label="Days"
             options={Object.values(Day).filter((day) => {
               return Object.values(Weekday).includes(day);

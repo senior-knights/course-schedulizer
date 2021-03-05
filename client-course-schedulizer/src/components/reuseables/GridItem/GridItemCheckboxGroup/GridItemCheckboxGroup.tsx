@@ -29,9 +29,6 @@ export const GridItemCheckboxGroup = ({
   const { name: nameFallback, errorMessage } = useInput(label, errors);
   const [value, onValueChange] = useState(initialValue);
 
-  console.log("checkbox group");
-  console.log(value);
-
   useEffect(() => {
     onValueChange(initialValue);
   }, [initialValue]);
