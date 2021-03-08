@@ -13,7 +13,7 @@ import { useInput } from "utilities";
 import "./GridItemCheckboxGroup.scss";
 
 interface GridItemCheckboxGroup {
-  initialValue?: string[];
+  initialValue: string[];
   label: string;
   name?: string;
   options: string[];
@@ -85,4 +85,8 @@ export const GridItemCheckboxGroup = ({
       </FormControl>
     </Grid>
   );
+};
+
+GridItemCheckboxGroup.defaultProps = {
+  name: undefined,
 };
