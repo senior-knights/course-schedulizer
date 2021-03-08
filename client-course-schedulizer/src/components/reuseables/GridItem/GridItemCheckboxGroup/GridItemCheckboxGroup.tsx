@@ -33,6 +33,12 @@ export const GridItemCheckboxGroup = ({
     onValueChange(initialValue);
   }, [initialValue]);
 
+  /* onCheckboxChange handles the value change when a checkbox is clicked
+      value is a string[] with a length equal to the number of options.
+      If an option is selected, its position in the value array is updated
+      with the option name. If it is unselected, its position in the value array
+      is updated with "false".
+  */
   const onCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     const opt = e.target.value;
     if (value) {
