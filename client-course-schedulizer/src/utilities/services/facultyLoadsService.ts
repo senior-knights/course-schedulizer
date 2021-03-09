@@ -161,17 +161,11 @@ export const findSection = (
   };
 };
 
-export interface CourseSectionMeetingTermSections {
-  csm: CourseSectionMeeting | null;
-  sectionList: string[];
-  term: Term;
-}
-
 export const getCourseSectionMeetingFromCell = (
   schedule: Schedule,
   cellValue: string,
   cellHeader: string,
-): CourseSectionMeetingTermSections => {
+): CSMIterableKeyMap => {
   const sectionStrList = cellValue.split(", ");
   const courseSectionHeaders = [
     "Fall Course Sections",
@@ -200,20 +194,16 @@ export const getCourseSectionMeetingFromCell = (
     }
     return {
       csm: courseSectionMeeting,
-      sectionList: sectionStrList,
-      term,
+      iterable: sectionStrList,
+      key: term,
     };
   }
   return {
     csm: null,
-    sectionList: sectionStrList,
-    term: Term.Fall,
+    iterable: sectionStrList,
+    key: Term.Fall,
   };
 };
-
-export interface UpdateSectionModalPaginationRef {
-  handleModalOpen: (csmTermSections: CourseSectionMeetingTermSections) => void;
-}
 
 export const findNonTeachingLoad = (
   schedule: Schedule,
@@ -251,29 +241,27 @@ export const findNonTeachingLoad = (
   };
 };
 
-export interface CourseSectionMeetingInstructorNonTeachingLoads {
+export interface CSMIterableKeyMap {
   csm: CourseSectionMeeting | null;
-  instructor: Instructor;
-  nonTeachingLoads: string[];
+  iterable: string[];
+  key: string;
 }
 
 export const getNonTeachingLoadsFromCell = (
   schedule: Schedule,
   cellValue: string,
   instructor: Instructor,
-): CourseSectionMeetingInstructorNonTeachingLoads => {
+): CSMIterableKeyMap => {
   const nonTeachingLoadStrList = cellValue.split(", ");
   const courseSectionMeeting = findNonTeachingLoad(schedule, nonTeachingLoadStrList[0], instructor);
 
   return {
     csm: courseSectionMeeting,
-    instructor,
-    nonTeachingLoads: nonTeachingLoadStrList,
+    iterable: nonTeachingLoadStrList,
+    key: instructor,
   };
 };
 
-export interface UpdateNonTeachingLoadModalPaginationRef {
-  handleModalOpen: (
-    csmInstructorNonTeachingLoads: CourseSectionMeetingInstructorNonTeachingLoads,
-  ) => void;
-}
+export type UpdateModalPaginationRef = {
+  handleModalOpen: ({ csm, iterable, key }: CSMIterableKeyMap) => void;
+};
