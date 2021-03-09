@@ -1,20 +1,19 @@
 import { AddSectionPopover, ModalPagination } from "components";
 import React, { forwardRef, Ref } from "react";
-import { CourseSectionMeeting, findSection, Schedule, UpdateModalPaginationRef } from "utilities";
+import { FindCourseSectionMeetingFunction, findSection, UpdateModalPaginationRef } from "utilities";
 import "./UpdateSectionModalPagination.scss";
 
+/**
+ * Creates a popup modal used on the FacultyLoads page to find
+ *   courses and allow the user to page through and edit them
+ *   on a modal.
+ */
 export const UpdateSectionModalPagination = forwardRef(
   (props, ref: Ref<UpdateModalPaginationRef>) => {
     return (
       <ModalPagination
         ref={ref}
-        findCourseSectionMeeting={
-          findSection as (
-            schedule: Schedule,
-            sectionName: string,
-            term: string,
-          ) => CourseSectionMeeting | null
-        }
+        findCourseSectionMeeting={findSection as FindCourseSectionMeetingFunction}
         PopoverComponent={AddSectionPopover}
       />
     );

@@ -11,20 +11,26 @@ import React, {
 import {
   CourseSectionMeeting,
   CSMIterableKeyMap,
+  FindCourseSectionMeetingFunction,
   PopoverValueProps,
-  Schedule,
   UpdateModalPaginationRef,
 } from "utilities";
 import { AppContext } from "utilities/contexts";
 import "./ModalPagination.scss";
 
 interface ModalPaginationProps {
+  /**
+   * A component that displays a form to edit the entries
+   * @type {React.ElementType<PopoverValueProps>}
+   * @memberof ModalPaginationProps
+   */
   PopoverComponent: React.ElementType<PopoverValueProps>;
-  findCourseSectionMeeting: (
-    schedule: Schedule,
-    iterableItem: string,
-    key: string,
-  ) => CourseSectionMeeting | null;
+  /**
+   * Function to find specific CSMs for the specific cell clicked
+   * @type {FindCourseSectionMeetingFunction}
+   * @memberof ModalPaginationProps
+   */
+  findCourseSectionMeeting: FindCourseSectionMeetingFunction;
 }
 
 interface IterableKeyMap {
@@ -32,6 +38,11 @@ interface IterableKeyMap {
   key: string;
 }
 
+/**
+ * Creates a modal for forms with multiple pages and allows the user to
+ *   step through the pages and edit the same form for multiple entities.
+ * Used on the FacultyPage to find CourseSectionMeetings
+ */
 export const ModalPagination = forwardRef(
   (props: ModalPaginationProps, ref: Ref<UpdateModalPaginationRef>) => {
     const { findCourseSectionMeeting, PopoverComponent } = props;
@@ -78,6 +89,7 @@ export const ModalPagination = forwardRef(
       setOpen(true);
     };
 
+    // Allow parents to open the child modal.
     useImperativeHandle(ref, () => {
       return {
         handleModalOpen,

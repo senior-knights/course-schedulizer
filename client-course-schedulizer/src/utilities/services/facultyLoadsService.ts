@@ -241,6 +241,13 @@ export const findNonTeachingLoad = (
   };
 };
 
+/**
+ * A specific CSM with with corresponding iterable
+ *   and key.
+ *
+ * @export
+ * @interface CSMIterableKeyMap
+ */
 export interface CSMIterableKeyMap {
   csm: CourseSectionMeeting | null;
   iterable: string[];
@@ -262,6 +269,13 @@ export const getNonTeachingLoadsFromCell = (
   };
 };
 
+/**
+ * Components with this reference will have a function handleModalOpen which
+ *   can be called.
+ *
+ * @export
+ * @type
+ */
 export type UpdateModalPaginationRef = {
   handleModalOpen: ({ csm, iterable, key }: CSMIterableKeyMap) => void;
 };
