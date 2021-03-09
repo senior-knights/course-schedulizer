@@ -15,10 +15,10 @@ import {
   useDeleteSectionFromSchedule,
 } from "utilities";
 import {
-  CourseSectionMeeting,
   Day,
   Half,
   Intensive,
+  PopoverValueProps,
   SemesterLength,
   SemesterLengthOption,
   Term,
@@ -26,13 +26,10 @@ import {
 } from "utilities/interfaces";
 import "./AddSectionPopover.scss";
 
-interface AddSectionPopover {
-  values?: CourseSectionMeeting;
-}
 const SPACING = 2;
 
 /* A form to input information to add a schedule */
-export const AddSectionPopover = ({ values }: AddSectionPopover) => {
+export const AddSectionPopover = ({ values }: PopoverValueProps) => {
   const methods = useForm<SectionInput>({
     criteriaMode: "all",
     defaultValues: mapInternalTypesToInput(values),

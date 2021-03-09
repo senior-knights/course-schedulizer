@@ -12,14 +12,11 @@ import { UpdateNonTeachingLoadModalPagination, UpdateSectionModalPagination } fr
 import React, { useContext, useMemo, useRef } from "react";
 import { Cell, Column, useTable } from "react-table";
 import {
-  CourseSectionMeetingInstructorNonTeachingLoads,
-  CourseSectionMeetingTermSections,
   createTable,
   FacultyRow,
   getCourseSectionMeetingFromCell,
   getNonTeachingLoadsFromCell,
-  UpdateNonTeachingLoadModalPaginationRef,
-  UpdateSectionModalPaginationRef,
+  UpdateModalPaginationRef,
 } from "utilities";
 import { AppContext } from "utilities/contexts";
 import { AddNonTeachingLoadPopover, PopoverButton } from "../../reuseables";
@@ -34,8 +31,8 @@ export const FacultyLoads = () => {
     return createTable(schedule);
   }, [schedule]);
 
-  const updateSectionModalRef = useRef<UpdateSectionModalPaginationRef>(null);
-  const updateNonTeachingLoadModalRef = useRef<UpdateNonTeachingLoadModalPaginationRef>(null);
+  const updateSectionModalRef = useRef<UpdateModalPaginationRef>(null);
+  const updateNonTeachingLoadModalRef = useRef<UpdateModalPaginationRef>(null);
 
   const handleCellClick = (cell: Cell<FacultyRow>) => {
     if (typeof cell.value === "string") {
@@ -46,13 +43,9 @@ export const FacultyLoads = () => {
         : getCourseSectionMeetingFromCell(schedule, cell.value, cellHeader);
       if (cellData.csm) {
         if (isNonTeachingLoad && updateNonTeachingLoadModalRef.current) {
-          updateNonTeachingLoadModalRef.current.handleModalOpen(
-            cellData as CourseSectionMeetingInstructorNonTeachingLoads,
-          );
+          updateNonTeachingLoadModalRef.current.handleModalOpen(cellData);
         } else if (!isNonTeachingLoad && updateSectionModalRef.current) {
-          updateSectionModalRef.current.handleModalOpen(
-            cellData as CourseSectionMeetingTermSections,
-          );
+          updateSectionModalRef.current.handleModalOpen(cellData);
         }
       }
     }
