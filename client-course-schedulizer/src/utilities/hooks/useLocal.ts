@@ -7,8 +7,7 @@
  */
 export const loadLocal = <T>(key: string) => {
   const item: string | null = localStorage.getItem(key);
-  const thing = item ? JSON.parse(item) : undefined;
-  return thing ? (thing as T) : undefined;
+  return item ? (JSON.parse(item) as T) : undefined;
 };
 
 /**
