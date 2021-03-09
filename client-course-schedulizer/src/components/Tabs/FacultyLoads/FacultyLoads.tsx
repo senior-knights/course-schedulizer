@@ -133,12 +133,14 @@ export const FacultyLoads = () => {
                       // Loop over the rows cells
                       row.cells.map((cell) => {
                         // Apply the cell props
-                        const cellClass = cell
-                          .getCellProps()
-                          .key.toString()
-                          .match(/(CourseSections)|(otherDuties)/g)
-                          ? "change-cursor"
-                          : "";
+                        const cellClass =
+                          cell.value &&
+                          cell
+                            .getCellProps()
+                            .key.toString()
+                            .match(/(CourseSections)|(otherDuties)/g)
+                            ? "change-cursor"
+                            : "";
                         return (
                           <TableCell
                             className={cellClass}
