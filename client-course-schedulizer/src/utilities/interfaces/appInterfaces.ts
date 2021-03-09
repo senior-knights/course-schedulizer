@@ -1,4 +1,4 @@
-import { loadInitialState } from "utilities/hooks/useInitialState";
+import { loadLocal } from "utilities/hooks/useLocal";
 import { Schedule, Term } from "./dataInterfaces";
 
 export enum ColorBy {
@@ -24,7 +24,7 @@ export interface AppState {
 // Defaults for the app state when it launches, will try to load
 //  previous appState (with cleared fileUrl) to launch app from.
 //  If no previous state saved, will default to the object below.
-export const initialAppState: AppState = loadInitialState() || {
+export const initialAppState: AppState = loadLocal("appState") || {
   classes: [],
   colorBy: 0,
   fileUrl: "",

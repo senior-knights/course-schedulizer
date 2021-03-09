@@ -29,6 +29,8 @@ export const useImportFile = () => {
         file && reader.readAsArrayBuffer(file);
         reader.onloadend = async () => {
           scheduleJSON = csvStringToSchedule(getCSVFromXLSXData(reader.result as ArrayBufferLike));
+
+          await appDispatch({ payload: { fileUrl: "" }, type: "setFileUrl" });
           await updateScheduleInContext(schedule, scheduleJSON, appDispatch, setIsCSVLoading);
         };
         break;
@@ -39,6 +41,7 @@ export const useImportFile = () => {
           const scheduleString = String(reader.result);
           scheduleJSON = csvStringToSchedule(scheduleString);
 
+          await appDispatch({ payload: { fileUrl: "" }, type: "setFileUrl" });
           await updateScheduleInContext(schedule, scheduleJSON, appDispatch, setIsCSVLoading);
         };
         break;
@@ -60,6 +63,7 @@ export const useImportFile = () => {
       // TODO: store in local storage incase prof navigates away while editing.
       // currently a redundant check
       if (!isEqual(schedule, scheduleJSON)) {
+        await appDispatch({ payload: { fileUrl: "" }, type: "setFileUrl" });
         await appDispatch({ payload: { schedule: scheduleJSON }, type: "setScheduleData" });
       }
       setIsCSVLoading(false);
