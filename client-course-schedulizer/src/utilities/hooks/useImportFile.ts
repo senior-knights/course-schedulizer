@@ -56,8 +56,13 @@ export const useImportFile = (isAdditiveImport: boolean) => {
       scheduleJSON = csvStringToSchedule(scheduleString);
 
       appDispatch({ payload: { fileUrl: "" }, type: "setFileUrl" });
-      await updateScheduleInContext(schedule, scheduleJSON, appDispatch, isAdditiveImport);
-      setIsCSVLoading(false);
+      await updateScheduleInContext(
+        schedule,
+        scheduleJSON,
+        appDispatch,
+        setIsCSVLoading,
+        isAdditiveImport,
+      );
     };
   };
 
@@ -69,6 +74,7 @@ export const useImportFile = (isAdditiveImport: boolean) => {
  * @param currentSchedule
  * @param scheduleJSON
  * @param appDispatch
+ * @param setIsCSVLoading
  * @param isAdditiveImport
  *
  * Ref: https://stackoverflow.com/a/57214316/9931154
@@ -77,6 +83,7 @@ export const updateScheduleInContext = async (
   currentSchedule: Schedule,
   scheduleJSON: Schedule,
   appDispatch: AppContext["appDispatch"],
+  setIsCSVLoading: AppContext["setIsCSVLoading"],
   isAdditiveImport = false,
 ) => {
   if (!isEqual(currentSchedule, scheduleJSON)) {
@@ -89,6 +96,7 @@ export const updateScheduleInContext = async (
       newScheduleData = scheduleJSON;
     }
     await appDispatch({ payload: { schedule: newScheduleData }, type: "setScheduleData" });
+    setIsCSVLoading(false);
   }
 };
 

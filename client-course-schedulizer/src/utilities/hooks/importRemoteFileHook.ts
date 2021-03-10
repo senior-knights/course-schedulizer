@@ -37,7 +37,7 @@ export const useImportRemoteFile = () => {
             appDispatch({ payload: { fileUrl: csvUrl }, type: "setFileUrl" });
             if (result) {
               const newSchedule = csvStringToSchedule(result);
-              await updateScheduleInContext(schedule, newSchedule, appDispatch);
+              await updateScheduleInContext(schedule, newSchedule, appDispatch, setIsCSVLoading);
               clearSearchParams();
             } else {
               setIsCSVLoading(false);
@@ -64,7 +64,7 @@ export const useImportRemoteFile = () => {
               const newSchedule = csvStringToSchedule(
                 getCSVFromXLSXData(result as ArrayBufferLike),
               );
-              await updateScheduleInContext(schedule, newSchedule, appDispatch);
+              await updateScheduleInContext(schedule, newSchedule, appDispatch, setIsCSVLoading);
               clearSearchParams();
             } else {
               setIsCSVLoading(false);
