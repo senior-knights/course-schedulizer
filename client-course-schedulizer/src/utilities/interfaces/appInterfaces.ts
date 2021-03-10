@@ -12,6 +12,7 @@ export enum ColorBy {
 export interface AppState {
   classes: string[];
   colorBy: ColorBy;
+  fileUrl: string;
   professors: string[];
   rooms: string[];
   schedule: Schedule;
@@ -21,11 +22,12 @@ export interface AppState {
 }
 
 // Defaults for the app state when it launches, will try to load
-//  previous appState to launch app from. If no previous state saved,
-//  will default to the object below.
+//  previous appState (with cleared fileUrl) to launch app from.
+//  If no previous state saved, will default to the object below.
 export const initialAppState: AppState = loadLocal("appState") || {
   classes: [],
   colorBy: 0,
+  fileUrl: "",
   professors: [],
   rooms: [],
   schedule: { courses: [] },
@@ -38,8 +40,9 @@ export const initialAppState: AppState = loadLocal("appState") || {
 export interface AppAction {
   payload: {
     colorBy?: ColorBy;
+    fileUrl?: string;
     schedule?: Schedule;
     term?: Term;
   };
-  type: "setScheduleData" | "setSelectedTerm" | "setColorBy"; // add | to add more actions in the future
+  type: "setScheduleData" | "setSelectedTerm" | "setFileUrl" | "setColorBy"; // add | to add more actions in the future
 }

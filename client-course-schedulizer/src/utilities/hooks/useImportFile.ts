@@ -49,14 +49,13 @@ export const useImportFile = (isAdditiveImport: boolean) => {
     reader.onloadend = async () => {
       let scheduleString: string;
       if (fileType === "xlsx") {
-        const uploadedData = new Uint8Array(reader.result as ArrayBufferLike);
-        const workBook = read(uploadedData, { type: "array" });
-        const firstSheet = workBook.Sheets[workBook.SheetNames[0]];
-        scheduleString = utils.sheet_to_csv(firstSheet);
+        scheduleString = getCSVFromXLSXData(reader.result as ArrayBufferLike);
       } else {
         scheduleString = String(reader.result);
       }
       scheduleJSON = csvStringToSchedule(scheduleString);
+
+      appDispatch({ payload: { fileUrl: "" }, type: "setFileUrl" });
       await updateScheduleInContext(schedule, scheduleJSON, appDispatch, isAdditiveImport);
       setIsCSVLoading(false);
     };
@@ -74,11 +73,11 @@ export const useImportFile = (isAdditiveImport: boolean) => {
  *
  * Ref: https://stackoverflow.com/a/57214316/9931154
  */
-const updateScheduleInContext = async (
+export const updateScheduleInContext = async (
   currentSchedule: Schedule,
   scheduleJSON: Schedule,
   appDispatch: AppContext["appDispatch"],
-  isAdditiveImport: boolean,
+  isAdditiveImport = false,
 ) => {
   if (!isEqual(currentSchedule, scheduleJSON)) {
     let newScheduleData: Schedule;
@@ -91,4 +90,17 @@ const updateScheduleInContext = async (
     }
     await appDispatch({ payload: { schedule: newScheduleData }, type: "setScheduleData" });
   }
+};
+
+/**
+ * Convert XLSX Data to CSV
+ *
+ * @param  {ArrayBufferLike} xlsxData
+ * @returns string
+ */
+export const getCSVFromXLSXData = (xlsxData: ArrayBufferLike): string => {
+  const data = new Uint8Array(xlsxData);
+  const workBook = read(data, { type: "array" });
+  const firstSheet = workBook.Sheets[workBook.SheetNames[0]];
+  return utils.sheet_to_csv(firstSheet);
 };

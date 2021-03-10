@@ -33,6 +33,12 @@ export const reducer = (actionCallback: (item: AppState) => void = voidFn) => {
         newState = { ...state, selectedTerm: term };
         break;
       }
+      case "setFileUrl": {
+        let { fileUrl } = action.payload;
+        fileUrl = fileUrl || "";
+        newState = { ...state, fileUrl };
+        break;
+      }
       case "setColorBy": {
         let { colorBy } = action.payload;
         colorBy = colorBy || ColorBy.Level;
