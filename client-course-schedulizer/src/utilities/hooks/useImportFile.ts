@@ -56,13 +56,8 @@ export const useImportFile = (isAdditiveImport: boolean) => {
       scheduleJSON = csvStringToSchedule(scheduleString);
 
       appDispatch({ payload: { fileUrl: "" }, type: "setFileUrl" });
-      await updateScheduleInContext(
-        schedule,
-        scheduleJSON,
-        appDispatch,
-        setIsCSVLoading,
-        isAdditiveImport,
-      );
+      await updateScheduleInContext(schedule, scheduleJSON, appDispatch, isAdditiveImport);
+      setIsCSVLoading(false);
     };
   };
 
@@ -72,7 +67,7 @@ export const useImportFile = (isAdditiveImport: boolean) => {
 /**
  * Update the Schedule information in the context
  * @param currentSchedule
- * @param scheduleJSON
+ * @param newSchedule
  * @param appDispatch
  * @param setIsCSVLoading
  * @param isAdditiveImport
@@ -81,22 +76,20 @@ export const useImportFile = (isAdditiveImport: boolean) => {
  */
 export const updateScheduleInContext = async (
   currentSchedule: Schedule,
-  scheduleJSON: Schedule,
+  newSchedule: Schedule,
   appDispatch: AppContext["appDispatch"],
-  setIsCSVLoading: AppContext["setIsCSVLoading"],
   isAdditiveImport = false,
 ) => {
-  if (!isEqual(currentSchedule, scheduleJSON)) {
+  if (!isEqual(currentSchedule, newSchedule)) {
     let newScheduleData: Schedule;
     if (isAdditiveImport) {
       newScheduleData = {
-        courses: [...new Set([...currentSchedule.courses, ...scheduleJSON.courses])],
+        courses: [...new Set([...currentSchedule.courses, ...newSchedule.courses])],
       };
     } else {
-      newScheduleData = scheduleJSON;
+      newScheduleData = newSchedule;
     }
     await appDispatch({ payload: { schedule: newScheduleData }, type: "setScheduleData" });
-    setIsCSVLoading(false);
   }
 };
 
