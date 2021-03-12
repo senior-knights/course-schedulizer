@@ -55,7 +55,7 @@ export const useImportFile = (isAdditiveImport: boolean) => {
       }
       scheduleJSON = csvStringToSchedule(scheduleString);
 
-      appDispatch({ payload: { fileUrl: "" }, type: "setFileUrl" });
+      !isAdditiveImport && appDispatch({ payload: { fileUrl: "" }, type: "setFileUrl" });
       await updateScheduleInContext(schedule, scheduleJSON, appDispatch, isAdditiveImport);
       setIsCSVLoading(false);
     };
