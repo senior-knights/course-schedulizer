@@ -7,9 +7,9 @@ import { FormProvider, useForm } from "react-hook-form";
 import {
   addFalseToTermsCheckboxList,
   addNonTeachingLoadSchema,
-  CourseSectionMeeting,
   mapNonTeachingLoadValuesToInput,
   NonTeachingLoadInput,
+  PopoverValueProps,
   removeUncheckedValues,
   Term,
   useAddSectionToSchedule,
@@ -19,11 +19,7 @@ import "./AddNonTeachingLoadPopover.scss";
 
 const SPACING = 2;
 
-interface AddNonTeachingLoadPopover {
-  values?: CourseSectionMeeting;
-}
-
-export const AddNonTeachingLoadPopover = ({ values }: AddNonTeachingLoadPopover) => {
+export const AddNonTeachingLoadPopover = ({ values }: PopoverValueProps) => {
   const { addNonTeachingLoadToSchedule } = useAddSectionToSchedule();
 
   const onSubmit = (removeOldActivity: boolean) => {
