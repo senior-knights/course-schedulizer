@@ -136,22 +136,26 @@ export const findSection = (
   if (!sectionName) {
     return null;
   }
-
   const [prefix, number, letter] = sectionName.split("-");
+
+  // Find the course with the prefix and number from the schedule courses array
   const courses = filter(schedule.courses, (c) => {
     return c.prefixes.includes(prefix) && c.number === number;
   });
   if (!courses.length) {
     return null;
   }
+  // Extract the course from the array
   const [course] = courses;
 
+  // Find the section with the letter and term from the couse sections array
   const sections = filter(course.sections, (s) => {
     return s.letter === letter && s.term === term;
   });
   if (!sections.length) {
     return null;
   }
+  // Extract the section from the array
   const [section] = sections;
 
   return {
@@ -217,37 +221,37 @@ export interface UpdateSectionModalPaginationRef {
 
 export const findNonTeachingLoad = (
   schedule: Schedule,
-  nonTeachingLoad: string,
+  nonTeachingActivity: string,
   instructor: Instructor,
 ): CourseSectionMeeting | null => {
-  if (!nonTeachingLoad) {
+  if (!nonTeachingActivity) {
     return null;
   }
 
-  const courses = filter(schedule.courses, (c) => {
+  const nonTeachingLoadsArray = filter(schedule.courses, (c) => {
     return c.prefixes.length === 0 && c.number === "";
   });
-  if (!courses.length) {
+  if (!nonTeachingLoadsArray.length) {
     return null;
   }
-  const [course] = courses;
+  const [nonTeachingLoads] = nonTeachingLoadsArray;
 
-  const sections = filter(course.sections, (s) => {
+  const nonTeachingLoadArray = filter(nonTeachingLoads.sections, (s) => {
     return (
       s.isNonTeaching === true &&
-      s.instructionalMethod === nonTeachingLoad &&
+      s.instructionalMethod === nonTeachingActivity &&
       s.instructors.includes(instructor)
     );
   });
-  if (!sections.length) {
+  if (!nonTeachingLoadArray.length) {
     return null;
   }
-  const [section] = sections;
+  const [nonTeachingLoad] = nonTeachingLoadArray;
 
   return {
-    course,
+    course: nonTeachingLoads,
     meeting: emptyMeeting,
-    section,
+    section: nonTeachingLoad,
   };
 };
 
