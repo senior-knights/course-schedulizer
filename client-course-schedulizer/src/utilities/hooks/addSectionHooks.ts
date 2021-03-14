@@ -37,6 +37,9 @@ export const useAddSectionToSchedule = () => {
     insertSectionCourse(schedule, newSection, newCourse);
     appDispatch({ payload: { schedule }, type: "setScheduleData" });
     setIsCSVLoading(false);
+    // TODO: Switch term if necessary
+    // TODO: Ensure scroll doesn't cause graphical errors
+    // TODO: What about adding/modifying a section on the teaching loads tab once merged?
     scrollToUpdatedSection(newCourse, newSection);
   };
 
