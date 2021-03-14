@@ -40,6 +40,7 @@ export const getEvents = (schedule: Schedule, groups: "faculty" | "room"): Group
       forEach(section.instructors, (prof) => {
         forEach(section.meetings, (meeting) => {
           const room = `${meeting.location.building} ${meeting.location.roomNumber}`;
+          const className = createEventClassName(sectionName, room, prof);
           const group = groups === "faculty" ? prof : room;
           const startTimeMoment = moment(meeting.startTime, "h:mm A");
           const endTimeMoment = moment(startTimeMoment).add(meeting.duration, "minutes");
@@ -48,6 +49,7 @@ export const getEvents = (schedule: Schedule, groups: "faculty" | "room"): Group
               .add(days.indexOf(day) + 1, "days")
               .format("YYYY-MM-DD");
             const newEvent: EventInput = {
+              classNames: [className],
               description: course.name,
               end: `${dayOfWeek}T${endTimeMoment.format("HH:mm")}`,
               extendedProps: {
@@ -74,6 +76,11 @@ export const getEvents = (schedule: Schedule, groups: "faculty" | "room"): Group
     });
   });
   return events;
+};
+
+export const createEventClassName = (sectionName: string, room: string, prof: string): string => {
+  const identifier = `${sectionName}_${prof}_${room}`;
+  return identifier.replace(/ /g, "_");
 };
 
 export const getMinAndMaxTimes = (schedule: Schedule) => {

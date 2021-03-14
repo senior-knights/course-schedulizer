@@ -1,10 +1,11 @@
-import { camelCase } from "lodash";
+import { camelCase, forEach } from "lodash";
 import { useContext } from "react";
 import { DeepMap, FieldError } from "react-hook-form";
 import { insertSectionCourse } from "utilities";
 import { AppContext } from "utilities/contexts";
 import { Course, CourseSectionMeeting, Section } from "utilities/interfaces";
 import {
+  createEventClassName,
   handleOldSection,
   mapInputToInternalTypes,
   NonTeachingLoadInput,
@@ -36,6 +37,7 @@ export const useAddSectionToSchedule = () => {
     insertSectionCourse(schedule, newSection, newCourse);
     appDispatch({ payload: { schedule }, type: "setScheduleData" });
     setIsCSVLoading(false);
+    scrollToUpdatedSection(newCourse, newSection);
   };
 
   const addNonTeachingLoadToSchedule = (data: NonTeachingLoadInput) => {
@@ -48,6 +50,25 @@ export const useAddSectionToSchedule = () => {
   };
 
   return { addNonTeachingLoadToSchedule, addSectionToSchedule };
+};
+
+const scrollToUpdatedSection = (newCourse: Course, newSection: Section) => {
+  let className = "";
+  let newElement: Element | undefined;
+  const newSectionName = `${newCourse.prefixes[0]}-${newCourse.number}-${newSection.letter}`;
+  forEach(newSection.instructors, (prof) => {
+    forEach(newSection.meetings, (meeting) => {
+      const room = `${meeting.location.building}_${meeting.location.roomNumber}`;
+      className = createEventClassName(newSectionName, prof, room);
+      const newElements = document.getElementsByClassName(className);
+      if (newElements) {
+        [newElement] = newElements;
+      }
+    });
+  });
+  if (newElement) {
+    newElement.scrollIntoView({ inline: "center" });
+  }
 };
 
 // a helper to provide consistent naming and retrieve error messages
