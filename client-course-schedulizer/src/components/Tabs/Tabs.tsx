@@ -7,18 +7,18 @@ import { Harmony } from "./Harmony";
 import { CSVActions, NoCoursesHeader, TabPanel } from "./tabComponents";
 import "./Tabs.scss";
 
-const DEFAULT_TAB = 0;
-
 /* A navigator between the different features of the app */
 export const Tabs = () => {
-  const [tabValue, setTabValue] = useState(DEFAULT_TAB);
   const {
-    appState: { schedule },
+    appState: { schedule, schedulizerTab },
     isCSVLoading,
+    appDispatch,
   } = useContext(AppContext);
+  const [tabValue, setTabValue] = useState(schedulizerTab);
 
   const handleTabChange = (event: ChangeEvent<{}>, newValue: number) => {
     setTabValue(newValue);
+    appDispatch({ payload: { schedulizerTab: newValue }, type: "setSchedulizerTab" });
   };
 
   const scheduleHasCourses = schedule.courses.length > 0;
