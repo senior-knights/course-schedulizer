@@ -8,6 +8,7 @@ import {
   Section,
   Term,
 } from "utilities";
+import { Instructor } from "utilities/interfaces";
 
 type hourKeys = "fallHours" | "springHours" | "summerHours" | "totalHours" | "otherHours";
 type sectionKeys =
@@ -58,16 +59,9 @@ const updateRow = ({
     prevRow[termHoursProp] = prevRow[termHoursProp]
       ? Number(prevRow[termHoursProp]) / section.instructors.length + facultyHours
       : facultyHours;
-
-    if (termName === "other") {
-      prevRow[termCourseSectionProp] += ` (${facultyHours})`;
-    }
   } else {
     newRow[termCourseSectionProp] = sectionName;
     newRow[termHoursProp] = facultyHours;
-    if (termName === "other") {
-      newRow[termCourseSectionProp] += ` (${facultyHours})`;
-    }
   }
 };
 
@@ -142,22 +136,26 @@ export const findSection = (
   if (!sectionName) {
     return null;
   }
-
   const [prefix, number, letter] = sectionName.split("-");
+
+  // Find the course with the prefix and number from the schedule courses array
   const courses = filter(schedule.courses, (c) => {
     return c.prefixes.includes(prefix) && c.number === number;
   });
   if (!courses.length) {
     return null;
   }
+  // Extract the course from the array
   const [course] = courses;
 
+  // Find the section with the letter and term from the couse sections array
   const sections = filter(course.sections, (s) => {
     return s.letter === letter && s.term === term;
   });
   if (!sections.length) {
     return null;
   }
+  // Extract the section from the array
   const [section] = sections;
 
   return {
@@ -167,17 +165,11 @@ export const findSection = (
   };
 };
 
-export interface CourseSectionMeetingTermSections {
-  csm: CourseSectionMeeting | null;
-  sectionList: string[];
-  term: Term;
-}
-
 export const getCourseSectionMeetingFromCell = (
   schedule: Schedule,
   cellValue: string,
   cellHeader: string,
-): CourseSectionMeetingTermSections => {
+): CSMIterableKeyMap => {
   const sectionStrList = cellValue.split(", ");
   const courseSectionHeaders = [
     "Fall Course Sections",
@@ -206,17 +198,88 @@ export const getCourseSectionMeetingFromCell = (
     }
     return {
       csm: courseSectionMeeting,
-      sectionList: sectionStrList,
-      term,
+      iterable: sectionStrList,
+      key: term,
     };
   }
   return {
     csm: null,
-    sectionList: sectionStrList,
-    term: Term.Fall,
+    iterable: sectionStrList,
+    key: Term.Fall,
   };
 };
 
-export interface UpdateSectionModalPaginationRef {
-  handleModalOpen: (csmTermSections: CourseSectionMeetingTermSections) => void;
+export const findNonTeachingLoad = (
+  schedule: Schedule,
+  nonTeachingActivity: string,
+  instructor: Instructor,
+): CourseSectionMeeting | null => {
+  if (!nonTeachingActivity) {
+    return null;
+  }
+
+  const nonTeachingLoadsArray = filter(schedule.courses, (c) => {
+    return c.prefixes.length === 0 && c.number === "";
+  });
+  if (!nonTeachingLoadsArray.length) {
+    return null;
+  }
+  const [nonTeachingLoads] = nonTeachingLoadsArray;
+
+  const nonTeachingLoadArray = filter(nonTeachingLoads.sections, (s) => {
+    return (
+      s.isNonTeaching === true &&
+      s.instructionalMethod === nonTeachingActivity &&
+      s.instructors.includes(instructor)
+    );
+  });
+  if (!nonTeachingLoadArray.length) {
+    return null;
+  }
+  const [nonTeachingLoad] = nonTeachingLoadArray;
+
+  return {
+    course: nonTeachingLoads,
+    meeting: emptyMeeting,
+    section: nonTeachingLoad,
+  };
+};
+
+/**
+ * A specific CSM with with corresponding iterable
+ *   and key.
+ *
+ * @export
+ * @interface CSMIterableKeyMap
+ */
+export interface CSMIterableKeyMap {
+  csm: CourseSectionMeeting | null;
+  iterable: string[];
+  key: string;
 }
+
+export const getNonTeachingLoadsFromCell = (
+  schedule: Schedule,
+  cellValue: string,
+  instructor: Instructor,
+): CSMIterableKeyMap => {
+  const nonTeachingLoadStrList = cellValue.split(", ");
+  const courseSectionMeeting = findNonTeachingLoad(schedule, nonTeachingLoadStrList[0], instructor);
+
+  return {
+    csm: courseSectionMeeting,
+    iterable: nonTeachingLoadStrList,
+    key: instructor,
+  };
+};
+
+/**
+ * Components with this reference will have a function handleModalOpen which
+ *   can be called.
+ *
+ * @export
+ * @type
+ */
+export type UpdateModalPaginationRef = {
+  handleModalOpen: ({ csm, iterable, key }: CSMIterableKeyMap) => void;
+};

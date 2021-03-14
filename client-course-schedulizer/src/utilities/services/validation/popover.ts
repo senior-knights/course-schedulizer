@@ -34,11 +34,13 @@ export const addSectionSchema = object().shape({
   anticipatedSize: number()
     .typeError("global max must be a number")
     .integer()
+    .min(0)
     .transform(emptyStringToNull)
     .nullable(),
   day10Used: number()
     .typeError("day 10 used must be a number")
     .integer()
+    .min(0)
     .transform(emptyStringToNull)
     .nullable(),
   days: array().transform(removeUncheckedValues),
@@ -46,17 +48,19 @@ export const addSectionSchema = object().shape({
   duration: number()
     .typeError("duration must be a number")
     .integer()
+    .min(0)
     .transform(emptyStringToNull)
     .nullable(),
   facultyHours: number()
     .typeError("faculty hours must be a number")
-    .integer()
+    .min(0)
     .test("is-decimal", "invalid decimal", decimalRegex)
     .transform(emptyStringToNull)
     .nullable(),
   globalMax: number()
     .typeError("global max must be a number")
     .integer()
+    .min(0)
     .transform(emptyStringToNull)
     .nullable(),
   instructionalMethod: string(),
@@ -64,6 +68,7 @@ export const addSectionSchema = object().shape({
   localMax: number()
     .typeError("global max must be a number")
     .integer()
+    .min(0)
     .transform(emptyStringToNull)
     .nullable(),
   location: string(),
@@ -74,25 +79,28 @@ export const addSectionSchema = object().shape({
     .typeError("room capacity must be a number")
     .positive()
     .integer()
+    .min(0)
     .transform(emptyStringToNull)
     .nullable(),
   section: string().required().uppercase(),
   status: string(),
   studentHours: number()
     .typeError("student hours must be a number")
-    .integer()
+    .min(0)
     .test("is-decimal", "invalid decimal", decimalRegex)
     .transform(emptyStringToNull)
     .nullable(),
   used: number()
     .typeError("used must be a number")
     .integer()
+    .min(0)
     .transform(emptyStringToNull)
     .nullable(),
   year: number()
     .typeError("year must be a number")
     .positive()
     .integer()
+    .min(0)
     .transform(emptyStringToNull)
     .nullable(),
 });

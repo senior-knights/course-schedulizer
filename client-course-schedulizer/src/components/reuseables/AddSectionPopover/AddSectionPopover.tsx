@@ -5,6 +5,7 @@ import { isEqual } from "lodash";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
+  addFalseToDaysCheckboxList,
   addSectionSchema,
   convertFromSemesterLength,
   mapInternalTypesToInput,
@@ -14,10 +15,10 @@ import {
   useDeleteSectionFromSchedule,
 } from "utilities";
 import {
-  CourseSectionMeeting,
   Day,
   Half,
   Intensive,
+  PopoverValueProps,
   SemesterLength,
   SemesterLengthOption,
   Term,
@@ -25,13 +26,10 @@ import {
 } from "utilities/interfaces";
 import "./AddSectionPopover.scss";
 
-interface AddSectionPopover {
-  values?: CourseSectionMeeting;
-}
 const SPACING = 2;
 
 /* A form to input information to add a schedule */
-export const AddSectionPopover = ({ values }: AddSectionPopover) => {
+export const AddSectionPopover = ({ values }: PopoverValueProps) => {
   const methods = useForm<SectionInput>({
     criteriaMode: "all",
     defaultValues: mapInternalTypesToInput(values),
@@ -177,7 +175,7 @@ export const AddSectionPopover = ({ values }: AddSectionPopover) => {
         </Grid>
         <Grid container spacing={SPACING}>
           <GridItemCheckboxGroup
-            initialValue={values?.meeting?.days}
+            initialValue={addFalseToDaysCheckboxList(values?.meeting?.days) as string[]}
             label="Days"
             options={Object.values(Day).filter((day) => {
               return Object.values(Weekday).includes(day);
