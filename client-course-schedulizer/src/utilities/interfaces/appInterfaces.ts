@@ -12,23 +12,27 @@ export enum ColorBy {
 export interface AppState {
   classes: string[];
   colorBy: ColorBy;
+  fileUrl: string;
   professors: string[];
   rooms: string[];
   schedule: Schedule;
+  schedulizerTab: number;
   selectedTerm: Term;
   slotMaxTime: string;
   slotMinTime: string;
 }
 
 // Defaults for the app state when it launches, will try to load
-//  previous appState to launch app from. If no previous state saved,
-//  will default to the object below.
+//  previous appState (with cleared fileUrl) to launch app from.
+//  If no previous state saved, will default to the object below.
 export const initialAppState: AppState = loadLocal("appState") || {
   classes: [],
   colorBy: 0,
+  fileUrl: "",
   professors: [],
   rooms: [],
   schedule: { courses: [] },
+  schedulizerTab: 0,
   selectedTerm: Term.Fall,
   slotMaxTime: "22:00",
   slotMinTime: "6:00",
@@ -36,10 +40,6 @@ export const initialAppState: AppState = loadLocal("appState") || {
 
 // structure of actions that can be sent to app dispatch
 export interface AppAction {
-  payload: {
-    colorBy?: ColorBy;
-    schedule?: Schedule;
-    term?: Term;
-  };
-  type: "setScheduleData" | "setSelectedTerm" | "setColorBy"; // add | to add more actions in the future
+  payload: Partial<AppState>;
+  type: "setScheduleData" | "setSelectedTerm" | "setFileUrl" | "setColorBy" | "setSchedulizerTab"; // add | to add more actions in the future
 }

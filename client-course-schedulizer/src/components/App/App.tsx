@@ -1,9 +1,10 @@
 import { Footer, Header } from "components";
-import { AboutPage, HelpPage, SchedulizerPage } from "components/pages";
+import { AboutPage, HarmonyPage, HelpPage, SchedulizerPage } from "components/pages";
 import React, { useReducer, useState } from "react";
 import { HashRouter, Route, Switch } from "react-router-dom";
-import { initialAppState, reducer, useLocal } from "utilities";
+import { reducer, useLocal } from "utilities";
 import { AppContext } from "utilities/contexts";
+import { initialAppState } from "utilities/interfaces";
 import "./App.scss";
 
 /* App with a HashRouter.
@@ -26,6 +27,9 @@ export const App = () => {
               </Route>
               <Route path="/help">
                 <HelpPage />
+              </Route>
+              <Route path="/harmony">
+                <HarmonyPage />
               </Route>
               <Route path="/">
                 <SchedulizerPage />
