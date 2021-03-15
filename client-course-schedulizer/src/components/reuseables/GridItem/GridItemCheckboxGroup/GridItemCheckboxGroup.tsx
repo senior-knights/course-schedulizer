@@ -7,21 +7,53 @@ import {
   FormLabel,
   Grid,
 } from "@material-ui/core";
-import React from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useInput } from "utilities";
 import "./GridItemCheckboxGroup.scss";
 
 interface GridItemCheckboxGroup {
+  initialValue: string[];
   label: string;
   name?: string;
   options: string[];
-  value?: string[];
 }
 
-export const GridItemCheckboxGroup = ({ label, name, options, value }: GridItemCheckboxGroup) => {
+export const GridItemCheckboxGroup = ({
+  label,
+  name,
+  options,
+  initialValue,
+}: GridItemCheckboxGroup) => {
   const { register, errors } = useFormContext();
   const { name: nameFallback, errorMessage } = useInput(label, errors);
+  const [value, onValueChange] = useState(initialValue);
+
+  useEffect(() => {
+    onValueChange(initialValue);
+  }, [initialValue]);
+
+  /* onCheckboxChange handles the value change when a checkbox is clicked
+      value is a string[] with a length equal to the number of options.
+      If an option is selected, its position in the value array is updated
+      with the option name. If it is unselected, its position in the value array
+      is updated with "false".
+  */
+  const onCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const opt = e.target.value;
+    if (value) {
+      const valueCopy = [...value];
+      if (value?.includes(opt)) {
+        valueCopy.splice(options.indexOf(opt), 1, "false");
+        onValueChange(valueCopy);
+      } else {
+        valueCopy.splice(options.indexOf(opt), 1, opt);
+        onValueChange(valueCopy);
+      }
+    } else {
+      onValueChange([opt]);
+    }
+  };
 
   return (
     <Grid item xs>
@@ -33,7 +65,12 @@ export const GridItemCheckboxGroup = ({ label, name, options, value }: GridItemC
               return (
                 <Grid key={opt} item>
                   <FormControlLabel
-                    control={<Checkbox defaultChecked={value?.includes(opt)} />}
+                    control={
+                      <Checkbox
+                        checked={value?.includes(opt) ?? false}
+                        onChange={onCheckboxChange}
+                      />
+                    }
                     inputRef={register}
                     label={opt}
                     name={`${name ?? nameFallback}[${i}]`}
@@ -52,5 +89,4 @@ export const GridItemCheckboxGroup = ({ label, name, options, value }: GridItemC
 
 GridItemCheckboxGroup.defaultProps = {
   name: undefined,
-  value: [],
 };
