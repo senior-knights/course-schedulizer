@@ -4,6 +4,7 @@ export * from "./AddSectionPopover";
 export * from "./animated";
 export * from "./AsyncComponent";
 export * from "./Calendar";
+export * from "./FieldArrayForm";
 export * from "./GridItem";
 export * from "./ImportInputWrapper";
 export * from "./ModalPagination";
