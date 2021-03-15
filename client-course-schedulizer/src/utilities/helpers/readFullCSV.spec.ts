@@ -64,14 +64,6 @@ describe("parses basic course", () => {
     expect(basicCourse.department).toEqual("Mathematics and Statistics");
   });
 
-  it("parses faculty hours", () => {
-    expect(basicCourse.facultyHours).toEqual(3);
-  });
-
-  it("parses student hours", () => {
-    expect(basicCourse.studentHours).toEqual(3);
-  });
-
   it("parses name", () => {
     expect(basicCourse.name).toEqual("Math in the Contemporary World");
   });
@@ -93,6 +85,14 @@ describe("parses basic course", () => {
 describe("parses basic section", () => {
   it("loads section", () => {
     expect(basicSection).toBeDefined();
+  });
+
+  it("parses faculty hours", () => {
+    expect(basicSection.facultyHours).toEqual(3);
+  });
+
+  it("parses student hours", () => {
+    expect(basicSection.studentHours).toEqual(3);
   });
 
   it("parses used", () => {
