@@ -2,6 +2,8 @@ import { voidFn } from "utilities";
 import { AppAction, AppState, ColorBy, Term } from "utilities/interfaces";
 import { getClasses, getMinAndMaxTimes, getProfs, getRooms } from "utilities/services";
 
+const DEFAULT_PAGE = 0;
+
 /*
   Provides a function to perform multiple setState updates
   at once that depend on each other.
@@ -28,15 +30,27 @@ export const reducer = (actionCallback: (item: AppState) => void = voidFn) => {
         break;
       }
       case "setSelectedTerm": {
-        let { term } = action.payload;
-        term = term || Term.Fall;
-        newState = { ...state, selectedTerm: term };
+        let { selectedTerm } = action.payload;
+        selectedTerm = selectedTerm || Term.Fall;
+        newState = { ...state, selectedTerm };
+        break;
+      }
+      case "setFileUrl": {
+        let { fileUrl } = action.payload;
+        fileUrl = fileUrl || "";
+        newState = { ...state, fileUrl };
         break;
       }
       case "setColorBy": {
         let { colorBy } = action.payload;
         colorBy = colorBy || ColorBy.Level;
         newState = { ...state, colorBy };
+        break;
+      }
+      case "setSchedulizerTab": {
+        let { schedulizerTab } = action.payload;
+        schedulizerTab = schedulizerTab || DEFAULT_PAGE;
+        newState = { ...state, schedulizerTab };
         break;
       }
       default:

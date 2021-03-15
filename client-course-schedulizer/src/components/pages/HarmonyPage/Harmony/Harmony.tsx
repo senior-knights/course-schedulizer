@@ -1,5 +1,4 @@
-import { Harmony as H } from "@harmoniously/react";
-import { Assignments } from "harmoniously";
+import { Assignments, Harmony as H } from "@harmoniously/react";
 import React, { useContext } from "react";
 import { AppContext } from "utilities/contexts";
 
@@ -15,8 +14,7 @@ const useInferredAssignments = () => {
   const inferredAssignments: Assignments = {};
   classes.forEach((cls) => {
     inferredAssignments[cls] = {
-      // TODO: update this. https://stackoverflow.com/a/5915122/9931154
-      professor: professors[Math.floor(Math.random() * professors.length)],
+      professors,
       rooms: [...rooms, "a", "b"],
       times,
     };
@@ -33,9 +31,6 @@ export const Harmony = () => {
 
   return (
     <>
-      <h2>
-        Note: This tab is in a <b>pre alpha</b> state. Output might not be perfect.
-      </h2>
       <H assignments={inferredAssignments} />
       <div>Professors: {professors}</div>
       <div>Rooms: {rooms}</div>
