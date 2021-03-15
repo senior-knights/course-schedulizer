@@ -13,7 +13,7 @@ export const Tabs = () => {
     isCSVLoading,
     appDispatch,
   } = useContext(AppContext);
-  const [tabValue, setTabValue] = useState(schedulizerTab);
+  const [tabValue, setTabValue] = useState(schedulizerTab || 0);
 
   const handleTabChange = (event: ChangeEvent<{}>, newValue: number) => {
     setTabValue(newValue);
