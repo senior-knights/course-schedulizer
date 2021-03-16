@@ -16,6 +16,7 @@ export interface AppState {
   professors: string[];
   rooms: string[];
   schedule: Schedule;
+  schedulizerTab: number;
   selectedTerm: Term;
   slotMaxTime: string;
   slotMinTime: string;
@@ -31,6 +32,7 @@ export const initialAppState: AppState = loadLocal("appState") || {
   professors: [],
   rooms: [],
   schedule: { courses: [] },
+  schedulizerTab: 0,
   selectedTerm: Term.Fall,
   slotMaxTime: "22:00",
   slotMinTime: "6:00",
@@ -38,11 +40,6 @@ export const initialAppState: AppState = loadLocal("appState") || {
 
 // structure of actions that can be sent to app dispatch
 export interface AppAction {
-  payload: {
-    colorBy?: ColorBy;
-    fileUrl?: string;
-    schedule?: Schedule;
-    term?: Term;
-  };
-  type: "setScheduleData" | "setSelectedTerm" | "setFileUrl" | "setColorBy"; // add | to add more actions in the future
+  payload: Partial<AppState>;
+  type: "setScheduleData" | "setSelectedTerm" | "setFileUrl" | "setColorBy" | "setSchedulizerTab"; // add | to add more actions in the future
 }

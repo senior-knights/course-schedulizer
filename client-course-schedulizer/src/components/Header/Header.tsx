@@ -18,6 +18,9 @@ export const Header = () => {
           <Link component={RouterLink} to="/">
             Schedulizer
           </Link>
+          <Link component={RouterLink} to="/harmony">
+            Harmony
+          </Link>
           <Link component={RouterLink} to="/about">
             About
           </Link>
