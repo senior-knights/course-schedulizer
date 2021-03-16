@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { DeepMap, FieldError } from "react-hook-form";
 import { insertSectionCourse } from "utilities";
 import { AppContext } from "utilities/contexts";
-import { Course, CourseSectionMeeting, Section } from "utilities/interfaces";
+import { AppAction, Course, CourseSectionMeeting, Section, Term } from "utilities/interfaces";
 import {
   createEventClassName,
   handleOldSection,
@@ -20,13 +20,13 @@ interface MappedSection {
 
 export const useAddSectionToSchedule = () => {
   const {
-    appState: { schedule },
+    appState: { schedule, selectedTerm },
     appDispatch,
     setIsCSVLoading,
   } = useContext(AppContext);
 
   // Update the schedule via pass by sharing.
-  const addSectionToSchedule = (
+  const addSectionToSchedule = async (
     data: SectionInput,
     oldData: CourseSectionMeeting | undefined,
     removeOldSection = false,
@@ -36,10 +36,10 @@ export const useAddSectionToSchedule = () => {
     handleOldSection(oldData, newSection, removeOldSection, schedule);
     insertSectionCourse(schedule, newSection, newCourse);
     appDispatch({ payload: { schedule }, type: "setScheduleData" });
-    setIsCSVLoading(false);
-    // TODO: Switch term if necessary
     // TODO: Ensure scroll doesn't cause graphical errors
     // TODO: What about adding/modifying a section on the teaching loads tab once merged?
+    await switchToCorrectTerm(newSection, selectedTerm, appDispatch);
+    setIsCSVLoading(false);
     scrollToUpdatedSection(newCourse, newSection);
   };
 
@@ -55,6 +55,20 @@ export const useAddSectionToSchedule = () => {
   return { addNonTeachingLoadToSchedule, addSectionToSchedule };
 };
 
+const switchToCorrectTerm = async (
+  newSection: Section,
+  currentTerm: Term,
+  appDispatch: React.Dispatch<AppAction> | (() => void),
+) => {
+  const newTerm = Array.isArray(newSection.term) ? newSection.term[0] : newSection.term;
+  if (newTerm !== currentTerm) {
+    await appDispatch({
+      payload: { term: newTerm },
+      type: "setSelectedTerm",
+    });
+  }
+};
+
 const scrollToUpdatedSection = (newCourse: Course, newSection: Section) => {
   let className = "";
   let newElement: Element | undefined;
@@ -62,15 +76,15 @@ const scrollToUpdatedSection = (newCourse: Course, newSection: Section) => {
   forEach(newSection.instructors, (prof) => {
     forEach(newSection.meetings, (meeting) => {
       const room = `${meeting.location.building}_${meeting.location.roomNumber}`;
-      className = createEventClassName(newSectionName, prof, room);
+      className = createEventClassName(newSectionName, room, prof);
       const newElements = document.getElementsByClassName(className);
       if (newElements) {
-        [newElement] = newElements;
+        newElement = newElements.item(newElements.length - 1) ?? undefined;
       }
     });
   });
   if (newElement) {
-    newElement.scrollIntoView({ inline: "center" });
+    newElement.scrollIntoView({ behavior: "smooth", inline: "nearest" });
   }
 };
 
