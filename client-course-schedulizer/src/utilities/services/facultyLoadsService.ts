@@ -126,7 +126,14 @@ export const createTable = (schedule: Schedule): FacultyRow[] => {
     .sort((a, b) => {
       return b.totalHours - a.totalHours;
     });
-  sortedTableData.push({ faculty: "Total", totalHours: sumBy(sortedTableData, "totalHours") });
+  sortedTableData.push({
+    faculty: "Total",
+    fallHours: sumBy(sortedTableData, "fallHours"),
+    otherHours: sumBy(sortedTableData, "otherHours"),
+    springHours: sumBy(sortedTableData, "springHours"),
+    summerHours: sumBy(sortedTableData, "summerHours"),
+    totalHours: sumBy(sortedTableData, "totalHours"),
+  });
   return sortedTableData;
 };
 
