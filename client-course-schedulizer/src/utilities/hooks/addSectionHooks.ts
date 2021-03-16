@@ -80,7 +80,7 @@ const switchToCorrectTerm = async (
   const newTerm = Array.isArray(newSection.term) ? newSection.term[0] : newSection.term;
   if (newTerm !== currentTerm) {
     await appDispatch({
-      payload: { term: newTerm },
+      payload: { selectedTerm: newTerm },
       type: "setSelectedTerm",
     });
   }
