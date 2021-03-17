@@ -80,7 +80,7 @@ export const termCallback = (value: string, { section }: CaseCallbackParams) => 
     });
     section.term = termsArr;
   } else {
-    section.term = termCase(value);
+    section.term = value === "" ? [] : termCase(value);
   }
 };
 
@@ -99,7 +99,7 @@ export const instructorCallback = (value: string, { section }: CaseCallbackParam
 };
 
 export const prefixCallback = (value: string, { course }: CaseCallbackParams) => {
-  course.prefixes = prefixCase(value);
+  course.prefixes = value === "" ? [] : prefixCase(value);
 };
 
 export const nameCallback = (value: string, { course }: CaseCallbackParams) => {
