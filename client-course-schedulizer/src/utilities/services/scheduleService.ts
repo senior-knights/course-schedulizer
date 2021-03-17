@@ -5,7 +5,7 @@ import hash from "object-hash";
 import randomColor from "randomcolor";
 import { enumArray } from "utilities";
 import { INITIAL_DATE } from "utilities/constants";
-import { ColorBy, Day, Meeting, Schedule, Section, Term } from "utilities/interfaces";
+import { ColorBy, Day, Instructor, Meeting, Schedule, Section, Term } from "utilities/interfaces";
 
 // Returns a list of hours to display on the Schedule
 // TODO: add better types for timing, maybe: https://stackoverflow.com/questions/51445767/how-to-define-a-regex-matched-string-type-in-typescript
@@ -182,4 +182,18 @@ export const colorEventsByFeature = (groupedEvents: GroupedEvents, colorBy: Colo
       });
   }
   return groupedEvents;
+};
+
+export const getInstructors = (schedule: Schedule) => {
+  const instructors: Instructor[] = [];
+  forEach(schedule.courses, (course) => {
+    forEach(course.sections, (section) => {
+      forEach(section.instructors, (instructor) => {
+        if (!instructors.includes(instructor)) {
+          instructors.push(instructor);
+        }
+      });
+    });
+  });
+  return instructors.sort();
 };

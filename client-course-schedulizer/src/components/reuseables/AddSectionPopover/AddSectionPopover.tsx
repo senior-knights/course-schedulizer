@@ -1,19 +1,26 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Grid, InputAdornment, Typography } from "@material-ui/core";
-import { GridItemCheckboxGroup, GridItemRadioGroup, GridItemTextField } from "components";
+import {
+  GridItemAutocomplete,
+  GridItemCheckboxGroup,
+  GridItemRadioGroup,
+  GridItemTextField,
+} from "components";
 import { isEqual } from "lodash";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
   addFalseToDaysCheckboxList,
   addSectionSchema,
   convertFromSemesterLength,
+  getInstructors,
   mapInternalTypesToInput,
   removeUncheckedValues,
   SectionInput,
   useAddSectionToSchedule,
   useDeleteSectionFromSchedule,
 } from "utilities";
+import { AppContext } from "utilities/contexts";
 import {
   Day,
   Half,
@@ -30,6 +37,10 @@ const SPACING = 2;
 
 /* A form to input information to add a schedule */
 export const AddSectionPopover = ({ values }: PopoverValueProps) => {
+  const {
+    appState: { schedule },
+  } = useContext(AppContext);
+
   const methods = useForm<SectionInput>({
     criteriaMode: "all",
     defaultValues: mapInternalTypesToInput(values),
@@ -141,7 +152,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
         </Grid>
         <Grid container spacing={SPACING}>
           {/* TODO: Dropdown for instructors with option to add new one */}
-          <GridItemTextField label="Instructor" />
+          <GridItemAutocomplete label="Instructor" options={getInstructors(schedule)} />
           {/* TODO: Dropdown for rooms with option to add new one */}
           <GridItemTextField label="Location" />
           <GridItemTextField label="Room Capacity" />
