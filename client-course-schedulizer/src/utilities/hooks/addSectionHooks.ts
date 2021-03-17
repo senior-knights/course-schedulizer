@@ -4,11 +4,24 @@ import { DeepMap, FieldError } from "react-hook-form";
 import { insertSectionCourse } from "utilities";
 import { AppContext } from "utilities/contexts";
 import { Course, CourseSectionMeeting, Section } from "utilities/interfaces";
-import { handleOldSection, mapInputToInternalTypes, SectionInput } from "utilities/services";
+import {
+  handleOldSection,
+  mapInputToInternalTypes,
+  NonTeachingLoadInput,
+  SectionInput,
+} from "utilities/services";
+import { mapNonTeachingLoadInput } from "utilities/services/addNonTeachingLoadService";
 
 interface MappedSection {
   newCourse: Course;
   newSection: Section;
+}
+
+interface AddToScheduleParams {
+  newCourse: Course;
+  newSection: Section;
+  oldData: CourseSectionMeeting | undefined;
+  removeOldSection: boolean;
 }
 
 export const useAddSectionToSchedule = () => {
@@ -26,13 +39,32 @@ export const useAddSectionToSchedule = () => {
   ) => {
     setIsCSVLoading(true);
     const { newSection, newCourse }: MappedSection = mapInputToInternalTypes(data);
+    addToSchedule({ newCourse, newSection, oldData, removeOldSection });
+  };
+
+  const addNonTeachingLoadToSchedule = (
+    data: NonTeachingLoadInput,
+    oldData: CourseSectionMeeting | undefined,
+    removeOldSection = false,
+  ) => {
+    setIsCSVLoading(true);
+    const { newSection, newCourse }: MappedSection = mapNonTeachingLoadInput(data);
+    addToSchedule({ newCourse, newSection, oldData, removeOldSection });
+  };
+
+  const addToSchedule = ({
+    newCourse,
+    newSection,
+    oldData,
+    removeOldSection,
+  }: AddToScheduleParams) => {
     handleOldSection(oldData, newSection, removeOldSection, schedule);
     insertSectionCourse(schedule, newSection, newCourse);
     appDispatch({ payload: { schedule }, type: "setScheduleData" });
     setIsCSVLoading(false);
   };
 
-  return { addSectionToSchedule };
+  return { addNonTeachingLoadToSchedule, addSectionToSchedule };
 };
 
 // a helper to provide consistent naming and retrieve error messages

@@ -1,4 +1,4 @@
-import { cloneDeep } from "lodash";
+import { cloneDeep, forEach } from "lodash";
 import moment from "moment";
 import { emptyMeeting } from "utilities/constants";
 import { Course, Day, Meeting, Section, SemesterLength, Term } from "utilities/interfaces";
@@ -11,6 +11,7 @@ export interface CaseCallbackParams {
 
 export const MIN_HALF_LENGTH = 35;
 export const MAX_HALF_LENGTH = 80;
+const SEPARATORS = [",", ";", "\n"];
 
 // Define regexes for parsing
 // const timeReg = RegExp("(?<![1-9])(1[0-9]|2[0-3]|[0-9]):([0-5][0-9])");
@@ -65,7 +66,22 @@ export const locationCallback = (value: string, params: CaseCallbackParams) => {
 };
 
 export const termCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.term = termCase(value);
+  let separator = ",";
+  if (
+    SEPARATORS.some((s) => {
+      separator = s;
+      return value.includes(s);
+    })
+  ) {
+    const terms = value.split(separator);
+    const termsArr: Term[] = [];
+    forEach(terms, (term) => {
+      termsArr.push(termCase(term));
+    });
+    section.term = termsArr;
+  } else {
+    section.term = termCase(value);
+  }
 };
 
 export const semesterLengthCallback = (value: string, { section }: CaseCallbackParams) => {
@@ -99,15 +115,15 @@ export const letterCallback = (value: string, { section }: CaseCallbackParams) =
 };
 
 export const globalMaxCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.globalMax = numberDefaultZeroCase(value);
+  section.globalMax = integerDefaultZeroCase(value);
 };
 
 export const localMaxCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.localMax = numberDefaultZeroCase(value);
+  section.localMax = integerDefaultZeroCase(value);
 };
 
 export const anticipatedSizeCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.anticipatedSize = numberDefaultZeroCase(value);
+  section.anticipatedSize = integerDefaultZeroCase(value);
 };
 
 export const commentsCallback = (value: string, { section }: CaseCallbackParams) => {
@@ -118,12 +134,14 @@ export const yearCallback = (value: string, { section }: CaseCallbackParams) => 
   section.year = yearCase(value);
 };
 
-export const studentHoursCallback = (value: string, { course }: CaseCallbackParams) => {
-  course.studentHours = numberDefaultZeroCase(value);
+export const studentHoursCallback = (value: string, { section }: CaseCallbackParams) => {
+  section.studentHours = value.startsWith("$")
+    ? integerDefaultZeroCase(value.substr(1))
+    : integerDefaultZeroCase(value);
 };
 
-export const facultyHoursCallback = (value: string, { course }: CaseCallbackParams) => {
-  course.facultyHours = numberDefaultZeroCase(value);
+export const facultyHoursCallback = (value: string, { section }: CaseCallbackParams) => {
+  section.facultyHours = value.startsWith("$") ? Number(value.substr(1)) : Number(value);
 };
 
 export const durationCallback = (value: string, params: CaseCallbackParams) => {
@@ -134,7 +152,7 @@ export const durationCallback = (value: string, params: CaseCallbackParams) => {
 
 export const roomCapacityCallback = (value: string, params: CaseCallbackParams) => {
   assignWithMeetings(value, params, (capacity, i, meetings) => {
-    meetings[i].location.roomCapacity = numberDefaultZeroCase(capacity);
+    meetings[i].location.roomCapacity = integerDefaultZeroCase(capacity);
   });
 };
 
@@ -147,11 +165,11 @@ export const termStartCallback = (value: string, { section }: CaseCallbackParams
 };
 
 export const usedCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.used = numberDefaultZeroCase(value);
+  section.used = integerDefaultZeroCase(value);
 };
 
 export const day10UsedCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.day10Used = numberDefaultZeroCase(value);
+  section.day10Used = integerDefaultZeroCase(value);
 };
 
 export const startDateCallback = (value: string, { section }: CaseCallbackParams) => {
@@ -169,6 +187,28 @@ export const statusCallback = (value: string, { section }: CaseCallbackParams) =
 
 export const instructionalMethodCallback = (value: string, { section }: CaseCallbackParams) => {
   section.instructionalMethod = value;
+};
+
+export const sectionCallback = (value: string, params: CaseCallbackParams) => {
+  if (value === "--" || value.trim() === "") {
+    params.section.isNonTeaching = true;
+  } else {
+    const sectionParts = value.split("-");
+    prefixCallback(sectionParts[0], params);
+    numberCallback(sectionParts[1], params);
+    letterCallback(sectionParts[2], params);
+  }
+};
+
+export const timeCallback = (value: string, params: CaseCallbackParams) => {
+  const [startTime] = value.split(" ").join("").split("-");
+  startTimeCallback(startTime, params);
+  durationCallback(value, params);
+};
+
+export const nonTeachingActivityCallback = (value: string, params: CaseCallbackParams) => {
+  params.section.isNonTeaching = true;
+  instructionalMethodCallback(value, params);
 };
 
 export const startTimeCase = (value: string): string => {
@@ -295,7 +335,7 @@ export const prefixCase = (value: string): string[] => {
   return value.replace(" ", "").split(/[;,\n]/);
 };
 
-export const numberDefaultZeroCase = (value: string): number => {
+export const integerDefaultZeroCase = (value: string): number => {
   return Number.isInteger(Number(value)) ? Number(value) : 0;
 };
 

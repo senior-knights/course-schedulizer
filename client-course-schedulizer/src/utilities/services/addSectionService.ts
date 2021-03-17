@@ -1,4 +1,6 @@
-import { filter, indexOf, isEqual } from "lodash";
+import { filter, indexOf, isEqual, map } from "lodash";
+import moment from "moment";
+import { CheckboxTerms } from "utilities";
 import {
   instructorCase,
   locationCase,
@@ -9,6 +11,7 @@ import {
 import {
   Course,
   CourseSectionMeeting,
+  Day,
   Half,
   Instructor,
   Intensive,
@@ -19,36 +22,47 @@ import {
   Section,
   SemesterLength,
   SemesterLengthOption,
+  Term,
+  Weekday,
 } from "utilities/interfaces";
+
+type CheckboxDays = (Day | boolean)[];
 
 // Defines interface for the section popover input
 export interface SectionInput {
-  anticipatedSize: Section["anticipatedSize"];
+  anticipatedSize?: Section["anticipatedSize"];
   comments: Section["comments"];
-  day10Used: Section["day10Used"];
-  days: Meeting["days"];
+  day10Used?: Section["day10Used"];
+  days: CheckboxDays;
   department: Course["department"];
-  duration: Meeting["duration"];
+  duration?: Meeting["duration"];
   facultyHours: Section["facultyHours"];
-  globalMax: Section["globalMax"];
-  half: Half;
+  globalMax?: Section["globalMax"];
+  halfSemester: Half;
   instructionalMethod: Section["instructionalMethod"];
   instructor: Instructor;
-  intensive?: Intensive;
-  localMax: Section["localMax"];
+  intensiveSemester: Intensive;
+  localMax?: Section["localMax"];
   location: string;
   name: Course["name"];
   number: Course["number"];
   prefix: Prefix;
-  roomCapacity: Location["roomCapacity"];
+  roomCapacity?: Location["roomCapacity"];
   section: Section["letter"];
   semesterLength: SemesterLengthOption;
   startTime: Meeting["startTime"];
   status: Section["status"];
   studentHours: Section["studentHours"];
   term: Section["term"];
-  used: Section["used"];
+  used?: Section["used"];
   year: string; // Assume string till yearCase() decides
+}
+
+export interface NonTeachingLoadInput {
+  activity: Section["instructionalMethod"];
+  facultyHours: Section["facultyHours"];
+  instructor: Instructor;
+  terms: CheckboxTerms;
 }
 
 export const convertFromSemesterLength = (sl: SemesterLength | undefined): SemesterLengthOption => {
@@ -107,7 +121,9 @@ export const getSection = (
   const course = getCourse(schedule, prefixes, courseNumber);
   const sections = filter(course?.sections, (section) => {
     return (
-      section.letter === letter && section.term === term && section.instructors === instructors
+      section.letter === letter &&
+      section.term === term &&
+      isEqual(section.instructors, instructors)
     );
   });
   return sections.length > 0 ? sections[0] : undefined;
@@ -128,6 +144,7 @@ const removeSection = (
       );
     },
   );
+  // TODO: Delete course if no sections left?
 };
 
 /* Used to map the input from the popover form to the
@@ -139,9 +156,71 @@ export const mapInputToInternalTypes = (data: SectionInput) => {
   return { newCourse, newSection };
 };
 
+export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInput => {
+  const locationValue = (
+    (data &&
+      data.meeting &&
+      `${data?.meeting?.location.building} ${data?.meeting?.location.roomNumber}`) ||
+    ""
+  ).trim();
+
+  let defaultTerm = data?.section.term;
+  if (Array.isArray(defaultTerm)) {
+    [defaultTerm] = defaultTerm;
+  }
+
+  const days = addFalseToDaysCheckboxList(data?.meeting?.days);
+
+  return {
+    anticipatedSize: data?.section.anticipatedSize,
+    comments: data?.section.comments ?? "",
+    day10Used: data?.section.day10Used,
+    days,
+    department: data?.course.department ?? "",
+    duration: data?.meeting?.duration,
+    facultyHours:
+      data?.section.facultyHours !== undefined
+        ? data?.section.facultyHours
+        : data?.course.facultyHours || 0,
+    globalMax: data?.section.globalMax,
+    halfSemester: ((data?.section.semesterLength &&
+    convertFromSemesterLength(data?.section.semesterLength) === SemesterLengthOption.HalfSemester
+      ? data?.section.semesterLength
+      : SemesterLength.HalfFirst) as unknown) as Half,
+    instructionalMethod: data?.section.instructionalMethod ?? "LEC",
+    instructor: data?.section.instructors.join() || "",
+    intensiveSemester: ((data?.section.semesterLength &&
+    convertFromSemesterLength(data?.section.semesterLength) ===
+      SemesterLengthOption.IntensiveSemester
+      ? data?.section.semesterLength
+      : SemesterLength.IntensiveA) as unknown) as Intensive,
+    localMax: data?.section.localMax,
+    location: locationValue,
+    name: data?.course.name || "",
+    number: data?.course.number || "",
+    prefix: data?.course.prefixes.join() || "",
+    roomCapacity: data?.meeting?.location.roomCapacity,
+    section: data?.section.letter || "",
+    semesterLength: convertFromSemesterLength(data?.section.semesterLength),
+    startTime: data?.meeting?.startTime
+      ? moment(data?.meeting?.startTime, "h:mm A").format("HH:mm")
+      : "08:00",
+    status: data?.section.status ?? "Active",
+    studentHours:
+      data?.section.studentHours !== undefined
+        ? data?.section.studentHours
+        : data?.course.studentHours || 0,
+    term: defaultTerm || Term.Fall,
+    used: data?.section.used,
+    year: data?.section.year?.toString() ?? "",
+  };
+};
+
 const createNewSectionFromInput = (data: SectionInput): Section => {
   const location = locationCase(data.location);
-  const semesterType = convertToSemesterLength(data.intensive || data.half || data.semesterLength);
+  const semesterType = convertToSemesterLength(
+    data.intensiveSemester || data.halfSemester || data.semesterLength,
+  );
 
   const building = location[0];
   const roomNumber = location[1];
@@ -159,7 +238,7 @@ const createNewSectionFromInput = (data: SectionInput): Section => {
     localMax: Number(data.localMax),
     meetings: [
       {
-        days: data.days,
+        days: data.days as Day[],
         duration: Number(data.duration),
         location: {
           building,
@@ -216,17 +295,31 @@ export const handleOldSection = (
 
     // Remove the old version of the Section
     if (removeOldSection) {
-      removeOldSectionFromSchedule(oldData, schedule, oldSection);
+      removeSectionFromSchedule(oldData, schedule, oldSection);
     }
   }
 };
 
-const removeOldSectionFromSchedule = (
-  oldData: CourseSectionMeeting | undefined,
+export const removeSectionFromSchedule = (
+  data: CourseSectionMeeting | undefined,
   schedule: Schedule,
-  oldSection: Section,
+  section: Section,
 ) => {
-  const oldCourse = oldData?.course;
+  const oldCourse = data?.course;
   const courseIndex = indexOf(schedule.courses, oldCourse);
-  removeSection(schedule, oldSection.letter, oldSection.term, oldSection.instructors, courseIndex);
+  removeSection(schedule, section.letter, section.term, section.instructors, courseIndex);
+};
+
+export const addFalseToDaysCheckboxList = (days?: Day[]): CheckboxDays => {
+  const weekdays = Object.values(Day).filter((day) => {
+    return Object.values(Weekday).includes(day);
+  });
+
+  if (!days) {
+    return new Array(weekdays.length).fill(false);
+  }
+
+  return map(weekdays, (wd: Day) => {
+    return days.includes(wd) ? wd : false;
+  });
 };

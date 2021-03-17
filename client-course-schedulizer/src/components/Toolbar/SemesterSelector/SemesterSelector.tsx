@@ -20,7 +20,7 @@ export const SemesterSelector = () => {
       // This action takes so long it affectively makes this
       //  synchronous function asynchronous.
       await appDispatch({
-        payload: { term: newTerm },
+        payload: { selectedTerm: newTerm },
         type: "setSelectedTerm",
       });
       setIsScheduleLoading(false);

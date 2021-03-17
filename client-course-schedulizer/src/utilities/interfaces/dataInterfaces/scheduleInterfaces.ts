@@ -35,16 +35,17 @@ export interface Section {
   anticipatedSize?: number;
   comments: string;
   // Number of students enrolled in this section 10 days into the course
-  day10Used: number;
+  day10Used?: number;
   // Like 2/3/2020
   endDate: string;
   // Overrides Course value
   facultyHours?: number;
-  globalMax: number;
+  globalMax?: number;
   instructionalMethod: string;
   instructors: Instructor[];
+  isNonTeaching?: boolean;
   letter: string;
-  localMax: number;
+  localMax?: number;
   // Multiple Meetings possible if time/room differs on different days
   // Asynchronous classes should have an empty array of meeting times
   meetings: Meeting[];
@@ -54,11 +55,11 @@ export interface Section {
   status: string;
   // Overrides Course value
   studentHours?: number;
-  term: Term;
+  term: Term | Term[];
   // Like 9/3/2019
   termStart: string;
   // Number of students enrolled in this section at the end of the course
-  used: number;
+  used?: number;
   year: number | string;
 }
 

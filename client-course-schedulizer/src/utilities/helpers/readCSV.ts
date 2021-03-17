@@ -49,7 +49,7 @@ const registrarSpreadsheetFields: ValidFields = {
   MeetingDays: cf.daysCallback,
   MeetingDurationMinutes: cf.durationCallback,
   MeetingStart: cf.startTimeCallback,
-  MeetingTime: cf.durationCallback,
+  MeetingTime: cf.timeCallback,
   MinimumCredits: cf.studentHoursCallback,
   RoomCapacity: cf.roomCapacityCallback,
   SectionCode: cf.letterCallback,
@@ -63,15 +63,34 @@ const registrarSpreadsheetFields: ValidFields = {
   Used: cf.usedCallback,
 };
 
+const templateSpreadsheetFields: ValidFields = {
+  Days: cf.daysCallback,
+  FacLoad: cf.facultyHoursCallback,
+  NonTeachingActivity: cf.nonTeachingActivityCallback,
+  Room: cf.locationCallback,
+  SectionName: cf.sectionCallback,
+  StuCred: cf.studentHoursCallback,
+  Terms: cf.termCallback,
+};
+
 const callbacks: ValidFields = {
   ...pruimSpreadsheetFields,
   ...registrarSpreadsheetFields,
+  ...templateSpreadsheetFields,
 };
 
 export const csvStringToSchedule = (csvString: string): Schedule => {
+  // Remove junk from Excel export to CSV
+  csvString = csvString.replace("ï»¿", "");
+
+  // Remove title rows from template spreadsheet. Perhaps there is a better way to check if it is in the template format
+  if (csvString.startsWith("2")) {
+    csvString = csvString.split("\n").slice(2).join("\n");
+  }
+
   const objects: papa.ParseResult<never> = papa.parse(csvString, {
     header: true,
-    skipEmptyLines: true,
+    skipEmptyLines: "greedy",
   });
 
   // Define variables for Schedule creation
@@ -95,7 +114,7 @@ export const csvStringToSchedule = (csvString: string): Schedule => {
     if (fields) {
       fields.forEach((field) => {
         const value = String(object[field]);
-        field = field.replace(/\s/g, "").replace("ï»¿", "");
+        field = field.replace(/\s/g, "").replace("(", "").replace(")", "").replace("-", "");
         if (field in callbacks) {
           callbacks[field as keyof ValidFields](value, { course, meetings, section });
         }
@@ -157,6 +176,5 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
     course.sections.push(section);
     schedule.courses.push(course);
   }
-
   return schedule;
 };

@@ -8,6 +8,7 @@ import StickyNode from "react-stickynode";
 import { CourseSectionMeeting } from "utilities";
 import { AppContext, ScheduleContext } from "utilities/contexts";
 import {
+  colorEventsByFeature,
   filterEventsByTerm,
   filterHeadersWithNoEvents,
   getHoursArr,
@@ -44,7 +45,7 @@ export const Schedule = (props: ScheduleBase) => {
 */
 const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: ScheduleBase) => {
   const {
-    appState: { selectedTerm, slotMaxTime, slotMinTime },
+    appState: { colorBy, selectedTerm, slotMaxTime, slotMinTime },
   } = useContext(AppContext);
   const [popupData, setPopupData] = useState<CourseSectionMeeting>();
 
@@ -81,6 +82,9 @@ const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Sc
   const calenderHeadersNoEmptyInTerm = useMemo(() => {
     return filterHeadersWithNoEvents(filteredEvents, calendarHeaders);
   }, [filteredEvents, calendarHeaders]);
+
+  // Color events by the selected feature
+  colorEventsByFeature(filteredEvents, colorBy);
 
   return (
     <>
