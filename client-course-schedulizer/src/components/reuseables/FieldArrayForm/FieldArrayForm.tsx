@@ -6,9 +6,10 @@ import { FieldArrayFormProvider } from "utilities";
 import { FieldArrayFields } from "./FieldArrayFields";
 import { FieldArrayFormActionButtons } from "./FieldArrayFormActionButtons";
 
-interface FieldArrayFormProps {
+export interface FieldArrayFormProps {
   defaultValue: object;
   fieldsName: string;
+  onSubmit?: (data: string[]) => void;
 }
 
 /**
@@ -16,7 +17,7 @@ interface FieldArrayFormProps {
  * This uses a provider to pass form related data down the component tree.
  * Handles the form submission and formats the name to look nice on the web.
  */
-export const FieldArrayForm = ({ fieldsName, defaultValue }: FieldArrayFormProps) => {
+export const FieldArrayForm = ({ fieldsName, defaultValue, onSubmit }: FieldArrayFormProps) => {
   const titleCaseName = startCase(toLower(fieldsName));
   const formMethods = useForm({
     defaultValues: { [titleCaseName]: [defaultValue] },
@@ -36,9 +37,7 @@ export const FieldArrayForm = ({ fieldsName, defaultValue }: FieldArrayFormProps
     >
       <form
         onSubmit={handleSubmit((data) => {
-          // TODO: handle this.
-          // eslint-disable-next-line no-console
-          console.log(data);
+          onSubmit && onSubmit(data[titleCaseName] as string[]);
         })}
       >
         <h3>{titleCaseName}: </h3>
@@ -47,4 +46,8 @@ export const FieldArrayForm = ({ fieldsName, defaultValue }: FieldArrayFormProps
       </form>
     </FieldArrayFormProvider>
   );
+};
+
+FieldArrayForm.defaultProps = {
+  onSubmit: undefined,
 };

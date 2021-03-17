@@ -40,7 +40,7 @@
     "@fullcalendar/moment": "5.3.1",
     "@fullcalendar/react": "5.3.1",
     "@fullcalendar/timegrid": "5.3.1",
-    "@harmoniously/react": "0.0.3-alpha.0",
+    "@harmoniously/react": "0.0.7",
     "@hookform/resolvers": "^1.0.0",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
@@ -83,7 +83,8 @@
     "react-visibility-sensor": "5.1.1",
     "runtypes": "5.0.1",
     "xlsx": "0.16.9",
-    "yup": "^0.29.3"
+    "yup": "^0.29.3",
+    "zustand": "3.3.3"
   },
   "devDependencies": {
     "@types/isomorphic-fetch": "0.0.35",
