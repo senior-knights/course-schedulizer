@@ -66,6 +66,14 @@ export const FacultyLoads = () => {
     ];
   }, []);
 
+  // Sort by faculty name
+  data.sort((a, b): number => {
+    if (a.faculty < b.faculty) {
+      return -1;
+    }
+    return 1;
+  });
+
   const tableInstance = useTable({ columns, data });
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
@@ -119,9 +127,10 @@ export const FacultyLoads = () => {
               rows.map((row) => {
                 // Prepare the row for display
                 prepareRow(row);
+                const rowId = getIdFromFaculty(row.original.faculty);
                 return (
                   // Apply the row props
-                  <TableRow {...row.getRowProps()}>
+                  <TableRow {...row.getRowProps()} id={rowId}>
                     {
                       // Loop over the rows cells
                       row.cells.map((cell) => {
@@ -159,4 +168,8 @@ export const FacultyLoads = () => {
       </TableContainer>
     </>
   );
+};
+
+export const getIdFromFaculty = (faculty: string) => {
+  return faculty.replace(/ /g, "-");
 };

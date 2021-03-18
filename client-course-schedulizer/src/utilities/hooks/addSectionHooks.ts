@@ -1,9 +1,17 @@
+import { getIdFromFaculty } from "components";
 import { camelCase, forEach } from "lodash";
 import { useContext } from "react";
 import { DeepMap, FieldError } from "react-hook-form";
 import { insertSectionCourse } from "utilities";
 import { AppContext } from "utilities/contexts";
-import { AppAction, Course, CourseSectionMeeting, Section, Term } from "utilities/interfaces";
+import {
+  AppAction,
+  Course,
+  CourseSectionMeeting,
+  SchedulizerTab,
+  Section,
+  Term,
+} from "utilities/interfaces";
 import {
   createEventClassName,
   handleOldSection,
@@ -27,7 +35,7 @@ interface AddToScheduleParams {
 
 export const useAddSectionToSchedule = () => {
   const {
-    appState: { schedule, selectedTerm },
+    appState: { schedule, selectedTerm, schedulizerTab },
     appDispatch,
     setIsCSVLoading,
   } = useContext(AppContext);
@@ -41,11 +49,19 @@ export const useAddSectionToSchedule = () => {
     setIsCSVLoading(true);
     const { newSection, newCourse }: MappedSection = mapInputToInternalTypes(data);
     addToSchedule({ newCourse, newSection, oldData, removeOldSection });
-    // TODO: Ensure scroll doesn't cause graphical errors
-    // TODO: What about adding/modifying a section on the teaching loads tab once merged?
-    await switchToCorrectTerm(newSection, selectedTerm, appDispatch);
-    setIsCSVLoading(false);
-    scrollToUpdatedSection(newCourse, newSection);
+
+    // Depedning on the current tab, scroll to the updated/added section/row
+    if (schedulizerTab === SchedulizerTab.Faculty || schedulizerTab === SchedulizerTab.Room) {
+      await switchToCorrectTerm(newSection, selectedTerm, appDispatch);
+      setIsCSVLoading(false);
+      scrollToUpdatedSection(newCourse, newSection);
+    } else if (schedulizerTab === SchedulizerTab.Loads) {
+      setIsCSVLoading(false);
+      // TODO: This may not be the row clicked on if there are multiple instructors?
+      scrollToUpdatedFacultyRow(newSection.instructors[newSection.instructors.length - 1]);
+    } else {
+      setIsCSVLoading(false);
+    }
   };
 
   const addNonTeachingLoadToSchedule = (
@@ -56,6 +72,8 @@ export const useAddSectionToSchedule = () => {
     setIsCSVLoading(true);
     const { newSection, newCourse }: MappedSection = mapNonTeachingLoadInput(data);
     addToSchedule({ newCourse, newSection, oldData, removeOldSection });
+    setIsCSVLoading(false);
+    scrollToUpdatedFacultyRow(newSection.instructors[newSection.instructors.length - 1]);
   };
 
   const addToSchedule = ({
@@ -100,8 +118,16 @@ const scrollToUpdatedSection = (newCourse: Course, newSection: Section) => {
       }
     });
   });
-  if (newElement) {
+  if (newElement && newElement.parentElement?.parentElement) {
     newElement.scrollIntoView({ behavior: "smooth", inline: "nearest" });
+  }
+};
+
+const scrollToUpdatedFacultyRow = (instructor: string) => {
+  const id = getIdFromFaculty(instructor);
+  const row = document.getElementById(id);
+  if (row !== null) {
+    row.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 };
 
