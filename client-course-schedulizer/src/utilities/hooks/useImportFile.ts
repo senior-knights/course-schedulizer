@@ -1,6 +1,6 @@
 import { isEqual } from "lodash";
 import { ChangeEvent, useContext } from "react";
-import { Course, csvStringToSchedule, Schedule } from "utilities";
+import { csvStringToSchedule, insertSectionCourse, Schedule } from "utilities";
 import { AppContext } from "utilities/contexts";
 import { read, utils } from "xlsx";
 
@@ -82,9 +82,7 @@ export const updateScheduleInContext = async (
   if (!isEqual(currentSchedule, newSchedule)) {
     let newScheduleData: Schedule;
     if (isAdditiveImport) {
-      newScheduleData = {
-        courses: combineSchedules(currentSchedule, newSchedule),
-      };
+      newScheduleData = combineSchedules(currentSchedule, newSchedule);
     } else {
       newScheduleData = newSchedule;
     }
@@ -112,36 +110,10 @@ export const getCSVFromXLSXData = (xlsxData: ArrayBufferLike): string => {
  * @param  {Schedule} newSchedule
  */
 const combineSchedules = (currentSchedule: Schedule, newSchedule: Schedule) => {
-  const coursesSet = new Set<Course>([...currentSchedule.courses]);
   newSchedule.courses.forEach((newCourse) => {
-    mergeWithNoDuplicateCourses(currentSchedule, newCourse, coursesSet);
+    newCourse.sections.forEach((newSection) => {
+      currentSchedule = insertSectionCourse(currentSchedule, newSection, newCourse);
+    });
   });
-  return [...coursesSet];
-};
-
-/**
- * Create a set of unique corses between two schedules.
- *
- * NOTE: The course objects must be identical for isEqual to find the duplicate.
- * TODO: would using a different data structure, like a hash map, be better (faster)?
- *
- * @param  {Schedule} currentSchedule
- * @param  {Course} newCourse
- * @param  {Set<Course>} coursesSet
- */
-const mergeWithNoDuplicateCourses = (
-  currentSchedule: Schedule,
-  newCourse: Course,
-  coursesSet: Set<Course>,
-) => {
-  let isDuplicate = false;
-  currentSchedule.courses.forEach((currentCourse) => {
-    // Short-circuit if a duplicate is found.
-    if (!isDuplicate && isEqual(newCourse, currentCourse)) {
-      isDuplicate = true;
-    }
-  });
-  if (!isDuplicate) {
-    coursesSet.add(newCourse);
-  }
+  return currentSchedule;
 };
