@@ -1,4 +1,4 @@
-import { cloneDeep } from "lodash";
+import { cloneDeep, isEqual } from "lodash";
 import papa from "papaparse";
 import { Course, emptyCourse, emptySection, Meeting, Schedule, Section } from "utilities";
 import { getCourse, getSection } from "utilities/services";
@@ -155,17 +155,35 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
       section.instructionalMethod,
     );
 
+    schedule.courses[existingCourseIndex].name = course.name;
+    schedule.courses[existingCourseIndex].department = course.department;
+
     // If there is, add the new meeting(s) to the existing course
     if (existingSection) {
       const existingSectionIndex = schedule.courses[existingCourseIndex].sections.indexOf(
         existingSection,
       );
-      // TODO: Avoid duplicate meetings?
-      schedule.courses[existingCourseIndex].sections[
-        existingSectionIndex
-      ].meetings = schedule.courses[existingCourseIndex].sections[
-        existingSectionIndex
-      ].meetings.concat(section.meetings);
+      const newMeetings = section.meetings;
+
+      // Only add meetings which don't already exist
+      newMeetings.forEach((newMeeting) => {
+        let meetingExists = false;
+        schedule.courses[existingCourseIndex].sections[existingSectionIndex].meetings.forEach(
+          (oldMeeting) => {
+            // Short-circuit if duplicate is found
+            if (!meetingExists && isEqual(newMeeting, oldMeeting)) {
+              meetingExists = true;
+            }
+          },
+        );
+        if (!meetingExists) {
+          schedule.courses[existingCourseIndex].sections[
+            existingSectionIndex
+          ].meetings = schedule.courses[existingCourseIndex].sections[
+            existingSectionIndex
+          ].meetings.concat(newMeeting);
+        }
+      });
     }
     // Otherwise, add the new section to the existing course
     else {
