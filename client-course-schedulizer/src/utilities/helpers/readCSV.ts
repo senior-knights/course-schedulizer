@@ -154,6 +154,9 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
       section.instructors,
     );
 
+    schedule.courses[existingCourseIndex].name = course.name;
+    schedule.courses[existingCourseIndex].department = course.department;
+
     // If there is, add the new meeting(s) to the existing course
     if (existingSection) {
       const existingSectionIndex = schedule.courses[existingCourseIndex].sections.indexOf(
