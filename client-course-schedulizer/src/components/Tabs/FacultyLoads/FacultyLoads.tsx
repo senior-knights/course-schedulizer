@@ -15,6 +15,7 @@ import {
   createTable,
   FacultyRow,
   getCourseSectionMeetingFromCell,
+  getIdFromFaculty,
   getNonTeachingLoadsFromCell,
   UpdateModalPaginationRef,
 } from "utilities";
@@ -168,8 +169,4 @@ export const FacultyLoads = () => {
       </TableContainer>
     </>
   );
-};
-
-export const getIdFromFaculty = (faculty: string) => {
-  return faculty.replace(/ /g, "-");
 };

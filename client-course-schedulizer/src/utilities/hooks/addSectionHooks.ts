@@ -1,4 +1,3 @@
-import { getIdFromFaculty } from "components";
 import { camelCase, forEach } from "lodash";
 import { useContext } from "react";
 import { DeepMap, FieldError } from "react-hook-form";
@@ -137,4 +136,8 @@ export const useInput = <T>(label: string, errors: DeepMap<T, FieldError>) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const errorMessage = (errors[name as keyof T] as any)?.message;
   return { errorMessage, name };
+};
+
+export const getIdFromFaculty = (faculty: string) => {
+  return faculty.replace(/ /g, "-");
 };
