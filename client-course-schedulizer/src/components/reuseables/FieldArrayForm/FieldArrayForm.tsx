@@ -9,7 +9,7 @@ import { FieldArrayFormActionButtons } from "./FieldArrayFormActionButtons";
 export interface FieldArrayFormProps {
   defaultValue: object;
   fieldsName: string;
-  onSubmit?: (data: string[]) => void;
+  onSubmit?: (data: object[]) => void;
 }
 
 /**
@@ -37,7 +37,7 @@ export const FieldArrayForm = ({ fieldsName, defaultValue, onSubmit }: FieldArra
     >
       <form
         onSubmit={handleSubmit((data) => {
-          onSubmit && onSubmit(data[titleCaseName] as string[]);
+          onSubmit && onSubmit(data[titleCaseName] as object[]);
         })}
       >
         <h3>{titleCaseName}: </h3>

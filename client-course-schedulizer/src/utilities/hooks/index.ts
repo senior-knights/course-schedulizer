@@ -1,6 +1,7 @@
 export * from "./addSectionHooks";
 export * from "./deleteSectionHooks";
 export * from "./importRemoteFileHook";
+export * from "./useAssignmentsStore";
 export * from "./useExportCSV";
 export * from "./useExportFullCSV";
 export * from "./useFieldArrayFormContext";
