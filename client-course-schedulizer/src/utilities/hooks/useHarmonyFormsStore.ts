@@ -24,7 +24,7 @@ export const useHarmonyFormsStore = create<HarmonyFormsState>(
       };
     },
     {
-      name: "harmonyState",
+      name: "harmonyFormsState",
     },
   ),
 );
