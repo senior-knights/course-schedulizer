@@ -1,5 +1,5 @@
-import { Harmony as HarmonyBase } from "@harmoniously/react";
-import React from "react";
+import { Harmony as HarmonyBase, Result } from "@harmoniously/react";
+import React, { useState } from "react";
 import { HarmonyAssignmentsState, useHarmonyAssignmentsStore } from "utilities";
 
 // TODO: move this to the harmony page and allow users to load in exiting data
@@ -30,13 +30,14 @@ const selector = ({ assignments }: HarmonyAssignmentsState) => {
  */
 export const Harmony = () => {
   const assignments = useHarmonyAssignmentsStore(selector);
-
-  // TODO: create a state to pass to this Component so I cen get the result back
-  // Then convert it to a CSV and upload it to the Schedulizer component.
+  const [res, setRes] = useState<Result>();
+  // TODO: create a zustand store for the result.
+  // TODO: convert result to a CSV (or a Schedule object) and upload it to the Schedulizer component.
 
   return (
     <>
-      <HarmonyBase assignments={assignments} />
+      <HarmonyBase assignments={assignments} setResult={setRes} />
+      <div>{JSON.stringify(res)}</div>
     </>
   );
 };
