@@ -1,12 +1,12 @@
 import { FieldArrayForm, FieldArrayFormProps } from "components";
 import React from "react";
-import { HarmonyState, useHarmonyStore } from "utilities/hooks/useHarmonyStore";
+import { HarmonyFormsState, useHarmonyFormsStore } from "utilities/hooks/useHarmonyFormsStore";
 
 interface HarmonyFieldArrayFormProps extends FieldArrayFormProps {
   onSubmit?: () => void;
 }
 
-const selector = (state: HarmonyState) => {
+const selector = (state: HarmonyFormsState) => {
   return state.update;
 };
 
@@ -15,7 +15,7 @@ const selector = (state: HarmonyState) => {
  */
 export const HarmonyFieldArrayForm = (props: HarmonyFieldArrayFormProps) => {
   const { onSubmit, fieldsName } = props;
-  const update = useHarmonyStore(selector);
+  const update = useHarmonyFormsStore(selector);
 
   const onSubmitCallback = React.useCallback(
     (data) => {

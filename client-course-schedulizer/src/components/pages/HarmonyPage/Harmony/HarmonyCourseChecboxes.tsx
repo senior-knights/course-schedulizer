@@ -1,11 +1,11 @@
 import { Box, Paper } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import {
-  HarmonyAccessors,
-  HarmonyState,
+  HarmonyFormsAccessors,
+  HarmonyFormsState,
   SingularAccessors,
-  useAssignmentsStore,
-  useHarmonyStore,
+  useHarmonyAssignmentsStore,
+  useHarmonyFormsStore,
 } from "utilities/hooks";
 import { HarmonyCheckboxList } from "./HarmonyCheckboxList";
 
@@ -14,14 +14,14 @@ interface HarmonyCourseCheckboxesProps {
 }
 
 // pick values from store.
-const selector = ({ professors, times, rooms }: HarmonyState) => {
+const selector = ({ professors, times, rooms }: HarmonyFormsState) => {
   return [professors, times, rooms];
 };
 
 /** All of the check box lists for each attribute for a specific class */
 export const HarmonyCourseCheckboxes = ({ course }: HarmonyCourseCheckboxesProps) => {
-  const [professors, times, rooms] = useHarmonyStore(selector);
-  const { setClass } = useAssignmentsStore();
+  const [professors, times, rooms] = useHarmonyFormsStore(selector);
+  const { setClass } = useHarmonyAssignmentsStore();
   const [profList, setProfList] = useState<string[]>([]);
   const [timeList, setTimeList] = useState<string[]>([]);
   const [roomList, setRoomList] = useState<string[]>([]);
@@ -40,19 +40,19 @@ export const HarmonyCourseCheckboxes = ({ course }: HarmonyCourseCheckboxesProps
             return `${profObj.First} ${profObj.Last}`;
           }}
           id="professors"
-          list={professors as HarmonyAccessors["professors"]}
+          list={professors as HarmonyFormsAccessors["professors"]}
           setList={setProfList}
         />
         <HarmonyCheckboxList
           course={course}
           id="times"
-          list={times as HarmonyAccessors["times"]}
+          list={times as HarmonyFormsAccessors["times"]}
           setList={setTimeList}
         />
         <HarmonyCheckboxList
           course={course}
           id="rooms"
-          list={rooms as HarmonyAccessors["rooms"]}
+          list={rooms as HarmonyFormsAccessors["rooms"]}
           setList={setRoomList}
         />
       </Paper>

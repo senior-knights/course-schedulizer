@@ -1,9 +1,9 @@
 import React from "react";
-import { HarmonyAccessors, HarmonyState, useHarmonyStore } from "utilities/hooks";
+import { HarmonyFormsAccessors, HarmonyFormsState, useHarmonyFormsStore } from "utilities/hooks";
 import { HarmonyCourseCheckboxes } from "./HarmonyCourseChecboxes";
 
 // pick values from store.
-const selector = ({ courses }: HarmonyState) => {
+const selector = ({ courses }: HarmonyFormsState) => {
   return courses;
 };
 
@@ -12,11 +12,11 @@ const selector = ({ courses }: HarmonyState) => {
  *   assignment restrictions for courses.
  */
 export const HarmonyAddAssignments = () => {
-  const courses = useHarmonyStore(selector);
+  const courses = useHarmonyFormsStore(selector);
   return (
     <>
       <h3>Add Assignments</h3>
-      {(courses as HarmonyAccessors["courses"]).map((courseObj) => {
+      {(courses as HarmonyFormsAccessors["courses"]).map((courseObj) => {
         return <HarmonyCourseCheckboxes key={courseObj.Course} course={courseObj.Course} />;
       })}
       {/* <Button type="submit">Submit</Button>

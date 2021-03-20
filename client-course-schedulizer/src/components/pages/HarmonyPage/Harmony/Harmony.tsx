@@ -1,6 +1,6 @@
 import { Harmony as HarmonyBase } from "@harmoniously/react";
 import React from "react";
-import { AssignmentsState, useAssignmentsStore } from "utilities";
+import { HarmonyAssignmentsState, useHarmonyAssignmentsStore } from "utilities";
 
 // TODO: move this to the harmony page and allow users to load in exiting data
 // temporary hook used to get data from the imported schedule and generate fake assignments.
@@ -21,7 +21,7 @@ import { AssignmentsState, useAssignmentsStore } from "utilities";
 //   return { inferredAssignments, professors, rooms };
 // };
 
-const selector = ({ assignments }: AssignmentsState) => {
+const selector = ({ assignments }: HarmonyAssignmentsState) => {
   return assignments;
 };
 
@@ -29,7 +29,7 @@ const selector = ({ assignments }: AssignmentsState) => {
  *   gives metadata about the schedule.
  */
 export const Harmony = () => {
-  const assignments = useAssignmentsStore(selector);
+  const assignments = useHarmonyAssignmentsStore(selector);
 
   // TODO: create a state to pass to this Component so I cen get the result back
   // Then convert it to a CSV and upload it to the Schedulizer component.

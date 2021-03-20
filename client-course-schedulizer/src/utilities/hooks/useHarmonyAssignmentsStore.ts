@@ -7,9 +7,9 @@ import { persist } from "zustand/middleware";
  * A hook to get access to a global store containing assignment data for Harmony
  * Persists the value in localStorage
  */
-export const useAssignmentsStore = create<AssignmentsState>(
+export const useHarmonyAssignmentsStore = create<HarmonyAssignmentsState>(
   persist(
-    immer<AssignmentsState>((set) => {
+    immer<HarmonyAssignmentsState>((set) => {
       return {
         assignments: {},
         setClass: (className: string, attributes: ClassLimits) => {
@@ -20,12 +20,12 @@ export const useAssignmentsStore = create<AssignmentsState>(
       };
     }),
     {
-      name: "assignmentsState",
+      name: "harmonyAssignmentsState",
     },
   ),
 );
 
-export interface AssignmentsState extends State {
+export interface HarmonyAssignmentsState extends State {
   assignments: Assignments;
   setClass: (className: string, setAttributes: ClassLimits) => void;
 }
