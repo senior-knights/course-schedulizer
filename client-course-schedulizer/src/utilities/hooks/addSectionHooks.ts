@@ -118,7 +118,7 @@ const scrollToUpdatedSection = (newCourse: Course, newSection: Section) => {
     });
   });
   if (newElement && newElement.parentElement?.parentElement) {
-    newElement.scrollIntoView({ behavior: "smooth", inline: "nearest" });
+    newElement.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
   }
 };
 
