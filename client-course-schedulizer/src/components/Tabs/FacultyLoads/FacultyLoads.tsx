@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import { UpdateNonTeachingLoadModalPagination, UpdateSectionModalPagination } from "components";
 import React, { useContext, useMemo, useRef } from "react";
-import { Cell, Column, useTable } from "react-table";
+import { Cell, Column, useSortBy, useTable } from "react-table";
 import {
   createTable,
   FacultyRow,
@@ -67,7 +67,7 @@ export const FacultyLoads = () => {
     ];
   }, []);
 
-  // Sort by faculty name
+  // Sort by faculty name by default
   data.sort((a, b): number => {
     if (a.faculty < b.faculty) {
       return -1;
@@ -75,7 +75,7 @@ export const FacultyLoads = () => {
     return 1;
   });
 
-  const tableInstance = useTable({ columns, data });
+  const tableInstance = useTable({ columns, data }, useSortBy);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
 
@@ -106,12 +106,16 @@ export const FacultyLoads = () => {
                       // Loop over the headers in each row
                       headerGroup.headers.map((column) => {
                         return (
-                          // Apply the header cell props
-                          <TableCell {...column.getHeaderProps()}>
+                          // Apply the header cell props, and sort when clicked
+                          // See https://codesandbox.io/s/github/tannerlinsley/react-table/tree/master/examples/sorting?file=/src/App.js:1439-1662
+                          <TableCell {...column.getHeaderProps(column.getSortByToggleProps())}>
                             {
                               // Render the header
                               column.render("Header")
                             }
+                            <span>
+                              {column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : ""}
+                            </span>
                           </TableCell>
                         );
                       })
