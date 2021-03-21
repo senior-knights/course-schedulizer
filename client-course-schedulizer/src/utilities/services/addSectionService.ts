@@ -153,10 +153,9 @@ const removeSection = (
  internal JSON object type.  */
 export const mapInputToInternalTypes = (data: SectionInput) => {
   const newSection: Section = createNewSectionFromInput(data);
-  const newMeeting: Meeting = newSection.meetings[0];
   const newCourse: Course = createNewCourseFromInput(data);
 
-  return { newCourse, newMeeting, newSection };
+  return { newCourse, newSection };
 };
 
 export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInput => {
@@ -330,16 +329,30 @@ export const addFalseToDaysCheckboxList = (days?: Day[]): CheckboxDays => {
   });
 };
 
-// If there is an old version of the Meeting...
 export const handleOldMeeting = (
   oldData: CourseSectionMeeting | undefined,
-  newMeeting: Meeting,
+  newSection: Section,
+  removeOldMeeting: boolean,
   schedule: Schedule,
 ) => {
   const oldMeeting = oldData?.meeting;
-  if (oldMeeting) {
+  const oldSection = oldData?.section;
+  if (oldSection) {
+    // If the year, term, and semester length haven't changed...
+    if (
+      String(newSection.year) === String(oldSection.year) &&
+      newSection.term === oldSection.term &&
+      newSection.semesterLength === oldSection.semesterLength
+    ) {
+      // Update the new Section to match the date fields of the old Section
+      newSection.termStart = oldSection.termStart;
+      newSection.startDate = oldSection.startDate;
+      newSection.endDate = oldSection.endDate;
+    }
+  }
+  if (oldMeeting && removeOldMeeting) {
     // Remove the old version of the Meeting
-    removeMeetingFromSchedule(oldData, schedule, oldMeeting);
+    removeMeetingFromSchedule(oldData, schedule, oldMeeting, false);
   }
 };
 
@@ -347,12 +360,13 @@ export const removeMeetingFromSchedule = (
   data: CourseSectionMeeting | undefined,
   schedule: Schedule,
   oldMeeting: Meeting,
+  hardDelete = true,
 ) => {
   const oldCourse = data?.course;
   const oldSection = data?.section;
   const courseIndex = indexOf(schedule.courses, oldCourse);
   const sectionIndex = indexOf(oldCourse?.sections, oldSection);
-  removeMeeting(schedule, oldMeeting, courseIndex, sectionIndex);
+  removeMeeting(schedule, oldMeeting, courseIndex, sectionIndex, hardDelete);
 };
 
 const removeMeeting = (
@@ -360,6 +374,7 @@ const removeMeeting = (
   oldMeeting: Meeting,
   courseIndex: number,
   sectionIndex: number,
+  hardDelete: boolean,
 ) => {
   // Remove the oldMeeting from the sections meetings
   schedule.courses[courseIndex].sections[sectionIndex].meetings = filter(
@@ -368,6 +383,12 @@ const removeMeeting = (
       return !isEqual(meeting, oldMeeting);
     },
   );
-  // TODO: Delete section if no meetings left? Not always a good idea?
-  // TODO: Delete course if no sections left?
+  // If user pressed delete button, delete section if no meetings left
+  if (hardDelete && !schedule.courses[courseIndex].sections[sectionIndex].meetings.length) {
+    schedule.courses[courseIndex].sections.splice(sectionIndex);
+    // If user pressed delete button, delete course if no sections left
+    if (!schedule.courses[courseIndex].sections.length) {
+      schedule.courses.splice(courseIndex);
+    }
+  }
 };

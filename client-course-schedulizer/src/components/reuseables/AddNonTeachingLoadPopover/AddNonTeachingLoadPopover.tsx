@@ -13,7 +13,7 @@ import {
   removeUncheckedValues,
   Term,
   useAddSectionToSchedule,
-  useDeleteSectionFromSchedule,
+  useDeleteMeetingFromSchedule,
 } from "utilities";
 import "./AddNonTeachingLoadPopover.scss";
 
@@ -33,11 +33,11 @@ export const AddNonTeachingLoadPopover = ({ values }: PopoverValueProps) => {
     resolver: yupResolver(addNonTeachingLoadSchema),
   });
 
-  const { deleteSectionFromSchedule } = useDeleteSectionFromSchedule();
+  const { deleteMeetingFromSchedule } = useDeleteMeetingFromSchedule();
 
-  const deleteSection = () => {
+  const deleteMeeting = () => {
     return () => {
-      deleteSectionFromSchedule(values);
+      deleteMeetingFromSchedule(values);
     };
   };
 
@@ -89,7 +89,7 @@ export const AddNonTeachingLoadPopover = ({ values }: PopoverValueProps) => {
           {values && (
             <Button
               color="secondary"
-              onClick={methods.handleSubmit(deleteSection())}
+              onClick={methods.handleSubmit(deleteMeeting())}
               variant="contained"
             >
               Delete Activity

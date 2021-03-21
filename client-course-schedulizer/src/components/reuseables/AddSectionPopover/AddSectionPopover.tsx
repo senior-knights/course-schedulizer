@@ -12,7 +12,7 @@ import {
   removeUncheckedValues,
   SectionInput,
   useAddSectionToSchedule,
-  useDeleteSectionFromSchedule,
+  useDeleteMeetingFromSchedule,
 } from "utilities";
 import {
   Day,
@@ -39,7 +39,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
     convertFromSemesterLength(values?.section.semesterLength),
   );
   const { addSectionToSchedule } = useAddSectionToSchedule();
-  const { deleteSectionFromSchedule } = useDeleteSectionFromSchedule();
+  const { deleteMeetingFromSchedule } = useDeleteMeetingFromSchedule();
 
   const { reset, getValues } = methods;
 
@@ -61,9 +61,9 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
     };
   };
 
-  const deleteSection = () => {
+  const deleteMeeting = () => {
     return () => {
-      deleteSectionFromSchedule(values);
+      deleteMeetingFromSchedule(values);
     };
   };
 
@@ -109,7 +109,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
           <Button
             className="delete-button"
             color="secondary"
-            onClick={methods.handleSubmit(deleteSection())}
+            onClick={methods.handleSubmit(deleteMeeting())}
             variant="contained"
           >
             Delete Section

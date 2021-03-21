@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { DeepMap, FieldError } from "react-hook-form";
 import { insertSectionCourse } from "utilities";
 import { AppContext } from "utilities/contexts";
-import { Course, CourseSectionMeeting, Meeting, Section } from "utilities/interfaces";
+import { Course, CourseSectionMeeting, Section } from "utilities/interfaces";
 import {
   handleOldMeeting,
   mapInputToInternalTypes,
@@ -14,13 +14,11 @@ import { mapNonTeachingLoadInput } from "utilities/services/addNonTeachingLoadSe
 
 interface MappedMeeting {
   newCourse: Course;
-  newMeeting: Meeting;
   newSection: Section;
 }
 
 interface AddToScheduleParams {
   newCourse: Course;
-  newMeeting: Meeting;
   newSection: Section;
   oldData: CourseSectionMeeting | undefined;
   removeOldMeeting: boolean;
@@ -40,8 +38,8 @@ export const useAddSectionToSchedule = () => {
     removeOldMeeting = false,
   ) => {
     setIsCSVLoading(true);
-    const { newCourse, newMeeting, newSection }: MappedMeeting = mapInputToInternalTypes(data);
-    addToSchedule({ newCourse, newMeeting, newSection, oldData, removeOldMeeting });
+    const { newCourse, newSection }: MappedMeeting = mapInputToInternalTypes(data);
+    addToSchedule({ newCourse, newSection, oldData, removeOldMeeting });
   };
 
   const addNonTeachingLoadToSchedule = (
@@ -50,20 +48,17 @@ export const useAddSectionToSchedule = () => {
     removeOldMeeting = false,
   ) => {
     setIsCSVLoading(true);
-    const { newCourse, newMeeting, newSection }: MappedMeeting = mapNonTeachingLoadInput(data);
-    addToSchedule({ newCourse, newMeeting, newSection, oldData, removeOldMeeting });
+    const { newCourse, newSection }: MappedMeeting = mapNonTeachingLoadInput(data);
+    addToSchedule({ newCourse, newSection, oldData, removeOldMeeting });
   };
 
   const addToSchedule = ({
     newCourse,
-    newMeeting,
     newSection,
     oldData,
     removeOldMeeting,
   }: AddToScheduleParams) => {
-    if (removeOldMeeting) {
-      handleOldMeeting(oldData, newMeeting, schedule);
-    }
+    handleOldMeeting(oldData, newSection, removeOldMeeting, schedule);
     insertSectionCourse(schedule, newSection, newCourse);
     appDispatch({ payload: { schedule }, type: "setScheduleData" });
     setIsCSVLoading(false);
