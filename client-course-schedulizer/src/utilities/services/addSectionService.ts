@@ -1,13 +1,7 @@
 import { filter, indexOf, isEqual, map } from "lodash";
 import moment from "moment";
 import { CheckboxTerms } from "utilities";
-import {
-  instructorCase,
-  locationCase,
-  prefixCase,
-  startTimeCase,
-  yearCase,
-} from "utilities/helpers";
+import { locationCase, prefixCase, startTimeCase, yearCase } from "utilities/helpers";
 import {
   Course,
   CourseSectionMeeting,
@@ -40,7 +34,7 @@ export interface SectionInput {
   globalMax?: Section["globalMax"];
   halfSemester: Half;
   instructionalMethod: Section["instructionalMethod"];
-  instructor: Instructor;
+  instructor: Instructor[];
   intensiveSemester: Intensive;
   localMax?: Section["localMax"];
   location: string;
@@ -188,7 +182,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
       ? data?.section.semesterLength
       : SemesterLength.HalfFirst) as unknown) as Half,
     instructionalMethod: data?.section.instructionalMethod ?? "LEC",
-    instructor: data?.section.instructors.join() || "",
+    instructor: data?.section.instructors || [],
     intensiveSemester: ((data?.section.semesterLength &&
     convertFromSemesterLength(data?.section.semesterLength) ===
       SemesterLengthOption.IntensiveSemester
@@ -233,7 +227,7 @@ const createNewSectionFromInput = (data: SectionInput): Section => {
     facultyHours: Number(data.facultyHours),
     globalMax: Number(data.globalMax),
     instructionalMethod: data.instructionalMethod,
-    instructors: instructorCase(data.instructor),
+    instructors: data.instructor,
     letter: data.section,
     localMax: Number(data.localMax),
     meetings: [

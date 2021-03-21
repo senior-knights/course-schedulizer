@@ -1,36 +1,40 @@
-import { Grid } from "@material-ui/core";
+import { Grid, TextField } from "@material-ui/core";
 import { Autocomplete, AutocompleteProps } from "@material-ui/lab";
-import { FormTextField } from "components";
 import React from "react";
+import { Controller, useFormContext } from "react-hook-form";
+import { useInput } from "utilities";
 import "./GridItemAutocomplete.scss";
 
 interface GridItemAutocomplete {
-  autocompleteProps?: AutocompleteProps<unknown, boolean, boolean, boolean>;
+  defaultValue?: string[];
   label: string;
   name?: string;
-  options: string[];
-  value?: string;
 }
 
 /* A text field to be used on forms */
-export const GridItemAutocomplete = ({
-  autocompleteProps,
-  label,
-  value,
-  name,
-  options,
-}: GridItemAutocomplete) => {
+export const GridItemAutocomplete = (
+  props: GridItemAutocomplete &
+    Omit<AutocompleteProps<unknown, boolean, boolean, boolean>, "renderInput">,
+) => {
+  const { defaultValue, label, name } = props;
+  const { control, errors } = useFormContext();
+  const { name: nameFallback } = useInput(label, errors);
+
   return (
     <Grid container direction="column" item xs>
       <Grid item xs>
-        <Autocomplete
-          {...autocompleteProps}
-          options={options}
-          renderInput={(params) => {
-            return (
-              <FormTextField label={label} name={name} textFieldProps={params} value={value} />
-            );
-          }}
+        <Controller
+          as={
+            <Autocomplete
+              {...props}
+              renderInput={(params) => {
+                return <TextField label={label} {...params} variant="outlined" />;
+              }}
+            />
+          }
+          control={control}
+          defaultValue={defaultValue}
+          name={name ?? nameFallback}
         />
       </Grid>
     </Grid>
@@ -38,7 +42,6 @@ export const GridItemAutocomplete = ({
 };
 
 GridItemAutocomplete.defaultProps = {
-  autocompleteProps: undefined,
+  defaultValue: undefined,
   name: undefined,
-  value: "",
 };

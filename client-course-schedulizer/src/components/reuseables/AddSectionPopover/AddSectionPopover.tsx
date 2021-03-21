@@ -152,7 +152,12 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
         </Grid>
         <Grid container spacing={SPACING}>
           {/* TODO: Dropdown for instructors with option to add new one */}
-          <GridItemAutocomplete label="Instructor" options={getInstructors(schedule)} />
+          <GridItemAutocomplete
+            defaultValue={values?.section.instructors ?? []}
+            label="Instructor"
+            multiple
+            options={getInstructors(schedule)}
+          />
           {/* TODO: Dropdown for rooms with option to add new one */}
           <GridItemTextField label="Location" />
           <GridItemTextField label="Room Capacity" />

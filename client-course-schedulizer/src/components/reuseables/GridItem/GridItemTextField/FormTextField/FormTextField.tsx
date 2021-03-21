@@ -7,7 +7,7 @@ import "./FormTextField.scss";
 
 export const FormTextField = ({ label, textFieldProps, value, name }: GridItemTextField) => {
   const { register, errors } = useFormContext();
-  const { name: nameFallback, errorMessage } = useInput(label, errors);
+  const { name: nameFallback, errorMessage } = useInput(label ?? "", errors);
 
   return (
     <TextField
