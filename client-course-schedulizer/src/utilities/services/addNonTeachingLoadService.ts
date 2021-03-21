@@ -1,6 +1,13 @@
 import { cloneDeep, map } from "lodash";
-import { Course, CourseSectionMeeting, NonTeachingLoadInput, Section, Term } from "utilities";
-import { emptyCourse, emptySection } from "utilities/constants";
+import {
+  Course,
+  CourseSectionMeeting,
+  Meeting,
+  NonTeachingLoadInput,
+  Section,
+  Term,
+} from "utilities";
+import { emptyCourse, emptyMeeting, emptySection } from "utilities/constants";
 
 export type CheckboxTerms = (Term | boolean)[];
 
@@ -18,6 +25,7 @@ export const mapNonTeachingLoadValuesToInput = (
 };
 
 export const mapNonTeachingLoadInput = (data: NonTeachingLoadInput) => {
+  const newMeeting: Meeting = cloneDeep(emptyMeeting);
   const newSection: Section = cloneDeep(emptySection);
   const newCourse: Course = cloneDeep(emptyCourse);
   newSection.instructionalMethod = data.activity;
@@ -25,7 +33,7 @@ export const mapNonTeachingLoadInput = (data: NonTeachingLoadInput) => {
   newSection.instructors = [data.instructor];
   newSection.isNonTeaching = true;
   newSection.term = data.terms as Term[];
-  return { newCourse, newSection };
+  return { newCourse, newMeeting, newSection };
 };
 
 export const addFalseToTermsCheckboxList = (terms?: Term[]): CheckboxTerms => {

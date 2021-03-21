@@ -55,9 +55,9 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
     }
   }, [reset, getValues, values]);
 
-  const onSubmit = (removeOldSection: boolean) => {
+  const onSubmit = (removeOldMeeting: boolean) => {
     return (data: SectionInput) => {
-      addSectionToSchedule(data, values, removeOldSection);
+      addSectionToSchedule(data, values, removeOldMeeting);
     };
   };
 
