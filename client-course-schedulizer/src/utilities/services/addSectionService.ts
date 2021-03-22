@@ -117,13 +117,15 @@ export const getSection = (
   letter: Section["letter"],
   term: Section["term"],
   instructors: Section["instructors"],
+  instructionalMethod: Section["instructionalMethod"],
 ) => {
   const course = getCourse(schedule, prefixes, courseNumber);
   const sections = filter(course?.sections, (section) => {
     return (
       section.letter === letter &&
       section.term === term &&
-      isEqual(section.instructors, instructors)
+      isEqual(section.instructors, instructors) &&
+      section.instructionalMethod === instructionalMethod
     );
   });
   return sections.length > 0 ? sections[0] : undefined;

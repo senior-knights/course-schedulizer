@@ -152,6 +152,7 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
       section.letter,
       section.term,
       section.instructors,
+      section.instructionalMethod,
     );
 
     schedule.courses[existingCourseIndex].name = course.name;
