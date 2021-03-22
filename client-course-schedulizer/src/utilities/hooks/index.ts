@@ -6,5 +6,6 @@ export * from "./useExportFullCSV";
 export * from "./useFieldArrayFormContext";
 export * from "./useHarmonyAssignmentsStore";
 export * from "./useHarmonyFormsStore";
+export * from "./useHarmonyResultStore";
 export * from "./useImportFile";
 export * from "./useLocal";
