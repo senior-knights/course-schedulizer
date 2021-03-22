@@ -18,3 +18,4 @@ export const AppContext = createContext<AppContext>({
   isCSVLoading: false,
   setIsCSVLoading: voidFn,
 });
+AppContext.displayName = "AppContext";

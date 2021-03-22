@@ -74,6 +74,9 @@ export const scheduleToNonTeachingCSVString = (schedule: Schedule): string => {
 
 export const getTermsStr = (section: Section): string => {
   if (Array.isArray(section.term)) {
+    if (section.term.length === 0) {
+      return "";
+    }
     let termsStr = '"';
     forEach(section.term, (term) => {
       termsStr += `${getTermStr(section.year, term)}, `;
