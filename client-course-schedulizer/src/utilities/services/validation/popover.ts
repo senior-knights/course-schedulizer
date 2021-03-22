@@ -64,7 +64,7 @@ export const addSectionSchema = object().shape({
     .transform(emptyStringToNull)
     .nullable(),
   instructionalMethod: string(),
-  instructor: string(),
+  instructor: array().of(string()),
   localMax: number()
     .typeError("global max must be a number")
     .integer()

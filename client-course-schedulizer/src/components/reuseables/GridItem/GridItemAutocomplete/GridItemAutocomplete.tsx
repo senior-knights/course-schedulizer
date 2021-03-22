@@ -24,17 +24,25 @@ export const GridItemAutocomplete = (
     <Grid container direction="column" item xs>
       <Grid item xs>
         <Controller
-          as={
-            <Autocomplete
-              {...props}
-              renderInput={(params) => {
-                return <TextField label={label} {...params} variant="outlined" />;
-              }}
-            />
-          }
           control={control}
           defaultValue={defaultValue}
           name={name ?? nameFallback}
+          onChange={([, data]: [unknown, unknown]) => {
+            return data;
+          }}
+          render={({ onChange, ...controllerProps }) => {
+            return (
+              <Autocomplete
+                {...props}
+                onChange={(e, data) => {
+                  return onChange(data);
+                }}
+                renderInput={(params) => {
+                  return <TextField label={label} {...params} variant="outlined" />;
+                }}
+              />
+            );
+          }}
         />
       </Grid>
     </Grid>
