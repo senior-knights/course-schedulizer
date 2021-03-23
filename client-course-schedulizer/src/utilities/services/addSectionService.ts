@@ -1,13 +1,7 @@
 import { filter, indexOf, isEqual, map } from "lodash";
 import moment from "moment";
 import { CheckboxTerms } from "utilities";
-import {
-  instructorCase,
-  locationCase,
-  prefixCase,
-  startTimeCase,
-  yearCase,
-} from "utilities/helpers";
+import { locationCase, startTimeCase, yearCase } from "utilities/helpers";
 import {
   Course,
   CourseSectionMeeting,
@@ -40,13 +34,13 @@ export interface SectionInput {
   globalMax?: Section["globalMax"];
   halfSemester: Half;
   instructionalMethod: Section["instructionalMethod"];
-  instructor: Instructor;
+  instructor: Instructor[];
   intensiveSemester: Intensive;
   localMax?: Section["localMax"];
   location: string;
   name: Course["name"];
   number: Course["number"];
-  prefix: Prefix;
+  prefix: Prefix[];
   roomCapacity?: Location["roomCapacity"];
   section: Section["letter"];
   semesterLength: SemesterLengthOption;
@@ -117,13 +111,15 @@ export const getSection = (
   letter: Section["letter"],
   term: Section["term"],
   instructors: Section["instructors"],
+  instructionalMethod: Section["instructionalMethod"],
 ) => {
   const course = getCourse(schedule, prefixes, courseNumber);
   const sections = filter(course?.sections, (section) => {
     return (
       section.letter === letter &&
       section.term === term &&
-      isEqual(section.instructors, instructors)
+      isEqual(section.instructors, instructors) &&
+      section.instructionalMethod === instructionalMethod
     );
   });
   return sections.length > 0 ? sections[0] : undefined;
@@ -190,7 +186,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
       ? data?.section.semesterLength
       : SemesterLength.HalfFirst) as unknown) as Half,
     instructionalMethod: data?.section.instructionalMethod ?? "LEC",
-    instructor: data?.section.instructors.join() || "",
+    instructor: data?.section.instructors || [],
     intensiveSemester: ((data?.section.semesterLength &&
     convertFromSemesterLength(data?.section.semesterLength) ===
       SemesterLengthOption.IntensiveSemester
@@ -200,7 +196,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
     location: locationValue,
     name: data?.course.name || "",
     number: data?.course.number || "",
-    prefix: data?.course.prefixes.join() || "",
+    prefix: data?.course.prefixes || [],
     roomCapacity: data?.meeting?.location.roomCapacity,
     section: data?.section.letter || "",
     semesterLength: convertFromSemesterLength(data?.section.semesterLength),
@@ -235,7 +231,7 @@ const createNewSectionFromInput = (data: SectionInput): Section => {
     facultyHours: Number(data.facultyHours),
     globalMax: Number(data.globalMax),
     instructionalMethod: data.instructionalMethod,
-    instructors: instructorCase(data.instructor),
+    instructors: data.instructor,
     letter: data.section,
     localMax: Number(data.localMax),
     meetings: [
@@ -267,7 +263,7 @@ const createNewCourseFromInput = (data: SectionInput): Course => {
     facultyHours: Number(data.facultyHours),
     name: data.name,
     number: data.number,
-    prefixes: prefixCase(data.prefix),
+    prefixes: data.prefix,
     // The newSection will be added later in insertSectionCourse()
     sections: [],
     studentHours: Number(data.studentHours),

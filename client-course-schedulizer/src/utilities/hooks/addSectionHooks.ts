@@ -1,10 +1,18 @@
-import { camelCase } from "lodash";
+import { camelCase, forEach } from "lodash";
 import { useContext } from "react";
 import { DeepMap, FieldError } from "react-hook-form";
 import { insertSectionCourse } from "utilities";
 import { AppContext } from "utilities/contexts";
-import { Course, CourseSectionMeeting, Section } from "utilities/interfaces";
 import {
+  AppAction,
+  Course,
+  CourseSectionMeeting,
+  SchedulizerTab,
+  Section,
+  Term,
+} from "utilities/interfaces";
+import {
+  createEventClassName,
   handleOldMeeting,
   mapInputToInternalTypes,
   NonTeachingLoadInput,
@@ -12,7 +20,7 @@ import {
 } from "utilities/services";
 import { mapNonTeachingLoadInput } from "utilities/services/addNonTeachingLoadService";
 
-interface MappedMeeting {
+interface MappedSection {
   newCourse: Course;
   newSection: Section;
 }
@@ -26,20 +34,33 @@ interface AddToScheduleParams {
 
 export const useAddSectionToSchedule = () => {
   const {
-    appState: { schedule },
+    appState: { schedule, selectedTerm, schedulizerTab },
     appDispatch,
     setIsCSVLoading,
   } = useContext(AppContext);
 
   // Update the schedule via pass by sharing.
-  const addSectionToSchedule = (
+  const addSectionToSchedule = async (
     data: SectionInput,
     oldData: CourseSectionMeeting | undefined,
     removeOldMeeting = false,
   ) => {
     setIsCSVLoading(true);
-    const { newCourse, newSection }: MappedMeeting = mapInputToInternalTypes(data);
+    const { newCourse, newSection }: MappedSection = mapInputToInternalTypes(data);
     addToSchedule({ newCourse, newSection, oldData, removeOldMeeting });
+
+    // Depedning on the current tab, scroll to the updated/added section/row
+    if (schedulizerTab === SchedulizerTab.Faculty || schedulizerTab === SchedulizerTab.Room) {
+      await switchToCorrectTerm(newSection, selectedTerm, appDispatch);
+      setIsCSVLoading(false);
+      scrollToUpdatedSection(newCourse, newSection);
+    } else if (schedulizerTab === SchedulizerTab.Loads) {
+      setIsCSVLoading(false);
+      // TODO: This may not be the row clicked on if there are multiple instructors?
+      scrollToUpdatedFacultyRow(newSection.instructors[newSection.instructors.length - 1]);
+    } else {
+      setIsCSVLoading(false);
+    }
   };
 
   const addNonTeachingLoadToSchedule = (
@@ -48,8 +69,10 @@ export const useAddSectionToSchedule = () => {
     removeOldMeeting = false,
   ) => {
     setIsCSVLoading(true);
-    const { newCourse, newSection }: MappedMeeting = mapNonTeachingLoadInput(data);
+    const { newCourse, newSection }: MappedSection = mapNonTeachingLoadInput(data);
     addToSchedule({ newCourse, newSection, oldData, removeOldMeeting });
+    setIsCSVLoading(false);
+    scrollToUpdatedFacultyRow(newSection.instructors[newSection.instructors.length - 1]);
   };
 
   const addToSchedule = ({
@@ -61,10 +84,50 @@ export const useAddSectionToSchedule = () => {
     handleOldMeeting(oldData, newSection, removeOldMeeting, schedule);
     insertSectionCourse(schedule, newSection, newCourse);
     appDispatch({ payload: { schedule }, type: "setScheduleData" });
-    setIsCSVLoading(false);
   };
 
   return { addNonTeachingLoadToSchedule, addSectionToSchedule };
+};
+
+const switchToCorrectTerm = async (
+  newSection: Section,
+  currentTerm: Term,
+  appDispatch: React.Dispatch<AppAction> | (() => void),
+) => {
+  const newTerm = Array.isArray(newSection.term) ? newSection.term[0] : newSection.term;
+  if (newTerm !== currentTerm) {
+    await appDispatch({
+      payload: { selectedTerm: newTerm },
+      type: "setSelectedTerm",
+    });
+  }
+};
+
+const scrollToUpdatedSection = (newCourse: Course, newSection: Section) => {
+  let className = "";
+  let newElement: Element | undefined;
+  const newSectionName = `${newCourse.prefixes[0]}-${newCourse.number}-${newSection.letter}`;
+  forEach(newSection.instructors, (prof) => {
+    forEach(newSection.meetings, (meeting) => {
+      const room = `${meeting.location.building}_${meeting.location.roomNumber}`;
+      className = createEventClassName(newSectionName, room, prof);
+      const newElements = document.getElementsByClassName(className);
+      if (newElements) {
+        newElement = newElements.item(newElements.length - 1) ?? undefined;
+      }
+    });
+  });
+  if (newElement && newElement.parentElement?.parentElement) {
+    newElement.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+  }
+};
+
+const scrollToUpdatedFacultyRow = (instructor: string) => {
+  const id = getIdFromFaculty(instructor);
+  const row = document.getElementById(id);
+  if (row !== null) {
+    row.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
 };
 
 // a helper to provide consistent naming and retrieve error messages
@@ -73,4 +136,8 @@ export const useInput = <T>(label: string, errors: DeepMap<T, FieldError>) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const errorMessage = (errors[name as keyof T] as any)?.message;
   return { errorMessage, name };
+};
+
+export const getIdFromFaculty = (faculty: string) => {
+  return faculty.replace(/ /g, "-");
 };

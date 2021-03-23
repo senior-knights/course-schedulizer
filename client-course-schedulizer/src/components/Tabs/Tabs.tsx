@@ -3,6 +3,7 @@ import { AsyncComponent } from "components";
 import { FacultyLoads, FacultySchedule, RoomsSchedule } from "components/Tabs";
 import React, { ChangeEvent, useContext, useState } from "react";
 import { AppContext } from "utilities/contexts";
+import { SchedulizerTab } from "utilities/interfaces";
 import { CSVActions, NoCoursesHeader, TabPanel } from "./tabComponents";
 import "./Tabs.scss";
 
@@ -15,7 +16,7 @@ export const Tabs = () => {
   } = useContext(AppContext);
   const [tabValue, setTabValue] = useState(schedulizerTab || 0);
 
-  const handleTabChange = (event: ChangeEvent<{}>, newValue: number) => {
+  const handleTabChange = (event: ChangeEvent<{}>, newValue: SchedulizerTab) => {
     setTabValue(newValue);
     appDispatch({ payload: { schedulizerTab: newValue }, type: "setSchedulizerTab" });
   };

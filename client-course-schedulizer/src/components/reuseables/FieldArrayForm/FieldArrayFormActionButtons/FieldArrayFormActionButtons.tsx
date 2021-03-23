@@ -19,7 +19,7 @@ export const FieldArrayFormActionButtons = () => {
         type="button"
         variant="outlined"
       >
-        Add {titleCaseName}
+        Add {titleCaseName?.slice(0, -1)}
       </Button>
 
       <Button color="primary" style={{ margin: "1em" }} type="submit" variant="outlined">

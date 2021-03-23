@@ -1,6 +1,6 @@
-import { FieldArrayForm } from "components";
+import { AnimateShowAndHide, HarmonyFieldArrayForm } from "components";
 import React from "react";
-// import { Harmony } from "./Harmony";
+import { Harmony, HarmonyAddAssignments } from "./Harmony";
 
 /**
  * The page contains all of the Harmoniously user-experience.
@@ -12,15 +12,16 @@ import React from "react";
 export const HarmonyPage = () => {
   return (
     <>
-      <h2>
+      <AnimateShowAndHide>Harmony</AnimateShowAndHide>
+      <h1>
         Note: This page is in a <i>pre-alpha</i> state. Output might not be perfect.
-      </h2>
-      <FieldArrayForm defaultValue={{ First: "", Last: "" }} fieldsName="professors" />
-      <FieldArrayForm defaultValue={{ Course: "" }} fieldsName="courses" />
-      <FieldArrayForm defaultValue={{ Room: "" }} fieldsName="rooms" />
-      <FieldArrayForm defaultValue={{ Time: "" }} fieldsName="times" />
-      {/* TODO: remove this for now */}
-      {/* <Harmony /> */}
+      </h1>
+      <HarmonyFieldArrayForm defaultValue={{ First: "", Last: "" }} fieldsName="professors" />
+      <HarmonyFieldArrayForm defaultValue={{ Course: "" }} fieldsName="courses" />
+      <HarmonyFieldArrayForm defaultValue={{ Room: "" }} fieldsName="rooms" />
+      <HarmonyFieldArrayForm defaultValue={{ Time: "" }} fieldsName="times" />
+      <HarmonyAddAssignments />
+      <Harmony />
     </>
   );
 };

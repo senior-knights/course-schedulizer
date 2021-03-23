@@ -8,6 +8,13 @@ export enum ColorBy {
   Prefix,
 }
 
+export enum SchedulizerTab {
+  Faculty = 0,
+  Room,
+  Loads,
+  Conflicts,
+}
+
 // structure for the global app state
 export interface AppState {
   classes: string[];
@@ -16,7 +23,7 @@ export interface AppState {
   professors: string[];
   rooms: string[];
   schedule: Schedule;
-  schedulizerTab: number;
+  schedulizerTab: SchedulizerTab;
   selectedTerm: Term;
   slotMaxTime: string;
   slotMinTime: string;
