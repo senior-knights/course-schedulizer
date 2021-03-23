@@ -1,4 +1,4 @@
-import { filter, sumBy } from "lodash";
+import { filter, forEach, sumBy } from "lodash";
 import {
   Course,
   CourseSectionMeeting,
@@ -67,14 +67,14 @@ const updateRow = ({
 
 export const createTable = (schedule: Schedule): FacultyRow[] => {
   const newTableData: FacultyRow[] = [];
-  schedule.courses.forEach((course) => {
-    course.sections.forEach((section) => {
+  forEach(schedule.courses, (course) => {
+    forEach(course.sections, (section) => {
       const sectionName = getSectionName(course, section);
-      section.instructors.forEach((instructor) => {
+      forEach(section.instructors, (instructor) => {
         const newFacultyRow: FacultyRow = {
           faculty: instructor,
         };
-        const [prevAddedFacultyRow] = newTableData.filter((data) => {
+        const [prevAddedFacultyRow] = filter(newTableData, (data) => {
           return data.faculty === instructor;
         });
         const updateArgs = {

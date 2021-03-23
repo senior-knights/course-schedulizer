@@ -64,7 +64,7 @@ export const addSectionSchema = object().shape({
     .transform(emptyStringToNull)
     .nullable(),
   instructionalMethod: string(),
-  instructor: string(),
+  instructor: array().of(string()),
   localMax: number()
     .typeError("global max must be a number")
     .integer()
@@ -74,7 +74,7 @@ export const addSectionSchema = object().shape({
   location: string(),
   name: string(),
   number: string().required(),
-  prefix: string().required().uppercase(),
+  prefix: array().of(string().uppercase().required()),
   roomCapacity: number()
     .typeError("room capacity must be a number")
     .positive()

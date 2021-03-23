@@ -183,3 +183,59 @@ export const colorEventsByFeature = (groupedEvents: GroupedEvents, colorBy: Colo
   }
   return groupedEvents;
 };
+
+export const getPrefixes = (schedule: Schedule) => {
+  const prefixes: string[] = [];
+  forEach(schedule.courses, (course) => {
+    forEach(course.prefixes, (prefix) => {
+      if (!prefixes.includes(prefix)) {
+        prefixes.push(prefix);
+      }
+    });
+  });
+  return prefixes.sort();
+};
+
+export const getNumbers = (schedule: Schedule) => {
+  const numbers: string[] = [];
+  forEach(schedule.courses, (course) => {
+    if (!numbers.includes(course.number)) {
+      numbers.push(course.number);
+    }
+  });
+  return numbers.sort();
+};
+
+export const getCourseNames = (schedule: Schedule) => {
+  const names: string[] = [];
+  forEach(schedule.courses, (course) => {
+    if (!names.includes(course.name)) {
+      names.push(course.name);
+    }
+  });
+  return names.sort();
+};
+
+export const getSectionLetters = (schedule: Schedule) => {
+  const letters: string[] = [];
+  forEach(schedule.courses, (course) => {
+    forEach(course.sections, (section) => {
+      if (!letters.includes(section.letter)) {
+        letters.push(section.letter);
+      }
+    });
+  });
+  return letters.sort();
+};
+
+export const getInstructionalMethods = (schedule: Schedule) => {
+  const instructionalMethods: string[] = [];
+  forEach(schedule.courses, (course) => {
+    forEach(course.sections, (section) => {
+      if (!instructionalMethods.includes(section.instructionalMethod) && !section.isNonTeaching) {
+        instructionalMethods.push(section.instructionalMethod);
+      }
+    });
+  });
+  return instructionalMethods.sort();
+};

@@ -119,7 +119,7 @@ const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Sc
           horizontal: "left",
           vertical: "bottom",
         }}
-        PaperProps={{ style: { maxWidth: "50%", minWidth: "500px" } }}
+        PaperProps={{ style: { maxHeight: "90%", maxWidth: "90%", minWidth: "500px" } }}
         transformOrigin={{
           horizontal: "right",
           vertical: "top",
