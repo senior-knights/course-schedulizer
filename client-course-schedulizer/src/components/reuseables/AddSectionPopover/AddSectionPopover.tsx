@@ -71,8 +71,8 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
   }, [reset, getValues, values]);
 
   const onSubmit = (removeOldSection: boolean) => {
-    return (data: SectionInput) => {
-      addSectionToSchedule(data, values, removeOldSection);
+    return async (data: SectionInput) => {
+      await addSectionToSchedule(data, values, removeOldSection);
     };
   };
 
