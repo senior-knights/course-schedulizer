@@ -70,7 +70,7 @@ export const AddNonTeachingLoadPopover = ({ values }: PopoverValueProps) => {
           <GridItemTextField label="Activity" />
         </Grid>
         <Grid container spacing={SPACING}>
-          <GridItemAutocomplete label="Instructor" multiple options={professors.sort()} />
+          <GridItemAutocomplete label="Instructor" multiple options={[...professors].sort()} />
         </Grid>
         <Grid container spacing={SPACING}>
           <GridItemTextField label="Faculty Hours" />

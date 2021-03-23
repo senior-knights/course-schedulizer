@@ -33,7 +33,6 @@ export const GridItemAutocomplete = (
           render={({ onChange, ...controllerProps }) => {
             return (
               <Autocomplete
-                autoSelect
                 freeSolo
                 onChange={(e, data) => {
                   return onChange(data);

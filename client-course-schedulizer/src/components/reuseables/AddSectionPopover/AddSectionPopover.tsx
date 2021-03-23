@@ -157,8 +157,8 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
           />
         </Grid>
         <Grid container spacing={SPACING}>
-          <GridItemAutocomplete label="Instructor" multiple options={professors.sort()} />
-          <GridItemAutocomplete label="Location" options={rooms.sort()} />
+          <GridItemAutocomplete label="Instructor" multiple options={[...professors].sort()} />
+          <GridItemAutocomplete label="Location" options={[...rooms].sort()} />
           <GridItemTextField label="Room Capacity" />
           <GridItemTextField label="Faculty Hours" />
           <GridItemTextField label="Student Hours" />
