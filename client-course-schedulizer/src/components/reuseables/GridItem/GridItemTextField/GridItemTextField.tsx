@@ -4,7 +4,7 @@ import { useFormContext } from "react-hook-form";
 import { useInput } from "utilities";
 import "./GridItemTextField.scss";
 
-export interface GridItemTextField {
+interface GridItemTextField {
   label: string;
   name?: string;
   textFieldProps?: StandardTextFieldProps;
@@ -14,7 +14,7 @@ export interface GridItemTextField {
 /* A text field to be used on forms */
 export const GridItemTextField = ({ label, textFieldProps, value, name }: GridItemTextField) => {
   const { register, errors } = useFormContext();
-  const { name: nameFallback, errorMessage } = useInput(label ?? "", errors);
+  const { name: nameFallback, errorMessage } = useInput(label, errors);
 
   return (
     <Grid container direction="column" item xs>
