@@ -1,40 +1,43 @@
-import { Assignments, Harmony as H } from "@harmoniously/react";
-import React, { useContext } from "react";
-import { AppContext } from "utilities/contexts";
+import { Harmony as HarmonyBase, Result } from "@harmoniously/react";
+import React, { useState } from "react";
+import { HarmonyAssignmentsState, useHarmonyAssignmentsStore } from "utilities";
 
-// TODO: allow this to be edited by users.
-const times = ["mwf800", "mwf900", "mwf1030", "mwf1130", "mwf1230", "mwf130", "mwf230", "mwf330"];
-
+// TODO: move this to the harmony page and allow users to load in exiting data
 // temporary hook used to get data from the imported schedule and generate fake assignments.
-const useInferredAssignments = () => {
-  const {
-    appState: { rooms, professors, classes },
-  } = useContext(AppContext);
+// const useInferredAssignments = () => {
+//   const {
+//     appState: { rooms, professors, classes },
+//   } = useContext(AppContext);
 
-  const inferredAssignments: Assignments = {};
-  classes.forEach((cls) => {
-    inferredAssignments[cls] = {
-      professors,
-      rooms: [...rooms, "a", "b"],
-      times,
-    };
-  });
+//   const inferredAssignments: Assignments = {};
+//   classes.forEach((cls) => {
+//     inferredAssignments[cls] = {
+//       professors,
+//       rooms: [...rooms, "a", "b"],
+//       times,
+//     };
+//   });
 
-  return { inferredAssignments, professors, rooms };
+//   return { inferredAssignments, professors, rooms };
+// };
+
+const selector = ({ assignments }: HarmonyAssignmentsState) => {
+  return assignments;
 };
 
 /** Harmony returns a component to automatically create schedules and
  *   gives metadata about the schedule.
  */
 export const Harmony = () => {
-  const { inferredAssignments, professors, rooms } = useInferredAssignments();
+  const assignments = useHarmonyAssignmentsStore(selector);
+  const [res, setRes] = useState<Result>();
+  // TODO: create a zustand store for the result.
+  // TODO: convert result to a CSV (or a Schedule object) and upload it to the Schedulizer component.
 
   return (
     <>
-      <H assignments={inferredAssignments} />
-      <div>Professors: {professors}</div>
-      <div>Rooms: {rooms}</div>
-      <div>Times: {times}</div>
+      <HarmonyBase assignments={assignments} setResult={setRes} />
+      <div>{JSON.stringify(res)}</div>
     </>
   );
 };
