@@ -74,7 +74,7 @@ export const addSectionSchema = object().shape({
   location: string(),
   name: string(),
   number: string().required(),
-  prefix: string().required().uppercase(),
+  prefix: array().of(string().uppercase().required()),
   roomCapacity: number()
     .typeError("room capacity must be a number")
     .positive()

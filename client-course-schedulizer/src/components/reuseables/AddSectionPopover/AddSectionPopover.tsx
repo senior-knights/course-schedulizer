@@ -147,7 +147,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
           <GridItemTextField label="Department" textFieldProps={{ autoFocus: true }} />
         </Grid>
         <Grid container spacing={SPACING}>
-          <GridItemAutocomplete label="Prefix" options={getPrefixes(schedule)} />
+          <GridItemAutocomplete label="Prefix" multiple options={getPrefixes(schedule)} />
           <GridItemAutocomplete label="Number" options={getNumbers(schedule)} />
           <GridItemAutocomplete label="Section" options={getSectionLetters(schedule)} />
           <GridItemAutocomplete label="Name" options={getCourseNames(schedule)} />

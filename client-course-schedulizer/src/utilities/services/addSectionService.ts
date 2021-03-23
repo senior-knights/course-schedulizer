@@ -1,7 +1,7 @@
 import { filter, indexOf, isEqual, map } from "lodash";
 import moment from "moment";
 import { CheckboxTerms } from "utilities";
-import { locationCase, prefixCase, startTimeCase, yearCase } from "utilities/helpers";
+import { locationCase, startTimeCase, yearCase } from "utilities/helpers";
 import {
   Course,
   CourseSectionMeeting,
@@ -40,7 +40,7 @@ export interface SectionInput {
   location: string;
   name: Course["name"];
   number: Course["number"];
-  prefix: Prefix;
+  prefix: Prefix[];
   roomCapacity?: Location["roomCapacity"];
   section: Section["letter"];
   semesterLength: SemesterLengthOption;
@@ -194,7 +194,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
     location: locationValue,
     name: data?.course.name || "",
     number: data?.course.number || "",
-    prefix: data?.course.prefixes.join() || "",
+    prefix: data?.course.prefixes || [],
     roomCapacity: data?.meeting?.location.roomCapacity,
     section: data?.section.letter || "",
     semesterLength: convertFromSemesterLength(data?.section.semesterLength),
@@ -261,7 +261,7 @@ const createNewCourseFromInput = (data: SectionInput): Course => {
     facultyHours: Number(data.facultyHours),
     name: data.name,
     number: data.number,
-    prefixes: prefixCase(data.prefix),
+    prefixes: data.prefix,
     // The newSection will be added later in insertSectionCourse()
     sections: [],
     studentHours: Number(data.studentHours),
