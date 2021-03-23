@@ -1,6 +1,7 @@
-import { Grid, StandardTextFieldProps } from "@material-ui/core";
+import { Grid, StandardTextFieldProps, TextField } from "@material-ui/core";
 import React from "react";
-import { FormTextField } from "./FormTextField";
+import { useFormContext } from "react-hook-form";
+import { useInput } from "utilities";
 import "./GridItemTextField.scss";
 
 export interface GridItemTextField {
@@ -11,11 +12,24 @@ export interface GridItemTextField {
 }
 
 /* A text field to be used on forms */
-export const GridItemTextField = (props: GridItemTextField) => {
+export const GridItemTextField = ({ label, textFieldProps, value, name }: GridItemTextField) => {
+  const { register, errors } = useFormContext();
+  const { name: nameFallback, errorMessage } = useInput(label ?? "", errors);
+
   return (
     <Grid container direction="column" item xs>
       <Grid item xs>
-        <FormTextField {...props} />
+        <TextField
+          defaultValue={value}
+          fullWidth
+          inputRef={register}
+          label={label}
+          name={name ?? nameFallback}
+          {...textFieldProps}
+          error={!!errorMessage}
+          helperText={errorMessage}
+          variant="outlined"
+        />
       </Grid>
     </Grid>
   );
