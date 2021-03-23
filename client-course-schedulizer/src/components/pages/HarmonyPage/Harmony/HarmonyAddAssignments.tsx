@@ -1,6 +1,6 @@
 import React from "react";
 import { HarmonyFormsAccessors, HarmonyFormsState, useHarmonyFormsStore } from "utilities/hooks";
-import { HarmonyCourseCheckboxes } from "./HarmonyCourseChecboxes";
+import { HarmonyCourseCheckboxes } from "./HarmonyCourseCheckboxes";
 
 // pick values from store.
 const selector = ({ courses }: HarmonyFormsState) => {
