@@ -362,7 +362,8 @@ export const removeMeetingFromSchedule = (
   const oldSection = data?.section;
   const courseIndex = indexOf(schedule.courses, oldCourse);
   const sectionIndex = indexOf(oldCourse?.sections, oldSection);
-  removeMeeting(schedule, oldMeeting, courseIndex, sectionIndex, hardDelete);
+  const oldSectionHadMeetings = !!(oldSection && oldSection.meetings.length);
+  removeMeeting(schedule, oldMeeting, courseIndex, sectionIndex, hardDelete, oldSectionHadMeetings);
 };
 
 const removeMeeting = (
@@ -371,6 +372,7 @@ const removeMeeting = (
   courseIndex: number,
   sectionIndex: number,
   hardDelete: boolean,
+  oldSectionHadMeetings: boolean,
 ) => {
   // Remove the oldMeeting from the sections meetings
   schedule.courses[courseIndex].sections[sectionIndex].meetings = filter(
@@ -379,8 +381,11 @@ const removeMeeting = (
       return !isEqual(meeting, oldMeeting);
     },
   );
-  // If user pressed delete button, delete section if no meetings left
-  if (hardDelete && !schedule.courses[courseIndex].sections[sectionIndex].meetings.length) {
+  // If user pressed delete button and/or the old section had meetings before, delete section if no meetings left
+  if (
+    (hardDelete || oldSectionHadMeetings) &&
+    !schedule.courses[courseIndex].sections[sectionIndex].meetings.length
+  ) {
     schedule.courses[courseIndex].sections.splice(sectionIndex);
     // If user pressed delete button, delete course if no sections left
     if (!schedule.courses[courseIndex].sections.length) {
