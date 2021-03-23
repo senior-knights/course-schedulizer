@@ -33,13 +33,16 @@ export const GridItemAutocomplete = (
           render={({ onChange, ...controllerProps }) => {
             return (
               <Autocomplete
-                {...props}
+                autoSelect
+                freeSolo
                 onChange={(e, data) => {
                   return onChange(data);
                 }}
                 renderInput={(params) => {
                   return <TextField label={label} {...params} variant="outlined" />;
                 }}
+                {...props}
+                {...controllerProps}
               />
             );
           }}

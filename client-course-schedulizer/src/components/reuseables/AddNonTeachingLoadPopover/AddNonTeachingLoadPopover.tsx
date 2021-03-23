@@ -1,8 +1,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Grid, Typography } from "@material-ui/core";
-import { GridItemCheckboxGroup, GridItemTextField } from "components";
+import { GridItemAutocomplete, GridItemCheckboxGroup, GridItemTextField } from "components";
 import { isEqual } from "lodash";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
   addFalseToTermsCheckboxList,
@@ -15,12 +15,16 @@ import {
   useAddSectionToSchedule,
   useDeleteSectionFromSchedule,
 } from "utilities";
+import { AppContext } from "utilities/contexts";
 import "./AddNonTeachingLoadPopover.scss";
 
 const SPACING = 2;
 
 export const AddNonTeachingLoadPopover = ({ values }: PopoverValueProps) => {
   const { addNonTeachingLoadToSchedule } = useAddSectionToSchedule();
+  const {
+    appState: { professors },
+  } = useContext(AppContext);
 
   const onSubmit = (removeOldActivity: boolean) => {
     return (data: NonTeachingLoadInput) => {
@@ -66,7 +70,7 @@ export const AddNonTeachingLoadPopover = ({ values }: PopoverValueProps) => {
           <GridItemTextField label="Activity" />
         </Grid>
         <Grid container spacing={SPACING}>
-          <GridItemTextField label="Instructor" />
+          <GridItemAutocomplete label="Instructor" multiple options={professors.sort()} />
         </Grid>
         <Grid container spacing={SPACING}>
           <GridItemTextField label="Faculty Hours" />

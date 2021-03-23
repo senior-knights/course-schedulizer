@@ -13,7 +13,11 @@ import {
   addFalseToDaysCheckboxList,
   addSectionSchema,
   convertFromSemesterLength,
-  getInstructors,
+  getCourseNames,
+  getInstructionalMethods,
+  getNumbers,
+  getPrefixes,
+  getSectionLetters,
   mapInternalTypesToInput,
   removeUncheckedValues,
   SectionInput,
@@ -38,7 +42,7 @@ const SPACING = 2;
 /* A form to input information to add a schedule */
 export const AddSectionPopover = ({ values }: PopoverValueProps) => {
   const {
-    appState: { schedule },
+    appState: { schedule, rooms, professors },
   } = useContext(AppContext);
 
   const methods = useForm<SectionInput>({
@@ -143,23 +147,18 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
           <GridItemTextField label="Department" textFieldProps={{ autoFocus: true }} />
         </Grid>
         <Grid container spacing={SPACING}>
-          {/* TODO: Dropdown for courses already in system */}
-          <GridItemTextField label="Prefix" />
-          <GridItemTextField label="Number" />
-          <GridItemTextField label="Section" />
-          <GridItemTextField label="Name" />
-          <GridItemTextField label="Instructional Method" />
+          <GridItemAutocomplete label="Prefix" options={getPrefixes(schedule)} />
+          <GridItemAutocomplete label="Number" options={getNumbers(schedule)} />
+          <GridItemAutocomplete label="Section" options={getSectionLetters(schedule)} />
+          <GridItemAutocomplete label="Name" options={getCourseNames(schedule)} />
+          <GridItemAutocomplete
+            label="Instructional Method"
+            options={getInstructionalMethods(schedule)}
+          />
         </Grid>
         <Grid container spacing={SPACING}>
-          {/* TODO: Dropdown for instructors with option to add new one */}
-          <GridItemAutocomplete
-            defaultValue={values?.section.instructors ?? []}
-            label="Instructor"
-            multiple
-            options={getInstructors(schedule)}
-          />
-          {/* TODO: Dropdown for rooms with option to add new one */}
-          <GridItemTextField label="Location" />
+          <GridItemAutocomplete label="Instructor" multiple options={professors.sort()} />
+          <GridItemAutocomplete label="Location" options={rooms.sort()} />
           <GridItemTextField label="Room Capacity" />
           <GridItemTextField label="Faculty Hours" />
           <GridItemTextField label="Student Hours" />
