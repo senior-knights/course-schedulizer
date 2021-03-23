@@ -1,8 +1,9 @@
-import { forEach } from "lodash";
-import moment, { Moment } from "moment";
-import { Schedule, Section, Term } from "utilities/interfaces";
+import moment from "moment";
+import { getMeetingTimeStr, getTermsStr } from "utilities";
+import { Schedule } from "utilities/interfaces";
 
-// Simplified version of scheduleToFullCSVString() from writeFullCSV.ts to conform to new standard
+// Deprecated, TODO: Remove this code?
+// Simplified version of scheduleToFullCSVString() from writeFullCSV.ts
 export const scheduleToCSVString = (schedule: Schedule): string => {
   let csvStr = "Term,Section Name,Stu Cred,Fac Load,Room,Days,Meeting Time,Short Title,Faculty\n";
   schedule.courses.forEach((course) => {
@@ -70,34 +71,4 @@ export const scheduleToNonTeachingCSVString = (schedule: Schedule): string => {
     }
   });
   return csvStr;
-};
-
-export const getTermsStr = (section: Section): string => {
-  if (Array.isArray(section.term)) {
-    if (section.term.length === 0) {
-      return "";
-    }
-    let termsStr = '"';
-    forEach(section.term, (term) => {
-      termsStr += `${getTermStr(section.year, term)}, `;
-    });
-    return `${termsStr.slice(0, -2)}"`;
-  }
-  return getTermStr(section.year, section.term);
-};
-
-const getTermStr = (year: Section["year"], term: Term) => {
-  return `${
-    typeof year === "number"
-      ? term === Term.Fall
-        ? String(year).slice(-2)
-        : String(year + 1).slice(-2)
-      : term === Term.Fall
-      ? String(Number(year.slice(-2)) - 1)
-      : year.slice(-2)
-  }/${term}`;
-};
-
-export const getMeetingTimeStr = (startMoment: Moment, endMoment: Moment): string => {
-  return `${startMoment.format("h:mmA")} - ${endMoment.format("h:mmA")}\n`;
 };

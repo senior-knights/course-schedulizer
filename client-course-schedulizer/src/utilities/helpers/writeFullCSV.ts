@@ -1,8 +1,7 @@
-import moment from "moment";
-import { getMeetingTimeStr, getTermsStr } from "utilities/helpers";
-import { Day, Schedule } from "utilities/interfaces";
+import { forEach } from "lodash";
+import moment, { Moment } from "moment";
+import { Day, Schedule, Section, Term } from "utilities/interfaces";
 
-// TODO: Deprecate and/or delete this function, replacing it with scheduleToCSVString() from writeCSV.ts?
 export const scheduleToFullCSVString = (schedule: Schedule): string => {
   const numericReg = RegExp("[0-9]");
   let csvStr =
@@ -105,4 +104,34 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
     });
   });
   return csvStr;
+};
+
+export const getMeetingTimeStr = (startMoment: Moment, endMoment: Moment): string => {
+  return `${startMoment.format("h:mmA")} - ${endMoment.format("h:mmA")}\n`;
+};
+
+const getTermStr = (year: Section["year"], term: Term) => {
+  return `${
+    typeof year === "number"
+      ? term === Term.Fall
+        ? String(year).slice(-2)
+        : String(year + 1).slice(-2)
+      : term === Term.Fall
+      ? String(Number(year.slice(-2)) - 1)
+      : year.slice(-2)
+  }/${term}`;
+};
+
+export const getTermsStr = (section: Section): string => {
+  if (Array.isArray(section.term)) {
+    if (section.term.length === 0) {
+      return "";
+    }
+    let termsStr = '"';
+    forEach(section.term, (term) => {
+      termsStr += `${getTermStr(section.year, term)}, `;
+    });
+    return `${termsStr.slice(0, -2)}"`;
+  }
+  return getTermStr(section.year, section.term);
 };
