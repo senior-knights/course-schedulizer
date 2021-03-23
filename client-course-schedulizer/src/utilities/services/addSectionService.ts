@@ -386,10 +386,10 @@ const removeMeeting = (
     (hardDelete || oldSectionHadMeetings) &&
     !schedule.courses[courseIndex].sections[sectionIndex].meetings.length
   ) {
-    schedule.courses[courseIndex].sections.splice(sectionIndex);
-    // If user pressed delete button, delete course if no sections left
+    schedule.courses[courseIndex].sections.splice(sectionIndex, 1);
+    // Delete course if no sections left
     if (!schedule.courses[courseIndex].sections.length) {
-      schedule.courses.splice(courseIndex);
+      schedule.courses.splice(courseIndex, 1);
     }
   }
 };
