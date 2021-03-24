@@ -11,7 +11,7 @@ export const mapNonTeachingLoadValuesToInput = (
 
   return {
     activity: data?.section.instructionalMethod ?? "",
-    facultyHours: data?.section.facultyHours,
+    facultyHours: data?.section.facultyHours ?? 0,
     instructor: data?.section.instructors[0] ?? "",
     terms,
   };

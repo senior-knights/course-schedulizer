@@ -135,9 +135,7 @@ export const yearCallback = (value: string, { section }: CaseCallbackParams) => 
 };
 
 export const studentHoursCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.studentHours = value.startsWith("$")
-    ? integerDefaultZeroCase(value.substr(1))
-    : integerDefaultZeroCase(value);
+  section.studentHours = value.startsWith("$") ? Number(value.substr(1)) : Number(value);
 };
 
 export const facultyHoursCallback = (value: string, { section }: CaseCallbackParams) => {
@@ -335,8 +333,8 @@ export const prefixCase = (value: string): string[] => {
   return value.replace(" ", "").split(/[;,\n]/);
 };
 
-export const integerDefaultZeroCase = (value: string): number => {
-  return Number.isInteger(Number(value)) ? Number(value) : 0;
+export const integerDefaultZeroCase = (value: string): number | undefined => {
+  return value.trim() === "" ? undefined : Number.isInteger(Number(value)) ? Number(value) : 0;
 };
 
 export const durationCase = (value: string): number => {
@@ -349,6 +347,6 @@ export const durationCase = (value: string): number => {
   return endTimeMoment.diff(startTimeMoment, "minutes");
 };
 
-export const yearCase = (value: string): number | string => {
-  return Number.isInteger(Number(value)) ? Number(value) : value;
+export const yearCase = (value: string): number | string | undefined => {
+  return value.trim() === "" ? undefined : Number.isInteger(Number(value)) ? Number(value) : value;
 };

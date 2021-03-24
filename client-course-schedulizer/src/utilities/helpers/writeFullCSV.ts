@@ -50,7 +50,7 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
         buildingAndRoomStr += meeting.location.roomNumber
           ? `${meeting.location.building} ${meeting.location.roomNumber}\n`
           : `${meeting.location.building}\n`;
-        roomCapacityStr += `${meeting.location.roomCapacity}\n`;
+        roomCapacityStr += `${meeting.location.roomCapacity ?? ""}\n`;
         daysStr += `${meeting.days.join("")}\n`;
         monStr += `${meeting.days.includes(Day.Monday) ? "M" : ""}\n`;
         tuesStr += `${meeting.days.includes(Day.Tuesday) ? "T" : ""}\n`;
@@ -85,23 +85,23 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
         : "100";
 
       // Construct a row in the output CSV
-      csvStr += `"${course.department}",${termStr},${section.termStart},${
-        section.year
+      csvStr += `"${course.department ?? ""}",${termStr},${section.termStart ?? ""},${
+        section.year ?? ""
       },"${sectionNameStr}","${course.prefixes.join("\n")}",${course.number},${
         section.letter
-      },${courseLevelCodeStr},${section.studentHours ?? course.studentHours},${
-        section.facultyHours ?? course.facultyHours
-      },${section.used},${section.day10Used},${section.localMax},${
-        section.globalMax
-      },"${roomCapacityStr}","${buildingAndRoomStr}","${daysStr}","${meetingTimeStr}",${
-        section.startDate
-      },${section.endDate},${
-        section.semesterLength
+      },${courseLevelCodeStr},${section.studentHours},${section.facultyHours},${
+        section.used ?? ""
+      },${section.day10Used ?? ""},${section.localMax ?? ""},${section.globalMax ?? ""},"${
+        roomCapacityStr ?? ""
+      }","${buildingAndRoomStr}","${daysStr}","${meetingTimeStr}",${section.startDate ?? ""},${
+        section.endDate ?? ""
+      },${
+        section.semesterLength ?? ""
       },"${buildingStr}","${roomNumberStr}","${meetingStartStr}","${meetingStartInternalStr}","${meetingDurationMinutesStr}","${meetingEndStr}","${meetingEndInternalStr}","${monStr}","${tuesStr}","${wedStr}","${thursStr}","${friStr}","${
         course.name
-      }","${section.instructors.join("\n")}","${section.status}","${
-        section.instructionalMethod
-      }","${section.comments}"\n`;
+      }","${section.instructors.join("\n")}","${section.status ?? ""}","${
+        section.instructionalMethod ?? ""
+      }","${section.comments ?? ""}"\n`;
     });
   });
   return csvStr;

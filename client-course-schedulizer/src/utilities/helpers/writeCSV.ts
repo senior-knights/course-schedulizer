@@ -39,9 +39,9 @@ export const scheduleToCSVString = (schedule: Schedule): string => {
         }-${section.letter}`;
 
         // Construct a row in the output CSV
-        csvStr += `${termStr},"${sectionNameStr}",${(
-          section.studentHours ?? course.studentHours
-        ).toFixed(2)},${(section.facultyHours ?? course.facultyHours).toFixed(
+        csvStr += `${termStr},"${sectionNameStr}",${section.studentHours.toFixed(
+          2,
+        )},${section.facultyHours.toFixed(
           2,
         )},"${buildingAndRoomStr}","${daysStr}","${meetingTimeStr}","${
           course.name
@@ -63,9 +63,9 @@ export const scheduleToNonTeachingCSVString = (schedule: Schedule): string => {
 
         // TODO: Should instructionalMethod be used for Non-Teaching Activity or should we add a new field?
         // Construct a row in the output CSV
-        csvStr += `${termStr},${section.instructionalMethod},${(
-          section.facultyHours ?? course.facultyHours
-        ).toFixed(2)},"${section.instructors.join("\n")}"\n`;
+        csvStr += `${termStr},${section.instructionalMethod},${section.facultyHours.toFixed(
+          2,
+        )},"${section.instructors.join("\n")}"\n`;
       });
     }
   });
@@ -86,16 +86,18 @@ export const getTermsStr = (section: Section): string => {
   return getTermStr(section.year, section.term);
 };
 
-const getTermStr = (year: Section["year"], term: Term) => {
-  return `${
-    typeof year === "number"
-      ? term === Term.Fall
-        ? String(year).slice(-2)
-        : String(year + 1).slice(-2)
-      : term === Term.Fall
-      ? String(Number(year.slice(-2)) - 1)
-      : year.slice(-2)
-  }/${term}`;
+const getTermStr = (year: Section["year"], term: Term): string => {
+  return year
+    ? `${
+        typeof year === "number"
+          ? term === Term.Fall
+            ? String(year).slice(-2)
+            : String(year + 1).slice(-2)
+          : term === Term.Fall
+          ? String(Number(year?.slice(-2)) - 1)
+          : year?.slice(-2)
+      }/${term}`
+    : term;
 };
 
 export const getMeetingTimeStr = (startMoment: Moment, endMoment: Moment): string => {

@@ -174,10 +174,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
     days,
     department: data?.course.department ?? "",
     duration: data?.meeting?.duration,
-    facultyHours:
-      data?.section.facultyHours !== undefined
-        ? data?.section.facultyHours
-        : data?.course.facultyHours || 0,
+    facultyHours: data?.section.facultyHours ?? 0,
     globalMax: data?.section.globalMax,
     halfSemester: ((data?.section.semesterLength &&
     convertFromSemesterLength(data?.section.semesterLength) === SemesterLengthOption.HalfSemester
@@ -202,10 +199,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
       ? moment(data?.meeting?.startTime, "h:mm A").format("HH:mm")
       : "08:00",
     status: data?.section.status ?? "Active",
-    studentHours:
-      data?.section.studentHours !== undefined
-        ? data?.section.studentHours
-        : data?.course.studentHours || 0,
+    studentHours: data?.section.studentHours ?? 0,
     term: defaultTerm || Term.Fall,
     used: data?.section.used,
     year: data?.section.year?.toString() ?? "",
@@ -258,13 +252,11 @@ const createNewSectionFromInput = (data: SectionInput): Section => {
 const createNewCourseFromInput = (data: SectionInput): Course => {
   return {
     department: data.department,
-    facultyHours: Number(data.facultyHours),
     name: data.name,
     number: data.number,
     prefixes: data.prefix,
     // The newSection will be added later in insertSectionCourse()
     sections: [],
-    studentHours: Number(data.studentHours),
   };
 };
 
