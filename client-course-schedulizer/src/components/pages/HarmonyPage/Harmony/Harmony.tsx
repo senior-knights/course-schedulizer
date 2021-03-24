@@ -34,13 +34,13 @@ const resultSelector = ({ setResult }: HarmonyResultState) => {
   return setResult;
 };
 
-/** Harmony returns a component to automatically create schedules and
- *   gives metadata about the schedule.
- */
+/** Harmony returns a component to automatically create schedules. */
 export const Harmony = () => {
   const assignments = useHarmonyAssignmentsStore(selector);
-  const [res, setRes] = useState<Result>();
   const setResult = useHarmonyResultStore(resultSelector);
+  const [res, setRes] = useState<Result>();
+
+  // Save state in the store.
   useEffect(() => {
     setResult(res);
   }, [res, setResult]);

@@ -1,6 +1,7 @@
 import { AnimateShowAndHide, HarmonyFieldArrayForm } from "components";
 import React from "react";
 import { Harmony, HarmonyAddAssignments } from "./Harmony";
+import { HarmonySchedule } from "./Harmony/HarmonySchedule";
 
 /**
  * The page contains all of the Harmoniously user-experience.
@@ -22,6 +23,7 @@ export const HarmonyPage = () => {
       <HarmonyFieldArrayForm defaultValue={{ Time: "" }} fieldsName="times" />
       <HarmonyAddAssignments />
       <Harmony />
+      <HarmonySchedule />
     </>
   );
 };
