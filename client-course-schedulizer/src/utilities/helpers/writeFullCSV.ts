@@ -101,7 +101,7 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
         course.name
       }","${section.instructors.join("\n")}","${section.status}","${
         section.instructionalMethod
-      }","${section.comments}","${section.timestamp}"\n`;
+      }","${section.comments}","${section.timestamp ?? ""}"\n`;
     });
   });
   return csvStr;

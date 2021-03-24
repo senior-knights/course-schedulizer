@@ -186,7 +186,9 @@ export const statusCallback = (value: string, { section }: CaseCallbackParams) =
 };
 
 export const timestampCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.timestamp = Number(value);
+  if (value.trim() !== "") {
+    section.timestamp = Number(value);
+  }
 };
 
 export const instructionalMethodCallback = (value: string, { section }: CaseCallbackParams) => {
