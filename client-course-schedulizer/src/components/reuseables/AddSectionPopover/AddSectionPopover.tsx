@@ -1,19 +1,30 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Grid, InputAdornment, Typography } from "@material-ui/core";
-import { GridItemCheckboxGroup, GridItemRadioGroup, GridItemTextField } from "components";
+import {
+  GridItemAutocomplete,
+  GridItemCheckboxGroup,
+  GridItemRadioGroup,
+  GridItemTextField,
+} from "components";
 import { isEqual } from "lodash";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
   addFalseToDaysCheckboxList,
   addSectionSchema,
   convertFromSemesterLength,
+  getCourseNames,
+  getInstructionalMethods,
+  getNumbers,
+  getPrefixes,
+  getSectionLetters,
   mapInternalTypesToInput,
   removeUncheckedValues,
   SectionInput,
   useAddSectionToSchedule,
   useDeleteSectionFromSchedule,
 } from "utilities";
+import { AppContext } from "utilities/contexts";
 import {
   Day,
   Half,
@@ -30,6 +41,10 @@ const SPACING = 2;
 
 /* A form to input information to add a schedule */
 export const AddSectionPopover = ({ values }: PopoverValueProps) => {
+  const {
+    appState: { schedule, rooms, professors },
+  } = useContext(AppContext);
+
   const methods = useForm<SectionInput>({
     criteriaMode: "all",
     defaultValues: mapInternalTypesToInput(values),
@@ -56,8 +71,8 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
   }, [reset, getValues, values]);
 
   const onSubmit = (removeOldSection: boolean) => {
-    return (data: SectionInput) => {
-      addSectionToSchedule(data, values, removeOldSection);
+    return async (data: SectionInput) => {
+      await addSectionToSchedule(data, values, removeOldSection);
     };
   };
 
@@ -132,18 +147,18 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
           <GridItemTextField label="Department" textFieldProps={{ autoFocus: true }} />
         </Grid>
         <Grid container spacing={SPACING}>
-          {/* TODO: Dropdown for courses already in system */}
-          <GridItemTextField label="Prefix" />
-          <GridItemTextField label="Number" />
-          <GridItemTextField label="Section" />
-          <GridItemTextField label="Name" />
-          <GridItemTextField label="Instructional Method" />
+          <GridItemAutocomplete label="Prefix" multiple options={getPrefixes(schedule)} />
+          <GridItemAutocomplete label="Number" options={getNumbers(schedule)} />
+          <GridItemAutocomplete label="Section" options={getSectionLetters(schedule)} />
+          <GridItemAutocomplete label="Name" options={getCourseNames(schedule)} />
+          <GridItemAutocomplete
+            label="Instructional Method"
+            options={getInstructionalMethods(schedule)}
+          />
         </Grid>
         <Grid container spacing={SPACING}>
-          {/* TODO: Dropdown for instructors with option to add new one */}
-          <GridItemTextField label="Instructor" />
-          {/* TODO: Dropdown for rooms with option to add new one */}
-          <GridItemTextField label="Location" />
+          <GridItemAutocomplete label="Instructor" multiple options={[...professors].sort()} />
+          <GridItemAutocomplete label="Location" options={[...rooms].sort()} />
           <GridItemTextField label="Room Capacity" />
           <GridItemTextField label="Faculty Hours" />
           <GridItemTextField label="Student Hours" />

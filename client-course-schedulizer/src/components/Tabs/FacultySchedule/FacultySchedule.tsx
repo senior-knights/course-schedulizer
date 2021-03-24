@@ -13,7 +13,10 @@ export const FacultySchedule = () => {
 
   return (
     <>
-      <Schedule calendarHeaders={professors} groupedEvents={getEvents(schedule, "faculty")} />
+      <Schedule
+        calendarHeaders={professors.sort()}
+        groupedEvents={getEvents(schedule, "faculty")}
+      />
     </>
   );
 };
