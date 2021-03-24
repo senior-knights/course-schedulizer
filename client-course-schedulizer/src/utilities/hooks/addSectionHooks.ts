@@ -1,4 +1,5 @@
 import { camelCase, forEach } from "lodash";
+import moment from "moment";
 import { useContext } from "react";
 import { DeepMap, FieldError } from "react-hook-form";
 import { insertSectionCourse } from "utilities";
@@ -81,6 +82,7 @@ export const useAddSectionToSchedule = () => {
     oldData,
     removeOldSection,
   }: AddToScheduleParams) => {
+    newSection.timestamp = moment.now();
     handleOldSection(oldData, newSection, removeOldSection, schedule);
     insertSectionCourse(schedule, newSection, newCourse);
     appDispatch({ payload: { schedule }, type: "setScheduleData" });

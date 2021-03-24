@@ -1,3 +1,4 @@
+import moment from "moment";
 import { Course, Meeting, Section, SemesterLength, Term } from "./interfaces";
 
 export const INITIAL_DATE = "2000-01-02";
@@ -35,6 +36,7 @@ export const emptySection: Section = {
   status: "",
   term: Term.Fall,
   termStart: "",
+  timestamp: moment.now(),
   used: 0,
   year: new Date().getFullYear(),
 };

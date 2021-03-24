@@ -60,6 +60,7 @@ const registrarSpreadsheetFields: ValidFields = {
   SubjectCode: cf.prefixCallback,
   Term: cf.termCallback,
   TermStart: cf.termStartCallback,
+  Timestamp: cf.timestampCallback,
   Used: cf.usedCallback,
 };
 
