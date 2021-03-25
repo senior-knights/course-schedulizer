@@ -114,6 +114,6 @@ export const addNonTeachingLoadSchema = object().shape({
     .test("is-decimal", "invalid decimal", decimalRegex)
     .transform(emptyStringToNull)
     .nullable(),
-  instructor: string().required(),
+  instructor: array().of(string()).required(),
   terms: array().transform(removeUncheckedValues),
 });
