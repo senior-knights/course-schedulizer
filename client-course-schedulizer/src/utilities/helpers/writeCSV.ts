@@ -2,7 +2,7 @@ import moment from "moment";
 import { getMeetingTimeStr, getTermsStr } from "utilities";
 import { Schedule } from "utilities/interfaces";
 
-// Deprecated, TODO: Remove this code?
+// Deprecated, TODO: Remove this function?
 // Simplified version of scheduleToFullCSVString() from writeFullCSV.ts
 export const scheduleToCSVString = (schedule: Schedule): string => {
   let csvStr = "Term,Section Name,Stu Cred,Fac Load,Room,Days,Meeting Time,Short Title,Faculty\n";
@@ -53,6 +53,7 @@ export const scheduleToCSVString = (schedule: Schedule): string => {
   return csvStr;
 };
 
+// Exported alongside the full schedule
 export const scheduleToNonTeachingCSVString = (schedule: Schedule): string => {
   let csvStr = "Term(s),Non-Teaching Activity,Fac Load,Faculty\n";
   schedule.courses.forEach((course) => {
