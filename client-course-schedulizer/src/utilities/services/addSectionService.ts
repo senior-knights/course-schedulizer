@@ -192,7 +192,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
       : SemesterLength.IntensiveA) as unknown) as Intensive,
     localMax: data?.section.localMax,
     location: locationValue,
-    name: data?.course.name ?? "",
+    name: data?.section.name ?? data?.course.name ?? "",
     number: data?.course.number ?? "",
     prefix: data?.course.prefixes ?? [],
     roomCapacity: data?.meeting?.location.roomCapacity,
