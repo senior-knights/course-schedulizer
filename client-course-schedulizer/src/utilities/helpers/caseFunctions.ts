@@ -102,12 +102,8 @@ export const prefixCallback = (value: string, { course }: CaseCallbackParams) =>
   course.prefixes = value === "" ? [] : prefixCase(value);
 };
 
-export const nameCallback = (value: string, { course, section }: CaseCallbackParams) => {
-  if (course.name.trim() === "") {
-    course.name = value;
-  } else {
-    section.name = value;
-  }
+export const nameCallback = (value: string, { course }: CaseCallbackParams) => {
+  course.name = value;
 };
 
 export const numberCallback = (value: string, { course }: CaseCallbackParams) => {
