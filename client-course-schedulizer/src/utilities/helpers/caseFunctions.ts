@@ -127,7 +127,9 @@ export const anticipatedSizeCallback = (value: string, { section }: CaseCallback
 };
 
 export const commentsCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.comments = value;
+  if (value.trim() !== "") {
+    section.comments = value;
+  }
 };
 
 export const yearCallback = (value: string, { section }: CaseCallbackParams) => {
