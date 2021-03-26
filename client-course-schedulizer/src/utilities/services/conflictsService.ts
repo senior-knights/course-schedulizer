@@ -1,4 +1,4 @@
-import { cloneDeep, forEach } from "lodash";
+import { forEach } from "lodash";
 import * as AllMoment from "moment";
 import moment, { Moment } from "moment";
 import { extendMoment } from "moment-range";
@@ -16,11 +16,10 @@ interface ConflictData {
   term: Section["term"];
 }
 
-export const findConflicts = (origSchedule: Schedule): Schedule => {
+export const findConflicts = (schedule: Schedule): Schedule => {
   // flatten the schedule into a single array with just the data to check for conflicts
   const dataToCheck: ConflictData[] = [];
-  const scheduleWithConflicts = cloneDeep(origSchedule);
-  forEach(origSchedule.courses, (course, courseIndex) => {
+  forEach(schedule.courses, (course, courseIndex) => {
     forEach(course.sections, (section, sectionIndex) => {
       forEach(section.meetings, (meeting, meetingIndex) => {
         const startTimeMoment = moment(meeting.startTime, "h:mm A");
@@ -36,7 +35,7 @@ export const findConflicts = (origSchedule: Schedule): Schedule => {
       });
     });
   });
-  console.log(dataToCheck);
+
   // loop through each pair of meetings and mark conflicts
   forEach(dataToCheck, (meeting1, i) => {
     forEach(dataToCheck, (meeting2, j) => {
@@ -58,11 +57,11 @@ export const findConflicts = (origSchedule: Schedule): Schedule => {
         ) {
           const [ci1, si1, mi1] = meeting1.indexes;
           const [ci2, si2, mi2] = meeting2.indexes;
-          scheduleWithConflicts.courses[ci1].sections[si1].meetings[mi1].isConflict = true;
-          scheduleWithConflicts.courses[ci2].sections[si2].meetings[mi2].isConflict = true;
+          schedule.courses[ci1].sections[si1].meetings[mi1].isConflict = true;
+          schedule.courses[ci2].sections[si2].meetings[mi2].isConflict = true;
         }
       }
     });
   });
-  return scheduleWithConflicts;
+  return schedule;
 };
