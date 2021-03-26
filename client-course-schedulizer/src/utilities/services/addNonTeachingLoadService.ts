@@ -12,7 +12,7 @@ export const mapNonTeachingLoadValuesToInput = (
   return {
     activity: data?.section.instructionalMethod ?? "",
     facultyHours:
-      data?.section.facultyHours && data.section.facultyHours > -1
+      data?.section.facultyHours !== undefined && data.section.facultyHours > -1
         ? data.section.facultyHours
         : undefined,
     instructor: data?.section.instructors[0] ?? "",

@@ -159,7 +159,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
       `${data?.meeting?.location.building} ${data?.meeting?.location.roomNumber}`) ||
     ""
   ).trim();
-
+  console.log(data?.section.facultyHours);
   let defaultTerm = data?.section.term;
   if (Array.isArray(defaultTerm)) {
     [defaultTerm] = defaultTerm;
@@ -175,7 +175,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
     department: data?.course.department,
     duration: data?.meeting?.duration,
     facultyHours:
-      data?.section.facultyHours && data.section.facultyHours > -1
+      data?.section.facultyHours !== undefined && data.section.facultyHours > -1
         ? data.section.facultyHours
         : undefined,
     globalMax: data?.section.globalMax,
@@ -203,7 +203,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
       : "08:00",
     status: data?.section.status ?? "Active",
     studentHours:
-      data?.section.studentHours && data.section.studentHours > -1
+      data?.section.studentHours !== undefined && data.section.studentHours > -1
         ? data.section.studentHours
         : undefined,
     term: defaultTerm || Term.Fall,
