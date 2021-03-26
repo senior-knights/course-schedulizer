@@ -58,7 +58,7 @@ export interface Section {
   term: Term | Term[];
   // Like 9/3/2019
   termStart: string;
-  timestamp?: number;
+  timestamp?: string;
   // Number of students enrolled in this section at the end of the course
   used?: number;
   year: number | string;
