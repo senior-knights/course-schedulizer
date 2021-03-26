@@ -7,6 +7,7 @@ import {
   GridItemTextField,
 } from "components";
 import { isEqual } from "lodash";
+import moment from "moment";
 import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
@@ -252,6 +253,11 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
           </Grid>
           <Grid className="popover-buttons" item>
             {buttons()}
+            {values?.section.timestamp && (
+              <Typography variant="caption">
+                Last Edited: {moment(values?.section.timestamp).format("MMMM Do YYYY, h:mm:ss a")}
+              </Typography>
+            )}
           </Grid>
         </Grid>
       </form>
