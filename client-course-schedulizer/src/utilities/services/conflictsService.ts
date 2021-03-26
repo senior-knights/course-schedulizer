@@ -22,6 +22,7 @@ export const findConflicts = (schedule: Schedule): Schedule => {
   forEach(schedule.courses, (course, courseIndex) => {
     forEach(course.sections, (section, sectionIndex) => {
       forEach(section.meetings, (meeting, meetingIndex) => {
+        meeting.isConflict = false;
         const startTimeMoment = moment(meeting.startTime, "h:mm A");
         dataToCheck.push({
           days: meeting.days,
