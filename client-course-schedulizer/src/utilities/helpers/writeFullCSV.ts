@@ -98,7 +98,7 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
       },${
         section.semesterLength ?? ""
       },"${buildingStr}","${roomNumberStr}","${meetingStartStr}","${meetingStartInternalStr}","${meetingDurationMinutesStr}","${meetingEndStr}","${meetingEndInternalStr}","${monStr}","${tuesStr}","${wedStr}","${thursStr}","${friStr}","${
-        course.name
+        section.name ?? course.name
       }","${section.instructors.join("\n")}","${section.status ?? ""}","${
         section.instructionalMethod ?? ""
       }","${section.comments ?? ""}"\n`;

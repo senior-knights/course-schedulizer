@@ -47,6 +47,7 @@ export interface Section {
   // Multiple Meetings possible if time/room differs on different days
   // Asynchronous classes should have an empty array of meeting times
   meetings: Meeting[];
+  name?: string;
   semesterLength?: SemesterLength;
   // Like 5/21/2020
   startDate?: string;
