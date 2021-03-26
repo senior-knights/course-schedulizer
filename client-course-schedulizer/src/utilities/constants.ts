@@ -17,10 +17,10 @@ export const emptyMeeting: Meeting = {
 };
 
 export const emptySection: Section = {
-  facultyHours: 0,
+  facultyHours: -1,
   instructors: [],
   letter: "",
   meetings: [],
-  studentHours: 0,
+  studentHours: -1,
   term: Term.Fall,
 };
