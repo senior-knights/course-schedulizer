@@ -159,7 +159,6 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
       `${data?.meeting?.location.building} ${data?.meeting?.location.roomNumber}`) ||
     ""
   ).trim();
-  console.log(data?.section.facultyHours);
   let defaultTerm = data?.section.term;
   if (Array.isArray(defaultTerm)) {
     [defaultTerm] = defaultTerm;

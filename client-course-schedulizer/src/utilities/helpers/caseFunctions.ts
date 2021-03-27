@@ -350,9 +350,5 @@ export const durationCase = (value: string): number => {
 };
 
 export const yearCase = (value: string): number | string | undefined => {
-  return !value || value.trim() === ""
-    ? undefined
-    : Number.isInteger(Number(value))
-    ? Number(value)
-    : value;
+  return Number.isInteger(Number(value)) && value ? Number(value) : value;
 };

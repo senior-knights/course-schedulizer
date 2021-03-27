@@ -157,7 +157,6 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
 
     schedule.courses[existingCourseIndex].department = course.department;
     if (course.name !== schedule.courses[existingCourseIndex].name) {
-      console.log(course.name);
       section.name = course.name;
     }
 
