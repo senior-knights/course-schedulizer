@@ -44,7 +44,7 @@ export const scheduleToCSVString = (schedule: Schedule): string => {
         )},${section.facultyHours.toFixed(
           2,
         )},"${buildingAndRoomStr}","${daysStr}","${meetingTimeStr}","${
-          course.name
+          section.name ?? course.name
         }","${section.instructors.join("\n")}"\n`;
       });
     }
