@@ -1,5 +1,5 @@
 export * from "./addSectionHooks";
-export * from "./deleteSectionHooks";
+export * from "./deleteMeetingHooks";
 export * from "./importRemoteFileHook";
 export * from "./useExportCSV";
 export * from "./useExportFullCSV";
