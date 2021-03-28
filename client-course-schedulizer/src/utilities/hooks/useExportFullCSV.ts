@@ -14,7 +14,10 @@ export const useExportFullCSV = () => {
   const onFullExportClick = () => {
     // TODO: maybe generate a cool title like full-schedule-fall-2020.csv
     download(scheduleToFullCSVString(schedule), `full_schedule_${moment().format()}.csv`);
-    download(scheduleToNonTeachingCSVString(schedule), `non_teaching_${moment().format()}.csv`);
+    const nonTeachingCSV = scheduleToNonTeachingCSVString(schedule);
+    if (nonTeachingCSV) {
+      download(nonTeachingCSV, `non_teaching_${moment().format()}.csv`);
+    }
   };
   return onFullExportClick;
 };
