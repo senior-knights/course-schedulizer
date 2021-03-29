@@ -18,7 +18,7 @@ export const GridItemAutocomplete = (
 ) => {
   const { defaultValue, label, name } = props;
   const { control, errors } = useFormContext();
-  const { name: nameFallback } = useInput(label, errors);
+  const { name: nameFallback, errorMessage } = useInput(label, errors);
 
   return (
     <Grid container direction="column" item xs>
@@ -31,16 +31,41 @@ export const GridItemAutocomplete = (
             return data;
           }}
           render={({ onChange, ...controllerProps }) => {
+            const cPropSet = new Set(
+              Array.isArray(controllerProps.value)
+                ? controllerProps.value
+                : [controllerProps.value],
+            );
+            const propsCopy = { ...props };
+            // Remove existing elements from the autocomplete options
+            // Set difference: https://stackoverflow.com/a/36504668/14478665
+            propsCopy.options = [
+              ...new Set(
+                props.options.filter((x) => {
+                  return x && !cPropSet.has(x);
+                }),
+              ),
+            ];
             return (
               <Autocomplete
+                autoSelect
                 freeSolo
                 onChange={(e, data) => {
                   return onChange(data);
                 }}
+                openOnFocus
                 renderInput={(params) => {
-                  return <TextField label={label} {...params} variant="outlined" />;
+                  return (
+                    <TextField
+                      label={label}
+                      {...params}
+                      error={!!errorMessage}
+                      helperText={errorMessage}
+                      variant="outlined"
+                    />
+                  );
                 }}
-                {...props}
+                {...propsCopy}
                 {...controllerProps}
               />
             );

@@ -55,7 +55,7 @@ export interface SectionInput {
 export interface NonTeachingLoadInput {
   activity: Section["instructionalMethod"];
   facultyHours: Section["facultyHours"];
-  instructor: Instructor;
+  instructor: Instructor[];
   terms: CheckboxTerms;
 }
 
@@ -186,7 +186,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
       ? data?.section.semesterLength
       : SemesterLength.HalfFirst) as unknown) as Half,
     instructionalMethod: data?.section.instructionalMethod ?? "LEC",
-    instructor: data?.section.instructors || [],
+    instructor: data?.section.instructors ?? [],
     intensiveSemester: ((data?.section.semesterLength &&
     convertFromSemesterLength(data?.section.semesterLength) ===
       SemesterLengthOption.IntensiveSemester
