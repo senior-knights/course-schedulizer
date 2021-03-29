@@ -79,9 +79,7 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
       const sectionNameStr = `${course.prefixes.length ? course.prefixes[0] : ""}-${
         course.number
       }-${section.letter}`;
-      const courseLevelCodeStr = numericReg.test(course.number[0])
-        ? `${course.number[0]}00`
-        : "100";
+      const courseLevelCodeStr = numericReg.test(course.number[0]) ? `${course.number[0]}00` : "";
 
       // Construct a row in the output CSV
       csvStr += `"${course.department ?? ""}",${termStr},${section.termStart ?? ""},${
