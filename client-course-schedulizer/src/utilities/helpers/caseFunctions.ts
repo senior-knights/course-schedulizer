@@ -152,7 +152,8 @@ export const durationCallback = (value: string, params: CaseCallbackParams) => {
 
 export const roomCapacityCallback = (value: string, params: CaseCallbackParams) => {
   assignWithMeetings(value, params, (capacity, i, meetings) => {
-    meetings[i].location.roomCapacity = integerDefaultZeroCase(capacity);
+    meetings[i].location.roomCapacity =
+      value.trim() === "" ? undefined : integerDefaultZeroCase(capacity);
   });
 };
 
