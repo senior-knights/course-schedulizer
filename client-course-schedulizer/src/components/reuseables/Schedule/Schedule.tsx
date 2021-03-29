@@ -8,6 +8,7 @@ import StickyNode from "react-stickynode";
 import { CourseSectionMeeting } from "utilities";
 import { AppContext, ScheduleContext } from "utilities/contexts";
 import {
+  colorConflictBorders,
   colorEventsByFeature,
   filterEventsByTerm,
   filterHeadersWithNoEvents,
@@ -85,6 +86,7 @@ const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Sc
 
   // Color events by the selected feature
   colorEventsByFeature(filteredEvents, colorBy);
+  colorConflictBorders(groupedEvents);
 
   return (
     <>
@@ -119,7 +121,7 @@ const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Sc
           horizontal: "left",
           vertical: "bottom",
         }}
-        PaperProps={{ style: { maxWidth: "50%", minWidth: "500px" } }}
+        PaperProps={{ style: { maxHeight: "90%", maxWidth: "90%", minWidth: "500px" } }}
         transformOrigin={{
           horizontal: "right",
           vertical: "top",

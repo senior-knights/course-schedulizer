@@ -6,6 +6,7 @@ import randomColor from "randomcolor";
 import { enumArray } from "utilities";
 import { INITIAL_DATE } from "utilities/constants";
 import { ColorBy, Day, Meeting, Schedule, Section, Term } from "utilities/interfaces";
+import { findConflicts } from "./conflictsService";
 
 // Returns a list of hours to display on the Schedule
 // TODO: add better types for timing, maybe: https://stackoverflow.com/questions/51445767/how-to-define-a-regex-matched-string-type-in-typescript
@@ -34,12 +35,14 @@ const eventExistsInEventList = (event: EventInput, eventList: EventInput[]): boo
 export const getEvents = (schedule: Schedule, groups: "faculty" | "room"): GroupedEvents => {
   const events: GroupedEvents = {};
   const days: Day[] = enumArray(Day);
-  forEach(schedule.courses, (course) => {
+  const scheduleWithConflicts = findConflicts(schedule);
+  forEach(scheduleWithConflicts.courses, (course) => {
     forEach(course.sections, (section) => {
       const sectionName = `${course.prefixes[0]}-${course.number}-${section.letter}`;
       forEach(section.instructors, (prof) => {
         forEach(section.meetings, (meeting) => {
           const room = `${meeting.location.building} ${meeting.location.roomNumber}`;
+          const className = createEventClassName(sectionName, room, prof);
           const group = groups === "faculty" ? prof : room;
           const startTimeMoment = moment(meeting.startTime, "h:mm A");
           const endTimeMoment = moment(startTimeMoment).add(meeting.duration, "minutes");
@@ -48,6 +51,7 @@ export const getEvents = (schedule: Schedule, groups: "faculty" | "room"): Group
               .add(days.indexOf(day) + 1, "days")
               .format("YYYY-MM-DD");
             const newEvent: EventInput = {
+              classNames: [className],
               description: course.name,
               end: `${dayOfWeek}T${endTimeMoment.format("HH:mm")}`,
               extendedProps: {
@@ -76,7 +80,13 @@ export const getEvents = (schedule: Schedule, groups: "faculty" | "room"): Group
   return events;
 };
 
+export const createEventClassName = (sectionName: string, room: string, prof: string): string => {
+  const identifier = `${sectionName}_${prof}_${room}`;
+  return identifier.replace(/ /g, "_");
+};
+
 export const getMinAndMaxTimes = (schedule: Schedule) => {
+  findConflicts(schedule);
   const sections: Section[] = flatten(map(schedule.courses, "sections"));
   const meetings: Meeting[] = flatten(map(sections, "meetings"));
   const startTimes = map(meetings, (meeting) => {
@@ -111,6 +121,16 @@ export const filterHeadersWithNoEvents = (filteredEvents: GroupedEvents, headers
   return filter(headers, (header) => {
     const groupEvents = filteredEvents[header];
     return groupEvents?.length > 0;
+  });
+};
+
+export const colorConflictBorders = (groupedEvents: GroupedEvents) => {
+  forOwn(groupedEvents, (_, key) => {
+    forEach(groupedEvents[key], (event) => {
+      if (event.extendedProps?.meeting?.isConflict) {
+        event.borderColor = "red";
+      }
+    });
   });
 };
 
@@ -182,4 +202,60 @@ export const colorEventsByFeature = (groupedEvents: GroupedEvents, colorBy: Colo
       });
   }
   return groupedEvents;
+};
+
+export const getPrefixes = (schedule: Schedule) => {
+  const prefixes: string[] = [];
+  forEach(schedule.courses, (course) => {
+    forEach(course.prefixes, (prefix) => {
+      if (!prefixes.includes(prefix)) {
+        prefixes.push(prefix);
+      }
+    });
+  });
+  return prefixes.sort();
+};
+
+export const getNumbers = (schedule: Schedule) => {
+  const numbers: string[] = [];
+  forEach(schedule.courses, (course) => {
+    if (!numbers.includes(course.number)) {
+      numbers.push(course.number);
+    }
+  });
+  return numbers.sort();
+};
+
+export const getCourseNames = (schedule: Schedule) => {
+  const names: string[] = [];
+  forEach(schedule.courses, (course) => {
+    if (!names.includes(course.name)) {
+      names.push(course.name);
+    }
+  });
+  return names.sort();
+};
+
+export const getSectionLetters = (schedule: Schedule) => {
+  const letters: string[] = [];
+  forEach(schedule.courses, (course) => {
+    forEach(course.sections, (section) => {
+      if (!letters.includes(section.letter)) {
+        letters.push(section.letter);
+      }
+    });
+  });
+  return letters.sort();
+};
+
+export const getInstructionalMethods = (schedule: Schedule) => {
+  const instructionalMethods: string[] = [];
+  forEach(schedule.courses, (course) => {
+    forEach(course.sections, (section) => {
+      if (!instructionalMethods.includes(section.instructionalMethod) && !section.isNonTeaching) {
+        instructionalMethods.push(section.instructionalMethod);
+      }
+    });
+  });
+  return instructionalMethods.sort();
 };

@@ -64,7 +64,7 @@ export const addSectionSchema = object().shape({
     .transform(emptyStringToNull)
     .nullable(),
   instructionalMethod: string(),
-  instructor: string(),
+  instructor: array().of(string()),
   localMax: number()
     .typeError("global max must be a number")
     .integer()
@@ -73,8 +73,8 @@ export const addSectionSchema = object().shape({
     .nullable(),
   location: string(),
   name: string(),
-  number: string().required(),
-  prefix: string().required().uppercase(),
+  number: string().required().typeError("number is a required field"),
+  prefix: array().of(string().uppercase()).required().typeError("prefix is a required field"),
   roomCapacity: number()
     .typeError("room capacity must be a number")
     .positive()
@@ -82,7 +82,7 @@ export const addSectionSchema = object().shape({
     .min(0)
     .transform(emptyStringToNull)
     .nullable(),
-  section: string().required().uppercase(),
+  section: string().required().uppercase().typeError("section is a required field"),
   status: string(),
   studentHours: number()
     .typeError("student hours must be a number")
@@ -114,6 +114,6 @@ export const addNonTeachingLoadSchema = object().shape({
     .test("is-decimal", "invalid decimal", decimalRegex)
     .transform(emptyStringToNull)
     .nullable(),
-  instructor: string().required(),
+  instructor: array().of(string()).required(),
   terms: array().transform(removeUncheckedValues),
 });
