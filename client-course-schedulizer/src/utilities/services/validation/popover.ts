@@ -102,7 +102,7 @@ export const addSectionSchema = object().shape({
     .typeError("year must be a number")
     .positive()
     .integer()
-    .min(0)
+    .min(1970)
     .transform(emptyStringToNull)
     .nullable(),
 });
