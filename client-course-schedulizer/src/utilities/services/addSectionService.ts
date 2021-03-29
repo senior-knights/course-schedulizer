@@ -239,7 +239,7 @@ const createNewSectionFromInput = (data: SectionInput): Section => {
         duration: Number(data.duration),
         location: {
           building,
-          roomCapacity: Number(data.roomCapacity),
+          roomCapacity: data.roomCapacity === undefined ? undefined : Number(data.roomCapacity),
           roomNumber,
         },
         startTime: startTimeCase(data.startTime),
