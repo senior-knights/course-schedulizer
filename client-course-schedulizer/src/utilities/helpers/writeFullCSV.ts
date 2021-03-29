@@ -88,13 +88,13 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
         section.year ?? ""
       },"${sectionNameStr}","${course.prefixes.join("\n")}",${course.number},${
         section.letter
-      },${courseLevelCodeStr},${section.studentHours},${section.facultyHours},${
-        section.used ?? ""
-      },${section.day10Used ?? ""},${section.localMax ?? ""},${section.globalMax ?? ""},"${
-        roomCapacityStr ?? ""
-      }","${buildingAndRoomStr}","${daysStr}","${meetingTimeStr}",${section.startDate ?? ""},${
-        section.endDate ?? ""
-      },${
+      },${courseLevelCodeStr},${section.studentHours > -1 ? section.studentHours : ""},${
+        section.facultyHours > -1 ? section.facultyHours : ""
+      },${section.used ?? ""},${section.day10Used ?? ""},${section.localMax ?? ""},${
+        section.globalMax ?? ""
+      },"${roomCapacityStr ?? ""}","${buildingAndRoomStr}","${daysStr}","${meetingTimeStr}",${
+        section.startDate ?? ""
+      },${section.endDate ?? ""},${
         section.semesterLength ?? ""
       },"${buildingStr}","${roomNumberStr}","${meetingStartStr}","${meetingStartInternalStr}","${meetingDurationMinutesStr}","${meetingEndStr}","${meetingEndInternalStr}","${monStr}","${tuesStr}","${wedStr}","${thursStr}","${friStr}","${
         section.name ?? course.name
