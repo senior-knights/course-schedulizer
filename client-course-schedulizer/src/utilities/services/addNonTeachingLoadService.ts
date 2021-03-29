@@ -15,7 +15,7 @@ export const mapNonTeachingLoadValuesToInput = (
       data?.section.facultyHours !== undefined && data.section.facultyHours > -1
         ? data.section.facultyHours
         : undefined,
-    instructor: data?.section.instructors[0] ?? "",
+    instructor: data?.section.instructors ?? [],
     terms,
   };
 };
@@ -25,7 +25,7 @@ export const mapNonTeachingLoadInput = (data: NonTeachingLoadInput) => {
   const newCourse: Course = cloneDeep(emptyCourse);
   newSection.instructionalMethod = data.activity;
   newSection.facultyHours = data.facultyHours ?? 0;
-  newSection.instructors = [data.instructor];
+  newSection.instructors = data.instructor;
   newSection.isNonTeaching = true;
   newSection.term = data.terms as Term[];
   return { newCourse, newSection };

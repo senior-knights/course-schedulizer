@@ -12,6 +12,7 @@ export const emptyCourse: Course = {
 export const emptyMeeting: Meeting = {
   days: [],
   duration: 0,
+  isConflict: false,
   location: { building: "", roomNumber: "" },
   startTime: "",
 };

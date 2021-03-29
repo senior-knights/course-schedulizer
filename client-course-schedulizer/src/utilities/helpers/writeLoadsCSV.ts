@@ -1,8 +1,35 @@
-import { forEach } from "lodash";
-import moment, { Moment } from "moment";
-import { Schedule, Section, Term } from "utilities/interfaces";
+import moment from "moment";
+import { getMeetingTimeStr, getTermsStr } from "utilities";
+import { Schedule } from "utilities/interfaces";
 
-// Simplified version of scheduleToFullCSVString() from writeFullCSV.ts to conform to new standard
+// Exported alongside the full schedule
+export const scheduleToNonTeachingCSVString = (schedule: Schedule): string => {
+  const csvHeader = "Term(s),Non-Teaching Activity,Fac Load,Faculty\n";
+  let csvStr = csvHeader;
+  schedule.courses.forEach((course) => {
+    // Only produce output for courses that don't have a prefix and number (assume they are non-teaching loads)
+    if (!((course.prefixes.length && course.prefixes[0]) || course.number)) {
+      course.sections.forEach((section) => {
+        // Create strings for fields that need to be constructed
+        const termStr = getTermsStr(section);
+
+        // TODO: Should instructionalMethod be used for Non-Teaching Activity or should we add a new field?
+        // Construct a row in the output CSV
+        csvStr += `${termStr},${section.instructionalMethod},${section.facultyHours.toFixed(
+          2,
+        )},"${section.instructors.join("\n")}"\n`;
+      });
+    }
+  });
+  // Only output if there are non-teaching loads
+  if (csvStr !== csvHeader) {
+    return csvStr;
+  }
+  return "";
+};
+
+// Deprecated, TODO: Remove this function?
+// Simplified version of scheduleToFullCSVString() from writeFullCSV.ts
 export const scheduleToCSVString = (schedule: Schedule): string => {
   let csvStr = "Term,Section Name,Stu Cred,Fac Load,Room,Days,Meeting Time,Short Title,Faculty\n";
   schedule.courses.forEach((course) => {
@@ -50,56 +77,4 @@ export const scheduleToCSVString = (schedule: Schedule): string => {
     }
   });
   return csvStr;
-};
-
-export const scheduleToNonTeachingCSVString = (schedule: Schedule): string => {
-  let csvStr = "Term(s),Non-Teaching Activity,Fac Load,Faculty\n";
-  schedule.courses.forEach((course) => {
-    // Only produce output for courses that don't have a prefix and number (assume they are non-teaching loads)
-    if (!((course.prefixes.length && course.prefixes[0]) || course.number)) {
-      course.sections.forEach((section) => {
-        // Create strings for fields that need to be constructed
-        const termStr = getTermsStr(section);
-
-        // TODO: Should instructionalMethod be used for Non-Teaching Activity or should we add a new field?
-        // Construct a row in the output CSV
-        csvStr += `${termStr},${section.instructionalMethod},${section.facultyHours.toFixed(
-          2,
-        )},"${section.instructors.join("\n")}"\n`;
-      });
-    }
-  });
-  return csvStr;
-};
-
-export const getTermsStr = (section: Section): string => {
-  if (Array.isArray(section.term)) {
-    if (section.term.length === 0) {
-      return "";
-    }
-    let termsStr = '"';
-    forEach(section.term, (term) => {
-      termsStr += `${getTermStr(section.year, term)}, `;
-    });
-    return `${termsStr.slice(0, -2)}"`;
-  }
-  return getTermStr(section.year, section.term);
-};
-
-const getTermStr = (year: Section["year"], term: Term): string => {
-  return year
-    ? `${
-        typeof year === "number"
-          ? term === Term.Fall
-            ? String(year).slice(-2)
-            : String(year + 1).slice(-2)
-          : term === Term.Fall
-          ? String(Number(year?.slice(-2)) - 1)
-          : year?.slice(-2)
-      }/${term}`
-    : term;
-};
-
-export const getMeetingTimeStr = (startMoment: Moment, endMoment: Moment): string => {
-  return `${startMoment.format("h:mmA")} - ${endMoment.format("h:mmA")}\n`;
 };

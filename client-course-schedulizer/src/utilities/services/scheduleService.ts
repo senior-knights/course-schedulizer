@@ -6,6 +6,7 @@ import randomColor from "randomcolor";
 import { enumArray } from "utilities";
 import { INITIAL_DATE } from "utilities/constants";
 import { ColorBy, Day, Meeting, Schedule, Section, Term } from "utilities/interfaces";
+import { findConflicts } from "./conflictsService";
 
 // Returns a list of hours to display on the Schedule
 // TODO: add better types for timing, maybe: https://stackoverflow.com/questions/51445767/how-to-define-a-regex-matched-string-type-in-typescript
@@ -34,7 +35,8 @@ const eventExistsInEventList = (event: EventInput, eventList: EventInput[]): boo
 export const getEvents = (schedule: Schedule, groups: "faculty" | "room"): GroupedEvents => {
   const events: GroupedEvents = {};
   const days: Day[] = enumArray(Day);
-  forEach(schedule.courses, (course) => {
+  const scheduleWithConflicts = findConflicts(schedule);
+  forEach(scheduleWithConflicts.courses, (course) => {
     forEach(course.sections, (section) => {
       const sectionName = `${course.prefixes[0]}-${course.number}-${section.letter}`;
       forEach(section.instructors, (prof) => {
@@ -84,6 +86,7 @@ export const createEventClassName = (sectionName: string, room: string, prof: st
 };
 
 export const getMinAndMaxTimes = (schedule: Schedule) => {
+  findConflicts(schedule);
   const sections: Section[] = flatten(map(schedule.courses, "sections"));
   const meetings: Meeting[] = flatten(map(sections, "meetings"));
   const startTimes = map(meetings, (meeting) => {
@@ -118,6 +121,16 @@ export const filterHeadersWithNoEvents = (filteredEvents: GroupedEvents, headers
   return filter(headers, (header) => {
     const groupEvents = filteredEvents[header];
     return groupEvents?.length > 0;
+  });
+};
+
+export const colorConflictBorders = (groupedEvents: GroupedEvents) => {
+  forOwn(groupedEvents, (_, key) => {
+    forEach(groupedEvents[key], (event) => {
+      if (event.extendedProps?.meeting?.isConflict) {
+        event.borderColor = "red";
+      }
+    });
   });
 };
 
