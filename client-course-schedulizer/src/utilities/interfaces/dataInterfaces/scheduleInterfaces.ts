@@ -12,6 +12,7 @@ export interface Meeting {
   days: Day[];
   // In minutes (usually 50)
   duration: number;
+  isConflict?: boolean;
   location: Location;
   // Like "8:00 AM" or "12:30 PM"
   startTime: string;
