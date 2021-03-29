@@ -345,7 +345,7 @@ export const handleOldMeeting = (
   }
   if (oldMeeting && removeOldMeeting) {
     // Remove the old version of the Meeting
-    removeMeetingFromSchedule(oldData, schedule, oldMeeting, false);
+    removeMeetingFromSchedule(oldData, schedule, oldMeeting, newSection.isNonTeaching);
   }
 };
 
