@@ -51,16 +51,19 @@ const updateRow = ({
   const facultyHours =
     (section.facultyHours !== undefined ? section.facultyHours : course.facultyHours) /
     section.instructors.length;
+  const sectionNameWithHours = `${sectionName} (${facultyHours})`;
   if (prevRow) {
     prevRow[termCourseSectionProp] = prevRow[termCourseSectionProp]
-      ? (prevRow[termCourseSectionProp] = `${prevRow[termCourseSectionProp]}, ${sectionName}`)
-      : (prevRow[termCourseSectionProp] = sectionName);
+      ? (prevRow[
+          termCourseSectionProp
+        ] = `${prevRow[termCourseSectionProp]}, ${sectionNameWithHours}`)
+      : (prevRow[termCourseSectionProp] = sectionNameWithHours);
 
     prevRow[termHoursProp] = prevRow[termHoursProp]
       ? Number(prevRow[termHoursProp]) + facultyHours
       : facultyHours;
   } else {
-    newRow[termCourseSectionProp] = sectionName;
+    newRow[termCourseSectionProp] = sectionNameWithHours;
     newRow[termHoursProp] = facultyHours;
   }
 };
