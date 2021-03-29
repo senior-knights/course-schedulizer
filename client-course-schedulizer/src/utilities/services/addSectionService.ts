@@ -223,23 +223,23 @@ const createNewSectionFromInput = (data: SectionInput): Section => {
   const roomNumber = location[1];
 
   return {
-    anticipatedSize: data.anticipatedSize ? Number(data.anticipatedSize) : undefined,
+    anticipatedSize: data.anticipatedSize,
     comments: data.comments,
-    day10Used: data.day10Used ? Number(data.day10Used) : undefined,
+    day10Used: data.day10Used,
     endDate: "",
     facultyHours: Number(data.facultyHours),
-    globalMax: data.globalMax ? Number(data.globalMax) : undefined,
+    globalMax: data.globalMax,
     instructionalMethod: data.instructionalMethod,
     instructors: data.instructor,
     letter: data.section,
-    localMax: data.localMax ? Number(data.localMax) : undefined,
+    localMax: data.localMax,
     meetings: [
       {
         days: data.days as Day[],
         duration: Number(data.duration),
         location: {
           building,
-          roomCapacity: data.roomCapacity === undefined ? undefined : Number(data.roomCapacity),
+          roomCapacity: data.roomCapacity,
           roomNumber,
         },
         startTime: startTimeCase(data.startTime),
@@ -251,7 +251,7 @@ const createNewSectionFromInput = (data: SectionInput): Section => {
     studentHours: Number(data.studentHours),
     term: data.term,
     termStart: "",
-    used: data.used ? Number(data.used) : undefined,
+    used: data.used,
     year: yearCase(data.year),
   };
 };
