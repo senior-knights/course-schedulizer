@@ -16,7 +16,12 @@
 }
 
 .calendar-width {
-  width: 25vw;
+  width: 350px;
+}
+
+.fc-event-title,
+.fc-event-time {
+  font-size: 0.7em !important;
 }
 
 .calendar-title {
