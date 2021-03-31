@@ -23,7 +23,7 @@ import {
   removeUncheckedValues,
   SectionInput,
   useAddSectionToSchedule,
-  useDeleteSectionFromSchedule,
+  useDeleteMeetingFromSchedule,
 } from "utilities";
 import { AppContext } from "utilities/contexts";
 import {
@@ -55,7 +55,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
     convertFromSemesterLength(values?.section.semesterLength),
   );
   const { addSectionToSchedule } = useAddSectionToSchedule();
-  const { deleteSectionFromSchedule } = useDeleteSectionFromSchedule();
+  const { deleteMeetingFromSchedule } = useDeleteMeetingFromSchedule();
 
   const { reset, getValues } = methods;
 
@@ -71,15 +71,15 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
     }
   }, [reset, getValues, values]);
 
-  const onSubmit = (removeOldSection: boolean) => {
+  const onSubmit = (removeOldMeeting: boolean) => {
     return async (data: SectionInput) => {
-      await addSectionToSchedule(data, values, removeOldSection);
+      await addSectionToSchedule(data, values, removeOldMeeting);
     };
   };
 
-  const deleteSection = () => {
+  const deleteMeeting = () => {
     return () => {
-      deleteSectionFromSchedule(values);
+      deleteMeetingFromSchedule(values);
     };
   };
 
@@ -125,7 +125,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
           <Button
             className="delete-button"
             color="secondary"
-            onClick={methods.handleSubmit(deleteSection())}
+            onClick={methods.handleSubmit(deleteMeeting())}
             variant="contained"
           >
             Delete Section

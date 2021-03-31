@@ -13,7 +13,7 @@ import {
   removeUncheckedValues,
   Term,
   useAddSectionToSchedule,
-  useDeleteSectionFromSchedule,
+  useDeleteMeetingFromSchedule,
 } from "utilities";
 import { AppContext } from "utilities/contexts";
 import "./AddNonTeachingLoadPopover.scss";
@@ -37,11 +37,11 @@ export const AddNonTeachingLoadPopover = ({ values }: PopoverValueProps) => {
     resolver: yupResolver(addNonTeachingLoadSchema),
   });
 
-  const { deleteSectionFromSchedule } = useDeleteSectionFromSchedule();
+  const { deleteMeetingFromSchedule } = useDeleteMeetingFromSchedule();
 
-  const deleteSection = () => {
+  const deleteMeeting = () => {
     return () => {
-      deleteSectionFromSchedule(values);
+      deleteMeetingFromSchedule(values);
     };
   };
 
@@ -70,7 +70,12 @@ export const AddNonTeachingLoadPopover = ({ values }: PopoverValueProps) => {
           <GridItemTextField label="Activity" />
         </Grid>
         <Grid container spacing={SPACING}>
-          <GridItemAutocomplete label="Instructor" multiple options={[...professors].sort()} />
+          <GridItemAutocomplete
+            defaultValue={values?.section.instructors}
+            label="Instructor"
+            multiple
+            options={[...professors].sort()}
+          />
         </Grid>
         <Grid container spacing={SPACING}>
           <GridItemTextField label="Faculty Hours" />
@@ -93,7 +98,7 @@ export const AddNonTeachingLoadPopover = ({ values }: PopoverValueProps) => {
           {values && (
             <Button
               color="secondary"
-              onClick={methods.handleSubmit(deleteSection())}
+              onClick={methods.handleSubmit(deleteMeeting())}
               variant="contained"
             >
               Delete Activity

@@ -55,7 +55,7 @@ export interface SectionInput {
 export interface NonTeachingLoadInput {
   activity: Section["instructionalMethod"];
   facultyHours: Section["facultyHours"];
-  instructor: Instructor;
+  instructor: Instructor[];
   terms: CheckboxTerms;
 }
 
@@ -125,6 +125,8 @@ export const getSection = (
   return sections.length > 0 ? sections[0] : undefined;
 };
 
+// Deprecated, replaced by removeMeeting
+// TODO: Remove?
 const removeSection = (
   schedule: Schedule,
   letter: Section["letter"],
@@ -184,7 +186,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
       ? data?.section.semesterLength
       : SemesterLength.HalfFirst) as unknown) as Half,
     instructionalMethod: data?.section.instructionalMethod ?? "LEC",
-    instructor: data?.section.instructors || [],
+    instructor: data?.section.instructors ?? [],
     intensiveSemester: ((data?.section.semesterLength &&
     convertFromSemesterLength(data?.section.semesterLength) ===
       SemesterLengthOption.IntensiveSemester
@@ -268,7 +270,8 @@ const createNewCourseFromInput = (data: SectionInput): Course => {
   };
 };
 
-// If there is an old version of the Section...
+// Deprecated, replaced by handleOldMeeting
+// TODO: Remove?
 export const handleOldSection = (
   oldData: CourseSectionMeeting | undefined,
   newSection: Section,
@@ -296,6 +299,8 @@ export const handleOldSection = (
   }
 };
 
+// Deprecated, replaced by removeMeetingFromSchedule
+// TODO: Remove?
 export const removeSectionFromSchedule = (
   data: CourseSectionMeeting | undefined,
   schedule: Schedule,
@@ -318,4 +323,73 @@ export const addFalseToDaysCheckboxList = (days?: Day[]): CheckboxDays => {
   return map(weekdays, (wd: Day) => {
     return days.includes(wd) ? wd : false;
   });
+};
+
+export const handleOldMeeting = (
+  oldData: CourseSectionMeeting | undefined,
+  newSection: Section,
+  removeOldMeeting: boolean,
+  schedule: Schedule,
+) => {
+  const oldMeeting = oldData?.meeting;
+  const oldSection = oldData?.section;
+  if (oldSection) {
+    // If the year, term, and semester length haven't changed...
+    if (
+      String(newSection.year) === String(oldSection.year) &&
+      newSection.term === oldSection.term &&
+      newSection.semesterLength === oldSection.semesterLength
+    ) {
+      // Update the new Section to match the date fields of the old Section
+      newSection.termStart = oldSection.termStart;
+      newSection.startDate = oldSection.startDate;
+      newSection.endDate = oldSection.endDate;
+    }
+  }
+  if (oldMeeting && removeOldMeeting) {
+    // Remove the old version of the Meeting
+    removeMeetingFromSchedule(oldData, schedule, oldMeeting, false);
+  }
+};
+
+export const removeMeetingFromSchedule = (
+  data: CourseSectionMeeting | undefined,
+  schedule: Schedule,
+  oldMeeting: Meeting,
+  hardDelete = true,
+) => {
+  const oldCourse = data?.course;
+  const oldSection = data?.section;
+  const courseIndex = indexOf(schedule.courses, oldCourse);
+  const sectionIndex = indexOf(oldCourse?.sections, oldSection);
+  const oldSectionHadMeetings = !!(oldSection && oldSection.meetings.length);
+  removeMeeting(schedule, oldMeeting, courseIndex, sectionIndex, hardDelete, oldSectionHadMeetings);
+};
+
+const removeMeeting = (
+  schedule: Schedule,
+  oldMeeting: Meeting,
+  courseIndex: number,
+  sectionIndex: number,
+  hardDelete: boolean,
+  oldSectionHadMeetings: boolean,
+) => {
+  // Remove the oldMeeting from the sections meetings
+  schedule.courses[courseIndex].sections[sectionIndex].meetings = filter(
+    schedule.courses[courseIndex].sections[sectionIndex].meetings,
+    (meeting) => {
+      return !isEqual(meeting, oldMeeting);
+    },
+  );
+  // If user pressed delete button and/or the old section had meetings before, delete section if no meetings left
+  if (
+    (hardDelete || oldSectionHadMeetings) &&
+    !schedule.courses[courseIndex].sections[sectionIndex].meetings.length
+  ) {
+    schedule.courses[courseIndex].sections.splice(sectionIndex, 1);
+    // Delete course if no sections left
+    if (!schedule.courses[courseIndex].sections.length) {
+      schedule.courses.splice(courseIndex, 1);
+    }
+  }
 };
