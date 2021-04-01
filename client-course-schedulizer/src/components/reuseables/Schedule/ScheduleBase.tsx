@@ -7,6 +7,7 @@ import Stick from "react-stick";
 import { CourseSectionMeeting } from "utilities";
 import { AppContext } from "utilities/contexts";
 import {
+  colorConflictBorders,
   colorEventsByFeature,
   filterEventsByTerm,
   filterHeadersWithNoEvents,
@@ -72,6 +73,7 @@ export const ScheduleBase = ({
 
   // Color events by the selected feature
   colorEventsByFeature(filteredEvents, colorBy);
+  colorConflictBorders(groupedEvents);
 
   return (
     <>

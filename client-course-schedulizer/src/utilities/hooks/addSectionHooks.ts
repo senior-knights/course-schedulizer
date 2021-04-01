@@ -13,7 +13,7 @@ import {
 } from "utilities/interfaces";
 import {
   createEventClassName,
-  handleOldSection,
+  handleOldMeeting,
   mapInputToInternalTypes,
   NonTeachingLoadInput,
   SectionInput,
@@ -29,7 +29,7 @@ interface AddToScheduleParams {
   newCourse: Course;
   newSection: Section;
   oldData: CourseSectionMeeting | undefined;
-  removeOldSection: boolean;
+  removeOldMeeting: boolean;
 }
 
 export const useAddSectionToSchedule = () => {
@@ -43,11 +43,11 @@ export const useAddSectionToSchedule = () => {
   const addSectionToSchedule = async (
     data: SectionInput,
     oldData: CourseSectionMeeting | undefined,
-    removeOldSection = false,
+    removeOldMeeting = false,
   ) => {
     setIsCSVLoading(true);
-    const { newSection, newCourse }: MappedSection = mapInputToInternalTypes(data);
-    addToSchedule({ newCourse, newSection, oldData, removeOldSection });
+    const { newCourse, newSection }: MappedSection = mapInputToInternalTypes(data);
+    addToSchedule({ newCourse, newSection, oldData, removeOldMeeting });
 
     // Depedning on the current tab, scroll to the updated/added section/row
     if (schedulizerTab === SchedulizerTab.Faculty || schedulizerTab === SchedulizerTab.Room) {
@@ -66,11 +66,11 @@ export const useAddSectionToSchedule = () => {
   const addNonTeachingLoadToSchedule = (
     data: NonTeachingLoadInput,
     oldData: CourseSectionMeeting | undefined,
-    removeOldSection = false,
+    removeOldMeeting = false,
   ) => {
     setIsCSVLoading(true);
-    const { newSection, newCourse }: MappedSection = mapNonTeachingLoadInput(data);
-    addToSchedule({ newCourse, newSection, oldData, removeOldSection });
+    const { newCourse, newSection }: MappedSection = mapNonTeachingLoadInput(data);
+    addToSchedule({ newCourse, newSection, oldData, removeOldMeeting });
     setIsCSVLoading(false);
     scrollToUpdatedFacultyRow(newSection.instructors[newSection.instructors.length - 1]);
   };
@@ -79,9 +79,9 @@ export const useAddSectionToSchedule = () => {
     newCourse,
     newSection,
     oldData,
-    removeOldSection,
+    removeOldMeeting,
   }: AddToScheduleParams) => {
-    handleOldSection(oldData, newSection, removeOldSection, schedule);
+    handleOldMeeting(oldData, newSection, removeOldMeeting, schedule);
     insertSectionCourse(schedule, newSection, newCourse);
     appDispatch({ payload: { schedule }, type: "setScheduleData" });
   };

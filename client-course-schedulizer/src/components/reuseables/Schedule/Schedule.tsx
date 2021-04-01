@@ -1,8 +1,7 @@
-import { AsyncComponent } from "components";
+import { AsyncComponent, ScheduleBase, ScheduleBaseProps } from "components";
 import React, { useState } from "react";
 import { ScheduleContext } from "utilities/contexts";
 import "./Schedule.scss";
-import { ScheduleBase, ScheduleBaseProps } from "./ScheduleBase";
 
 /* Provides a Schedule component to handle loading and async events and interfaces
   with a BaseSchedule.
