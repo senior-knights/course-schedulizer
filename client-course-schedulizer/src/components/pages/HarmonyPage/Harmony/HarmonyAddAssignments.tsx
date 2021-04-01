@@ -2,11 +2,6 @@ import React from "react";
 import { HarmonyFormsAccessors, HarmonyFormsState, useHarmonyFormsStore } from "utilities/hooks";
 import { HarmonyCourseCheckboxes } from "./HarmonyCourseCheckboxes";
 
-// pick values from store.
-const selector = ({ courses }: HarmonyFormsState) => {
-  return courses;
-};
-
 /**
  * Section on Harmony page designed to allow users to input
  *   assignment restrictions for courses.
@@ -24,4 +19,9 @@ export const HarmonyAddAssignments = () => {
       <Button>Upload JSON</Button> */}
     </>
   );
+};
+
+// pick values from store.
+const selector = ({ courses }: HarmonyFormsState) => {
+  return courses;
 };

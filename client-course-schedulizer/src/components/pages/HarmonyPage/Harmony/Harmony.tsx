@@ -26,14 +26,6 @@ import {
 //   return { inferredAssignments, professors, rooms };
 // };
 
-const selector = ({ assignments }: HarmonyAssignmentsState) => {
-  return assignments;
-};
-
-const resultSelector = ({ setResult }: HarmonyResultState) => {
-  return setResult;
-};
-
 /** Harmony returns a component to automatically create schedules. */
 export const Harmony = () => {
   const assignments = useHarmonyAssignmentsStore(selector);
@@ -45,11 +37,17 @@ export const Harmony = () => {
     setResult(res);
   }, [res, setResult]);
 
-  // TODO: convert result to a CSV (or a Schedule object) and upload it to the Schedulizer component.
-
   return (
     <>
       <HarmonyBase assignments={assignments} setResult={setRes} />
     </>
   );
+};
+
+const selector = ({ assignments }: HarmonyAssignmentsState) => {
+  return assignments;
+};
+
+const resultSelector = ({ setResult }: HarmonyResultState) => {
+  return setResult;
 };
