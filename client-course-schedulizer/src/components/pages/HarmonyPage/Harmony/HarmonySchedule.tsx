@@ -23,7 +23,7 @@ export const HarmonySchedule = () => {
 
   return (
     <>
-      <Schedule calendarHeaders={headers} groupedEvents={events} />
+      <Schedule calendarHeaders={headers} groupedEvents={events} readonly />
     </>
   );
 };
