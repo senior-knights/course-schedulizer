@@ -18,8 +18,8 @@ type sectionKeys =
   | "otherDuties";
 
 // Define a regex for the faculty load hours specifications added to the
-// Teaching Load tab's course/duty strings. e.g.: "Chair (7), CS-195-A (0.5)".
-const loadHoursRegEx = / \(\d+.?\d*\)(,|$)/;
+// Teaching Load tab's course/duty strings. See the test cases.
+export const loadHoursRegEx = / \(\d+.?\d*\)(,|$)/;
 
 export type FacultyRow = {
   [key in hourKeys]?: number;
