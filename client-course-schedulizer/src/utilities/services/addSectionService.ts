@@ -376,10 +376,16 @@ const removeMeeting = (
 ) => {
   // Remove the oldMeeting from the sections meetings
   if (oldMeeting) {
+    let meetingFound = false;
     schedule.courses[courseIndex].sections[sectionIndex].meetings = filter(
       schedule.courses[courseIndex].sections[sectionIndex].meetings,
       (meeting) => {
-        return !isEqual(meeting, oldMeeting);
+        // Only remove the meeting once (leave any duplicates)
+        if (!meetingFound) {
+          meetingFound = isEqual(meeting, oldMeeting);
+          return !meetingFound;
+        }
+        return true;
       },
     );
   }
