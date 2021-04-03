@@ -355,7 +355,7 @@ export const handleOldMeeting = (
 export const removeMeetingFromSchedule = (
   data: CourseSectionMeeting | undefined,
   schedule: Schedule,
-  oldMeeting: Meeting,
+  oldMeeting: Meeting | undefined,
   hardDelete = true,
 ) => {
   const oldCourse = data?.course;
@@ -368,19 +368,21 @@ export const removeMeetingFromSchedule = (
 
 const removeMeeting = (
   schedule: Schedule,
-  oldMeeting: Meeting,
+  oldMeeting: Meeting | undefined,
   courseIndex: number,
   sectionIndex: number,
   hardDelete: boolean,
   oldSectionHadMeetings: boolean,
 ) => {
   // Remove the oldMeeting from the sections meetings
-  schedule.courses[courseIndex].sections[sectionIndex].meetings = filter(
-    schedule.courses[courseIndex].sections[sectionIndex].meetings,
-    (meeting) => {
-      return !isEqual(meeting, oldMeeting);
-    },
-  );
+  if (oldMeeting) {
+    schedule.courses[courseIndex].sections[sectionIndex].meetings = filter(
+      schedule.courses[courseIndex].sections[sectionIndex].meetings,
+      (meeting) => {
+        return !isEqual(meeting, oldMeeting);
+      },
+    );
+  }
   // If user pressed delete button and/or the old section had meetings before, delete section if no meetings left
   if (
     (hardDelete || oldSectionHadMeetings) &&
