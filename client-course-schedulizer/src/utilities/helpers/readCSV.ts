@@ -155,8 +155,10 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
       section.instructionalMethod,
     );
 
-    schedule.courses[existingCourseIndex].name = course.name;
     schedule.courses[existingCourseIndex].department = course.department;
+    if (course.name !== schedule.courses[existingCourseIndex].name) {
+      section.name = course.name;
+    }
 
     // If there is, add the new meeting(s) to the existing course
     if (existingSection) {

@@ -52,6 +52,7 @@ export const addSectionSchema = object().shape({
     .transform(emptyStringToNull)
     .nullable(),
   facultyHours: number()
+    .required()
     .typeError("faculty hours must be a number")
     .min(0)
     .test("is-decimal", "invalid decimal", decimalRegex)
@@ -63,7 +64,7 @@ export const addSectionSchema = object().shape({
     .min(0)
     .transform(emptyStringToNull)
     .nullable(),
-  instructionalMethod: string(),
+  instructionalMethod: string().nullable(),
   instructor: array().of(string()),
   localMax: number()
     .typeError("global max must be a number")
@@ -85,6 +86,7 @@ export const addSectionSchema = object().shape({
   section: string().required().uppercase().typeError("section is a required field"),
   status: string(),
   studentHours: number()
+    .required()
     .typeError("student hours must be a number")
     .min(0)
     .test("is-decimal", "invalid decimal", decimalRegex)
@@ -100,7 +102,7 @@ export const addSectionSchema = object().shape({
     .typeError("year must be a number")
     .positive()
     .integer()
-    .min(0)
+    .min(1970)
     .transform(emptyStringToNull)
     .nullable(),
 });

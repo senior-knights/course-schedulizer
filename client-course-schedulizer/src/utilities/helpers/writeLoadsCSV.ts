@@ -15,9 +15,9 @@ export const scheduleToNonTeachingCSVString = (schedule: Schedule): string => {
 
         // TODO: Should instructionalMethod be used for Non-Teaching Activity or should we add a new field?
         // Construct a row in the output CSV
-        csvStr += `${termStr},${section.instructionalMethod},${(
-          section.facultyHours ?? course.facultyHours
-        ).toFixed(2)},"${section.instructors.join("\n")}"\n`;
+        csvStr += `${termStr},${section.instructionalMethod},${section.facultyHours.toFixed(
+          2,
+        )},"${section.instructors.join("\n")}"\n`;
       });
     }
   });
@@ -66,12 +66,12 @@ export const scheduleToCSVString = (schedule: Schedule): string => {
         }-${section.letter}`;
 
         // Construct a row in the output CSV
-        csvStr += `${termStr},"${sectionNameStr}",${(
-          section.studentHours ?? course.studentHours
-        ).toFixed(2)},${(section.facultyHours ?? course.facultyHours).toFixed(
+        csvStr += `${termStr},"${sectionNameStr}",${section.studentHours.toFixed(
+          2,
+        )},${section.facultyHours.toFixed(
           2,
         )},"${buildingAndRoomStr}","${daysStr}","${meetingTimeStr}","${
-          course.name
+          section.name ?? course.name
         }","${section.instructors.join("\n")}"\n`;
       });
     }

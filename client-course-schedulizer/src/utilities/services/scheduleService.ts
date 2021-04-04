@@ -263,7 +263,11 @@ export const getInstructionalMethods = (schedule: Schedule) => {
   const instructionalMethods: string[] = [];
   forEach(schedule.courses, (course) => {
     forEach(course.sections, (section) => {
-      if (!instructionalMethods.includes(section.instructionalMethod) && !section.isNonTeaching) {
+      if (
+        section.instructionalMethod &&
+        !instructionalMethods.includes(section.instructionalMethod) &&
+        !section.isNonTeaching
+      ) {
         instructionalMethods.push(section.instructionalMethod);
       }
     });

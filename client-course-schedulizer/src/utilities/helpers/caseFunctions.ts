@@ -127,7 +127,9 @@ export const anticipatedSizeCallback = (value: string, { section }: CaseCallback
 };
 
 export const commentsCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.comments = value;
+  if (value.trim() !== "") {
+    section.comments = value;
+  }
 };
 
 export const yearCallback = (value: string, { section }: CaseCallbackParams) => {
@@ -135,9 +137,7 @@ export const yearCallback = (value: string, { section }: CaseCallbackParams) => 
 };
 
 export const studentHoursCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.studentHours = value.startsWith("$")
-    ? integerDefaultZeroCase(value.substr(1))
-    : integerDefaultZeroCase(value);
+  section.studentHours = value.startsWith("$") ? Number(value.substr(1)) : Number(value);
 };
 
 export const facultyHoursCallback = (value: string, { section }: CaseCallbackParams) => {
@@ -152,7 +152,8 @@ export const durationCallback = (value: string, params: CaseCallbackParams) => {
 
 export const roomCapacityCallback = (value: string, params: CaseCallbackParams) => {
   assignWithMeetings(value, params, (capacity, i, meetings) => {
-    meetings[i].location.roomCapacity = integerDefaultZeroCase(capacity);
+    meetings[i].location.roomCapacity =
+      value.trim() === "" ? undefined : integerDefaultZeroCase(capacity);
   });
 };
 
@@ -335,8 +336,8 @@ export const prefixCase = (value: string): string[] => {
   return value.replace(" ", "").split(/[;,\n]/);
 };
 
-export const integerDefaultZeroCase = (value: string): number => {
-  return Number.isInteger(Number(value)) ? Number(value) : 0;
+export const integerDefaultZeroCase = (value: string): number | undefined => {
+  return value.trim() === "" ? undefined : Number.isInteger(Number(value)) ? Number(value) : 0;
 };
 
 export const durationCase = (value: string): number => {
@@ -349,6 +350,6 @@ export const durationCase = (value: string): number => {
   return endTimeMoment.diff(startTimeMoment, "minutes");
 };
 
-export const yearCase = (value: string): number | string => {
-  return Number.isInteger(Number(value)) ? Number(value) : value;
+export const yearCase = (value: string): number | string | undefined => {
+  return Number.isInteger(Number(value)) && value ? Number(value) : value;
 };
