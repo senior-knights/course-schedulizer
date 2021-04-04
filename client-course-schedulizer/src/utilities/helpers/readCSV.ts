@@ -1,6 +1,15 @@
 import { cloneDeep, isEqual } from "lodash";
 import papa from "papaparse";
-import { Course, emptyCourse, emptySection, Meeting, Schedule, Section } from "utilities";
+import {
+  Course,
+  emptyCourse,
+  emptySection,
+  Meeting,
+  Schedule,
+  Section,
+  updateNonIdentifyingCourseInfo,
+  updateNonIdentifyingSectionInfo,
+} from "utilities";
 import { getCourse, getSection } from "utilities/services";
 import * as cf from "./caseFunctions";
 
@@ -155,7 +164,8 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
       section.instructionalMethod,
     );
 
-    schedule.courses[existingCourseIndex].department = course.department;
+    // Update course fields which were changed
+    schedule.courses[existingCourseIndex] = updateNonIdentifyingCourseInfo(existingCourse, course);
     if (course.name !== schedule.courses[existingCourseIndex].name) {
       section.name = course.name;
     }
@@ -166,6 +176,11 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
         existingSection,
       );
       const newMeetings = section.meetings;
+
+      // Update section fields which were changed
+      schedule.courses[existingCourseIndex].sections[
+        existingSectionIndex
+      ] = updateNonIdentifyingSectionInfo(existingSection, section);
 
       // Only add meetings which don't already exist
       newMeetings.forEach((newMeeting) => {

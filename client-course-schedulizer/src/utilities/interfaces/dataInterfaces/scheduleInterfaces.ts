@@ -20,6 +20,7 @@ export interface Meeting {
 
 export type Prefix = string;
 
+// If new non-identifying fields are added to this interface, must update updateNonIdentifyingCourseInfo()
 export interface Course {
   department?: string;
   name: string;
@@ -28,8 +29,20 @@ export interface Course {
   sections: Section[];
 }
 
+// Updates all fields except for:
+// - Identifying Fields: used for finding a Course in getCourse()
+//                       includes: prefixes, number
+//                       if any of these fields is changed, a new Course is made instead
+// - Sections: if this field is changed, new sections are added and/or old ones deleted
+// - Name: this is handled on the Section level instead
+export const updateNonIdentifyingCourseInfo = (oldCourse: Course, newCourse: Course): Course => {
+  oldCourse.department = newCourse.department;
+  return oldCourse;
+};
+
 export type Instructor = string;
 
+// If new non-identifying fields are added to this interface, must update updateNonIdentifyingSectionInfo()
 export interface Section {
   anticipatedSize?: number;
   comments?: string;
@@ -62,6 +75,34 @@ export interface Section {
   used?: number;
   year?: number | string;
 }
+
+// Updates all fields except for:
+// - Identifying Fields: used for finding a Section in getSection()
+//                       includes: letter, term, instructors, instructionalMethod
+//                       if any of these fields is changed, a new Section is made instead
+// - Meetings: if this field is changed, new meetings are added and/or old ones deleted
+export const updateNonIdentifyingSectionInfo = (
+  oldSection: Section,
+  newSection: Section,
+): Section => {
+  oldSection.anticipatedSize = newSection.anticipatedSize;
+  oldSection.comments = newSection.comments;
+  oldSection.day10Used = newSection.day10Used;
+  oldSection.endDate = newSection.endDate;
+  oldSection.facultyHours = newSection.facultyHours;
+  oldSection.globalMax = newSection.globalMax;
+  oldSection.isNonTeaching = newSection.isNonTeaching;
+  oldSection.localMax = newSection.localMax;
+  oldSection.name = newSection.name;
+  oldSection.semesterLength = newSection.semesterLength;
+  oldSection.startDate = newSection.startDate;
+  oldSection.status = newSection.status;
+  oldSection.studentHours = newSection.studentHours;
+  oldSection.termStart = newSection.termStart;
+  oldSection.used = newSection.used;
+  oldSection.year = newSection.year;
+  return oldSection;
+};
 
 export interface Schedule {
   courses: Course[];
