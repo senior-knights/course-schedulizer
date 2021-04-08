@@ -1,6 +1,6 @@
 import { Container, Tab, Tabs as MUITabs } from "@material-ui/core";
 import { AsyncComponent } from "components";
-import { FacultyLoads, FacultySchedule, RoomsSchedule } from "components/Tabs";
+import { DepartmentSchedule, FacultyLoads, FacultySchedule, RoomsSchedule } from "components/Tabs";
 import React, { ChangeEvent, useContext, useState } from "react";
 import { AppContext } from "utilities/contexts";
 import { SchedulizerTab } from "utilities/interfaces";
@@ -41,6 +41,7 @@ export const Tabs = () => {
               >
                 <Tab label="Faculty Schedule" />
                 <Tab label="Room Schedule" />
+                <Tab label="Dept Schedule" />
                 <Tab label="Teaching Loads" />
                 <Tab label="Conflicts" />
               </MUITabs>
@@ -53,9 +54,12 @@ export const Tabs = () => {
               <RoomsSchedule />
             </TabPanel>
             <TabPanel index={2} value={tabValue}>
-              <FacultyLoads />
+              <DepartmentSchedule />
             </TabPanel>
             <TabPanel index={3} value={tabValue}>
+              <FacultyLoads />
+            </TabPanel>
+            <TabPanel index={4} value={tabValue}>
               Item Four
             </TabPanel>
           </>

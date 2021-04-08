@@ -32,18 +32,29 @@ const eventExistsInEventList = (event: EventInput, eventList: EventInput[]): boo
 };
 
 // TODO: Add events with no meeting times as all day
-export const getEvents = (schedule: Schedule, groups: "faculty" | "room"): GroupedEvents => {
+export const getEvents = (
+  schedule: Schedule,
+  groups: "faculty" | "room" | "department",
+): GroupedEvents => {
   const events: GroupedEvents = {};
   const days: Day[] = enumArray(Day);
   const scheduleWithConflicts = findConflicts(schedule);
   forEach(scheduleWithConflicts.courses, (course) => {
+    const dept = course.department;
     forEach(course.sections, (section) => {
       const sectionName = `${course.prefixes[0]}-${course.number}-${section.letter}`;
       forEach(section.instructors, (prof) => {
         forEach(section.meetings, (meeting) => {
           const room = `${meeting.location.building} ${meeting.location.roomNumber}`;
           const className = createEventClassName(sectionName, room, prof);
-          const group = groups === "faculty" ? prof : room;
+          let group = "";
+          if (groups === "faculty") {
+            group = prof;
+          } else if (groups === "room") {
+            group = room;
+          } else {
+            group = dept;
+          }
           const startTimeMoment = moment(meeting.startTime, "h:mm A");
           const endTimeMoment = moment(startTimeMoment).add(meeting.duration, "minutes");
           // Don't display meetings which span more than one day
@@ -269,4 +280,14 @@ export const getInstructionalMethods = (schedule: Schedule) => {
     });
   });
   return instructionalMethods.sort();
+};
+
+export const getDepts = (schedule: Schedule) => {
+  const departments: string[] = [];
+  forEach(schedule.courses, (course) => {
+    if (!departments.includes(course.department)) {
+      departments.push(course.department ? course.department : "");
+    }
+  });
+  return departments.sort();
 };
