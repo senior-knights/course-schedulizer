@@ -21,6 +21,7 @@ export interface Meeting {
 export type Prefix = string;
 
 // If new non-identifying fields are added to this interface, must update updateNonIdentifyingCourseInfo()
+// If new identifying fields are added to this interface, must update updateIdentifyingCourseInfo()
 export interface Course {
   department?: string;
   name: string;
@@ -29,10 +30,9 @@ export interface Course {
   sections: Section[];
 }
 
-// Updates all fields except for:
+// Updates all Course fields except for:
 // - Identifying Fields: used for finding a Course in getCourse()
 //                       includes: prefixes, number
-//                       if any of these fields is changed, a new Course is made instead
 // - Sections: if this field is changed, new sections are added and/or old ones deleted
 // - Name: this is handled on the Section level instead
 export const updateNonIdentifyingCourseInfo = (oldCourse: Course, newCourse: Course): Course => {
@@ -40,9 +40,18 @@ export const updateNonIdentifyingCourseInfo = (oldCourse: Course, newCourse: Cou
   return oldCourse;
 };
 
+// Updates all identifying Course fields
+//  includes: prefixes, number
+export const updateIdentifyingCourseInfo = (oldCourse: Course, newCourse: Course): Course => {
+  oldCourse.prefixes = newCourse.prefixes;
+  oldCourse.number = newCourse.number;
+  return oldCourse;
+};
+
 export type Instructor = string;
 
 // If new non-identifying fields are added to this interface, must update updateNonIdentifyingSectionInfo()
+// If new identifying fields are added to this interface, must update updateIdentifyingSectionInfo()
 export interface Section {
   anticipatedSize?: number;
   comments?: string;
@@ -76,10 +85,9 @@ export interface Section {
   year?: number | string;
 }
 
-// Updates all fields except for:
+// Updates all Section fields except for:
 // - Identifying Fields: used for finding a Section in getSection()
 //                       includes: letter, term, instructors, instructionalMethod
-//                       if any of these fields is changed, a new Section is made instead
 // - Meetings: if this field is changed, new meetings are added and/or old ones deleted
 export const updateNonIdentifyingSectionInfo = (
   oldSection: Section,
@@ -101,6 +109,16 @@ export const updateNonIdentifyingSectionInfo = (
   oldSection.termStart = newSection.termStart;
   oldSection.used = newSection.used;
   oldSection.year = newSection.year;
+  return oldSection;
+};
+
+// Updates all identifying Section fields
+//  includes: letter, term, instructors, instructionalMethod
+export const updateIdentifyingSectionInfo = (oldSection: Section, newSection: Section): Section => {
+  oldSection.letter = newSection.letter;
+  oldSection.term = newSection.term;
+  oldSection.instructors = newSection.instructors;
+  oldSection.instructionalMethod = newSection.instructionalMethod;
   return oldSection;
 };
 

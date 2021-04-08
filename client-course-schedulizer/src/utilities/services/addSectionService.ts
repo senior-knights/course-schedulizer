@@ -17,6 +17,8 @@ import {
   SemesterLength,
   SemesterLengthOption,
   Term,
+  updateIdentifyingCourseInfo,
+  updateIdentifyingSectionInfo,
   Weekday,
 } from "utilities/interfaces";
 
@@ -325,11 +327,15 @@ export const addFalseToDaysCheckboxList = (days?: Day[]): CheckboxDays => {
 export const handleOldMeeting = (
   oldData: CourseSectionMeeting | undefined,
   newSection: Section,
+  newCourse: Course,
   removeOldMeeting: boolean,
   schedule: Schedule,
 ) => {
   const oldMeeting = oldData?.meeting;
-  const oldSection = oldData?.section;
+  let oldSection = oldData?.section;
+  let oldCourse = oldData?.course;
+  const courseIndex = indexOf(schedule.courses, oldCourse);
+  const sectionIndex = indexOf(oldCourse?.sections, oldSection);
   if (oldSection) {
     // If the year, term, and semester length haven't changed...
     if (
@@ -343,9 +349,29 @@ export const handleOldMeeting = (
       newSection.endDate = oldSection.endDate;
     }
   }
-  if (oldMeeting && removeOldMeeting) {
-    // Remove the old version of the Meeting
-    removeMeetingFromSchedule(oldData, schedule, oldMeeting, newSection.isNonTeaching);
+  // If the user pressed 'update' rather than 'add'...
+  if (removeOldMeeting && oldData) {
+    if (oldCourse) {
+      // Update identifying Course fields which were changed
+      oldCourse = updateIdentifyingCourseInfo(oldCourse, newCourse);
+      schedule.courses[courseIndex] = oldCourse;
+    }
+    if (oldSection) {
+      // Update identifying Section fields which were changed
+      oldSection = updateIdentifyingSectionInfo(oldSection, newSection);
+      schedule.courses[courseIndex].sections[sectionIndex] = oldSection;
+    }
+    if (oldMeeting) {
+      // Remove the old version of the Meeting
+      removeMeetingFromSchedule(
+        oldData,
+        schedule,
+        oldMeeting,
+        oldSection,
+        oldCourse,
+        newSection.isNonTeaching,
+      );
+    }
   }
 };
 
@@ -353,42 +379,44 @@ export const removeMeetingFromSchedule = (
   data: CourseSectionMeeting | undefined,
   schedule: Schedule,
   oldMeeting: Meeting | undefined,
+  oldSection: Section | undefined,
+  oldCourse: Course | undefined,
   hardDelete = true,
 ) => {
-  const oldCourse = data?.course;
-  const oldSection = data?.section;
   const courseIndex = indexOf(schedule.courses, oldCourse);
-  const sectionIndex = indexOf(oldCourse?.sections, oldSection);
+  const sectionIndex = indexOf(schedule.courses[courseIndex].sections, oldSection);
+  const meetingIndex = indexOf(
+    schedule.courses[courseIndex].sections[sectionIndex].meetings,
+    oldMeeting,
+  );
   const oldSectionHadMeetings = !!(oldSection && oldSection.meetings.length);
-  removeMeeting(schedule, oldMeeting, courseIndex, sectionIndex, hardDelete, oldSectionHadMeetings);
+  removeMeeting(
+    schedule,
+    meetingIndex,
+    sectionIndex,
+    courseIndex,
+    hardDelete,
+    oldSectionHadMeetings,
+  );
 };
 
 const removeMeeting = (
   schedule: Schedule,
-  oldMeeting: Meeting | undefined,
-  courseIndex: number,
+  meetingIndex: number,
   sectionIndex: number,
+  courseIndex: number,
   hardDelete: boolean,
   oldSectionHadMeetings: boolean,
 ) => {
   // Remove the oldMeeting from the sections meetings
-  if (oldMeeting) {
-    let meetingFound = false;
-    schedule.courses[courseIndex].sections[sectionIndex].meetings = filter(
-      schedule.courses[courseIndex].sections[sectionIndex].meetings,
-      (meeting) => {
-        // Only remove the meeting once (leave any duplicates)
-        if (!meetingFound) {
-          meetingFound = isEqual(meeting, oldMeeting);
-          return !meetingFound;
-        }
-        return true;
-      },
-    );
+  if (meetingIndex >= 0) {
+    schedule.courses[courseIndex].sections[sectionIndex].meetings.splice(meetingIndex, 1);
   }
   // If user pressed delete button and/or the old section had meetings before, delete section if no meetings left
   if (
     (hardDelete || oldSectionHadMeetings) &&
+    courseIndex >= 0 &&
+    sectionIndex >= 0 &&
     !schedule.courses[courseIndex].sections[sectionIndex].meetings.length
   ) {
     schedule.courses[courseIndex].sections.splice(sectionIndex, 1);

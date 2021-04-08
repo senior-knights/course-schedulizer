@@ -164,7 +164,7 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
       section.instructionalMethod,
     );
 
-    // Update course fields which were changed
+    // Update Course fields which were changed
     schedule.courses[existingCourseIndex] = updateNonIdentifyingCourseInfo(existingCourse, course);
     if (course.name !== schedule.courses[existingCourseIndex].name) {
       section.name = course.name;
@@ -177,7 +177,7 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
       );
       const newMeetings = section.meetings;
 
-      // Update section fields which were changed
+      // Update Section fields which were changed
       schedule.courses[existingCourseIndex].sections[
         existingSectionIndex
       ] = updateNonIdentifyingSectionInfo(existingSection, section);

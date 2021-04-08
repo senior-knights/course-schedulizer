@@ -81,7 +81,7 @@ export const useAddSectionToSchedule = () => {
     oldData,
     removeOldMeeting,
   }: AddToScheduleParams) => {
-    handleOldMeeting(oldData, newSection, removeOldMeeting, schedule);
+    handleOldMeeting(oldData, newSection, newCourse, removeOldMeeting, schedule);
     insertSectionCourse(schedule, newSection, newCourse);
     appDispatch({ payload: { schedule }, type: "setScheduleData" });
   };
