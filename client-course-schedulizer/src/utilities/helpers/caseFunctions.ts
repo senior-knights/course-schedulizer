@@ -219,17 +219,20 @@ export const startTimeCase = (value: string): string => {
 };
 
 export const locationCase = (value: string): string[] => {
-  const roomParts = value.trim().split(" ");
-  if (roomParts.length === 1) {
-    // No room number given
-    return [roomParts[0], ""];
+  if (value) {
+    const roomParts = value.trim().split(" ");
+    if (roomParts.length === 1) {
+      // No room number given
+      return [roomParts[0], ""];
+    }
+    if (roomParts.length === 2) {
+      // Building and room number given
+      return roomParts;
+    }
+    // Too many room parts given, assume last part is room number and rest is building
+    return [roomParts.slice(0, -1).join(" "), roomParts.slice(-1)[0]];
   }
-  if (roomParts.length === 2) {
-    // Building and room number given
-    return roomParts;
-  }
-  // Too many room parts given, assume last part is room number and rest is building
-  return [roomParts.slice(0, -1).join(" "), roomParts.slice(-1)[0]];
+  return [];
 };
 
 export const termCase = (value: string): Term => {

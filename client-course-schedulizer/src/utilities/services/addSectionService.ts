@@ -158,6 +158,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
   const locationValue = (
     (data &&
       data.meeting &&
+      data.meeting.location.building &&
       `${data?.meeting?.location.building} ${data?.meeting?.location.roomNumber}`) ||
     ""
   ).trim();
@@ -219,8 +220,8 @@ const createNewSectionFromInput = (data: SectionInput): Section => {
     data.intensiveSemester || data.halfSemester || data.semesterLength,
   );
 
-  const building = location[0];
-  const roomNumber = location[1];
+  const building = location ? location[0] : "";
+  const roomNumber = location ? location[1] : "";
 
   return {
     anticipatedSize: data.anticipatedSize,
