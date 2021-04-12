@@ -44,12 +44,14 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
           meetingEndInternalStr += "\n";
         }
         meetingDurationMinutesStr += `${meeting.duration}\n`;
-        buildingStr += `${meeting.location.building}\n`;
-        roomNumberStr += `${meeting.location.roomNumber}\n`;
-        buildingAndRoomStr += meeting.location.roomNumber
-          ? `${meeting.location.building} ${meeting.location.roomNumber}\n`
-          : `${meeting.location.building}\n`;
-        roomCapacityStr += `${meeting.location.roomCapacity}\n`;
+        if (meeting.location && meeting.location.building) {
+          buildingStr += `${meeting.location.building}\n`;
+          roomNumberStr += `${meeting.location.roomNumber}\n`;
+          buildingAndRoomStr += meeting.location.roomNumber
+            ? `${meeting.location.building} ${meeting.location.roomNumber}\n`
+            : `${meeting.location.building}\n`;
+        }
+        roomCapacityStr += `${meeting.location.roomCapacity ?? ""}\n`;
         daysStr += `${meeting.days.join("")}\n`;
         monStr += `${meeting.days.includes(Day.Monday) ? "M" : ""}\n`;
         tuesStr += `${meeting.days.includes(Day.Tuesday) ? "T" : ""}\n`;
@@ -79,28 +81,26 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
       const sectionNameStr = `${course.prefixes.length ? course.prefixes[0] : ""}-${
         course.number
       }-${section.letter}`;
-      const courseLevelCodeStr = numericReg.test(course.number[0])
-        ? `${course.number[0]}00`
-        : "100";
+      const courseLevelCodeStr = numericReg.test(course.number[0]) ? `${course.number[0]}00` : "";
 
       // Construct a row in the output CSV
-      csvStr += `"${course.department}",${termStr},${section.termStart},${
-        section.year
+      csvStr += `"${course.department ?? ""}",${termStr},${section.termStart ?? ""},${
+        section.year ?? ""
       },"${sectionNameStr}","${course.prefixes.join("\n")}",${course.number},${
         section.letter
-      },${courseLevelCodeStr},${section.studentHours ?? course.studentHours},${
-        section.facultyHours ?? course.facultyHours
-      },${section.used},${section.day10Used},${section.localMax},${
-        section.globalMax
-      },"${roomCapacityStr}","${buildingAndRoomStr}","${daysStr}","${meetingTimeStr}",${
-        section.startDate
-      },${section.endDate},${
-        section.semesterLength
+      },${courseLevelCodeStr},${section.studentHours > -1 ? section.studentHours : ""},${
+        section.facultyHours > -1 ? section.facultyHours : ""
+      },${section.used ?? ""},${section.day10Used ?? ""},${section.localMax ?? ""},${
+        section.globalMax ?? ""
+      },"${roomCapacityStr ?? ""}","${buildingAndRoomStr}","${daysStr}","${meetingTimeStr}",${
+        section.startDate ?? ""
+      },${section.endDate ?? ""},${
+        section.semesterLength ?? ""
       },"${buildingStr}","${roomNumberStr}","${meetingStartStr}","${meetingStartInternalStr}","${meetingDurationMinutesStr}","${meetingEndStr}","${meetingEndInternalStr}","${monStr}","${tuesStr}","${wedStr}","${thursStr}","${friStr}","${
-        course.name
-      }","${section.instructors.join("\n")}","${section.status}","${
-        section.instructionalMethod
-      }","${section.comments}","${section.timestamp ?? ""}"\n`;
+        section.name ?? course.name
+      }","${section.instructors.join("\n")}","${section.status ?? ""}","${
+        section.instructionalMethod ?? ""
+      }","${section.comments ?? ""}","${section.timestamp ?? ""}"\n`;
     });
   });
   return csvStr;
@@ -108,18 +108,6 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
 
 export const getMeetingTimeStr = (startMoment: Moment, endMoment: Moment): string => {
   return `${startMoment.format("h:mmA")} - ${endMoment.format("h:mmA")}\n`;
-};
-
-const getTermStr = (year: Section["year"], term: Term) => {
-  return `${
-    typeof year === "number"
-      ? term === Term.Fall
-        ? String(year).slice(-2)
-        : String(year + 1).slice(-2)
-      : term === Term.Fall
-      ? String(Number(year.slice(-2)) - 1)
-      : year.slice(-2)
-  }/${term}`;
 };
 
 export const getTermsStr = (section: Section): string => {
@@ -134,4 +122,18 @@ export const getTermsStr = (section: Section): string => {
     return `${termsStr.slice(0, -2)}"`;
   }
   return getTermStr(section.year, section.term);
+};
+
+const getTermStr = (year: Section["year"], term: Term): string => {
+  return year
+    ? `${
+        typeof year === "number"
+          ? term === Term.Fall
+            ? String(year).slice(-2)
+            : String(year + 1).slice(-2)
+          : term === Term.Fall
+          ? String(Number(year?.slice(-2)) - 1)
+          : year?.slice(-2)
+      }/${term}`
+    : term;
 };

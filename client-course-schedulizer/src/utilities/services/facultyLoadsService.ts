@@ -1,6 +1,5 @@
 import { filter, forEach, sumBy } from "lodash";
 import {
-  Course,
   CourseSectionMeeting,
   emptyMeeting,
   getSectionName,
@@ -33,7 +32,6 @@ export type FacultyRow = {
   };
 
 interface UpdateRowParams {
-  course: Course;
   newRow: FacultyRow;
   prevRow: FacultyRow;
   section: Section;
@@ -41,20 +39,11 @@ interface UpdateRowParams {
   termName?: "fall" | "spring" | "summer" | "other";
 }
 
-const updateRow = ({
-  course,
-  newRow,
-  prevRow,
-  section,
-  sectionName,
-  termName,
-}: UpdateRowParams) => {
+const updateRow = ({ newRow, prevRow, section, sectionName, termName }: UpdateRowParams) => {
   const termCourseSectionProp =
     termName === "other" ? "otherDuties" : (`${termName}CourseSections` as sectionKeys);
   const termHoursProp = `${termName}Hours` as hourKeys;
-  const facultyHours =
-    (section.facultyHours !== undefined ? section.facultyHours : course.facultyHours) /
-    section.instructors.length;
+  const facultyHours = section.facultyHours / section.instructors.length;
   // Add faculty load hours using the format specified by loadHoursRegEx.
   const sectionNameWithHours = `${sectionName} (${facultyHours})`;
   if (prevRow) {
@@ -86,14 +75,17 @@ export const createTable = (schedule: Schedule): FacultyRow[] => {
           return data.faculty === instructor;
         });
         const updateArgs = {
-          course,
           newRow: newFacultyRow,
           prevRow: prevAddedFacultyRow,
           section,
           sectionName,
         };
         if (section.isNonTeaching) {
-          updateRow({ ...updateArgs, sectionName: section.instructionalMethod, termName: "other" });
+          updateRow({
+            ...updateArgs,
+            sectionName: section.instructionalMethod ?? "",
+            termName: "other",
+          });
         } else {
           switch (section.term) {
             case Term.Fall:
