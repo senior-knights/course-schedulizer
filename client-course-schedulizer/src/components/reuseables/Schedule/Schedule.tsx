@@ -20,6 +20,7 @@ import "./Schedule.scss";
 interface ScheduleBase extends CalendarOptions {
   calendarHeaders: string[];
   groupedEvents: GroupedEvents;
+  scheduleType: string;
 }
 
 /* Provides a Schedule component to handle loading and async events and interfaces
@@ -44,7 +45,12 @@ export const Schedule = (props: ScheduleBase) => {
   <Stick> is used to stick the Schedule Header to the Schedule
   to track horizontal scrolling.
 */
-const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: ScheduleBase) => {
+const ScheduleBase = ({
+  calendarHeaders,
+  groupedEvents,
+  scheduleType,
+  ...calendarOptions
+}: ScheduleBase) => {
   const {
     appState: { colorBy, selectedTerm, slotMaxTime, slotMinTime },
   } = useContext(AppContext);
@@ -95,13 +101,19 @@ const ScheduleBase = ({ calendarHeaders, groupedEvents, ...calendarOptions }: Sc
         <LeftTimeAxis {...times} />
         <div className="schedule-wrapper">
           <Stick
-            node={<ScheduleHeader headers={calenderHeadersNoEmptyInTerm} />}
+            node={
+              <ScheduleHeader headers={calenderHeadersNoEmptyInTerm} scheduleType={scheduleType} />
+            }
             position="top left"
           >
             <div className="adjacent">
               {calenderHeadersNoEmptyInTerm.map((header) => {
+                let className = "calendar-width hide-axis";
+                if (scheduleType === "department") {
+                  className += " department-calendar-width";
+                }
                 return (
-                  <div key={header} className="calendar-width hide-axis">
+                  <div key={header} className={className}>
                     <Calendar
                       {...calendarOptions}
                       key={header}
@@ -156,6 +168,7 @@ const LeftTimeAxis = ({ slotMinTime: min, slotMaxTime: max }: LeftTimeAxis) => {
 
 interface ScheduleHeader {
   headers: ScheduleBase["calendarHeaders"];
+  scheduleType: string;
 }
 
 const tenVH = window.innerHeight / 10;
@@ -164,13 +177,17 @@ const tenVH = window.innerHeight / 10;
   StickyHeader is used to keep the Schedule header sticky to the
   top of the view port.
 */
-const ScheduleHeader = ({ headers }: ScheduleHeader) => {
+const ScheduleHeader = ({ headers, scheduleType }: ScheduleHeader) => {
   return (
     <StickyNode top={tenVH}>
       <div className="adjacent schedule-header-row">
         {headers.map((header) => {
+          let className = "calendar-width calendar-title";
+          if (scheduleType === "department") {
+            className += " department-calendar-width";
+          }
           return (
-            <div key={header} className="calendar-width calendar-title">
+            <div key={header} className={className}>
               {header}
             </div>
           );

@@ -17,6 +17,10 @@ type sectionKeys =
   | "summerCourseSections"
   | "otherDuties";
 
+// Define a regex for the faculty load hours specifications added to the
+// Teaching Load tab's course/duty strings. See the test cases.
+export const loadHoursRegEx = / \(\d+.?\d*\)(,|$)/;
+
 export type FacultyRow = {
   [key in hourKeys]?: number;
 } &
@@ -51,16 +55,20 @@ const updateRow = ({
   const facultyHours =
     (section.facultyHours !== undefined ? section.facultyHours : course.facultyHours) /
     section.instructors.length;
+  // Add faculty load hours using the format specified by loadHoursRegEx.
+  const sectionNameWithHours = `${sectionName} (${facultyHours})`;
   if (prevRow) {
     prevRow[termCourseSectionProp] = prevRow[termCourseSectionProp]
-      ? (prevRow[termCourseSectionProp] = `${prevRow[termCourseSectionProp]}, ${sectionName}`)
-      : (prevRow[termCourseSectionProp] = sectionName);
+      ? (prevRow[
+          termCourseSectionProp
+        ] = `${prevRow[termCourseSectionProp]}, ${sectionNameWithHours}`)
+      : (prevRow[termCourseSectionProp] = sectionNameWithHours);
 
     prevRow[termHoursProp] = prevRow[termHoursProp]
       ? Number(prevRow[termHoursProp]) + facultyHours
       : facultyHours;
   } else {
-    newRow[termCourseSectionProp] = sectionName;
+    newRow[termCourseSectionProp] = sectionNameWithHours;
     newRow[termHoursProp] = facultyHours;
   }
 };
@@ -157,7 +165,7 @@ export const findSection = (
   // Extract the course from the array
   const [course] = courses;
 
-  // Find the section with the letter and term from the couse sections array
+  // Find the section with the letter and term from the course sections array
   const sections = filter(course.sections, (s) => {
     return s.letter === letter && s.term === term;
   });
@@ -179,7 +187,8 @@ export const getCourseSectionMeetingFromCell = (
   cellValue: string,
   cellHeader: string,
 ): CSMIterableKeyMap => {
-  const sectionStrList = cellValue.split(", ");
+  // Remove the load hours spec from the string before splitting on comma.
+  const sectionStrList = cellValue.split(loadHoursRegEx).join("").split(", ");
   const courseSectionHeaders = [
     "Fall Course Sections",
     "Spring Course Sections",
@@ -272,7 +281,8 @@ export const getNonTeachingLoadsFromCell = (
   cellValue: string,
   instructor: Instructor,
 ): CSMIterableKeyMap => {
-  const nonTeachingLoadStrList = cellValue.split(", ");
+  // Remove the load hours spec from the string before splitting on comma.
+  const nonTeachingLoadStrList = cellValue.split(loadHoursRegEx).join("").split(", ");
   const courseSectionMeeting = findNonTeachingLoad(schedule, nonTeachingLoadStrList[0], instructor);
 
   return {
