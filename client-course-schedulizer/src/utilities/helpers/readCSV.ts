@@ -156,6 +156,8 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
     );
 
     schedule.courses[existingCourseIndex].department = course.department;
+
+    // Update the section name if the received name is different than the course name (section name will override the course name)
     if (course.name !== schedule.courses[existingCourseIndex].name) {
       section.name = course.name;
     }
