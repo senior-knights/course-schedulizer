@@ -1,5 +1,6 @@
 import React from "react";
 import StickyNode from "react-stickynode";
+import { getCalendarClassName } from "utilities";
 import { ScheduleBaseProps } from "./ScheduleBase";
 
 interface ScheduleHeaderProps {
@@ -18,10 +19,7 @@ export const ScheduleHeader = ({ headers, scheduleType }: ScheduleHeaderProps) =
     <StickyNode top={tenVH}>
       <div className="adjacent schedule-header-row">
         {headers.map((header) => {
-          let className = "calendar-width calendar-title";
-          if (scheduleType === "department") {
-            className += " department-calendar-width";
-          }
+          const className = `calendar-title ${getCalendarClassName(scheduleType)}`;
           return (
             <div key={header} className={className}>
               {header}

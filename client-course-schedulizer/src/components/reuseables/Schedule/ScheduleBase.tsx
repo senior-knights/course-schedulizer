@@ -10,6 +10,7 @@ import {
   colorEventsByFeature,
   filterEventsByTerm,
   filterHeadersWithNoEvents,
+  getCalendarClassName,
   GroupedEvents,
 } from "utilities/services";
 import { ScheduleHeader } from "./ScheduleHeader";
@@ -90,10 +91,7 @@ export const ScheduleBase = ({
           >
             <div className="adjacent">
               {calenderHeadersNoEmptyInTerm.map((header) => {
-                let className = "calendar-width hide-axis";
-                if (scheduleType === "department") {
-                  className += " department-calendar-width";
-                }
+                const className = `hide-axis ${getCalendarClassName(scheduleType)}`;
                 return (
                   <div key={header} className={className}>
                     <Calendar
