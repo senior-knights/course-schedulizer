@@ -1,6 +1,6 @@
 import { voidFn } from "utilities";
 import { AppAction, AppState, ColorBy, SchedulizerTab, Term } from "utilities/interfaces";
-import { getClasses, getMinAndMaxTimes, getProfs, getRooms } from "utilities/services";
+import { getClasses, getDepts, getMinAndMaxTimes, getProfs, getRooms } from "utilities/services";
 
 /*
   Provides a function to perform multiple setState updates
@@ -19,6 +19,7 @@ export const reducer = (actionCallback: (item: AppState) => void = voidFn) => {
         newState = {
           ...state,
           classes: getClasses(schedule),
+          departments: getDepts(schedule),
           professors: getProfs(schedule),
           rooms: getRooms(schedule),
           schedule,
