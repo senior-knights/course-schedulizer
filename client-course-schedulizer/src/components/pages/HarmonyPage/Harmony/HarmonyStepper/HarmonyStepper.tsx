@@ -1,6 +1,6 @@
 import { Button, Step, StepLabel, Stepper, Typography } from "@material-ui/core";
 import {
-  HarmonyAddAssignments,
+  HarmonyStepperAssignments,
   HarmonyStepperImportData,
   HarmonyStepperResult,
   HarmonyStepperWelcome,
@@ -19,7 +19,7 @@ const getStepContent = (step: number) => {
     case 1:
       return <HarmonyStepperImportData />;
     case 2:
-      return <HarmonyAddAssignments />;
+      return <HarmonyStepperAssignments />;
     case 3:
       return <HarmonyStepperResult />;
     default:
