@@ -175,7 +175,9 @@ export const day10UsedCallback = (value: string, { section }: CaseCallbackParams
 };
 
 export const startDateCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.startDate = value;
+  if (value.trim() !== "") {
+    section.startDate = value;
+  }
 };
 
 export const endDateCallback = (value: string, { section }: CaseCallbackParams) => {
@@ -324,7 +326,7 @@ export const endDateCase = (
   const sectionLength = sectionEnd.diff(sectionStart, "days");
   const startMonth = sectionStart.month();
   const firstStartMonths = [0, 1, 7, 8]; // Jan, Feb, Aug, Sept
-  if (sectionLength > MAX_HALF_LENGTH) {
+  if (sectionLength > MAX_HALF_LENGTH || value.trim() === "") {
     return SemesterLength.Full;
   }
   if (sectionLength > MIN_HALF_LENGTH && sectionLength <= MAX_HALF_LENGTH) {
