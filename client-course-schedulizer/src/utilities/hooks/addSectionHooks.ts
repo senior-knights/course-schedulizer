@@ -1,4 +1,4 @@
-import { camelCase, forEach } from "lodash";
+import { camelCase, forEach, isEqual, omit } from "lodash";
 import moment from "moment";
 import { useContext } from "react";
 import { DeepMap, FieldError } from "react-hook-form";
@@ -47,10 +47,18 @@ export const useAddSectionToSchedule = () => {
     removeOldMeeting = false,
   ) => {
     setIsCSVLoading(true);
-    const { newCourse, newSection }: MappedSection = mapInputToInternalTypes(data);
+    const { newSection, newCourse }: MappedSection = mapInputToInternalTypes(data);
+    newSection.startDate = oldData?.section.startDate ?? "";
+    newSection.termStart = oldData?.section.termStart ?? "";
+    newSection.endDate = oldData?.section.endDate ?? "";
+    if (oldData) {
+      oldData.meeting.isConflict = false;
+      oldData.section.timestamp = undefined;
+    }
+
     addToSchedule({ newCourse, newSection, oldData, removeOldMeeting });
 
-    // Depedning on the current tab, scroll to the updated/added section/row
+    // Depending on the current tab, scroll to the updated/added section/row
     if (schedulizerTab === SchedulizerTab.Faculty || schedulizerTab === SchedulizerTab.Room) {
       await switchToCorrectTerm(newSection, selectedTerm, appDispatch);
       setIsCSVLoading(false);
@@ -82,7 +90,38 @@ export const useAddSectionToSchedule = () => {
     oldData,
     removeOldMeeting,
   }: AddToScheduleParams) => {
-    newSection.timestamp = moment().format();
+    // console.log(JSON.stringify(oldData?.section));
+    // console.log(JSON.stringify(newSection));
+    console.log(
+      Object.keys(newSection).reduce((diff, key) => {
+        if (isEqual(oldData?.section[key as keyof Section], newSection[key as keyof Section]))
+          return diff;
+        return {
+          ...diff,
+          [key]: newSection[key as keyof Section],
+        };
+      }, {}),
+    );
+    if (oldData) {
+      console.log(
+        Object.keys(oldData.section).reduce((diff, key) => {
+          if (isEqual(newSection[key as keyof Section], oldData.section[key as keyof Section]))
+            return diff;
+          return {
+            ...diff,
+            [key]: oldData.section[key as keyof Section],
+          };
+        }, {}),
+      );
+    }
+    if (
+      !isEqual(omit(oldData?.section, ["meetings"]), omit(newSection, ["meetings"])) ||
+      !newSection.meetings.some((m) => {
+        return isEqual(m, oldData?.meeting);
+      })
+    ) {
+      newSection.timestamp = moment().format();
+    }
     handleOldMeeting(oldData, newSection, removeOldMeeting, schedule);
     insertSectionCourse(schedule, newSection, newCourse);
     appDispatch({ payload: { schedule }, type: "setScheduleData" });
