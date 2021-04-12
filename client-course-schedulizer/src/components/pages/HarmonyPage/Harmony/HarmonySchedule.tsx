@@ -32,7 +32,7 @@ export const HarmonySchedule = () => {
       <Button onClick={onClick} type="button">
         Send to Schedulizer
       </Button>
-      <Schedule calendarHeaders={headers} groupedEvents={events} readonly />
+      <Schedule calendarHeaders={headers} groupedEvents={events} readonly scheduleType="harmony" />
     </>
   );
 };

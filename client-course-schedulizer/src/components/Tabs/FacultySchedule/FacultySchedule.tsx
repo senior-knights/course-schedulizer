@@ -16,6 +16,7 @@ export const FacultySchedule = () => {
       <Schedule
         calendarHeaders={professors.sort()}
         groupedEvents={getEvents(schedule, "faculty")}
+        scheduleType="faculty"
       />
     </>
   );

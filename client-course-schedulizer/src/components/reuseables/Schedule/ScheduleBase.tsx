@@ -2,10 +2,9 @@ import { CalendarOptions, EventClickArg } from "@fullcalendar/react";
 import { Popover } from "@material-ui/core";
 import { AddSectionPopover, Calendar, ScheduleToolbar } from "components";
 import { bindPopover, usePopupState } from "material-ui-popup-state/hooks";
-import React, { useCallback, useContext, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import Stick from "react-stick";
-import { CourseSectionMeeting } from "utilities";
-import { AppContext } from "utilities/contexts";
+import { CourseSectionMeeting, useAppContext } from "utilities";
 import {
   colorConflictBorders,
   colorEventsByFeature,
@@ -20,6 +19,7 @@ export interface ScheduleBaseProps extends CalendarOptions {
   calendarHeaders: string[];
   groupedEvents: GroupedEvents;
   readonly?: boolean;
+  scheduleType: string;
 }
 
 /* Creates a list of Calendars to create a Schedule
@@ -30,11 +30,12 @@ export const ScheduleBase = ({
   readonly,
   calendarHeaders,
   groupedEvents,
+  scheduleType,
   ...calendarOptions
 }: ScheduleBaseProps) => {
   const {
     appState: { colorBy, selectedTerm, slotMaxTime, slotMinTime },
-  } = useContext(AppContext);
+  } = useAppContext();
   const [popupData, setPopupData] = useState<CourseSectionMeeting>();
 
   const popupState = usePopupState({
@@ -82,13 +83,19 @@ export const ScheduleBase = ({
         <ScheduleLeftTimeAxis {...times} />
         <div className="schedule-wrapper">
           <Stick
-            node={<ScheduleHeader headers={calenderHeadersNoEmptyInTerm} />}
+            node={
+              <ScheduleHeader headers={calenderHeadersNoEmptyInTerm} scheduleType={scheduleType} />
+            }
             position="top left"
           >
             <div className="adjacent">
               {calenderHeadersNoEmptyInTerm.map((header) => {
+                let className = "calendar-width hide-axis";
+                if (scheduleType === "department") {
+                  className += " department-calendar-width";
+                }
                 return (
-                  <div key={header} className="calendar-width hide-axis">
+                  <div key={header} className={className}>
                     <Calendar
                       {...calendarOptions}
                       key={header}

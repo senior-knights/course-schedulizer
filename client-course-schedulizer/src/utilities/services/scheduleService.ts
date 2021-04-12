@@ -32,47 +32,61 @@ const eventExistsInEventList = (event: EventInput, eventList: EventInput[]): boo
 };
 
 // TODO: Add events with no meeting times as all day
-export const getEvents = (schedule: Schedule, groups: "faculty" | "room"): GroupedEvents => {
+export const getEvents = (
+  schedule: Schedule,
+  groups: "faculty" | "room" | "department",
+): GroupedEvents => {
   const events: GroupedEvents = {};
   const days: Day[] = enumArray(Day);
   const scheduleWithConflicts = findConflicts(schedule);
   forEach(scheduleWithConflicts.courses, (course) => {
+    const dept = course.department;
     forEach(course.sections, (section) => {
       const sectionName = `${course.prefixes[0]}-${course.number}-${section.letter}`;
       forEach(section.instructors, (prof) => {
         forEach(section.meetings, (meeting) => {
           const room = `${meeting.location.building} ${meeting.location.roomNumber}`;
           const className = createEventClassName(sectionName, room, prof);
-          const group = groups === "faculty" ? prof : room;
+          let group = "";
+          if (groups === "faculty") {
+            group = prof;
+          } else if (groups === "room") {
+            group = room;
+          } else {
+            group = dept;
+          }
           const startTimeMoment = moment(meeting.startTime, "h:mm A");
           const endTimeMoment = moment(startTimeMoment).add(meeting.duration, "minutes");
-          forEach(meeting.days, (day) => {
-            const dayOfWeek = moment(INITIAL_DATE)
-              .add(days.indexOf(day) + 1, "days")
-              .format("YYYY-MM-DD");
-            const newEvent: EventInput = {
-              classNames: [className],
-              description: course.name,
-              end: `${dayOfWeek}T${endTimeMoment.format("HH:mm")}`,
-              extendedProps: {
-                course,
-                meeting,
-                section,
-              },
-              start: `${dayOfWeek}T${startTimeMoment.format("HH:mm")}`,
-              term: section.term,
-              title: sectionName,
-            };
-            if (events[group]) {
-              // Only add the event if it hasn't already been added
-              // TODO: Will this conceal conflicts (specifically duplicated courses/sections/meetings)?
-              if (!eventExistsInEventList(newEvent, events[group])) {
-                events[group].push(newEvent);
+          // Don't display meetings which span more than one day
+          if (startTimeMoment.format("YYYY-MM-DD") === endTimeMoment.format("YYYY-MM-DD")) {
+            forEach(meeting.days, (day) => {
+              const dayOfWeek = moment(INITIAL_DATE)
+                .add(days.indexOf(day) + 1, "days")
+                .format("YYYY-MM-DD");
+              const newEvent: EventInput = {
+                classNames: [className],
+                description: course.name,
+                end: `${dayOfWeek}T${endTimeMoment.format("HH:mm")}`,
+                extendedProps: {
+                  course,
+                  meeting,
+                  section,
+                },
+                start: `${dayOfWeek}T${startTimeMoment.format("HH:mm")}`,
+                term: section.term,
+                title: sectionName,
+              };
+              if (events[group]) {
+                // Only add the event if it hasn't already been added
+                // TODO: Will this conceal conflicts (specifically duplicated courses/sections/meetings)?
+                if (!eventExistsInEventList(newEvent, events[group])) {
+                  events[group].push(newEvent);
+                }
+              } else {
+                events[group] = [newEvent];
               }
-            } else {
-              events[group] = [newEvent];
-            }
-          });
+            });
+          }
         });
       });
     });
@@ -89,11 +103,19 @@ export const getMinAndMaxTimes = (schedule: Schedule) => {
   findConflicts(schedule);
   const sections: Section[] = flatten(map(schedule.courses, "sections"));
   const meetings: Meeting[] = flatten(map(sections, "meetings"));
+  let startDate = "";
   const startTimes = map(meetings, (meeting) => {
     return moment(meeting.startTime, "h:mm A");
   });
-  const endTimes = map(meetings, (meeting) => {
+  if (startTimes.length) {
+    startDate = startTimes[0].format("YYYY-MM-DD");
+  }
+  let endTimes = map(meetings, (meeting) => {
     return moment(meeting.startTime, "h:mm A").add(meeting.duration, "minutes");
+  });
+  // If the meeting ends on a different day than it started, don't include it
+  endTimes = endTimes.filter((endTime) => {
+    return endTime.format("YYYY-MM-DD") === startDate;
   });
   const minTime = (minBy(startTimes) || moment("06:00", "HH:mm")).startOf("hour").format("HH:mm");
   let maxTime = (maxBy(endTimes) || moment("22:00", "HH:mm"))
@@ -258,4 +280,14 @@ export const getInstructionalMethods = (schedule: Schedule) => {
     });
   });
   return instructionalMethods.sort();
+};
+
+export const getDepts = (schedule: Schedule) => {
+  const departments: string[] = [];
+  forEach(schedule.courses, (course) => {
+    if (!departments.includes(course.department)) {
+      departments.push(course.department ? course.department : "");
+    }
+  });
+  return departments.sort();
 };

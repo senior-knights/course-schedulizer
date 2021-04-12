@@ -10,7 +10,11 @@ export const RoomsSchedule = () => {
 
   return (
     <>
-      <Schedule calendarHeaders={rooms.sort()} groupedEvents={getEvents(schedule, "room")} />
+      <Schedule
+        calendarHeaders={rooms.sort()}
+        groupedEvents={getEvents(schedule, "room")}
+        scheduleType="room"
+      />
     </>
   );
 };
