@@ -56,6 +56,7 @@ const registrarSpreadsheetFields: ValidFields = {
   SectionEndDate: cf.endDateCallback,
   SectionStartDate: cf.startDateCallback,
   SectionStatus: cf.statusCallback,
+  SemesterLength: cf.semesterLengthCallback,
   ShortTitle: cf.nameCallback,
   SubjectCode: cf.prefixCallback,
   Term: cf.termCallback,
