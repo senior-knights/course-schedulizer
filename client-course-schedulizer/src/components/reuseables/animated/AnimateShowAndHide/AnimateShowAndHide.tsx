@@ -1,4 +1,3 @@
-import { Grid } from "@material-ui/core";
 import React, { PropsWithChildren, useCallback, useState } from "react";
 import { animated, useSpring } from "react-spring";
 import ReactVisibilitySensor from "react-visibility-sensor";
@@ -21,7 +20,7 @@ export const AnimateShowAndHide = ({ children, once }: PropsWithChildren<Animate
   const springProps = useSpring({
     config: { friction: 200, mass: 5, tension: 2000 },
     from: { height: 0, opacity: 0, x: 20 },
-    height: isVisible ? 110 : 0,
+    height: isVisible ? 130 : 0,
     opacity: isVisible ? 1 : 0,
     x: isVisible ? 0 : 20,
   });
@@ -44,11 +43,11 @@ export const AnimateShowAndHide = ({ children, once }: PropsWithChildren<Animate
 
   return (
     <ReactVisibilitySensor active={isActive} onChange={onVisibilityChange}>
-      <Grid className="show-and-hide-main" container justify="flex-start">
+      <div className="show-and-hide-main">
         <animated.div className="show-and-hide-text" style={springProps}>
           <animated.div style={{ height }}>{children}</animated.div>
         </animated.div>
-      </Grid>
+      </div>
     </ReactVisibilitySensor>
   );
 };
