@@ -19,6 +19,7 @@ import {
   Term,
   Weekday,
 } from "utilities/interfaces";
+import { getLocationString } from "./scheduleService";
 
 type CheckboxDays = (Day | boolean)[];
 
@@ -159,7 +160,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
     (data &&
       data.meeting &&
       data.meeting.location.building &&
-      `${data?.meeting?.location.building} ${data?.meeting?.location.roomNumber}`) ||
+      getLocationString(data.meeting.location)) ||
     ""
   ).trim();
   let defaultTerm = data?.section.term;

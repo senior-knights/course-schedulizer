@@ -5,7 +5,7 @@ import hash from "object-hash";
 import randomColor from "randomcolor";
 import { enumArray } from "utilities";
 import { INITIAL_DATE } from "utilities/constants";
-import { ColorBy, Day, Meeting, Schedule, Section, Term } from "utilities/interfaces";
+import { ColorBy, Day, Location, Meeting, Schedule, Section, Term } from "utilities/interfaces";
 import { findConflicts } from "./conflictsService";
 
 // Returns a list of hours to display on the Schedule
@@ -45,7 +45,7 @@ export const getEvents = (
       const sectionName = `${course.prefixes[0]}-${course.number}-${section.letter}`;
       forEach(section.instructors, (prof) => {
         forEach(section.meetings, (meeting) => {
-          const room = `${meeting.location.building} ${meeting.location.roomNumber}`;
+          const room = getLocationString(meeting.location);
           const className = createEventClassName(sectionName, room, prof);
           let group = "";
           if (groups === "faculty") {
@@ -294,4 +294,8 @@ export const getDepts = (schedule: Schedule) => {
     }
   });
   return departments.sort();
+};
+
+export const getLocationString = (location: Location): string => {
+  return `${location.building} ${location.roomNumber}`;
 };

@@ -2,7 +2,7 @@ import { forEach } from "lodash";
 import * as AllMoment from "moment";
 import moment, { Moment } from "moment";
 import { extendMoment } from "moment-range";
-import { Day, Schedule, Section } from "utilities";
+import { Day, getLocationString, getSectionName, Schedule, Section } from "utilities";
 import { Instructor } from "utilities/interfaces";
 
 const { range } = extendMoment(AllMoment);
@@ -13,6 +13,7 @@ interface ConflictData {
   indexes: number[];
   instructors: Section["instructors"];
   room: string;
+  sectionName: string;
   startTime: Moment;
   term: Section["term"];
 }
@@ -30,7 +31,8 @@ export const findConflicts = (schedule: Schedule): Schedule => {
           endTime: moment(startTimeMoment).add(meeting.duration, "minutes"),
           indexes: [courseIndex, sectionIndex, meetingIndex],
           instructors: section.instructors,
-          room: `${meeting.location.building} ${meeting.location.roomNumber}`,
+          room: getLocationString(meeting.location),
+          sectionName: getSectionName(course, section),
           startTime: startTimeMoment,
           term: section.term,
         });
@@ -55,7 +57,9 @@ export const findConflicts = (schedule: Schedule): Schedule => {
         range1.overlaps(range2) &&
         meeting1.term === meeting2.term &&
         meeting1.days.some(meeting2IncludesDay) &&
-        (meeting1.instructors.some(meeting2IncludesInstructor) || meeting1.room === meeting2.room)
+        (meeting1.instructors.some(meeting2IncludesInstructor) ||
+          meeting1.room === meeting2.room) &&
+        meeting1.sectionName !== meeting2.sectionName
       ) {
         const [ci1, si1, mi1] = meeting1.indexes;
         const [ci2, si2, mi2] = meeting2.indexes;
