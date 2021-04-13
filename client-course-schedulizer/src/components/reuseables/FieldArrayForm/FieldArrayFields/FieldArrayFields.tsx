@@ -15,7 +15,8 @@ export const FieldArrayFields = () => {
     <>
       {fields.map((field, index) => {
         return (
-          <Grid key={field.id} container justify="center">
+          <Grid key={field.id} container>
+            <DeleteFieldButton index={index} />
             {Object.keys(field)
               .filter((f) => {
                 return f !== "id";
@@ -23,7 +24,6 @@ export const FieldArrayFields = () => {
               .map((key) => {
                 return <FieldArrayField key={key} fieldIndex={key} index={index} />;
               })}
-            <DeleteFieldButton index={index} />
           </Grid>
         );
       })}

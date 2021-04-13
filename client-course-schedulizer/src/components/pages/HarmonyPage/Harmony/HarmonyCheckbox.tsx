@@ -32,8 +32,8 @@ export const HarmonyCheckbox = ({ setList, item }: HarmonyCheckboxProps) => {
   );
 
   return (
-    <div>
-      {item} <Checkbox checked={checked} onChange={handleChange(item)} />
+    <div style={{ alignItems: "center", display: "flex" }}>
+      <Checkbox checked={checked} onChange={handleChange(item)} /> {item}
     </div>
   );
 };

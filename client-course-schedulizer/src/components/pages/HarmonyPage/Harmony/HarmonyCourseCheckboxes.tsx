@@ -1,4 +1,4 @@
-import { Box, Paper } from "@material-ui/core";
+import { Card, CardContent } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import {
   HarmonyFormsAccessors,
@@ -26,32 +26,34 @@ export const HarmonyCourseCheckboxes = ({ course }: HarmonyCourseCheckboxesProps
   }, [course, profList, roomList, setClass, timeList]);
 
   return (
-    <Box component="div" m={2}>
-      <Paper>
-        <b>{course}</b>
-        <HarmonyCheckboxList
-          course={course}
-          customLabel={(profObj: SingularAccessors["professor"]) => {
-            return `${profObj.First} ${profObj.Last}`;
-          }}
-          id="professors"
-          list={professors as HarmonyFormsAccessors["professors"]}
-          setList={setProfList}
-        />
-        <HarmonyCheckboxList
-          course={course}
-          id="times"
-          list={times as HarmonyFormsAccessors["times"]}
-          setList={setTimeList}
-        />
-        <HarmonyCheckboxList
-          course={course}
-          id="rooms"
-          list={rooms as HarmonyFormsAccessors["rooms"]}
-          setList={setRoomList}
-        />
-      </Paper>
-    </Box>
+    <Card style={{ marginBottom: "2em" }} variant="outlined">
+      <CardContent>
+        <h2>{course}</h2>
+        <div style={{ display: "flex", justifyContent: "space-around" }}>
+          <HarmonyCheckboxList
+            course={course}
+            customLabel={(profObj: SingularAccessors["professor"]) => {
+              return `${profObj.First} ${profObj.Last}`;
+            }}
+            id="professors"
+            list={professors as HarmonyFormsAccessors["professors"]}
+            setList={setProfList}
+          />
+          <HarmonyCheckboxList
+            course={course}
+            id="times"
+            list={times as HarmonyFormsAccessors["times"]}
+            setList={setTimeList}
+          />
+          <HarmonyCheckboxList
+            course={course}
+            id="rooms"
+            list={rooms as HarmonyFormsAccessors["rooms"]}
+            setList={setRoomList}
+          />
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

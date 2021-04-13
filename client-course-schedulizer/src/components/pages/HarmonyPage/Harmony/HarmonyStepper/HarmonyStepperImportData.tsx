@@ -5,7 +5,7 @@ import React from "react";
 export const HarmonyStepperImportData = () => {
   return (
     <>
-      <AnimateShowAndHide>Import Data</AnimateShowAndHide>
+      <AnimateShowAndHide>Update Data</AnimateShowAndHide>
       <HarmonyFieldArrayForm defaultValue={{ First: "", Last: "" }} fieldsName="professors" />
       <HarmonyFieldArrayForm defaultValue={{ Course: "" }} fieldsName="courses" />
       <HarmonyFieldArrayForm defaultValue={{ Room: "" }} fieldsName="rooms" />

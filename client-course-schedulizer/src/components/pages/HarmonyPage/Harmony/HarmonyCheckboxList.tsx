@@ -19,15 +19,15 @@ export const HarmonyCheckboxList = <T extends unknown[]>({
   setList,
 }: HarmonyCheckboxListProps<T>) => {
   return (
-    <>
-      <h4>{id}</h4>
+    <div>
+      <h3>{id}</h3>
       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       {list.map((itemObj: any) => {
         const item: string =
           (customLabel && customLabel(itemObj)) || itemObj[Object.keys(itemObj)[0]];
         return <HarmonyCheckbox key={`${item}-${course}`} item={item} setList={setList} />;
       })}
-    </>
+    </div>
   );
 };
 

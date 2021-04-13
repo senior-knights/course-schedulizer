@@ -1,3 +1,4 @@
+import { Card, CardContent } from "@material-ui/core";
 import startCase from "lodash/startCase";
 import toLower from "lodash/toLower";
 import React from "react";
@@ -35,15 +36,19 @@ export const FieldArrayForm = ({ fieldsName, defaultValue, onSubmit }: FieldArra
       defaultValue={defaultValue}
       titleCaseName={titleCaseName}
     >
-      <form
-        onSubmit={handleSubmit((data) => {
-          onSubmit && onSubmit(data[titleCaseName] as object[]);
-        })}
-      >
-        <h3>{titleCaseName}: </h3>
-        <FieldArrayFields />
-        <FieldArrayFormActionButtons />
-      </form>
+      <Card style={{ marginBottom: "2em" }} variant="outlined">
+        <CardContent>
+          <form
+            onSubmit={handleSubmit((data) => {
+              onSubmit && onSubmit(data[titleCaseName] as object[]);
+            })}
+          >
+            <h2>{titleCaseName}: </h2>
+            <FieldArrayFields />
+            <FieldArrayFormActionButtons />
+          </form>
+        </CardContent>
+      </Card>
     </FieldArrayFormProvider>
   );
 };
