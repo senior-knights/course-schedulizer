@@ -5,7 +5,7 @@ import React from "react";
 export const HarmonyStepperAssignments = () => {
   return (
     <>
-      <AnimateShowAndHide>Add Assignments</AnimateShowAndHide>
+      <AnimateShowAndHide>Assignments</AnimateShowAndHide>
       <HarmonyAddAssignments />
     </>
   );

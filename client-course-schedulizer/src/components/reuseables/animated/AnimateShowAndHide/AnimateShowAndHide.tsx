@@ -45,7 +45,7 @@ export const AnimateShowAndHide = ({ children, once }: PropsWithChildren<Animate
     <ReactVisibilitySensor active={isActive} onChange={onVisibilityChange}>
       <div className="show-and-hide-main">
         <animated.div className="show-and-hide-text" style={springProps}>
-          <animated.div style={{ height }}>{children}</animated.div>
+          <animated.div style={{ height, paddingRight: 20 }}>{children}</animated.div>
         </animated.div>
       </div>
     </ReactVisibilitySensor>
