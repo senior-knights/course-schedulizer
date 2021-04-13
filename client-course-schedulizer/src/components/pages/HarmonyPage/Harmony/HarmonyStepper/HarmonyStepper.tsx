@@ -8,7 +8,7 @@ import {
 import React, { useEffect } from "react";
 
 const getSteps = () => {
-  return ["Welcome", "Import Data", "Create Assignments", "Find Schedule"];
+  return ["Welcome", "Import Data", "Update Data", "Create Assignments", "Find Schedule"];
 };
 
 // TODO: somehow this should be linked to the values in getSteps
@@ -17,10 +17,12 @@ const getStepContent = (step: number) => {
     case 0:
       return <HarmonyStepperWelcome />;
     case 1:
-      return <HarmonyStepperImportData />;
+      return <>Use inferred data from schedule. and set assignments. Optional</>;
     case 2:
-      return <HarmonyStepperAssignments />;
+      return <HarmonyStepperImportData />;
     case 3:
+      return <HarmonyStepperAssignments />;
+    case 4:
       return <HarmonyStepperResult />;
     default:
       return <>Unknown step</>;
@@ -104,7 +106,7 @@ export const HarmonyStepper = () => {
             <div className="harmony-stepper-content" style={{ flex: "1 0 auto" }}>
               {getStepContent(activeStep)}
             </div>
-            <div style={{ flex: "0 1 auto" }}>
+            <div style={{ flex: "0 1 auto", textAlign: "end" }}>
               <Button
                 className="harmony-stepper-button"
                 disabled={activeStep === 0}
@@ -132,7 +134,7 @@ export const HarmonyStepper = () => {
       <Stepper
         activeStep={activeStep}
         alternativeLabel
-        style={{ flex: "0 1 auto", paddingTop: "5em" }}
+        style={{ flex: "0 1 auto", paddingTop: "5em", textAlign: "center" }}
       >
         {steps.map((label, index) => {
           const stepProps: { completed?: boolean } = {};

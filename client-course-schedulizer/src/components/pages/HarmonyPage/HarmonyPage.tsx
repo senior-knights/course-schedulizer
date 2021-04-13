@@ -1,4 +1,4 @@
-import { HarmonyStepper } from "components";
+import { HarmonyStepper, Page } from "components";
 import React from "react";
 import "./HarmonyPage.scss";
 
@@ -10,5 +10,9 @@ import "./HarmonyPage.scss";
  *   to the Schedulizer to make edits.
  */
 export const HarmonyPage = () => {
-  return <HarmonyStepper />;
+  return (
+    <Page>
+      <HarmonyStepper />
+    </Page>
+  );
 };
