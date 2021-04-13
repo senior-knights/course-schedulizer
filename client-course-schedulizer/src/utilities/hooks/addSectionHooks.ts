@@ -1,4 +1,4 @@
-import { camelCase, cloneDeep, forEach, isEqual, omit } from "lodash";
+import { camelCase, forEach } from "lodash";
 import moment from "moment";
 import { useContext } from "react";
 import { DeepMap, FieldError } from "react-hook-form";
@@ -48,28 +48,6 @@ export const useAddSectionToSchedule = () => {
   ) => {
     setIsCSVLoading(true);
     const { newSection, newCourse }: MappedSection = mapInputToInternalTypes(data);
-    let newMeeting;
-    if (newSection.meetings.length) {
-      [newMeeting] = newSection.meetings;
-    }
-    newSection.startDate = oldData?.section.startDate ?? "";
-    newSection.termStart = oldData?.section.termStart ?? "";
-    newSection.endDate = oldData?.section.endDate ?? "";
-    const oldDataCopy = cloneDeep(oldData);
-    newSection.timestamp = oldDataCopy?.section.timestamp;
-    if (
-      !(
-        isEqual(
-          omit(newSection, ["timestamp", "meetings"]),
-          omit(oldDataCopy?.section, ["timestamp", "meetings"]),
-        ) &&
-        isEqual(omit(newCourse, "sections"), omit(oldDataCopy?.course, "sections")) &&
-        isEqual(omit(newMeeting, "isConflict"), omit(oldDataCopy?.meeting, "isConflict"))
-      )
-    ) {
-      newSection.timestamp = moment().format();
-    }
-
     addToSchedule({ newCourse, newSection, oldData, removeOldMeeting });
 
     // Depending on the current tab, scroll to the updated/added section/row
@@ -104,6 +82,7 @@ export const useAddSectionToSchedule = () => {
     oldData,
     removeOldMeeting,
   }: AddToScheduleParams) => {
+    newSection.timestamp = moment().format();
     handleOldMeeting(oldData, newSection, removeOldMeeting, schedule);
     insertSectionCourse(schedule, newSection, newCourse);
     appDispatch({ payload: { schedule }, type: "setScheduleData" });
