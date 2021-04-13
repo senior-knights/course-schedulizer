@@ -232,7 +232,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
                   }}
                 />
                 <Typography variant="caption">
-                  Custom semester lengths are not support yet.
+                  Custom semester lengths are not supported yet.
                 </Typography>
               </Grid>
             )}
