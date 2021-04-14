@@ -1,4 +1,5 @@
 import { EventInput } from "@fullcalendar/react";
+import { ScheduleBaseProps } from "components";
 import { filter, flatten, forEach, forOwn, map, maxBy, minBy, range } from "lodash";
 import moment from "moment";
 import hash from "object-hash";
@@ -294,4 +295,15 @@ export const getDepts = (schedule: Schedule) => {
     }
   });
   return departments.sort();
+};
+
+/* Generate a css class name. apply additional styles
+ * specifically for the department tab view
+ */
+export const getCalendarClassName = (scheduleType: ScheduleBaseProps["scheduleType"]) => {
+  let className = "calendar-width calendar-title";
+  if (scheduleType === "department") {
+    className += " department-calendar-width";
+  }
+  return className;
 };
