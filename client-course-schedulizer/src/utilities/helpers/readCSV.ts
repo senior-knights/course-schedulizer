@@ -65,6 +65,7 @@ const registrarSpreadsheetFields: ValidFields = {
   SectionEndDate: cf.endDateCallback,
   SectionStartDate: cf.startDateCallback,
   SectionStatus: cf.statusCallback,
+  SemesterLength: cf.semesterLengthCallback,
   ShortTitle: cf.nameCallback,
   SubjectCode: cf.prefixCallback,
   Term: cf.termCallback,
@@ -166,6 +167,11 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
 
     // Update Course fields which were changed
     schedule.courses[existingCourseIndex] = updateNonIdentifyingCourseInfo(existingCourse, course);
+    if (course.name !== schedule.courses[existingCourseIndex].name) {
+      section.name = course.name;
+    }
+
+    // Update the section name if the received name is different than the course name (section name will override the course name)
     if (course.name !== schedule.courses[existingCourseIndex].name) {
       section.name = course.name;
     }

@@ -44,11 +44,13 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
           meetingEndInternalStr += "\n";
         }
         meetingDurationMinutesStr += `${meeting.duration}\n`;
-        buildingStr += `${meeting.location.building}\n`;
-        roomNumberStr += `${meeting.location.roomNumber}\n`;
-        buildingAndRoomStr += meeting.location.roomNumber
-          ? `${meeting.location.building} ${meeting.location.roomNumber}\n`
-          : `${meeting.location.building}\n`;
+        if (meeting.location && meeting.location.building) {
+          buildingStr += `${meeting.location.building}\n`;
+          roomNumberStr += `${meeting.location.roomNumber}\n`;
+          buildingAndRoomStr += meeting.location.roomNumber
+            ? `${meeting.location.building} ${meeting.location.roomNumber}\n`
+            : `${meeting.location.building}\n`;
+        }
         roomCapacityStr += `${meeting.location.roomCapacity ?? ""}\n`;
         daysStr += `${meeting.days.join("")}\n`;
         monStr += `${meeting.days.includes(Day.Monday) ? "M" : ""}\n`;

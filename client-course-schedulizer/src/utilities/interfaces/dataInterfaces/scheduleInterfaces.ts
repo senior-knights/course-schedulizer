@@ -59,7 +59,6 @@ export interface Section {
   day10Used?: number;
   // Like 2/3/2020
   endDate?: string;
-  // Overrides Course value
   facultyHours: number;
   globalMax?: number;
   instructionalMethod?: string;
@@ -75,7 +74,6 @@ export interface Section {
   // Like 5/21/2020
   startDate?: string;
   status?: string;
-  // Overrides Course value
   studentHours: number;
   term: Term | Term[];
   // Like 9/3/2019

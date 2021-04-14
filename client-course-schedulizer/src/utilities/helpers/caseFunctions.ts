@@ -137,6 +137,7 @@ export const yearCallback = (value: string, { section }: CaseCallbackParams) => 
 };
 
 export const studentHoursCallback = (value: string, { section }: CaseCallbackParams) => {
+  // Remove '$' is Excel prepended it to the student hours
   section.studentHours = value.startsWith("$") ? Number(value.substr(1)) : Number(value);
 };
 
@@ -174,7 +175,9 @@ export const day10UsedCallback = (value: string, { section }: CaseCallbackParams
 };
 
 export const startDateCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.startDate = value;
+  if (value.trim() !== "") {
+    section.startDate = value;
+  }
 };
 
 export const endDateCallback = (value: string, { section }: CaseCallbackParams) => {
@@ -218,17 +221,20 @@ export const startTimeCase = (value: string): string => {
 };
 
 export const locationCase = (value: string): string[] => {
-  const roomParts = value.trim().split(" ");
-  if (roomParts.length === 1) {
-    // No room number given
-    return [roomParts[0], ""];
+  if (value) {
+    const roomParts = value.trim().split(" ");
+    if (roomParts.length === 1) {
+      // No room number given
+      return [roomParts[0], ""];
+    }
+    if (roomParts.length === 2) {
+      // Building and room number given
+      return roomParts;
+    }
+    // Too many room parts given, assume last part is room number and rest is building
+    return [roomParts.slice(0, -1).join(" "), roomParts.slice(-1)[0]];
   }
-  if (roomParts.length === 2) {
-    // Building and room number given
-    return roomParts;
-  }
-  // Too many room parts given, assume last part is room number and rest is building
-  return [roomParts.slice(0, -1).join(" "), roomParts.slice(-1)[0]];
+  return [];
 };
 
 export const termCase = (value: string): Term => {
@@ -320,7 +326,7 @@ export const endDateCase = (
   const sectionLength = sectionEnd.diff(sectionStart, "days");
   const startMonth = sectionStart.month();
   const firstStartMonths = [0, 1, 7, 8]; // Jan, Feb, Aug, Sept
-  if (sectionLength > MAX_HALF_LENGTH) {
+  if (sectionLength > MAX_HALF_LENGTH || value.trim() === "") {
     return SemesterLength.Full;
   }
   if (sectionLength > MIN_HALF_LENGTH && sectionLength <= MAX_HALF_LENGTH) {
@@ -351,5 +357,5 @@ export const durationCase = (value: string): number => {
 };
 
 export const yearCase = (value: string): number | string | undefined => {
-  return Number.isInteger(Number(value)) && value ? Number(value) : value;
+  return value && Number.isInteger(Number(value)) ? Number(value) : value;
 };

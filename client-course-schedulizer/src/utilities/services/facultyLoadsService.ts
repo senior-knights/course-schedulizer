@@ -43,9 +43,7 @@ const updateRow = ({ newRow, prevRow, section, sectionName, termName }: UpdateRo
   const termCourseSectionProp =
     termName === "other" ? "otherDuties" : (`${termName}CourseSections` as sectionKeys);
   const termHoursProp = `${termName}Hours` as hourKeys;
-  const facultyHours =
-    (section.facultyHours !== undefined ? section.facultyHours : section.facultyHours) /
-    section.instructors.length;
+  const facultyHours = section.facultyHours / section.instructors.length;
   // Add faculty load hours using the format specified by loadHoursRegEx.
   const sectionNameWithHours = `${sectionName} (${facultyHours})`;
   if (prevRow) {
