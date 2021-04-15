@@ -3,6 +3,7 @@ import {
   HarmonyStepperAssignments,
   HarmonyStepperImportData,
   HarmonyStepperResult,
+  HarmonyStepperUpdateData,
   HarmonyStepperWelcome,
 } from "components";
 import React, { useEffect } from "react";
@@ -17,9 +18,9 @@ const getStepContent = (step: number) => {
     case 0:
       return <HarmonyStepperWelcome />;
     case 1:
-      return <>Use inferred data from schedule. and set assignments. Optional</>;
-    case 2:
       return <HarmonyStepperImportData />;
+    case 2:
+      return <HarmonyStepperUpdateData />;
     case 3:
       return <HarmonyStepperAssignments />;
     case 4:

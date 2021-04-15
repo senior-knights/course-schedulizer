@@ -1,15 +1,11 @@
-import { HarmonyFieldArrayForm } from "components";
 import { AnimateShowAndHide } from "components/reuseables";
 import React from "react";
 
 export const HarmonyStepperImportData = () => {
   return (
     <>
-      <AnimateShowAndHide>Update Data</AnimateShowAndHide>
-      <HarmonyFieldArrayForm defaultValue={{ First: "", Last: "" }} fieldsName="professors" />
-      <HarmonyFieldArrayForm defaultValue={{ Course: "" }} fieldsName="courses" />
-      <HarmonyFieldArrayForm defaultValue={{ Room: "" }} fieldsName="rooms" />
-      <HarmonyFieldArrayForm defaultValue={{ Time: "" }} fieldsName="times" />
+      <AnimateShowAndHide>Import Data</AnimateShowAndHide>
+      Use inferred data from schedule. and set assignments. Optional
     </>
   );
 };
