@@ -171,7 +171,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
 
   return {
     anticipatedSize: data?.section.anticipatedSize,
-    comments: data?.section.comments,
+    comments: data?.section.comments?.trim() === "" ? undefined : data?.section.comments,
     day10Used: data?.section.day10Used,
     days,
     department: data?.course.department,

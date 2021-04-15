@@ -6,20 +6,22 @@ import {
   GridItemRadioGroup,
   GridItemTextField,
 } from "components";
-import { isEqual } from "lodash";
+import { isEqual, isNil, omitBy } from "lodash";
+import moment from "moment";
 import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
   addFalseToDaysCheckboxList,
   addSectionSchema,
   convertFromSemesterLength,
+  emptyMeeting,
   getCourseNames,
   getInstructionalMethods,
   getNumbers,
   getPrefixes,
   getSectionLetters,
+  mapInputToInternalTypes,
   mapInternalTypesToInput,
-  removeUncheckedValues,
   SectionInput,
   useAddSectionToSchedule,
   useDeleteMeetingFromSchedule,
@@ -39,10 +41,24 @@ import "./AddSectionPopover.scss";
 
 const SPACING = 2;
 
+const transformDataToTrueSectionInput = (data: SectionInput): SectionInput => {
+  const dataCourseSection = mapInputToInternalTypes(data);
+  let newMeeting = emptyMeeting;
+  if (dataCourseSection.newSection.meetings.length) {
+    [newMeeting] = dataCourseSection.newSection.meetings;
+  }
+  return mapInternalTypesToInput({
+    course: dataCourseSection.newCourse,
+    meeting: newMeeting,
+    section: dataCourseSection.newSection,
+  });
+};
+
 /* A form to input information to add a schedule */
 export const AddSectionPopover = ({ values }: PopoverValueProps) => {
   const {
     appState: { schedule, rooms, professors },
+    setIsCSVLoading,
   } = useContext(AppContext);
 
   const methods = useForm<SectionInput>({
@@ -50,29 +66,26 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
     defaultValues: mapInternalTypesToInput(values),
     resolver: yupResolver(addSectionSchema),
   });
+  const { reset } = methods;
   const [semesterLength, setSemesterLength] = useState<SemesterLengthOption>(
     convertFromSemesterLength(values?.section.semesterLength),
   );
   const { addSectionToSchedule } = useAddSectionToSchedule();
   const { deleteMeetingFromSchedule } = useDeleteMeetingFromSchedule();
 
-  const { reset, getValues } = methods;
-
-  useEffect(() => {
-    setSemesterLength(convertFromSemesterLength(values?.section.semesterLength));
-    const inputValues = mapInternalTypesToInput(values);
-    const formValues = getValues();
-    inputValues.days = removeUncheckedValues(inputValues.days as string[]) as Day[];
-
-    // Update the form values if they have changed
-    if (!isEqual(inputValues, formValues)) {
-      reset(inputValues);
-    }
-  }, [reset, getValues, values]);
-
   const onSubmit = (removeOldMeeting: boolean) => {
     return async (data: SectionInput) => {
-      await addSectionToSchedule(data, values, removeOldMeeting);
+      const dataTransformed = transformDataToTrueSectionInput(data);
+      // Submit the data if any of the form values were updated (omitting null and undefined values)
+      if (
+        !isEqual(omitBy(dataTransformed, isNil), omitBy(mapInternalTypesToInput(values), isNil))
+      ) {
+        await addSectionToSchedule(data, values, removeOldMeeting);
+      } else {
+        // Close the popover
+        setIsCSVLoading(true);
+        setIsCSVLoading(false);
+      }
     };
   };
 
@@ -85,6 +98,12 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
   const onSemesterLengthChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSemesterLength(e.target.value as SemesterLengthOption);
   };
+
+  useEffect(() => {
+    setSemesterLength(convertFromSemesterLength(values?.section.semesterLength));
+    const inputValues = mapInternalTypesToInput(values);
+    reset(inputValues);
+  }, [reset, values]);
 
   const isHalfSemester = semesterLength === SemesterLengthOption.HalfSemester;
   const isIntensiveSemester = semesterLength === SemesterLengthOption.IntensiveSemester;
@@ -252,6 +271,11 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
           </Grid>
           <Grid className="popover-buttons" item>
             {buttons()}
+            {values?.section.timestamp && (
+              <Typography variant="caption">
+                Last Edited: {moment(values?.section.timestamp).format("MMMM Do YYYY, h:mm:ss a")}
+              </Typography>
+            )}
           </Grid>
         </Grid>
       </form>
