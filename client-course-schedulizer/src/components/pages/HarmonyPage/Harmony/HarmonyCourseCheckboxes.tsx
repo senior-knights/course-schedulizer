@@ -13,11 +13,6 @@ interface HarmonyCourseCheckboxesProps {
   course: string;
 }
 
-// pick values from store.
-const selector = ({ professors, times, rooms }: HarmonyFormsState) => {
-  return [professors, times, rooms];
-};
-
 /** All of the check box lists for each attribute for a specific class */
 export const HarmonyCourseCheckboxes = ({ course }: HarmonyCourseCheckboxesProps) => {
   const [professors, times, rooms] = useHarmonyFormsStore(selector);
@@ -58,4 +53,9 @@ export const HarmonyCourseCheckboxes = ({ course }: HarmonyCourseCheckboxesProps
       </Paper>
     </Box>
   );
+};
+
+// pick values from store.
+const selector = ({ professors, times, rooms }: HarmonyFormsState) => {
+  return [professors, times, rooms];
 };
