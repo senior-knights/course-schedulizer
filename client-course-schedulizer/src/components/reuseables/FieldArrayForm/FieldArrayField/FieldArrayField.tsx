@@ -13,12 +13,17 @@ interface FieldArrayFieldProps {
  *   or just one.
  */
 export const FieldArrayField = ({ index, fieldIndex }: FieldArrayFieldProps) => {
-  const { control, titleCaseName: name, defaultValue = {} } = useFieldArrayFormContext();
+  const {
+    control,
+    titleCaseName: name,
+    defaultValue = {},
+    textFieldProps,
+  } = useFieldArrayFormContext();
 
   return (
     <Box m={1}>
       <Controller
-        as={<TextField label={fieldIndex} variant="outlined" />}
+        as={<TextField {...textFieldProps} label={fieldIndex} variant="outlined" />}
         control={control}
         defaultValue={defaultValue[fieldIndex]}
         name={`${name}[${index}][${fieldIndex}]`}

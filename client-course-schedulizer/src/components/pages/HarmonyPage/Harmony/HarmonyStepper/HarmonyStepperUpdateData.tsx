@@ -9,7 +9,11 @@ export const HarmonyStepperUpdateData = () => {
       <HarmonyFieldArrayForm defaultValue={{ First: "", Last: "" }} fieldsName="professors" />
       <HarmonyFieldArrayForm defaultValue={{ Course: "" }} fieldsName="courses" />
       <HarmonyFieldArrayForm defaultValue={{ Room: "" }} fieldsName="rooms" />
-      <HarmonyFieldArrayForm defaultValue={{ Time: "" }} fieldsName="times" />
+      <HarmonyFieldArrayForm
+        defaultValue={{ Time: "" }}
+        fieldsName="times"
+        textFieldProps={{ type: "time" }}
+      />
     </>
   );
 };
