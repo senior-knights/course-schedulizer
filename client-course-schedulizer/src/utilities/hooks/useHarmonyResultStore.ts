@@ -1,23 +1,17 @@
 import { Result } from "@harmoniously/react";
 import { Day, Schedule, SemesterLength, Term } from "utilities/interfaces";
 import create, { GetState, SetState, State } from "zustand";
-import { persist } from "zustand/middleware";
 
 export const useHarmonyResultStore = create<HarmonyResultState>(
-  persist<HarmonyResultState>(
-    (set: SetState<HarmonyResultState>, get: GetState<HarmonyResultState>) => {
-      return {
-        result: {},
-        schedule: { courses: [] },
-        setResult: (res: Result) => {
-          set({ result: res, schedule: convertToSchedule(res) });
-        },
-      };
-    },
-    {
-      name: "harmonyResultState",
-    },
-  ),
+  (set: SetState<HarmonyResultState>, get: GetState<HarmonyResultState>) => {
+    return {
+      result: {},
+      schedule: { courses: [] },
+      setResult: (res: Result) => {
+        set({ result: res, schedule: convertToSchedule(res) });
+      },
+    };
+  },
 );
 
 export interface HarmonyResultState extends State {
