@@ -1,6 +1,7 @@
 import { forEach } from "lodash";
 import moment, { Moment } from "moment";
 import { Day, Schedule, Section, Term } from "utilities/interfaces";
+import { getLocationString } from "utilities/services";
 
 export const scheduleToFullCSVString = (schedule: Schedule): string => {
   const numericReg = RegExp("[0-9]");
@@ -48,7 +49,7 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
           buildingStr += `${meeting.location.building}\n`;
           roomNumberStr += `${meeting.location.roomNumber}\n`;
           buildingAndRoomStr += meeting.location.roomNumber
-            ? `${meeting.location.building} ${meeting.location.roomNumber}\n`
+            ? `${getLocationString(meeting.location)}\n`
             : `${meeting.location.building}\n`;
         }
         roomCapacityStr += `${meeting.location.roomCapacity ?? ""}\n`;

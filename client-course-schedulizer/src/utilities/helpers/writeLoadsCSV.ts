@@ -1,5 +1,5 @@
 import moment from "moment";
-import { getMeetingTimeStr, getTermsStr } from "utilities";
+import { getLocationString, getMeetingTimeStr, getTermsStr } from "utilities";
 import { Schedule } from "utilities/interfaces";
 
 // Exported alongside the full schedule
@@ -51,7 +51,7 @@ export const scheduleToCSVString = (schedule: Schedule): string => {
             meetingTimeStr += "\n";
           }
           buildingAndRoomStr += meeting.location.roomNumber
-            ? `${meeting.location.building} ${meeting.location.roomNumber}\n`
+            ? `${getLocationString(meeting.location)}\n`
             : `${meeting.location.building}\n`;
           daysStr += `${meeting.days.join("")}\n`;
         });
