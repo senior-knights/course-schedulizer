@@ -2,6 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Grid, Typography } from "@material-ui/core";
 import { GridItemAutocomplete, GridItemCheckboxGroup, GridItemTextField } from "components";
 import { isEqual } from "lodash";
+import moment from "moment";
 import React, { useContext, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
@@ -103,6 +104,11 @@ export const AddNonTeachingLoadPopover = ({ values }: PopoverValueProps) => {
             >
               Delete Activity
             </Button>
+          )}
+          {values?.section.timestamp && (
+            <Typography variant="caption">
+              Last Edited: {moment(values?.section.timestamp).format("MMMM Do YYYY, h:mm:ss a")}
+            </Typography>
           )}
         </Grid>
       </form>

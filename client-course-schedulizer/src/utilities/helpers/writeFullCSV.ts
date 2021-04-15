@@ -1,11 +1,12 @@
 import { forEach } from "lodash";
 import moment, { Moment } from "moment";
 import { Day, Schedule, Section, Term } from "utilities/interfaces";
+import { getLocationString } from "utilities/services";
 
 export const scheduleToFullCSVString = (schedule: Schedule): string => {
   const numericReg = RegExp("[0-9]");
   let csvStr =
-    "Department,Term,TermStart,AcademicYear,SectionName,SubjectCode,CourseNum,SectionCode,CourseLevelCode,MinimumCredits,FacultyLoad,Used,Day10Used,LocalMax,GlobalMax,RoomCapacity,BuildingAndRoom,MeetingDays,MeetingTime,SectionStartDate,SectionEndDate,SemesterLength,Building,RoomNumber,MeetingStart,MeetingStartInternal,MeetingDurationMinutes,MeetingEnd,MeetingEndInternal,Monday,Tuesday,Wednesday,Thursday,Friday,ShortTitle,Faculty,SectionStatus,InstructionalMethod,Comments\n";
+    "Department,Term,TermStart,AcademicYear,SectionName,SubjectCode,CourseNum,SectionCode,CourseLevelCode,MinimumCredits,FacultyLoad,Used,Day10Used,LocalMax,GlobalMax,RoomCapacity,BuildingAndRoom,MeetingDays,MeetingTime,SectionStartDate,SectionEndDate,SemesterLength,Building,RoomNumber,MeetingStart,MeetingStartInternal,MeetingDurationMinutes,MeetingEnd,MeetingEndInternal,Monday,Tuesday,Wednesday,Thursday,Friday,ShortTitle,Faculty,SectionStatus,InstructionalMethod,Comments,LastEditTimestamp\n";
   schedule.courses.forEach((course) => {
     course.sections.forEach((section) => {
       // Iterate through meetings to construct relevant strings
@@ -48,7 +49,7 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
           buildingStr += `${meeting.location.building}\n`;
           roomNumberStr += `${meeting.location.roomNumber}\n`;
           buildingAndRoomStr += meeting.location.roomNumber
-            ? `${meeting.location.building} ${meeting.location.roomNumber}\n`
+            ? `${getLocationString(meeting.location)}\n`
             : `${meeting.location.building}\n`;
         }
         roomCapacityStr += `${meeting.location.roomCapacity ?? ""}\n`;
@@ -100,7 +101,7 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
         section.name ?? course.name
       }","${section.instructors.join("\n")}","${section.status ?? ""}","${
         section.instructionalMethod ?? ""
-      }","${section.comments ?? ""}"\n`;
+      }","${section.comments ?? ""}","${section.timestamp ?? ""}"\n`;
     });
   });
   return csvStr;

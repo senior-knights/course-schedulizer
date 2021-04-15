@@ -21,6 +21,7 @@ import {
   updateIdentifyingSectionInfo,
   Weekday,
 } from "utilities/interfaces";
+import { getLocationString } from "./scheduleService";
 
 type CheckboxDays = (Day | boolean)[];
 
@@ -161,7 +162,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
     (data &&
       data.meeting &&
       data.meeting.location.building &&
-      `${data?.meeting?.location.building} ${data?.meeting?.location.roomNumber}`) ||
+      getLocationString(data.meeting.location)) ||
     ""
   ).trim();
   let defaultTerm = data?.section.term;
@@ -173,7 +174,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
 
   return {
     anticipatedSize: data?.section.anticipatedSize,
-    comments: data?.section.comments,
+    comments: data?.section.comments?.trim() === "" ? undefined : data?.section.comments,
     day10Used: data?.section.day10Used,
     days,
     department: data?.course.department,
