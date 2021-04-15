@@ -39,7 +39,6 @@ const convertToSchedule = (result: Result): Schedule => {
 
       schedule.courses.push({
         department: "",
-        facultyHours: -1,
         name: "",
         number,
         prefixes: [prefix],
@@ -47,6 +46,7 @@ const convertToSchedule = (result: Result): Schedule => {
           {
             comments: "",
             endDate: "1/1/21",
+            facultyHours: -1,
             instructionalMethod: "",
             instructors: [professor],
             letter,
@@ -61,12 +61,12 @@ const convertToSchedule = (result: Result): Schedule => {
             semesterLength: SemesterLength.Full,
             startDate: "01/01/21",
             status: "",
+            studentHours: -1,
             term: Term.Fall,
             termStart: "01/01/21",
             year: -1,
           },
         ],
-        studentHours: -1,
       });
     });
   }
