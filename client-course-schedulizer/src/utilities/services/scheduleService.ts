@@ -41,7 +41,7 @@ export const getEvents = (
   const days: Day[] = enumArray(Day);
   const scheduleWithConflicts = findConflicts(schedule);
   forEach(scheduleWithConflicts.courses, (course) => {
-    const dept = course.department ?? "";
+    const dept = course.department ? course.department : "No Department";
     forEach(course.sections, (section) => {
       const sectionName = `${course.prefixes[0]}-${course.number}-${section.letter}`;
       forEach(section.instructors, (prof) => {
@@ -290,8 +290,9 @@ export const getInstructionalMethods = (schedule: Schedule) => {
 export const getDepts = (schedule: Schedule) => {
   const departments: string[] = [];
   forEach(schedule.courses, (course) => {
-    if (course.department && !departments.includes(course.department)) {
-      departments.push(course.department ? course.department : "");
+    const deptStr = course.department ? course.department : "No Department";
+    if (!departments.includes(deptStr)) {
+      departments.push(deptStr);
     }
   });
   return departments.sort();

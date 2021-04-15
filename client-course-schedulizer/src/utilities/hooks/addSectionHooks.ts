@@ -83,7 +83,7 @@ export const useAddSectionToSchedule = () => {
     removeOldMeeting,
   }: AddToScheduleParams) => {
     newSection.timestamp = moment().format();
-    handleOldMeeting(oldData, newSection, removeOldMeeting, schedule);
+    handleOldMeeting(oldData, newSection, newCourse, removeOldMeeting, schedule);
     insertSectionCourse(schedule, newSection, newCourse);
     appDispatch({ payload: { schedule }, type: "setScheduleData" });
   };
