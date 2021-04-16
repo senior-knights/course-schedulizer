@@ -6,7 +6,17 @@ import {
   HarmonyStepperUpdateData,
   HarmonyStepperWelcome,
 } from "components";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
+import {
+  HarmonyResultState,
+  useAppContext,
+  useHarmonyResultStore,
+  useRedirect,
+} from "utilities/hooks";
+
+const selector = ({ schedule }: HarmonyResultState) => {
+  return schedule;
+};
 
 const getSteps = () => {
   return ["Welcome", "Import Data", "Update Data", "Create Assignments", "Find Schedule"];
@@ -36,6 +46,9 @@ export const HarmonyStepper = () => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());
   const steps = getSteps();
+  const { appDispatch } = useAppContext();
+  const redirectTo = useRedirect();
+  const schedule = useHarmonyResultStore(selector);
 
   const isStepOptional = (step: number) => {
     return step === 1;
@@ -90,6 +103,11 @@ export const HarmonyStepper = () => {
     window.scrollTo(0, 0);
   }, [activeStep]);
 
+  const onClick = useCallback(() => {
+    appDispatch({ payload: { schedule }, type: "setScheduleData" });
+    redirectTo("/");
+  }, [appDispatch, redirectTo, schedule]);
+
   return (
     <div className="harmony-stepper-root">
       <div style={{ flex: "1 0 auto" }}>
@@ -100,6 +118,16 @@ export const HarmonyStepper = () => {
             </Typography>
             <Button className="harmony-stepper-button" onClick={handleReset}>
               Reset
+            </Button>
+            <Button
+              className="harmony-stepper-button"
+              disabled={activeStep === 0}
+              onClick={handleBack}
+            >
+              Back
+            </Button>
+            <Button onClick={onClick} type="button">
+              Send to Schedulizer
             </Button>
           </div>
         ) : (
