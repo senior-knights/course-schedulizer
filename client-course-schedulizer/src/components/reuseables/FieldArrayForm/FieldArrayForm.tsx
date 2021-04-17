@@ -9,6 +9,7 @@ import { FieldArrayFormActionButtons } from "./FieldArrayFormActionButtons";
 
 export interface FieldArrayFormProps {
   defaultValue: object;
+  defaultValues?: object[];
   fieldsName: string;
   onSubmit?: (data: object[]) => void;
   textFieldProps?: TextFieldProps;
@@ -22,12 +23,15 @@ export interface FieldArrayFormProps {
 export const FieldArrayForm = ({
   fieldsName,
   defaultValue,
+  defaultValues = [],
   onSubmit,
   textFieldProps,
 }: FieldArrayFormProps) => {
   const titleCaseName = startCase(toLower(fieldsName));
   const formMethods = useForm({
-    defaultValues: { [titleCaseName]: [defaultValue] },
+    defaultValues: {
+      [titleCaseName]: [...defaultValues, defaultValue],
+    },
   });
   const { control, handleSubmit } = formMethods;
   const fieldArrayMethods = useFieldArray({
@@ -40,6 +44,7 @@ export const FieldArrayForm = ({
       {...formMethods}
       {...fieldArrayMethods}
       defaultValue={defaultValue}
+      defaultValues={defaultValues}
       textFieldProps={textFieldProps}
       titleCaseName={titleCaseName}
     >

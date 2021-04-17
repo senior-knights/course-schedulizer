@@ -14,9 +14,9 @@ export const useHarmonyFormsStore = create<HarmonyFormsState>(
       professors: [],
       rooms: [],
       times: [],
-      update: (key: string, data: string[]) => {
+      update: (key, data) => {
         return set(() => {
-          return { [key as keyof HarmonyFormsAccessors]: data };
+          return { [key]: data };
         });
       },
     };
@@ -25,7 +25,7 @@ export const useHarmonyFormsStore = create<HarmonyFormsState>(
 
 /** Adds functions to accessors */
 export interface HarmonyFormsState extends HarmonyFormsAccessors {
-  update: (key: string, data: string[]) => void;
+  update: (key: keyof HarmonyFormsAccessors, data: object[]) => void;
 }
 
 /** labels to retrieve data */
