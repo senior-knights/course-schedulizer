@@ -11,7 +11,7 @@ export const getClasses = (schedule: Schedule): string[] => {
     } = course;
     sections.forEach((section) => {
       const { letter } = section;
-      coursesSet.add(`${firstPrefix}${number}${letter}`);
+      coursesSet.add(`${firstPrefix}-${number}-${letter}`);
     });
   });
   return [...coursesSet];
