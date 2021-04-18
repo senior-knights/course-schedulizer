@@ -11,7 +11,7 @@ export const useHarmonyAssignmentsStore = create<HarmonyAssignmentsState>(
     return {
       assignments: {},
       setClass: (className: string, attributes: ClassLimits) => {
-        return set((state) => {
+        set((state) => {
           state.assignments[className] = attributes;
         });
       },
