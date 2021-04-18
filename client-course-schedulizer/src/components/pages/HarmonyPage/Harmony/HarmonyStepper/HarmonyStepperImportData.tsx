@@ -3,6 +3,9 @@ import { AnimateShowAndHide } from "components/reuseables";
 import React, { useCallback } from "react";
 import { HarmonyFormsState, useAppContext, useHarmonyFormsStore } from "utilities";
 
+/** Second step in Harmony Stepper. Allows users to import data
+ *   and assignments from the current schedule.
+ */
 export const HarmonyStepperImportData = () => {
   const {
     appState: { schedule, rooms, professors, classes, times },
@@ -11,7 +14,7 @@ export const HarmonyStepperImportData = () => {
 
   const hasScheduleData = schedule.courses.length > 0;
 
-  const onClick = useCallback(() => {
+  const addSchedulizerDataToStore = useCallback(() => {
     update(
       "professors",
       professors.map((prof) => {
@@ -49,7 +52,7 @@ export const HarmonyStepperImportData = () => {
           {classes.length} class(es), and {times.length} time(s). Would you like to import those?
         </p>
       )}
-      <Button onClick={onClick} variant="outlined">
+      <Button onClick={addSchedulizerDataToStore} variant="outlined">
         Import
       </Button>
       {/* <Button>Download JSON</Button>

@@ -22,6 +22,7 @@ export const HarmonyCourseCheckboxes = ({ course }: HarmonyCourseCheckboxesProps
   const [roomList, setRoomList] = useState<string[]>([]);
 
   useEffect(() => {
+    // TODO: this isn't very efficient. Causes a re-render whenever values update.
     setClass(course, { professors: profList, rooms: roomList, times: timeList });
   }, [course, profList, roomList, setClass, timeList]);
 

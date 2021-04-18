@@ -6,9 +6,10 @@ export interface HarmonyStepperCallbackState extends State {
   pushCallbacks: (callback: () => void) => void;
 }
 
-/* Used to get a handle on different callbacks that need to be run
-  when the Harmony stepper transitions to the next page.
-*/
+/**
+ * Used to get a handle on different callbacks that need to be run
+ * when the Harmony stepper transitions to the next page.
+ */
 export const useHarmonyStepperCallback = create<HarmonyStepperCallbackState>((set) => {
   return {
     callbacks: [],

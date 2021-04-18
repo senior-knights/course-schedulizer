@@ -18,30 +18,13 @@ import {
   useHarmonyStepperCallback,
 } from "utilities/hooks/useHarmonyStepperCallback";
 
-const getSteps = () => {
-  return ["Welcome", "Import Data", "Update Data", "Create Assignments", "Find Schedule"];
-};
-
-// TODO: somehow this should be linked to the values in getSteps
-const getStepContent = (step: number) => {
-  switch (step) {
-    case 0:
-      return <HarmonyStepperWelcome />;
-    case 1:
-      return <HarmonyStepperImportData />;
-    case 2:
-      return <HarmonyStepperUpdateData />;
-    case 3:
-      return <HarmonyStepperAssignments />;
-    case 4:
-      return <HarmonyStepperResult />;
-    default:
-      return <>Unknown step</>;
-  }
-};
-
 // TODO: remove inline styles
-// https://material-ui.com/components/steppers/
+/**
+ * HarmonyStepper is a UI process to set the variables, attributes, and
+ *   constraints to use CSP techniques to find a schedule with no conflicts.
+ *
+ * ref: https://material-ui.com/components/steppers/
+ */
 export const HarmonyStepper = () => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());
@@ -191,6 +174,28 @@ export const HarmonyStepper = () => {
       </Stepper>
     </div>
   );
+};
+
+const getSteps = () => {
+  return ["Welcome", "Import Data", "Update Data", "Create Assignments", "Find Schedule"];
+};
+
+// TODO: somehow this should be linked to the values in getSteps
+const getStepContent = (step: number) => {
+  switch (step) {
+    case 0:
+      return <HarmonyStepperWelcome />;
+    case 1:
+      return <HarmonyStepperImportData />;
+    case 2:
+      return <HarmonyStepperUpdateData />;
+    case 3:
+      return <HarmonyStepperAssignments />;
+    case 4:
+      return <HarmonyStepperResult />;
+    default:
+      return <>Unknown step</>;
+  }
 };
 
 const selector = ({ schedule }: HarmonyResultState) => {

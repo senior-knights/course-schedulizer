@@ -1,6 +1,7 @@
 import { AnimateShowAndHide } from "components";
 import React from "react";
 
+/** First step in Harmony stepper. Welcome and information */
 export const HarmonyStepperWelcome = () => {
   return (
     <>
