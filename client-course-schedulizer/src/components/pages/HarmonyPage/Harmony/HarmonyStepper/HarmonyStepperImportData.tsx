@@ -21,7 +21,7 @@ export const HarmonyStepperImportData = () => {
       }),
     );
     update(
-      "classes",
+      "courses",
       classes.map((c) => {
         return { Course: c };
       }),
