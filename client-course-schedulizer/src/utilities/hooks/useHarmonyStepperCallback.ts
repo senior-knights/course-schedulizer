@@ -14,9 +14,7 @@ export const useHarmonyStepperCallback = create<HarmonyStepperCallbackState>((se
   return {
     callbacks: [],
     clearCallbacks: () => {
-      set(() => {
-        return { callbacks: [] };
-      });
+      set({ callbacks: [] });
     },
     pushCallbacks: (callback) => {
       set((state) => {
