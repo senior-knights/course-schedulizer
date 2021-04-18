@@ -74,7 +74,7 @@
     "runtypes": "5.0.1",
     "xlsx": "0.16.9",
     "yup": "^0.29.3",
-    "zustand": "3.3.3"
+    "zustand": "3.4.1"
   },
   "devDependencies": {
     "@types/isomorphic-fetch": "0.0.35",
