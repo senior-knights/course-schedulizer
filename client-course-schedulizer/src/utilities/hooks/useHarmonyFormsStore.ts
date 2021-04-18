@@ -3,7 +3,6 @@ import create, { GetState, SetState, State } from "zustand";
 /**
  * A hook to get access to a global store storing all values related to the
  *   forms on the Harmony page. Replacement for Context Providers and Reducers.
- * Persists the value in localStorage
  *
  * ref: https://dev.to/karanpratapsingh/simplify-your-store-a-brief-introduction-to-zustand-250h
  */

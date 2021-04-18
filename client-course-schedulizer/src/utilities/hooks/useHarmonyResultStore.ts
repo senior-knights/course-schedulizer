@@ -2,6 +2,7 @@ import { Result } from "@harmoniously/react";
 import { Day, Schedule, SemesterLength, Term } from "utilities/interfaces";
 import create, { GetState, SetState, State } from "zustand";
 
+/** Store the Harmony results */
 export const useHarmonyResultStore = create<HarmonyResultState>(
   (set: SetState<HarmonyResultState>, get: GetState<HarmonyResultState>) => {
     return {
