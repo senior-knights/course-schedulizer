@@ -14,7 +14,7 @@ export const HarmonyFieldArrayForm = (props: HarmonyFieldArrayFormProps) => {
   const update = useHarmonyFormsStore(selector);
 
   const onSubmitCallback = React.useCallback(
-    (data) => {
+    (data: object[]) => {
       update(fieldsName, data);
       onSubmit && onSubmit();
     },

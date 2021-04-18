@@ -13,10 +13,10 @@ import {
   useHarmonyResultStore,
   useRedirect,
 } from "utilities/hooks";
-
-const selector = ({ schedule }: HarmonyResultState) => {
-  return schedule;
-};
+import {
+  HarmonyStepperCallbackState,
+  useHarmonyStepperCallback,
+} from "utilities/hooks/useHarmonyStepperCallback";
 
 const getSteps = () => {
   return ["Welcome", "Import Data", "Update Data", "Create Assignments", "Find Schedule"];
@@ -49,6 +49,7 @@ export const HarmonyStepper = () => {
   const { appDispatch } = useAppContext();
   const redirectTo = useRedirect();
   const schedule = useHarmonyResultStore(selector);
+  const { callbacks, clearCallbacks } = useHarmonyStepperCallback(s);
 
   const isStepOptional = (step: number) => {
     return step === 1;
@@ -69,6 +70,13 @@ export const HarmonyStepper = () => {
       return prevActiveStep + 1;
     });
     setSkipped(newSkipped);
+
+    // run callback if needed
+    callbacks.forEach((cb) => {
+      cb();
+    });
+    // clear callback from store
+    clearCallbacks();
   };
 
   const handleBack = () => {
@@ -183,4 +191,12 @@ export const HarmonyStepper = () => {
       </Stepper>
     </div>
   );
+};
+
+const selector = ({ schedule }: HarmonyResultState) => {
+  return schedule;
+};
+
+const s = ({ callbacks, clearCallbacks }: HarmonyStepperCallbackState) => {
+  return { callbacks, clearCallbacks };
 };

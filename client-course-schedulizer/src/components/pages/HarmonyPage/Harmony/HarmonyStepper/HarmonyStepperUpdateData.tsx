@@ -10,19 +10,19 @@ export const HarmonyStepperUpdateData = () => {
     <>
       <AnimateShowAndHide>Update Data</AnimateShowAndHide>
       <HarmonyFieldArrayForm
-        defaultValue={{ First: "", Last: "" }}
         defaultValues={professors}
+        emptyValue={{ First: "", Last: "" }}
         fieldsName="professors"
       />
       <HarmonyFieldArrayForm
-        defaultValue={{ Course: "" }}
         defaultValues={courses}
+        emptyValue={{ Course: "" }}
         fieldsName="courses"
       />
-      <HarmonyFieldArrayForm defaultValue={{ Room: "" }} defaultValues={rooms} fieldsName="rooms" />
+      <HarmonyFieldArrayForm defaultValues={rooms} emptyValue={{ Room: "" }} fieldsName="rooms" />
       <HarmonyFieldArrayForm
-        defaultValue={{ Time: "" }}
         defaultValues={times}
+        emptyValue={{ Time: "" }}
         fieldsName="times"
         textFieldProps={{ type: "time" }}
       />
