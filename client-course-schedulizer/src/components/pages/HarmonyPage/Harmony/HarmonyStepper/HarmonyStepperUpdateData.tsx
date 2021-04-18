@@ -4,7 +4,7 @@ import React from "react";
 import { useHarmonyFormsStore } from "utilities/hooks";
 
 export const HarmonyStepperUpdateData = () => {
-  const { rooms, courses, professors } = useHarmonyFormsStore();
+  const { rooms, courses, professors, times } = useHarmonyFormsStore();
 
   return (
     <>
@@ -22,6 +22,7 @@ export const HarmonyStepperUpdateData = () => {
       <HarmonyFieldArrayForm defaultValue={{ Room: "" }} defaultValues={rooms} fieldsName="rooms" />
       <HarmonyFieldArrayForm
         defaultValue={{ Time: "" }}
+        defaultValues={times}
         fieldsName="times"
         textFieldProps={{ type: "time" }}
       />

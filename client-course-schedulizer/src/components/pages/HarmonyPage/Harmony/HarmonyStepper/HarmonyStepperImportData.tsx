@@ -4,9 +4,8 @@ import React, { useCallback } from "react";
 import { HarmonyFormsState, useAppContext, useHarmonyFormsStore } from "utilities";
 
 export const HarmonyStepperImportData = () => {
-  // TODO: get times
   const {
-    appState: { schedule, rooms, professors, classes },
+    appState: { schedule, rooms, professors, classes, times },
   } = useAppContext();
   const update = useHarmonyFormsStore(selector);
 
@@ -32,8 +31,13 @@ export const HarmonyStepperImportData = () => {
         return { Room: r };
       }),
     );
-    // update("times", times)
-  }, [classes, professors, rooms, update]);
+    update(
+      "times",
+      times.map((time) => {
+        return { Time: time };
+      }),
+    );
+  }, [classes, professors, rooms, times, update]);
 
   return (
     <>
@@ -42,7 +46,7 @@ export const HarmonyStepperImportData = () => {
       {hasScheduleData && (
         <p>
           We found schedule data: {rooms.length} room(s), {professors.length} professor(s),{" "}
-          {classes.length} class(es), and {undefined} time(s). Would you like to import those?
+          {classes.length} class(es), and {times.length} time(s). Would you like to import those?
         </p>
       )}
       <Button onClick={onClick} variant="outlined">
