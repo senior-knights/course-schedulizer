@@ -1,6 +1,7 @@
 import { Box, Card, CardContent, Grid } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import {
+  HarmonyAssignmentsState,
   HarmonyFormsAccessors,
   HarmonyFormsState,
   SingularAccessors,
@@ -16,7 +17,7 @@ interface HarmonyCourseCheckboxesProps {
 /** All of the check box lists for each attribute for a specific class */
 export const HarmonyCourseCheckboxes = ({ course }: HarmonyCourseCheckboxesProps) => {
   const [professors, times, rooms] = useHarmonyFormsStore(selector);
-  const { setClass } = useHarmonyAssignmentsStore();
+  const setClass = useHarmonyAssignmentsStore(assignmentsSelector);
   const [profList, setProfList] = useState<string[]>([]);
   const [timeList, setTimeList] = useState<string[]>([]);
   const [roomList, setRoomList] = useState<string[]>([]);
@@ -63,4 +64,8 @@ export const HarmonyCourseCheckboxes = ({ course }: HarmonyCourseCheckboxesProps
 // pick values from store.
 const selector = ({ professors, times, rooms }: HarmonyFormsState) => {
   return [professors, times, rooms];
+};
+
+const assignmentsSelector = ({ setClass }: HarmonyAssignmentsState) => {
+  return setClass;
 };

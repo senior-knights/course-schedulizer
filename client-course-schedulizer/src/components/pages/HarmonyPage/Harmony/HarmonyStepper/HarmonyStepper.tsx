@@ -32,7 +32,7 @@ export const HarmonyStepper = () => {
   const { appDispatch } = useAppContext();
   const redirectTo = useRedirect();
   const schedule = useHarmonyResultStore(selector);
-  const { callbacks, clearCallbacks } = useHarmonyStepperCallback(s);
+  const { callbacks, clearCallbacks } = useHarmonyStepperCallback(stepperSelector);
 
   const isStepOptional = (step: number) => {
     return step === 1;
@@ -202,6 +202,6 @@ const selector = ({ schedule }: HarmonyResultState) => {
   return schedule;
 };
 
-const s = ({ callbacks, clearCallbacks }: HarmonyStepperCallbackState) => {
+const stepperSelector = ({ callbacks, clearCallbacks }: HarmonyStepperCallbackState) => {
   return { callbacks, clearCallbacks };
 };

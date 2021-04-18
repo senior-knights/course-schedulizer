@@ -1,13 +1,13 @@
 import { HarmonyFieldArrayForm } from "components";
 import { AnimateShowAndHide } from "components/reuseables";
 import React from "react";
-import { useHarmonyFormsStore } from "utilities/hooks";
+import { HarmonyFormsState, useHarmonyFormsStore } from "utilities/hooks";
 
 /** Third step in HarmonyStepper. Allows users to make changes to
  *   rooms, courses, professors, and times a schedule can have.
  */
 export const HarmonyStepperUpdateData = () => {
-  const { rooms, courses, professors, times } = useHarmonyFormsStore();
+  const { rooms, courses, professors, times } = useHarmonyFormsStore(selector);
 
   return (
     <>
@@ -31,4 +31,8 @@ export const HarmonyStepperUpdateData = () => {
       />
     </>
   );
+};
+
+const selector = ({ rooms, courses, professors, times }: HarmonyFormsState) => {
+  return { courses, professors, rooms, times };
 };
