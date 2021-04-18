@@ -47,8 +47,16 @@ export const FieldArrayForm = ({
   });
 
   const onFormSubmit = useCallback(
+    // kinda a hack to get this to work and not do a full page submit. Ideally this would be in another callback onSave
     handleSubmit((formData) => {
-      onSubmit && onSubmit(formData[titleCaseName] as object[]);
+      const dataWithNoEmpty = (formData as { [key: string]: object[] })[titleCaseName].filter(
+        (obj) => {
+          return Object.entries(obj).every(([, value]) => {
+            return value !== "";
+          });
+        },
+      );
+      onSubmit && onSubmit(dataWithNoEmpty);
     }),
     [handleSubmit, onSubmit, titleCaseName],
   );
