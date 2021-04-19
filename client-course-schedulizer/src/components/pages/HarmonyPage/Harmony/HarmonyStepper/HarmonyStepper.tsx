@@ -9,14 +9,12 @@ import {
 import React, { useCallback, useEffect } from "react";
 import {
   HarmonyResultState,
+  HarmonyStepperCallbackState,
   useAppContext,
   useHarmonyResultStore,
+  useHarmonyStepperCallback,
   useRedirect,
 } from "utilities/hooks";
-import {
-  HarmonyStepperCallbackState,
-  useHarmonyStepperCallback,
-} from "utilities/hooks/useHarmonyStepperCallback";
 
 // TODO: remove inline styles
 /**

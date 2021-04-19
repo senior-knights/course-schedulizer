@@ -4,10 +4,7 @@ import toLower from "lodash/toLower";
 import React, { useCallback, useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { FieldArrayFormProvider } from "utilities";
-import {
-  HarmonyStepperCallbackState,
-  useHarmonyStepperCallback,
-} from "utilities/hooks/useHarmonyStepperCallback";
+import { HarmonyStepperCallbackState, useHarmonyStepperCallback } from "utilities/hooks";
 import { FieldArrayFields } from "./FieldArrayFields";
 import { FieldArrayFormActionButtons } from "./FieldArrayFormActionButtons";
 
