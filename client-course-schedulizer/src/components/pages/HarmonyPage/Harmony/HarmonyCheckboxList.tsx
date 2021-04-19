@@ -1,4 +1,6 @@
-import React, { Dispatch, SetStateAction } from "react";
+import { ClassLimits } from "@harmoniously/react";
+import React, { Dispatch, SetStateAction, useMemo } from "react";
+import { HarmonyAssignmentsState, useHarmonyAssignmentsStore } from "utilities/hooks";
 import { HarmonyCheckbox } from "./HarmonyCheckbox";
 
 interface HarmonyCheckboxListProps<T> {
@@ -18,6 +20,13 @@ export const HarmonyCheckboxList = <T extends unknown[]>({
   customLabel,
   setList,
 }: HarmonyCheckboxListProps<T>) => {
+  const assignments = useHarmonyAssignmentsStore(assignmentsSelector);
+
+  const inferredAssignmentsList = useMemo(() => {
+    const thing = assignments[course][id as keyof ClassLimits];
+    return thing;
+  }, [assignments, course, id]);
+
   return (
     <div>
       <h3>{id}</h3>
@@ -25,7 +34,15 @@ export const HarmonyCheckboxList = <T extends unknown[]>({
       {list.map((itemObj: any) => {
         const item: string =
           (customLabel && customLabel(itemObj)) || itemObj[Object.keys(itemObj)[0]];
-        return <HarmonyCheckbox key={`${item}-${course}`} item={item} setList={setList} />;
+        const defaultValue = inferredAssignmentsList.includes(item);
+        return (
+          <HarmonyCheckbox
+            key={`${item}-${course}`}
+            defaultValue={defaultValue}
+            item={item}
+            setList={setList}
+          />
+        );
       })}
     </div>
   );
@@ -33,4 +50,8 @@ export const HarmonyCheckboxList = <T extends unknown[]>({
 
 HarmonyCheckboxList.defaultProps = {
   customLabel: undefined,
+};
+
+const assignmentsSelector = ({ assignments }: HarmonyAssignmentsState) => {
+  return assignments;
 };

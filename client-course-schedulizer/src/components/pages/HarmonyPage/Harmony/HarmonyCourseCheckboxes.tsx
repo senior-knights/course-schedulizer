@@ -1,5 +1,5 @@
-import { Box, Card, CardContent, Grid } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import { Box, Button, Card, CardContent, Grid } from "@material-ui/core";
+import React, { useCallback, useState } from "react";
 import {
   HarmonyAssignmentsState,
   HarmonyFormsAccessors,
@@ -22,8 +22,7 @@ export const HarmonyCourseCheckboxes = ({ course }: HarmonyCourseCheckboxesProps
   const [timeList, setTimeList] = useState<string[]>([]);
   const [roomList, setRoomList] = useState<string[]>([]);
 
-  useEffect(() => {
-    // TODO: this isn't very efficient. Causes a re-render whenever values update.
+  const onSave = useCallback(() => {
     setClass(course, { professors: profList, rooms: roomList, times: timeList });
   }, [course, profList, roomList, setClass, timeList]);
 
@@ -55,6 +54,9 @@ export const HarmonyCourseCheckboxes = ({ course }: HarmonyCourseCheckboxesProps
               setList={setRoomList}
             />
           </Grid>
+          <Button onClick={onSave} type="button">
+            Save
+          </Button>
         </CardContent>
       </Card>
     </Box>

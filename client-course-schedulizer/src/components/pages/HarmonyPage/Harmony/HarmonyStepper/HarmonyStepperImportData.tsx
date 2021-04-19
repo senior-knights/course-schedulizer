@@ -1,7 +1,14 @@
+import { Assignments } from "@harmoniously/react";
 import { Button } from "@material-ui/core";
 import { AnimateShowAndHide } from "components/reuseables";
 import React, { useCallback } from "react";
-import { HarmonyFormsState, useAppContext, useHarmonyFormsStore } from "utilities";
+import {
+  HarmonyAssignmentsState,
+  HarmonyFormsState,
+  useAppContext,
+  useHarmonyAssignmentsStore,
+  useHarmonyFormsStore,
+} from "utilities";
 
 /** Second step in Harmony Stepper. Allows users to import data
  *   and assignments from the current schedule.
@@ -11,6 +18,7 @@ export const HarmonyStepperImportData = () => {
     appState: { schedule, rooms, professors, classes, times },
   } = useAppContext();
   const update = useHarmonyFormsStore(selector);
+  const setAssignments = useHarmonyAssignmentsStore(assignmentsSelector);
 
   const hasScheduleData = schedule.courses.length > 0;
 
@@ -40,7 +48,20 @@ export const HarmonyStepperImportData = () => {
         return { Time: time };
       }),
     );
-  }, [classes, professors, rooms, times, update]);
+    // generated assignments based on current data, professor can only teach certain classes. Any times allowed.
+
+    // foreach class, find the professor that teaches it. then add to the assignments
+    const inferredAssignments: Assignments = {};
+    classes.forEach((cls) => {
+      inferredAssignments[cls] = {
+        // TODO: update this for professors
+        professors,
+        rooms,
+        times,
+      };
+    });
+    setAssignments(inferredAssignments);
+  }, [classes, professors, rooms, setAssignments, times, update]);
 
   return (
     <>
@@ -63,4 +84,8 @@ export const HarmonyStepperImportData = () => {
 
 const selector = (state: HarmonyFormsState) => {
   return state.update;
+};
+
+const assignmentsSelector = (state: HarmonyAssignmentsState) => {
+  return state.setAssignments;
 };

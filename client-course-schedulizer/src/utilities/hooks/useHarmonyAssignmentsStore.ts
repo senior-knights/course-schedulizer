@@ -9,6 +9,11 @@ export const useHarmonyAssignmentsStore = create<HarmonyAssignmentsState>(
   immer<HarmonyAssignmentsState>((set) => {
     return {
       assignments: {},
+      setAssignments: (newAssignments: Assignments) => {
+        set((state) => {
+          state.assignments = newAssignments;
+        });
+      },
       setClass: (className: string, attributes: ClassLimits) => {
         set((state) => {
           state.assignments[className] = attributes;
@@ -20,5 +25,6 @@ export const useHarmonyAssignmentsStore = create<HarmonyAssignmentsState>(
 
 export interface HarmonyAssignmentsState extends State {
   assignments: Assignments;
+  setAssignments: (newAssignments: Assignments) => void;
   setClass: (className: string, setAttributes: ClassLimits) => void;
 }
