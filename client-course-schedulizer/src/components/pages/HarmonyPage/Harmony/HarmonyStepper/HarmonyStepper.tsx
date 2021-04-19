@@ -16,7 +16,7 @@ import {
   useRedirect,
 } from "utilities/hooks";
 
-// TODO: remove inline styles
+// TODO: remove inline styles. better performance using .scss?
 /**
  * HarmonyStepper is a UI process to set the variables, attributes, and
  *   constraints to use CSP techniques to find a schedule with no conflicts.
@@ -125,13 +125,14 @@ export const HarmonyStepper = () => {
               {getStepContent(activeStep)}
             </div>
             <div style={{ flex: "0 1 auto", textAlign: "end" }}>
-              <Button
+              {/* TODO: state is not persisted, so back has no use currently */}
+              {/* <Button
                 className="harmony-stepper-button"
                 disabled={activeStep === 0}
                 onClick={handleBack}
               >
                 Back
-              </Button>
+              </Button> */}
               {isStepOptional(activeStep) && (
                 <Button
                   className="harmony-stepper-button"

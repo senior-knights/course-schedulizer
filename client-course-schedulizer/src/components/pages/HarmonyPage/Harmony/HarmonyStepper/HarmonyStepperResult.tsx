@@ -1,4 +1,4 @@
-import { AnimateShowAndHide, Harmony, HarmonySchedule } from "components";
+import { AnimateShowAndHide, Harmony } from "components";
 import React from "react";
 
 /** Fifth step in HarmonyStepper. Shows the results of Harmony
@@ -9,7 +9,7 @@ export const HarmonyStepperResult = () => {
     <>
       <AnimateShowAndHide>Results</AnimateShowAndHide>
       <Harmony />
-      <HarmonySchedule />
+      {/* <HarmonySchedule /> */}
     </>
   );
 };
