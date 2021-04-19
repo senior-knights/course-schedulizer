@@ -24,7 +24,7 @@ export const Harmony = () => {
         assignments={assignments}
         autoRun
         button={HideButton}
-        footer={Footer}
+        footer={<Footer />}
         header={<></>}
         setResult={setRes}
       />
