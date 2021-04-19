@@ -1,4 +1,4 @@
-import { Harmony as HarmonyBase, Result } from "@harmoniously/react";
+import { CustomButtonProps, Harmony as HarmonyBase, Result } from "@harmoniously/react";
 import React, { useEffect, useState } from "react";
 import {
   HarmonyAssignmentsState,
@@ -20,7 +20,14 @@ export const Harmony = () => {
 
   return (
     <>
-      <HarmonyBase assignments={assignments} setResult={setRes} />
+      <HarmonyBase
+        assignments={assignments}
+        autoRun
+        button={HideButton}
+        footer={Footer}
+        header={<></>}
+        setResult={setRes}
+      />
     </>
   );
 };
@@ -31,4 +38,20 @@ const selector = ({ assignments }: HarmonyAssignmentsState) => {
 
 const resultSelector = ({ setResult }: HarmonyResultState) => {
   return setResult;
+};
+
+// TODO: update harmoniously API to hide buttons. https://github.com/charkour/harmoniously/issues/43
+const HideButton = (props: CustomButtonProps) => {
+  return <></>;
+};
+
+const Footer: React.FC = () => {
+  return (
+    <small>
+      powered by{" "}
+      <a href="https://github.com/charkour/harmoniously">
+        <code>harmoniously</code>
+      </a>
+    </small>
+  );
 };
