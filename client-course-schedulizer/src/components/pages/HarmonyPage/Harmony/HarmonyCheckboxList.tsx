@@ -1,5 +1,5 @@
 import { ClassLimits } from "@harmoniously/react";
-import React, { Dispatch, SetStateAction, useMemo } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useMemo } from "react";
 import { HarmonyAssignmentsState, useHarmonyAssignmentsStore } from "utilities/hooks";
 import { HarmonyCheckbox } from "./HarmonyCheckbox";
 
@@ -23,9 +23,13 @@ export const HarmonyCheckboxList = <T extends unknown[]>({
   const assignments = useHarmonyAssignmentsStore(assignmentsSelector);
 
   const inferredAssignmentsList = useMemo(() => {
-    const thing = assignments[course][id as keyof ClassLimits];
-    return thing;
+    const inferredAssignments = assignments[course][id as keyof ClassLimits];
+    return inferredAssignments;
   }, [assignments, course, id]);
+
+  useEffect(() => {
+    setList(inferredAssignmentsList);
+  });
 
   return (
     <div>

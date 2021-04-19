@@ -1,12 +1,14 @@
 import { Box, Button, Card, CardContent, Grid } from "@material-ui/core";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   HarmonyAssignmentsState,
   HarmonyFormsAccessors,
   HarmonyFormsState,
+  HarmonyStepperCallbackState,
   SingularAccessors,
   useHarmonyAssignmentsStore,
   useHarmonyFormsStore,
+  useHarmonyStepperCallback,
 } from "utilities/hooks";
 import { HarmonyCheckboxList } from "./HarmonyCheckboxList";
 
@@ -18,6 +20,8 @@ interface HarmonyCourseCheckboxesProps {
 export const HarmonyCourseCheckboxes = ({ course }: HarmonyCourseCheckboxesProps) => {
   const [professors, times, rooms] = useHarmonyFormsStore(selector);
   const setClass = useHarmonyAssignmentsStore(assignmentsSelector);
+  const pushCallbacks = useHarmonyStepperCallback(stepperSelector);
+
   const [profList, setProfList] = useState<string[]>([]);
   const [timeList, setTimeList] = useState<string[]>([]);
   const [roomList, setRoomList] = useState<string[]>([]);
@@ -25,6 +29,10 @@ export const HarmonyCourseCheckboxes = ({ course }: HarmonyCourseCheckboxesProps
   const onSave = useCallback(() => {
     setClass(course, { professors: profList, rooms: roomList, times: timeList });
   }, [course, profList, roomList, setClass, timeList]);
+
+  useEffect(() => {
+    pushCallbacks(onSave);
+  }, [onSave, pushCallbacks]);
 
   return (
     <Box mb={2}>
@@ -70,4 +78,8 @@ const selector = ({ professors, times, rooms }: HarmonyFormsState) => {
 
 const assignmentsSelector = ({ setClass }: HarmonyAssignmentsState) => {
   return setClass;
+};
+
+const stepperSelector = (state: HarmonyStepperCallbackState) => {
+  return state.pushCallbacks;
 };
