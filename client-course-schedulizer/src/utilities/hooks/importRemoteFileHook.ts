@@ -34,15 +34,13 @@ export const useImportRemoteFile = () => {
             return response.text();
           })
           .then(async (result) => {
-            await appDispatch({ payload: { fileUrl: csvUrl }, type: "setFileUrl" });
+            appDispatch({ payload: { fileUrl: csvUrl }, type: "setFileUrl" });
             if (result) {
               const newSchedule = csvStringToSchedule(result);
-              await updateScheduleInContext(schedule, newSchedule, appDispatch, setIsCSVLoading);
-              clearSearchParams();
-            } else {
-              setIsCSVLoading(false);
-              clearSearchParams();
+              await updateScheduleInContext(schedule, newSchedule, appDispatch);
             }
+            clearSearchParams();
+            setIsCSVLoading(false);
           });
       } else {
         clearSearchParams();
@@ -59,17 +57,15 @@ export const useImportRemoteFile = () => {
             return response.arrayBuffer();
           })
           .then(async (result) => {
-            await appDispatch({ payload: { fileUrl: xlsxUrl }, type: "setFileUrl" });
+            appDispatch({ payload: { fileUrl: xlsxUrl }, type: "setFileUrl" });
             if (result) {
               const newSchedule = csvStringToSchedule(
                 getCSVFromXLSXData(result as ArrayBufferLike),
               );
-              await updateScheduleInContext(schedule, newSchedule, appDispatch, setIsCSVLoading);
-              clearSearchParams();
-            } else {
-              setIsCSVLoading(false);
-              clearSearchParams();
+              await updateScheduleInContext(schedule, newSchedule, appDispatch);
             }
+            clearSearchParams();
+            setIsCSVLoading(false);
           });
       } else {
         clearSearchParams();

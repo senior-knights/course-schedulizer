@@ -1,8 +1,6 @@
 import { voidFn } from "utilities";
-import { AppAction, AppState, ColorBy, Term } from "utilities/interfaces";
-import { getClasses, getMinAndMaxTimes, getProfs, getRooms } from "utilities/services";
-
-const DEFAULT_PAGE = 0;
+import { AppAction, AppState, ColorBy, SchedulizerTab, Term } from "utilities/interfaces";
+import { getClasses, getDepts, getMinAndMaxTimes, getProfs, getRooms } from "utilities/services";
 
 /*
   Provides a function to perform multiple setState updates
@@ -21,6 +19,7 @@ export const reducer = (actionCallback: (item: AppState) => void = voidFn) => {
         newState = {
           ...state,
           classes: getClasses(schedule),
+          departments: getDepts(schedule),
           professors: getProfs(schedule),
           rooms: getRooms(schedule),
           schedule,
@@ -49,7 +48,7 @@ export const reducer = (actionCallback: (item: AppState) => void = voidFn) => {
       }
       case "setSchedulizerTab": {
         let { schedulizerTab } = action.payload;
-        schedulizerTab = schedulizerTab || DEFAULT_PAGE;
+        schedulizerTab = schedulizerTab || SchedulizerTab.Faculty;
         newState = { ...state, schedulizerTab };
         break;
       }

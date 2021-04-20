@@ -1,13 +1,7 @@
 import { filter, indexOf, isEqual, map } from "lodash";
 import moment from "moment";
 import { CheckboxTerms } from "utilities";
-import {
-  instructorCase,
-  locationCase,
-  prefixCase,
-  startTimeCase,
-  yearCase,
-} from "utilities/helpers";
+import { locationCase, startTimeCase, yearCase } from "utilities/helpers";
 import {
   Course,
   CourseSectionMeeting,
@@ -23,36 +17,39 @@ import {
   SemesterLength,
   SemesterLengthOption,
   Term,
+  updateIdentifyingCourseInfo,
+  updateIdentifyingSectionInfo,
   Weekday,
 } from "utilities/interfaces";
+import { getLocationString } from "./scheduleService";
 
 type CheckboxDays = (Day | boolean)[];
 
 // Defines interface for the section popover input
 export interface SectionInput {
   anticipatedSize?: Section["anticipatedSize"];
-  comments: Section["comments"];
+  comments?: Section["comments"];
   day10Used?: Section["day10Used"];
   days: CheckboxDays;
-  department: Course["department"];
+  department?: Course["department"];
   duration?: Meeting["duration"];
-  facultyHours: Section["facultyHours"];
+  facultyHours?: Section["facultyHours"];
   globalMax?: Section["globalMax"];
-  halfSemester: Half;
-  instructionalMethod: Section["instructionalMethod"];
-  instructor: Instructor;
-  intensiveSemester: Intensive;
+  halfSemester?: Half;
+  instructionalMethod?: Section["instructionalMethod"];
+  instructor: Instructor[];
+  intensiveSemester?: Intensive;
   localMax?: Section["localMax"];
   location: string;
   name: Course["name"];
   number: Course["number"];
-  prefix: Prefix;
+  prefix: Prefix[];
   roomCapacity?: Location["roomCapacity"];
   section: Section["letter"];
   semesterLength: SemesterLengthOption;
   startTime: Meeting["startTime"];
-  status: Section["status"];
-  studentHours: Section["studentHours"];
+  status?: Section["status"];
+  studentHours?: Section["studentHours"];
   term: Section["term"];
   used?: Section["used"];
   year: string; // Assume string till yearCase() decides
@@ -60,8 +57,8 @@ export interface SectionInput {
 
 export interface NonTeachingLoadInput {
   activity: Section["instructionalMethod"];
-  facultyHours: Section["facultyHours"];
-  instructor: Instructor;
+  facultyHours?: Section["facultyHours"];
+  instructor: Instructor[];
   terms: CheckboxTerms;
 }
 
@@ -117,18 +114,22 @@ export const getSection = (
   letter: Section["letter"],
   term: Section["term"],
   instructors: Section["instructors"],
+  instructionalMethod: Section["instructionalMethod"],
 ) => {
   const course = getCourse(schedule, prefixes, courseNumber);
   const sections = filter(course?.sections, (section) => {
     return (
       section.letter === letter &&
       section.term === term &&
-      isEqual(section.instructors, instructors)
+      isEqual(section.instructors, instructors) &&
+      section.instructionalMethod === instructionalMethod
     );
   });
   return sections.length > 0 ? sections[0] : undefined;
 };
 
+// Deprecated, replaced by removeMeeting
+// TODO: Remove?
 const removeSection = (
   schedule: Schedule,
   letter: Section["letter"],
@@ -160,10 +161,10 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
   const locationValue = (
     (data &&
       data.meeting &&
-      `${data?.meeting?.location.building} ${data?.meeting?.location.roomNumber}`) ||
+      data.meeting.location.building &&
+      getLocationString(data.meeting.location)) ||
     ""
   ).trim();
-
   let defaultTerm = data?.section.term;
   if (Array.isArray(defaultTerm)) {
     [defaultTerm] = defaultTerm;
@@ -173,22 +174,22 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
 
   return {
     anticipatedSize: data?.section.anticipatedSize,
-    comments: data?.section.comments ?? "",
+    comments: data?.section.comments?.trim() === "" ? undefined : data?.section.comments,
     day10Used: data?.section.day10Used,
     days,
-    department: data?.course.department ?? "",
+    department: data?.course.department,
     duration: data?.meeting?.duration,
     facultyHours:
-      data?.section.facultyHours !== undefined
-        ? data?.section.facultyHours
-        : data?.course.facultyHours || 0,
+      data?.section.facultyHours !== undefined && data.section.facultyHours > -1
+        ? data.section.facultyHours
+        : undefined,
     globalMax: data?.section.globalMax,
     halfSemester: ((data?.section.semesterLength &&
     convertFromSemesterLength(data?.section.semesterLength) === SemesterLengthOption.HalfSemester
       ? data?.section.semesterLength
       : SemesterLength.HalfFirst) as unknown) as Half,
     instructionalMethod: data?.section.instructionalMethod ?? "LEC",
-    instructor: data?.section.instructors.join() || "",
+    instructor: data?.section.instructors ?? [],
     intensiveSemester: ((data?.section.semesterLength &&
     convertFromSemesterLength(data?.section.semesterLength) ===
       SemesterLengthOption.IntensiveSemester
@@ -196,20 +197,20 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
       : SemesterLength.IntensiveA) as unknown) as Intensive,
     localMax: data?.section.localMax,
     location: locationValue,
-    name: data?.course.name || "",
-    number: data?.course.number || "",
-    prefix: data?.course.prefixes.join() || "",
+    name: data?.section.name ?? data?.course.name ?? "",
+    number: data?.course.number ?? "",
+    prefix: data?.course.prefixes ?? [],
     roomCapacity: data?.meeting?.location.roomCapacity,
-    section: data?.section.letter || "",
+    section: data?.section.letter ?? "",
     semesterLength: convertFromSemesterLength(data?.section.semesterLength),
     startTime: data?.meeting?.startTime
       ? moment(data?.meeting?.startTime, "h:mm A").format("HH:mm")
       : "08:00",
     status: data?.section.status ?? "Active",
     studentHours:
-      data?.section.studentHours !== undefined
-        ? data?.section.studentHours
-        : data?.course.studentHours || 0,
+      data?.section.studentHours !== undefined && data.section.studentHours > -1
+        ? data.section.studentHours
+        : undefined,
     term: defaultTerm || Term.Fall,
     used: data?.section.used,
     year: data?.section.year?.toString() ?? "",
@@ -222,27 +223,27 @@ const createNewSectionFromInput = (data: SectionInput): Section => {
     data.intensiveSemester || data.halfSemester || data.semesterLength,
   );
 
-  const building = location[0];
-  const roomNumber = location[1];
+  const building = location ? location[0] : "";
+  const roomNumber = location ? location[1] : "";
 
   return {
-    anticipatedSize: Number(data.anticipatedSize),
+    anticipatedSize: data.anticipatedSize,
     comments: data.comments,
-    day10Used: Number(data.day10Used),
+    day10Used: data.day10Used,
     endDate: "",
     facultyHours: Number(data.facultyHours),
-    globalMax: Number(data.globalMax),
+    globalMax: data.globalMax,
     instructionalMethod: data.instructionalMethod,
-    instructors: instructorCase(data.instructor),
+    instructors: data.instructor,
     letter: data.section,
-    localMax: Number(data.localMax),
+    localMax: data.localMax,
     meetings: [
       {
         days: data.days as Day[],
         duration: Number(data.duration),
         location: {
           building,
-          roomCapacity: Number(data.roomCapacity),
+          roomCapacity: data.roomCapacity,
           roomNumber,
         },
         startTime: startTimeCase(data.startTime),
@@ -254,7 +255,7 @@ const createNewSectionFromInput = (data: SectionInput): Section => {
     studentHours: Number(data.studentHours),
     term: data.term,
     termStart: "",
-    used: Number(data.used),
+    used: data.used,
     year: yearCase(data.year),
   };
 };
@@ -262,17 +263,16 @@ const createNewSectionFromInput = (data: SectionInput): Section => {
 const createNewCourseFromInput = (data: SectionInput): Course => {
   return {
     department: data.department,
-    facultyHours: Number(data.facultyHours),
     name: data.name,
     number: data.number,
-    prefixes: prefixCase(data.prefix),
+    prefixes: data.prefix,
     // The newSection will be added later in insertSectionCourse()
     sections: [],
-    studentHours: Number(data.studentHours),
   };
 };
 
-// If there is an old version of the Section...
+// Deprecated, replaced by handleOldMeeting
+// TODO: Remove?
 export const handleOldSection = (
   oldData: CourseSectionMeeting | undefined,
   newSection: Section,
@@ -300,6 +300,8 @@ export const handleOldSection = (
   }
 };
 
+// Deprecated, replaced by removeMeetingFromSchedule
+// TODO: Remove?
 export const removeSectionFromSchedule = (
   data: CourseSectionMeeting | undefined,
   schedule: Schedule,
@@ -322,4 +324,107 @@ export const addFalseToDaysCheckboxList = (days?: Day[]): CheckboxDays => {
   return map(weekdays, (wd: Day) => {
     return days.includes(wd) ? wd : false;
   });
+};
+
+export const handleOldMeeting = (
+  oldData: CourseSectionMeeting | undefined,
+  newSection: Section,
+  newCourse: Course,
+  removeOldMeeting: boolean,
+  schedule: Schedule,
+) => {
+  const oldMeeting = oldData?.meeting;
+  let oldSection = oldData?.section;
+  let oldCourse = oldData?.course;
+  const courseIndex = indexOf(schedule.courses, oldCourse);
+  const sectionIndex = indexOf(oldCourse?.sections, oldSection);
+  if (oldSection) {
+    // If the year, term, and semester length haven't changed...
+    if (
+      String(newSection.year) === String(oldSection.year) &&
+      newSection.term === oldSection.term &&
+      newSection.semesterLength === oldSection.semesterLength
+    ) {
+      // Update the new Section to match the date fields of the old Section
+      newSection.termStart = oldSection.termStart;
+      newSection.startDate = oldSection.startDate;
+      newSection.endDate = oldSection.endDate;
+    }
+  }
+  // If the user pressed 'update' rather than 'add'...
+  if (removeOldMeeting && oldData) {
+    if (oldCourse) {
+      // Update identifying Course fields which were changed
+      oldCourse = updateIdentifyingCourseInfo(oldCourse, newCourse);
+      schedule.courses[courseIndex] = oldCourse;
+    }
+    if (oldSection) {
+      // Update identifying Section fields which were changed
+      oldSection = updateIdentifyingSectionInfo(oldSection, newSection);
+      schedule.courses[courseIndex].sections[sectionIndex] = oldSection;
+    }
+    if (oldMeeting) {
+      // Remove the old version of the Meeting
+      removeMeetingFromSchedule(
+        oldData,
+        schedule,
+        oldMeeting,
+        oldSection,
+        oldCourse,
+        newSection.isNonTeaching,
+      );
+    }
+  }
+};
+
+export const removeMeetingFromSchedule = (
+  data: CourseSectionMeeting | undefined,
+  schedule: Schedule,
+  oldMeeting: Meeting | undefined,
+  oldSection: Section | undefined,
+  oldCourse: Course | undefined,
+  hardDelete = true,
+) => {
+  const courseIndex = indexOf(schedule.courses, oldCourse);
+  const sectionIndex = indexOf(schedule.courses[courseIndex].sections, oldSection);
+  const meetingIndex = indexOf(
+    schedule.courses[courseIndex].sections[sectionIndex].meetings,
+    oldMeeting,
+  );
+  const oldSectionHadMeetings = !!(oldSection && oldSection.meetings.length);
+  removeMeeting(
+    schedule,
+    meetingIndex,
+    sectionIndex,
+    courseIndex,
+    hardDelete,
+    oldSectionHadMeetings,
+  );
+};
+
+const removeMeeting = (
+  schedule: Schedule,
+  meetingIndex: number,
+  sectionIndex: number,
+  courseIndex: number,
+  hardDelete: boolean,
+  oldSectionHadMeetings: boolean,
+) => {
+  // Remove the oldMeeting from the sections meetings
+  if (meetingIndex >= 0) {
+    schedule.courses[courseIndex].sections[sectionIndex].meetings.splice(meetingIndex, 1);
+  }
+  // If user pressed delete button and/or the old section had meetings before, delete section if no meetings left
+  if (
+    (hardDelete || oldSectionHadMeetings) &&
+    courseIndex >= 0 &&
+    sectionIndex >= 0 &&
+    !schedule.courses[courseIndex].sections[sectionIndex].meetings.length
+  ) {
+    schedule.courses[courseIndex].sections.splice(sectionIndex, 1);
+    // Delete course if no sections left
+    if (!schedule.courses[courseIndex].sections.length) {
+      schedule.courses.splice(courseIndex, 1);
+    }
+  }
 };

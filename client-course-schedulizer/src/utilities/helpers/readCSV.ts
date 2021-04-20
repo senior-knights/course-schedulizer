@@ -1,6 +1,15 @@
-import { cloneDeep } from "lodash";
+import { cloneDeep, isEqual } from "lodash";
 import papa from "papaparse";
-import { Course, emptyCourse, emptySection, Meeting, Schedule, Section } from "utilities";
+import {
+  Course,
+  emptyCourse,
+  emptySection,
+  Meeting,
+  Schedule,
+  Section,
+  updateNonIdentifyingCourseInfo,
+  updateNonIdentifyingSectionInfo,
+} from "utilities";
 import { getCourse, getSection } from "utilities/services";
 import * as cf from "./caseFunctions";
 
@@ -45,6 +54,7 @@ const registrarSpreadsheetFields: ValidFields = {
   FacultyLoad: cf.facultyHoursCallback,
   GlobalMax: cf.globalMaxCallback,
   InstructionalMethod: cf.instructionalMethodCallback,
+  LastEditTimestamp: cf.timestampCallback,
   LocalMax: cf.localMaxCallback,
   MeetingDays: cf.daysCallback,
   MeetingDurationMinutes: cf.durationCallback,
@@ -56,6 +66,7 @@ const registrarSpreadsheetFields: ValidFields = {
   SectionEndDate: cf.endDateCallback,
   SectionStartDate: cf.startDateCallback,
   SectionStatus: cf.statusCallback,
+  SemesterLength: cf.semesterLengthCallback,
   ShortTitle: cf.nameCallback,
   SubjectCode: cf.prefixCallback,
   Term: cf.termCallback,
@@ -152,19 +163,51 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
       section.letter,
       section.term,
       section.instructors,
+      section.instructionalMethod,
     );
+
+    // Update Course fields which were changed
+    schedule.courses[existingCourseIndex] = updateNonIdentifyingCourseInfo(existingCourse, course);
+    if (course.name !== schedule.courses[existingCourseIndex].name) {
+      section.name = course.name;
+    }
+
+    // Update the section name if the received name is different than the course name (section name will override the course name)
+    if (course.name !== schedule.courses[existingCourseIndex].name) {
+      section.name = course.name;
+    }
 
     // If there is, add the new meeting(s) to the existing course
     if (existingSection) {
       const existingSectionIndex = schedule.courses[existingCourseIndex].sections.indexOf(
         existingSection,
       );
-      // TODO: Avoid duplicate meetings?
+      const newMeetings = section.meetings;
+
+      // Update Section fields which were changed
       schedule.courses[existingCourseIndex].sections[
         existingSectionIndex
-      ].meetings = schedule.courses[existingCourseIndex].sections[
-        existingSectionIndex
-      ].meetings.concat(section.meetings);
+      ] = updateNonIdentifyingSectionInfo(existingSection, section);
+
+      // Only add meetings which don't already exist
+      newMeetings.forEach((newMeeting) => {
+        let meetingExists = false;
+        schedule.courses[existingCourseIndex].sections[existingSectionIndex].meetings.forEach(
+          (oldMeeting) => {
+            // Short-circuit if duplicate is found
+            if (!meetingExists && isEqual(newMeeting, oldMeeting)) {
+              meetingExists = true;
+            }
+          },
+        );
+        if (!meetingExists) {
+          schedule.courses[existingCourseIndex].sections[
+            existingSectionIndex
+          ].meetings = schedule.courses[existingCourseIndex].sections[
+            existingSectionIndex
+          ].meetings.concat(newMeeting);
+        }
+      });
     }
     // Otherwise, add the new section to the existing course
     else {

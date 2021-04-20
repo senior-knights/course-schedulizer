@@ -2,8 +2,8 @@ import { readFileSync } from "fs";
 import { join } from "path";
 import { Course, Day, Schedule, Section, SemesterLength, Term } from "../interfaces/dataInterfaces";
 import { csvStringToSchedule } from "./readCSV";
-import { scheduleToCSVString } from "./writeCSV";
 import { scheduleToFullCSVString } from "./writeFullCSV";
+import { scheduleToCSVString } from "./writeLoadsCSV";
 
 let schedule: Schedule;
 let basicCourse: Course;
@@ -100,7 +100,7 @@ describe("parses basic section", () => {
   });
 
   it("parses day 10 used", () => {
-    expect(basicSection.day10Used).toEqual(0);
+    expect(basicSection.day10Used).toEqual(undefined);
   });
 
   it("parses term start", () => {

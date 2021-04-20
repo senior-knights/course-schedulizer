@@ -1,6 +1,5 @@
-import { filter, sumBy } from "lodash";
+import { filter, forEach, sumBy } from "lodash";
 import {
-  Course,
   CourseSectionMeeting,
   emptyMeeting,
   getSectionName,
@@ -17,6 +16,10 @@ type sectionKeys =
   | "summerCourseSections"
   | "otherDuties";
 
+// Define a regex for the faculty load hours specifications added to the
+// Teaching Load tab's course/duty strings. See the test cases.
+export const loadHoursRegEx = / \(\d+.?\d*\)(,|$)/;
+
 export type FacultyRow = {
   [key in hourKeys]?: number;
 } &
@@ -29,7 +32,6 @@ export type FacultyRow = {
   };
 
 interface UpdateRowParams {
-  course: Course;
   newRow: FacultyRow;
   prevRow: FacultyRow;
   section: Section;
@@ -37,55 +39,53 @@ interface UpdateRowParams {
   termName?: "fall" | "spring" | "summer" | "other";
 }
 
-const updateRow = ({
-  course,
-  newRow,
-  prevRow,
-  section,
-  sectionName,
-  termName,
-}: UpdateRowParams) => {
+const updateRow = ({ newRow, prevRow, section, sectionName, termName }: UpdateRowParams) => {
   const termCourseSectionProp =
     termName === "other" ? "otherDuties" : (`${termName}CourseSections` as sectionKeys);
   const termHoursProp = `${termName}Hours` as hourKeys;
-  const facultyHours =
-    (section.facultyHours !== undefined ? section.facultyHours : course.facultyHours) /
-    section.instructors.length;
+  const facultyHours = section.facultyHours / section.instructors.length;
+  // Add faculty load hours using the format specified by loadHoursRegEx.
+  const sectionNameWithHours = `${sectionName} (${facultyHours})`;
   if (prevRow) {
     prevRow[termCourseSectionProp] = prevRow[termCourseSectionProp]
-      ? (prevRow[termCourseSectionProp] = `${prevRow[termCourseSectionProp]}, ${sectionName}`)
-      : (prevRow[termCourseSectionProp] = sectionName);
+      ? (prevRow[
+          termCourseSectionProp
+        ] = `${prevRow[termCourseSectionProp]}, ${sectionNameWithHours}`)
+      : (prevRow[termCourseSectionProp] = sectionNameWithHours);
 
     prevRow[termHoursProp] = prevRow[termHoursProp]
       ? Number(prevRow[termHoursProp]) + facultyHours
       : facultyHours;
   } else {
-    newRow[termCourseSectionProp] = sectionName;
+    newRow[termCourseSectionProp] = sectionNameWithHours;
     newRow[termHoursProp] = facultyHours;
   }
 };
 
 export const createTable = (schedule: Schedule): FacultyRow[] => {
   const newTableData: FacultyRow[] = [];
-  schedule.courses.forEach((course) => {
-    course.sections.forEach((section) => {
+  forEach(schedule.courses, (course) => {
+    forEach(course.sections, (section) => {
       const sectionName = getSectionName(course, section);
-      section.instructors.forEach((instructor) => {
+      forEach(section.instructors, (instructor) => {
         const newFacultyRow: FacultyRow = {
           faculty: instructor,
         };
-        const [prevAddedFacultyRow] = newTableData.filter((data) => {
+        const [prevAddedFacultyRow] = filter(newTableData, (data) => {
           return data.faculty === instructor;
         });
         const updateArgs = {
-          course,
           newRow: newFacultyRow,
           prevRow: prevAddedFacultyRow,
           section,
           sectionName,
         };
         if (section.isNonTeaching) {
-          updateRow({ ...updateArgs, sectionName: section.instructionalMethod, termName: "other" });
+          updateRow({
+            ...updateArgs,
+            sectionName: section.instructionalMethod ?? "",
+            termName: "other",
+          });
         } else {
           switch (section.term) {
             case Term.Fall:
@@ -157,7 +157,7 @@ export const findSection = (
   // Extract the course from the array
   const [course] = courses;
 
-  // Find the section with the letter and term from the couse sections array
+  // Find the section with the letter and term from the course sections array
   const sections = filter(course.sections, (s) => {
     return s.letter === letter && s.term === term;
   });
@@ -179,7 +179,8 @@ export const getCourseSectionMeetingFromCell = (
   cellValue: string,
   cellHeader: string,
 ): CSMIterableKeyMap => {
-  const sectionStrList = cellValue.split(", ");
+  // Remove the load hours spec from the string before splitting on comma.
+  const sectionStrList = cellValue.split(loadHoursRegEx).join("").split(", ");
   const courseSectionHeaders = [
     "Fall Course Sections",
     "Spring Course Sections",
@@ -272,7 +273,8 @@ export const getNonTeachingLoadsFromCell = (
   cellValue: string,
   instructor: Instructor,
 ): CSMIterableKeyMap => {
-  const nonTeachingLoadStrList = cellValue.split(", ");
+  // Remove the load hours spec from the string before splitting on comma.
+  const nonTeachingLoadStrList = cellValue.split(loadHoursRegEx).join("").split(", ");
   const courseSectionMeeting = findNonTeachingLoad(schedule, nonTeachingLoadStrList[0], instructor);
 
   return {

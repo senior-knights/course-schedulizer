@@ -1,19 +1,32 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Grid, InputAdornment, Typography } from "@material-ui/core";
-import { GridItemCheckboxGroup, GridItemRadioGroup, GridItemTextField } from "components";
-import { isEqual } from "lodash";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import {
+  GridItemAutocomplete,
+  GridItemCheckboxGroup,
+  GridItemRadioGroup,
+  GridItemTextField,
+} from "components";
+import { isEqual, isNil, omitBy } from "lodash";
+import moment from "moment";
+import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
   addFalseToDaysCheckboxList,
   addSectionSchema,
   convertFromSemesterLength,
+  emptyMeeting,
+  getCourseNames,
+  getInstructionalMethods,
+  getNumbers,
+  getPrefixes,
+  getSectionLetters,
+  mapInputToInternalTypes,
   mapInternalTypesToInput,
-  removeUncheckedValues,
   SectionInput,
   useAddSectionToSchedule,
-  useDeleteSectionFromSchedule,
+  useDeleteMeetingFromSchedule,
 } from "utilities";
+import { AppContext } from "utilities/contexts";
 import {
   Day,
   Half,
@@ -28,48 +41,69 @@ import "./AddSectionPopover.scss";
 
 const SPACING = 2;
 
+const transformDataToTrueSectionInput = (data: SectionInput): SectionInput => {
+  const dataCourseSection = mapInputToInternalTypes(data);
+  let newMeeting = emptyMeeting;
+  if (dataCourseSection.newSection.meetings.length) {
+    [newMeeting] = dataCourseSection.newSection.meetings;
+  }
+  return mapInternalTypesToInput({
+    course: dataCourseSection.newCourse,
+    meeting: newMeeting,
+    section: dataCourseSection.newSection,
+  });
+};
+
 /* A form to input information to add a schedule */
 export const AddSectionPopover = ({ values }: PopoverValueProps) => {
+  const {
+    appState: { schedule, rooms, professors },
+    setIsCSVLoading,
+  } = useContext(AppContext);
+
   const methods = useForm<SectionInput>({
     criteriaMode: "all",
     defaultValues: mapInternalTypesToInput(values),
     resolver: yupResolver(addSectionSchema),
   });
+  const { reset } = methods;
   const [semesterLength, setSemesterLength] = useState<SemesterLengthOption>(
     convertFromSemesterLength(values?.section.semesterLength),
   );
   const { addSectionToSchedule } = useAddSectionToSchedule();
-  const { deleteSectionFromSchedule } = useDeleteSectionFromSchedule();
+  const { deleteMeetingFromSchedule } = useDeleteMeetingFromSchedule();
 
-  const { reset, getValues } = methods;
-
-  useEffect(() => {
-    setSemesterLength(convertFromSemesterLength(values?.section.semesterLength));
-    const inputValues = mapInternalTypesToInput(values);
-    const formValues = getValues();
-    inputValues.days = removeUncheckedValues(inputValues.days as string[]) as Day[];
-
-    // Update the form values if they have changed
-    if (!isEqual(inputValues, formValues)) {
-      reset(inputValues);
-    }
-  }, [reset, getValues, values]);
-
-  const onSubmit = (removeOldSection: boolean) => {
-    return (data: SectionInput) => {
-      addSectionToSchedule(data, values, removeOldSection);
+  const onSubmit = (removeOldMeeting: boolean) => {
+    return async (data: SectionInput) => {
+      const dataTransformed = transformDataToTrueSectionInput(data);
+      // Submit the data if any of the form values were updated (omitting null and undefined values)
+      if (
+        !isEqual(omitBy(dataTransformed, isNil), omitBy(mapInternalTypesToInput(values), isNil))
+      ) {
+        await addSectionToSchedule(data, values, removeOldMeeting);
+      } else {
+        // Close the popover
+        setIsCSVLoading(true);
+        setIsCSVLoading(false);
+      }
     };
   };
 
-  const deleteSection = () => {
+  const deleteMeeting = () => {
     return () => {
-      deleteSectionFromSchedule(values);
+      deleteMeetingFromSchedule(values);
     };
   };
 
   const onSemesterLengthChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSemesterLength(e.target.value as SemesterLengthOption);
   };
+
+  useEffect(() => {
+    setSemesterLength(convertFromSemesterLength(values?.section.semesterLength));
+    const inputValues = mapInternalTypesToInput(values);
+    reset(inputValues);
+  }, [reset, values]);
 
   const isHalfSemester = semesterLength === SemesterLengthOption.HalfSemester;
   const isIntensiveSemester = semesterLength === SemesterLengthOption.IntensiveSemester;
@@ -109,7 +143,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
           <Button
             className="delete-button"
             color="secondary"
-            onClick={methods.handleSubmit(deleteSection())}
+            onClick={methods.handleSubmit(deleteMeeting())}
             variant="contained"
           >
             Delete Section
@@ -132,18 +166,18 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
           <GridItemTextField label="Department" textFieldProps={{ autoFocus: true }} />
         </Grid>
         <Grid container spacing={SPACING}>
-          {/* TODO: Dropdown for courses already in system */}
-          <GridItemTextField label="Prefix" />
-          <GridItemTextField label="Number" />
-          <GridItemTextField label="Section" />
-          <GridItemTextField label="Name" />
-          <GridItemTextField label="Instructional Method" />
+          <GridItemAutocomplete label="Prefix" multiple options={getPrefixes(schedule)} />
+          <GridItemAutocomplete label="Number" options={getNumbers(schedule)} />
+          <GridItemAutocomplete label="Section" options={getSectionLetters(schedule)} />
+          <GridItemAutocomplete label="Name" options={getCourseNames(schedule)} />
+          <GridItemAutocomplete
+            label="Instructional Method"
+            options={getInstructionalMethods(schedule)}
+          />
         </Grid>
         <Grid container spacing={SPACING}>
-          {/* TODO: Dropdown for instructors with option to add new one */}
-          <GridItemTextField label="Instructor" />
-          {/* TODO: Dropdown for rooms with option to add new one */}
-          <GridItemTextField label="Location" />
+          <GridItemAutocomplete label="Instructor" multiple options={[...professors].sort()} />
+          <GridItemAutocomplete label="Location" options={[...rooms].sort()} />
           <GridItemTextField label="Room Capacity" />
           <GridItemTextField label="Faculty Hours" />
           <GridItemTextField label="Student Hours" />
@@ -217,7 +251,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
                   }}
                 />
                 <Typography variant="caption">
-                  Custom semester lengths are not support yet.
+                  Custom semester lengths are not supported yet.
                 </Typography>
               </Grid>
             )}
@@ -237,6 +271,11 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
           </Grid>
           <Grid className="popover-buttons" item>
             {buttons()}
+            {values?.section.timestamp && (
+              <Typography variant="caption">
+                Last Edited: {moment(values?.section.timestamp).format("MMMM Do YYYY, h:mm:ss a")}
+              </Typography>
+            )}
           </Grid>
         </Grid>
       </form>

@@ -8,10 +8,10 @@ export const Searchbar = () => {
     <Autocomplete
       className="searchbar"
       getOptionLabel={(option) => {
-        return `${option.name}-${option.section}`;
+        return option.label;
       }}
       id="combo-box-demo"
-      options={classes}
+      options={notSupported}
       renderInput={(params) => {
         return <TextField {...params} label="Search" variant="outlined" />;
       }}
@@ -19,8 +19,4 @@ export const Searchbar = () => {
   );
 };
 
-const classes = [
-  { instructor: "Victor T. Norman", name: "CS-108", section: "A" },
-  { instructor: "Victor T. Norman", name: "CS-108", section: "B" },
-  { instructor: "Joel Adams", name: "CS-112", section: "A" },
-];
+const notSupported = [{ label: "The searchbar is not supported yet." }];
