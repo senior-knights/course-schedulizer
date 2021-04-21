@@ -18,7 +18,7 @@ export const immer = <T extends State>(
   return (set, get, api) => {
     return config(
       (fn) => {
-        return set(produce(fn) as (state: T) => T);
+        return set(produce<T>(fn));
       },
       get,
       api,
