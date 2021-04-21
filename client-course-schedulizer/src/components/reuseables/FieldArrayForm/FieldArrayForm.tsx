@@ -1,3 +1,4 @@
+import { Card, CardContent, TextFieldProps } from "@material-ui/core";
 import startCase from "lodash/startCase";
 import toLower from "lodash/toLower";
 import React from "react";
@@ -10,6 +11,7 @@ export interface FieldArrayFormProps {
   defaultValue: object;
   fieldsName: string;
   onSubmit?: (data: object[]) => void;
+  textFieldProps?: TextFieldProps;
 }
 
 /**
@@ -17,7 +19,12 @@ export interface FieldArrayFormProps {
  * This uses a provider to pass form related data down the component tree.
  * Handles the form submission and formats the name to look nice on the web.
  */
-export const FieldArrayForm = ({ fieldsName, defaultValue, onSubmit }: FieldArrayFormProps) => {
+export const FieldArrayForm = ({
+  fieldsName,
+  defaultValue,
+  onSubmit,
+  textFieldProps,
+}: FieldArrayFormProps) => {
   const titleCaseName = startCase(toLower(fieldsName));
   const formMethods = useForm({
     defaultValues: { [titleCaseName]: [defaultValue] },
@@ -33,17 +40,22 @@ export const FieldArrayForm = ({ fieldsName, defaultValue, onSubmit }: FieldArra
       {...formMethods}
       {...fieldArrayMethods}
       defaultValue={defaultValue}
+      textFieldProps={textFieldProps}
       titleCaseName={titleCaseName}
     >
-      <form
-        onSubmit={handleSubmit((data) => {
-          onSubmit && onSubmit(data[titleCaseName] as object[]);
-        })}
-      >
-        <h3>{titleCaseName}: </h3>
-        <FieldArrayFields />
-        <FieldArrayFormActionButtons />
-      </form>
+      <Card style={{ marginBottom: "2em" }} variant="outlined">
+        <CardContent>
+          <form
+            onSubmit={handleSubmit((data) => {
+              onSubmit && onSubmit(data[titleCaseName] as object[]);
+            })}
+          >
+            <h2>{titleCaseName}: </h2>
+            <FieldArrayFields />
+            <FieldArrayFormActionButtons />
+          </form>
+        </CardContent>
+      </Card>
     </FieldArrayFormProvider>
   );
 };

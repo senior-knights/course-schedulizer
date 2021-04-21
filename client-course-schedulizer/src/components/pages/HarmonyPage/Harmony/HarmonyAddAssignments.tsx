@@ -10,7 +10,6 @@ export const HarmonyAddAssignments = () => {
   const courses = useHarmonyFormsStore(selector);
   return (
     <>
-      <h3>Add Assignments</h3>
       {(courses as HarmonyFormsAccessors["courses"]).map((courseObj) => {
         return <HarmonyCourseCheckboxes key={courseObj.Course} course={courseObj.Course} />;
       })}

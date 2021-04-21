@@ -1,5 +1,5 @@
-import { Box, Grid, Typography } from "@material-ui/core";
-import { NewTabLink } from "components/reuseables";
+import { Grid } from "@material-ui/core";
+import { NewTabLink, Page } from "components/reuseables";
 import React from "react";
 import { team, TeamMember } from "utilities";
 import { TeamMemberProfile, TextSection } from ".";
@@ -9,17 +9,13 @@ import "./AboutPage.scss";
   with references */
 export const AboutPage = () => {
   return (
-    <Grid container justify="center">
-      <Typography align="left">
-        <Box maxWidth={900} mb={3} p={4}>
-          <AboutVision />
-          <AboutTeam />
-          <AboutCode />
-          <AboutReport />
-          <AboutResources />
-        </Box>
-      </Typography>
-    </Grid>
+    <Page>
+      <AboutVision />
+      <AboutTeam />
+      <AboutCode />
+      <AboutReport />
+      <AboutResources />
+    </Page>
   );
 };
 

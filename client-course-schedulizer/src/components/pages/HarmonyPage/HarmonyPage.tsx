@@ -1,7 +1,6 @@
-import { AnimateShowAndHide, HarmonyFieldArrayForm } from "components";
+import { HarmonyStepper, Page } from "components";
 import React from "react";
-import { Harmony, HarmonyAddAssignments } from "./Harmony";
-import { HarmonySchedule } from "./Harmony/HarmonySchedule";
+import "./HarmonyPage.scss";
 
 /**
  * The page contains all of the Harmoniously user-experience.
@@ -12,18 +11,8 @@ import { HarmonySchedule } from "./Harmony/HarmonySchedule";
  */
 export const HarmonyPage = () => {
   return (
-    <>
-      <AnimateShowAndHide>Harmony</AnimateShowAndHide>
-      <h1>
-        Note: This page is in a <i>pre-alpha</i> state. Output might not be perfect.
-      </h1>
-      <HarmonyFieldArrayForm defaultValue={{ First: "", Last: "" }} fieldsName="professors" />
-      <HarmonyFieldArrayForm defaultValue={{ Course: "" }} fieldsName="courses" />
-      <HarmonyFieldArrayForm defaultValue={{ Room: "" }} fieldsName="rooms" />
-      <HarmonyFieldArrayForm defaultValue={{ Time: "" }} fieldsName="times" />
-      <HarmonyAddAssignments />
-      <Harmony />
-      <HarmonySchedule />
-    </>
+    <Page>
+      <HarmonyStepper />
+    </Page>
   );
 };

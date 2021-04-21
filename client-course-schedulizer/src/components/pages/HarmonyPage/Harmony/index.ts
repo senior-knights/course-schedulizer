@@ -5,3 +5,4 @@ export * from "./HarmonyCheckboxList";
 export * from "./HarmonyCourseCheckboxes";
 export * from "./HarmonyFieldArrayForm";
 export * from "./HarmonySchedule";
+export * from "./HarmonyStepper";

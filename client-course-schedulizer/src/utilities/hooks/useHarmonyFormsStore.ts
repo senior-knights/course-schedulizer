@@ -1,5 +1,4 @@
 import create, { GetState, SetState, State } from "zustand";
-import { persist } from "zustand/middleware";
 
 /**
  * A hook to get access to a global store storing all values related to the
@@ -9,24 +8,19 @@ import { persist } from "zustand/middleware";
  * ref: https://dev.to/karanpratapsingh/simplify-your-store-a-brief-introduction-to-zustand-250h
  */
 export const useHarmonyFormsStore = create<HarmonyFormsState>(
-  persist<HarmonyFormsState>(
-    (set: SetState<HarmonyFormsState>, get: GetState<HarmonyFormsState>) => {
-      return {
-        courses: [],
-        professors: [],
-        rooms: [],
-        times: [],
-        update: (key: string, data: string[]) => {
-          return set(() => {
-            return { [key as keyof HarmonyFormsAccessors]: data };
-          });
-        },
-      };
-    },
-    {
-      name: "harmonyFormsState",
-    },
-  ),
+  (set: SetState<HarmonyFormsState>, get: GetState<HarmonyFormsState>) => {
+    return {
+      courses: [],
+      professors: [],
+      rooms: [],
+      times: [],
+      update: (key: string, data: string[]) => {
+        return set(() => {
+          return { [key as keyof HarmonyFormsAccessors]: data };
+        });
+      },
+    };
+  },
 );
 
 /** Adds functions to accessors */
