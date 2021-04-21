@@ -13,12 +13,12 @@ export const useDeleteMeetingFromSchedule = () => {
   // Update the schedule via pass by sharing.
   const deleteMeetingFromSchedule = (data: CourseSectionMeeting | undefined) => {
     const meeting = data?.meeting;
-    if (meeting) {
-      setIsCSVLoading(true);
-      removeMeetingFromSchedule(data, schedule, meeting);
-      appDispatch({ payload: { schedule }, type: "setScheduleData" });
-      setIsCSVLoading(false);
-    }
+    const section = data?.section;
+    const course = data?.course;
+    setIsCSVLoading(true);
+    removeMeetingFromSchedule(data, schedule, meeting, section, course);
+    appDispatch({ payload: { schedule }, type: "setScheduleData" });
+    setIsCSVLoading(false);
   };
 
   return { deleteMeetingFromSchedule };

@@ -6,7 +6,7 @@ import hash from "object-hash";
 import randomColor from "randomcolor";
 import { enumArray } from "utilities";
 import { INITIAL_DATE } from "utilities/constants";
-import { ColorBy, Day, Meeting, Schedule, Section, Term } from "utilities/interfaces";
+import { ColorBy, Day, Location, Meeting, Schedule, Section, Term } from "utilities/interfaces";
 import { findConflicts } from "./conflictsService";
 
 // Returns a list of hours to display on the Schedule
@@ -41,12 +41,12 @@ export const getEvents = (
   const days: Day[] = enumArray(Day);
   const scheduleWithConflicts = findConflicts(schedule);
   forEach(scheduleWithConflicts.courses, (course) => {
-    const dept = course.department;
+    const dept = course.department ? course.department : "No Department";
     forEach(course.sections, (section) => {
       const sectionName = `${course.prefixes[0]}-${course.number}-${section.letter}`;
       forEach(section.instructors, (prof) => {
         forEach(section.meetings, (meeting) => {
-          const room = `${meeting.location.building} ${meeting.location.roomNumber}`;
+          const room = getLocationString(meeting.location);
           const className = createEventClassName(sectionName, room, prof);
           let group = "";
           if (groups === "faculty") {
@@ -275,7 +275,11 @@ export const getInstructionalMethods = (schedule: Schedule) => {
   const instructionalMethods: string[] = [];
   forEach(schedule.courses, (course) => {
     forEach(course.sections, (section) => {
-      if (!instructionalMethods.includes(section.instructionalMethod) && !section.isNonTeaching) {
+      if (
+        section.instructionalMethod &&
+        !instructionalMethods.includes(section.instructionalMethod) &&
+        !section.isNonTeaching
+      ) {
         instructionalMethods.push(section.instructionalMethod);
       }
     });
@@ -286,11 +290,16 @@ export const getInstructionalMethods = (schedule: Schedule) => {
 export const getDepts = (schedule: Schedule) => {
   const departments: string[] = [];
   forEach(schedule.courses, (course) => {
-    if (!departments.includes(course.department)) {
-      departments.push(course.department ? course.department : "");
+    const deptStr = course.department ? course.department : "No Department";
+    if (!departments.includes(deptStr)) {
+      departments.push(deptStr);
     }
   });
   return departments.sort();
+};
+
+export const getLocationString = (location: Location): string => {
+  return `${location.building} ${location.roomNumber}`;
 };
 
 /* Generate a css class name. apply additional styles

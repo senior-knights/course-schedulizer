@@ -100,7 +100,7 @@ describe("parses basic section", () => {
   });
 
   it("parses day 10 used", () => {
-    expect(basicSection.day10Used).toEqual(0);
+    expect(basicSection.day10Used).toEqual(undefined);
   });
 
   it("parses term start", () => {

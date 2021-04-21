@@ -1,4 +1,5 @@
 import { camelCase, forEach } from "lodash";
+import moment from "moment";
 import { useContext } from "react";
 import { DeepMap, FieldError } from "react-hook-form";
 import { insertSectionCourse } from "utilities";
@@ -46,10 +47,10 @@ export const useAddSectionToSchedule = () => {
     removeOldMeeting = false,
   ) => {
     setIsCSVLoading(true);
-    const { newCourse, newSection }: MappedSection = mapInputToInternalTypes(data);
+    const { newSection, newCourse }: MappedSection = mapInputToInternalTypes(data);
     addToSchedule({ newCourse, newSection, oldData, removeOldMeeting });
 
-    // Depedning on the current tab, scroll to the updated/added section/row
+    // Depending on the current tab, scroll to the updated/added section/row
     if (schedulizerTab === SchedulizerTab.Faculty || schedulizerTab === SchedulizerTab.Room) {
       await switchToCorrectTerm(newSection, selectedTerm, appDispatch);
       setIsCSVLoading(false);
@@ -81,7 +82,8 @@ export const useAddSectionToSchedule = () => {
     oldData,
     removeOldMeeting,
   }: AddToScheduleParams) => {
-    handleOldMeeting(oldData, newSection, removeOldMeeting, schedule);
+    newSection.timestamp = moment().format();
+    handleOldMeeting(oldData, newSection, newCourse, removeOldMeeting, schedule);
     insertSectionCourse(schedule, newSection, newCourse);
     appDispatch({ payload: { schedule }, type: "setScheduleData" });
   };
