@@ -33,7 +33,7 @@ export const HarmonyStepperImportData = () => {
     update(
       "courses",
       classes.map((c) => {
-        return { Course: c };
+        return { Course: c.name };
       }),
     );
     update(
@@ -53,9 +53,11 @@ export const HarmonyStepperImportData = () => {
     // foreach class, find the professor that teaches it. then add to the assignments
     const inferredAssignments: Assignments = {};
     classes.forEach((cls) => {
-      inferredAssignments[cls] = {
-        // TODO: update this for professors
-        professors,
+      // get professors who teach the class currently
+      const { name, instructors } = cls;
+
+      inferredAssignments[name] = {
+        professors: instructors,
         rooms,
         times,
       };

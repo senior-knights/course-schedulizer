@@ -1,4 +1,5 @@
 import { loadLocal } from "utilities/hooks/useLocal";
+import { HarmonyClass } from "utilities/services";
 import { Schedule, Term } from "./dataInterfaces";
 
 export enum ColorBy {
@@ -17,7 +18,7 @@ export enum SchedulizerTab {
 
 // structure for the global app state
 export interface AppState {
-  classes: string[];
+  classes: HarmonyClass[];
   colorBy: ColorBy;
   departments: string[];
   fileUrl: string;

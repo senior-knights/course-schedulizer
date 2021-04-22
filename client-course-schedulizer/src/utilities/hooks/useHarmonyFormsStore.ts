@@ -22,7 +22,7 @@ export const useHarmonyFormsStore = create<HarmonyFormsState>(
 
 /** Adds functions to accessors */
 export interface HarmonyFormsState extends HarmonyFormsAccessors {
-  update: (key: keyof HarmonyFormsAccessors, data: object[]) => void;
+  update: (key: keyof HarmonyFormsAccessors, data: { [key: string]: string }[]) => void;
 }
 
 /** labels to retrieve data */
