@@ -1,4 +1,5 @@
 import { CustomButtonProps, Harmony as HarmonyBase, Result } from "@harmoniously/react";
+import { Button } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import {
   HarmonyAssignmentsState,
@@ -23,7 +24,7 @@ export const Harmony = () => {
       <HarmonyBase
         assignments={assignments}
         autoRun
-        button={HideButton}
+        button={CustomButton}
         footer={<Footer />}
         header={<></>}
         setResult={setRes}
@@ -40,11 +41,13 @@ const resultSelector = ({ setResult }: HarmonyResultState) => {
   return setResult;
 };
 
-// TODO: update harmoniously API to hide buttons. https://github.com/charkour/harmoniously/issues/43
-const HideButton = (props: CustomButtonProps) => {
-  return <></>;
+const CustomButton = (props: CustomButtonProps) => {
+  return (
+    <Button variant="outlined" {...props}>
+      Find Another Schedule
+    </Button>
+  );
 };
-
 const Footer: React.FC = () => {
   return (
     <small>
