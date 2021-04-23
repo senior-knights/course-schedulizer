@@ -13,5 +13,19 @@ export const getTimes = (schedule: Schedule): string[] => {
       });
     });
   });
-  return [...timesSet];
+  // return [...timesSet];
+  // TODO: hack for demo
+  return [
+    "07:00",
+    "08:00",
+    "09:00",
+    "10:30",
+    "11:30",
+    "12:30",
+    "13:30",
+    "14:30",
+    "15:30",
+    "16:30",
+    "18:30",
+  ];
 };
