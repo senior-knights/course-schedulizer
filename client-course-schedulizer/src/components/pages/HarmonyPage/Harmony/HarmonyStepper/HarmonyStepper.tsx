@@ -57,6 +57,7 @@ export const HarmonyStepper = () => {
       cb();
     });
     // clear callback from store
+    // TODO: need to clear if navigate away.
     clearCallbacks();
   };
 

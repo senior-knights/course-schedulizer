@@ -218,7 +218,10 @@ export const colorEventsByFeature = (groupedEvents: GroupedEvents, colorBy: Colo
               event.color = "#ffc2c2";
               break;
             default:
-              event.color = randomColor({ luminosity: "light", seed: hash(levelStr) });
+              event.color = randomColor({
+                luminosity: "light",
+                seed: hash(levelStr ?? "no-level"),
+              });
           }
           event.textColor = "black";
         });

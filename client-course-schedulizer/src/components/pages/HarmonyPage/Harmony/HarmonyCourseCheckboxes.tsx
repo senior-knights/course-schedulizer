@@ -31,6 +31,8 @@ export const HarmonyCourseCheckboxes = ({ course }: HarmonyCourseCheckboxesProps
   }, [course, profList, roomList, setClass, timeList]);
 
   useEffect(() => {
+    // TODO: this is likely causing lots of issues. They are all saving to a new store and thus
+    // are all causing re-renders which takes a long time. Investigate using the Chrome perf monitor
     pushCallbacks(onSave);
   }, [onSave, pushCallbacks]);
 

@@ -41,7 +41,7 @@ const convertToSchedule = (result: Result): Schedule => {
           {
             comments: "",
             endDate: "1/1/21",
-            facultyHours: -1,
+            facultyHours: 3,
             instructionalMethod: "",
             instructors: [professor],
             letter,
@@ -56,10 +56,10 @@ const convertToSchedule = (result: Result): Schedule => {
             semesterLength: SemesterLength.Full,
             startDate: "01/01/21",
             status: "",
-            studentHours: -1,
+            studentHours: 3,
             term: Term.Fall,
             termStart: "01/01/21",
-            year: -1,
+            year: 2021,
           },
         ],
       });
