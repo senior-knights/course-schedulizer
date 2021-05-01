@@ -1,14 +1,16 @@
 import { Card, CardContent, TextFieldProps } from "@material-ui/core";
 import startCase from "lodash/startCase";
 import toLower from "lodash/toLower";
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { FieldArrayFormProvider } from "utilities";
+import { HarmonyStepperCallbackState, useHarmonyStepperCallback } from "utilities/hooks";
 import { FieldArrayFields } from "./FieldArrayFields";
 import { FieldArrayFormActionButtons } from "./FieldArrayFormActionButtons";
 
 export interface FieldArrayFormProps {
-  defaultValue: object;
+  defaultValues?: object[];
+  emptyValue: object;
   fieldsName: string;
   onSubmit?: (data: object[]) => void;
   textFieldProps?: TextFieldProps;
@@ -21,13 +23,19 @@ export interface FieldArrayFormProps {
  */
 export const FieldArrayForm = ({
   fieldsName,
-  defaultValue,
+  emptyValue,
+  defaultValues = [],
   onSubmit,
   textFieldProps,
 }: FieldArrayFormProps) => {
   const titleCaseName = startCase(toLower(fieldsName));
+
+  // TODO: remove this. This component could not contain Harmony code.
+  const pushCallbacks = useHarmonyStepperCallback(selector);
   const formMethods = useForm({
-    defaultValues: { [titleCaseName]: [defaultValue] },
+    defaultValues: {
+      [titleCaseName]: [...defaultValues, emptyValue],
+    },
   });
   const { control, handleSubmit } = formMethods;
   const fieldArrayMethods = useFieldArray({
@@ -35,21 +43,37 @@ export const FieldArrayForm = ({
     name: titleCaseName,
   });
 
+  const onFormSubmit = useCallback(
+    // kinda a hack to get this to work and not do a full page submit. Ideally this would be in another callback onSave
+    handleSubmit((formData) => {
+      const dataWithNoEmpty = (formData as { [key: string]: object[] })[titleCaseName].filter(
+        (obj) => {
+          return Object.entries(obj).every(([, value]) => {
+            return value !== "";
+          });
+        },
+      );
+      onSubmit && onSubmit(dataWithNoEmpty);
+    }),
+    [handleSubmit, onSubmit, titleCaseName],
+  );
+
+  useEffect(() => {
+    pushCallbacks(onFormSubmit);
+  }, [onFormSubmit, pushCallbacks]);
+
   return (
     <FieldArrayFormProvider
       {...formMethods}
       {...fieldArrayMethods}
-      defaultValue={defaultValue}
+      defaultValue={emptyValue}
+      defaultValues={defaultValues}
       textFieldProps={textFieldProps}
       titleCaseName={titleCaseName}
     >
       <Card style={{ marginBottom: "2em" }} variant="outlined">
         <CardContent>
-          <form
-            onSubmit={handleSubmit((data) => {
-              onSubmit && onSubmit(data[titleCaseName] as object[]);
-            })}
-          >
+          <form onSubmit={onFormSubmit}>
             <h2>{titleCaseName}: </h2>
             <FieldArrayFields />
             <FieldArrayFormActionButtons />
@@ -62,4 +86,8 @@ export const FieldArrayForm = ({
 
 FieldArrayForm.defaultProps = {
   onSubmit: undefined,
+};
+
+const selector = (state: HarmonyStepperCallbackState) => {
+  return state.pushCallbacks;
 };

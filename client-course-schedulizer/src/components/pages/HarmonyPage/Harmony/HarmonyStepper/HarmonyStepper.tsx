@@ -9,39 +9,20 @@ import {
 import React, { useCallback, useEffect } from "react";
 import {
   HarmonyResultState,
+  HarmonyStepperCallbackState,
   useAppContext,
   useHarmonyResultStore,
+  useHarmonyStepperCallback,
   useRedirect,
 } from "utilities/hooks";
 
-const selector = ({ schedule }: HarmonyResultState) => {
-  return schedule;
-};
-
-const getSteps = () => {
-  return ["Welcome", "Import Data", "Update Data", "Create Assignments", "Find Schedule"];
-};
-
-// TODO: somehow this should be linked to the values in getSteps
-const getStepContent = (step: number) => {
-  switch (step) {
-    case 0:
-      return <HarmonyStepperWelcome />;
-    case 1:
-      return <HarmonyStepperImportData />;
-    case 2:
-      return <HarmonyStepperUpdateData />;
-    case 3:
-      return <HarmonyStepperAssignments />;
-    case 4:
-      return <HarmonyStepperResult />;
-    default:
-      return <>Unknown step</>;
-  }
-};
-
-// TODO: remove inline styles
-// https://material-ui.com/components/steppers/
+// TODO: remove inline styles. better performance using .scss?
+/**
+ * HarmonyStepper is a UI process to set the variables, attributes, and
+ *   constraints to use CSP techniques to find a schedule with no conflicts.
+ *
+ * ref: https://material-ui.com/components/steppers/
+ */
 export const HarmonyStepper = () => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());
@@ -49,6 +30,7 @@ export const HarmonyStepper = () => {
   const { appDispatch } = useAppContext();
   const redirectTo = useRedirect();
   const schedule = useHarmonyResultStore(selector);
+  const { callbacks, clearCallbacks } = useHarmonyStepperCallback(stepperSelector);
 
   const isStepOptional = (step: number) => {
     return step === 1;
@@ -69,6 +51,14 @@ export const HarmonyStepper = () => {
       return prevActiveStep + 1;
     });
     setSkipped(newSkipped);
+
+    // run callback if needed
+    callbacks.forEach((cb) => {
+      cb();
+    });
+    // clear callback from store
+    // TODO: need to clear if navigate away.
+    clearCallbacks();
   };
 
   const handleBack = () => {
@@ -136,13 +126,14 @@ export const HarmonyStepper = () => {
               {getStepContent(activeStep)}
             </div>
             <div style={{ flex: "0 1 auto", textAlign: "end" }}>
-              <Button
+              {/* TODO: state is not persisted, so back has no use currently */}
+              {/* <Button
                 className="harmony-stepper-button"
                 disabled={activeStep === 0}
                 onClick={handleBack}
               >
                 Back
-              </Button>
+              </Button> */}
               {isStepOptional(activeStep) && (
                 <Button
                   className="harmony-stepper-button"
@@ -183,4 +174,34 @@ export const HarmonyStepper = () => {
       </Stepper>
     </div>
   );
+};
+
+const getSteps = () => {
+  return ["Welcome", "Import Data", "Update Data", "Create Assignments", "Find Schedule"];
+};
+
+// TODO: somehow this should be linked to the values in getSteps
+const getStepContent = (step: number) => {
+  switch (step) {
+    case 0:
+      return <HarmonyStepperWelcome />;
+    case 1:
+      return <HarmonyStepperImportData />;
+    case 2:
+      return <HarmonyStepperUpdateData />;
+    case 3:
+      return <HarmonyStepperAssignments />;
+    case 4:
+      return <HarmonyStepperResult />;
+    default:
+      return <>Unknown step</>;
+  }
+};
+
+const selector = ({ schedule }: HarmonyResultState) => {
+  return schedule;
+};
+
+const stepperSelector = ({ callbacks, clearCallbacks }: HarmonyStepperCallbackState) => {
+  return { callbacks, clearCallbacks };
 };

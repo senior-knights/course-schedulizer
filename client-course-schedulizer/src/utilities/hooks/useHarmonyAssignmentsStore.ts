@@ -4,14 +4,18 @@ import create, { State } from "zustand";
 
 /**
  * A hook to get access to a global store containing assignment data for Harmony
- * Persists the value in localStorage
  */
 export const useHarmonyAssignmentsStore = create<HarmonyAssignmentsState>(
   immer<HarmonyAssignmentsState>((set) => {
     return {
       assignments: {},
+      setAssignments: (newAssignments: Assignments) => {
+        set((state) => {
+          state.assignments = newAssignments;
+        });
+      },
       setClass: (className: string, attributes: ClassLimits) => {
-        return set((state) => {
+        set((state) => {
           state.assignments[className] = attributes;
         });
       },
@@ -21,5 +25,6 @@ export const useHarmonyAssignmentsStore = create<HarmonyAssignmentsState>(
 
 export interface HarmonyAssignmentsState extends State {
   assignments: Assignments;
+  setAssignments: (newAssignments: Assignments) => void;
   setClass: (className: string, setAttributes: ClassLimits) => void;
 }

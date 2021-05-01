@@ -8,6 +8,7 @@ export * from "./useFieldArrayFormContext";
 export * from "./useHarmonyAssignmentsStore";
 export * from "./useHarmonyFormsStore";
 export * from "./useHarmonyResultStore";
+export * from "./useHarmonyStepperCallback";
 export * from "./useImportFile";
 export * from "./useLocal";
 export * from "./useRedirect";

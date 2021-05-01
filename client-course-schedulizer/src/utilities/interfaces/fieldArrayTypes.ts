@@ -6,6 +6,7 @@ import { FieldValues, UseFieldArrayMethods, UseFormMethods } from "react-hook-fo
  */
 interface FieldArrayHelpers {
   defaultValue: Partial<FieldValues>;
+  defaultValues: Partial<FieldValues>[];
   textFieldProps: TextFieldProps;
   titleCaseName: string;
 }

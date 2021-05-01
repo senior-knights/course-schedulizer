@@ -3,7 +3,6 @@ import create, { GetState, SetState, State } from "zustand";
 /**
  * A hook to get access to a global store storing all values related to the
  *   forms on the Harmony page. Replacement for Context Providers and Reducers.
- * Persists the value in localStorage
  *
  * ref: https://dev.to/karanpratapsingh/simplify-your-store-a-brief-introduction-to-zustand-250h
  */
@@ -14,10 +13,8 @@ export const useHarmonyFormsStore = create<HarmonyFormsState>(
       professors: [],
       rooms: [],
       times: [],
-      update: (key: string, data: string[]) => {
-        return set(() => {
-          return { [key as keyof HarmonyFormsAccessors]: data };
-        });
+      update: (key, data) => {
+        set({ [key]: data });
       },
     };
   },
@@ -25,7 +22,7 @@ export const useHarmonyFormsStore = create<HarmonyFormsState>(
 
 /** Adds functions to accessors */
 export interface HarmonyFormsState extends HarmonyFormsAccessors {
-  update: (key: string, data: string[]) => void;
+  update: (key: keyof HarmonyFormsAccessors, data: { [key: string]: string }[]) => void;
 }
 
 /** labels to retrieve data */
