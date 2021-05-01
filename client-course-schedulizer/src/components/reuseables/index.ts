@@ -9,5 +9,6 @@ export * from "./GridItem";
 export * from "./ImportInputWrapper";
 export * from "./ModalPagination";
 export * from "./NewTabLink";
+export * from "./Page";
 export * from "./PopoverButton";
 export * from "./Schedule";

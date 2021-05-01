@@ -2,6 +2,7 @@ import { IconButton, Tooltip } from "@material-ui/core";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import React from "react";
 import { useFieldArrayFormContext } from "utilities";
+import "./DeleteFieldButton.scss";
 
 interface DeleteFieldButtonProps {
   index: number;
@@ -14,7 +15,7 @@ export const DeleteFieldButton = ({ index }: DeleteFieldButtonProps) => {
   const { remove } = useFieldArrayFormContext();
 
   return (
-    <div>
+    <div className="delete-field-button">
       <Tooltip title="Remove">
         <IconButton
           aria-label="remove"

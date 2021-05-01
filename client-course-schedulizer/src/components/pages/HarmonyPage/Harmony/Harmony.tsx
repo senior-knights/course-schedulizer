@@ -1,4 +1,5 @@
-import { Harmony as HarmonyBase, Result } from "@harmoniously/react";
+import { CustomButtonProps, Harmony as HarmonyBase, Result } from "@harmoniously/react";
+import { Button } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import {
   HarmonyAssignmentsState,
@@ -6,25 +7,6 @@ import {
   useHarmonyAssignmentsStore,
   useHarmonyResultStore,
 } from "utilities";
-
-// TODO: move this to the harmony page and allow users to load in exiting data
-// temporary hook used to get data from the imported schedule and generate fake assignments.
-// const useInferredAssignments = () => {
-//   const {
-//     appState: { rooms, professors, classes },
-//   } = useContext(AppContext);
-
-//   const inferredAssignments: Assignments = {};
-//   classes.forEach((cls) => {
-//     inferredAssignments[cls] = {
-//       professors,
-//       rooms: [...rooms, "a", "b"],
-//       times,
-//     };
-//   });
-
-//   return { inferredAssignments, professors, rooms };
-// };
 
 /** Harmony returns a component to automatically create schedules. */
 export const Harmony = () => {
@@ -39,7 +21,14 @@ export const Harmony = () => {
 
   return (
     <>
-      <HarmonyBase assignments={assignments} setResult={setRes} />
+      <HarmonyBase
+        assignments={assignments}
+        autoRun
+        button={CustomButton}
+        footer={<Footer />}
+        header={<></>}
+        setResult={setRes}
+      />
     </>
   );
 };
@@ -50,4 +39,22 @@ const selector = ({ assignments }: HarmonyAssignmentsState) => {
 
 const resultSelector = ({ setResult }: HarmonyResultState) => {
   return setResult;
+};
+
+const CustomButton = (props: CustomButtonProps) => {
+  return (
+    <Button variant="outlined" {...props}>
+      Find Another Schedule
+    </Button>
+  );
+};
+const Footer: React.FC = () => {
+  return (
+    <small>
+      powered by{" "}
+      <a href="https://github.com/charkour/harmoniously">
+        <code>harmoniously</code>
+      </a>
+    </small>
+  );
 };

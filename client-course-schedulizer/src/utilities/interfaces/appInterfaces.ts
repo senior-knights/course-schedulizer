@@ -1,4 +1,5 @@
 import { loadLocal } from "utilities/hooks/useLocal";
+import { HarmonyClass } from "utilities/services";
 import { Schedule, Term } from "./dataInterfaces";
 
 export enum ColorBy {
@@ -17,7 +18,7 @@ export enum SchedulizerTab {
 
 // structure for the global app state
 export interface AppState {
-  classes: string[];
+  classes: HarmonyClass[];
   colorBy: ColorBy;
   departments: string[];
   fileUrl: string;
@@ -28,6 +29,7 @@ export interface AppState {
   selectedTerm: Term;
   slotMaxTime: string;
   slotMinTime: string;
+  times: string[];
 }
 
 // Defaults for the app state when it launches, will try to load
@@ -45,6 +47,7 @@ export const initialAppState: AppState = loadLocal("appState") || {
   selectedTerm: Term.Fall,
   slotMaxTime: "22:00",
   slotMinTime: "6:00",
+  times: [],
 };
 
 // Ensure that these aren't undefined if they didn't exist in the previous app state

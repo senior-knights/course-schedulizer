@@ -1,3 +1,4 @@
+import { TextFieldProps } from "@material-ui/core/TextField/TextField";
 import { FieldValues, UseFieldArrayMethods, UseFormMethods } from "react-hook-form";
 
 /**
@@ -5,6 +6,8 @@ import { FieldValues, UseFieldArrayMethods, UseFormMethods } from "react-hook-fo
  */
 interface FieldArrayHelpers {
   defaultValue: Partial<FieldValues>;
+  defaultValues: Partial<FieldValues>[];
+  textFieldProps: TextFieldProps;
   titleCaseName: string;
 }
 

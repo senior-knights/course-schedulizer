@@ -1,14 +1,15 @@
-import { Checkbox } from "@material-ui/core";
+import { Checkbox, Grid } from "@material-ui/core";
 import React, { ChangeEvent, Dispatch, SetStateAction, useCallback, useState } from "react";
 
 interface HarmonyCheckboxProps {
+  defaultValue: boolean;
   item: string;
   setList: Dispatch<SetStateAction<string[]>>;
 }
 
 /** A single check box to update lists on the Harmony page */
-export const HarmonyCheckbox = ({ setList, item }: HarmonyCheckboxProps) => {
-  const [checked, setChecked] = useState(false);
+export const HarmonyCheckbox = ({ setList, item, defaultValue }: HarmonyCheckboxProps) => {
+  const [checked, setChecked] = useState(defaultValue);
 
   const handleChange = useCallback(
     (clickedItem: string) => {
@@ -32,8 +33,8 @@ export const HarmonyCheckbox = ({ setList, item }: HarmonyCheckboxProps) => {
   );
 
   return (
-    <div>
-      {item} <Checkbox checked={checked} onChange={handleChange(item)} />
-    </div>
+    <Grid alignItems="center" container>
+      <Checkbox checked={checked} onChange={handleChange(item)} /> {item}
+    </Grid>
   );
 };
