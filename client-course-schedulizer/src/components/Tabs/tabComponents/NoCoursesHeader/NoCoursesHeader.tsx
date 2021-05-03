@@ -1,5 +1,5 @@
 import { Box } from "@material-ui/core";
-import { AddSectionButton, ImportButton } from "components";
+import { AddSectionButton, ImportButton, ViewDemoButton } from "components";
 import React from "react";
 import "./NoCoursesHeader.scss";
 
@@ -15,7 +15,10 @@ export const NoCoursesHeader = () => {
       <Box component="span" marginRight={1}>
         <ImportButton variant="contained" />
       </Box>
-      <AddSectionButton isIcon={false} />
+      <Box component="span" marginRight={1}>
+        <AddSectionButton isIcon={false} />
+      </Box>
+      <ViewDemoButton />
     </>
   );
 };
