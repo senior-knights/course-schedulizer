@@ -9,7 +9,7 @@ export const ViewDemoButton = () => {
   const appContext = useAppContext();
 
   const demoUrl =
-    "?csv=https://raw.githubusercontent.com/senior-knights/course-schedulizer/production/client-course-schedulizer/csv/math-schedule-full.csv";
+    "?csv=https://kvlinden.github.io/data/full_schedule_2021-04-07_submitted.csv";
   const csvIndex = demoUrl.indexOf(getCSVStr);
 
   const onClick = useCallback(() => {
