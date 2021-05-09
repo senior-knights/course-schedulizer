@@ -103,10 +103,10 @@ const AboutCode = () => {
           <code>develop</code> is the less-stable, bleeding-edge build of our Course Schedulizer
           app. Please feel free to look around the code and interact with us on the discussion board
           or by posting issues. The honors constraint satisfaction package is also{" "}
-          <NewTabLink href="https://github.com/senior-knights/aima-typescript-csp">
-            hosted on GitHub
-          </NewTabLink>
-          . For details on the development process, please view the respective ReadMes on GitHub.
+          <NewTabLink href="https://github.com/charkour/csps">hosted on GitHub</NewTabLink>. The
+          Harmoniously project code is also{" "}
+          <NewTabLink href="https://github.com/charkour/harmoniously">hosted on GitHub</NewTabLink>.
+          For details on the development process, please view the respective ReadMes on GitHub.
         </>
       }
       title="Code"
@@ -120,8 +120,14 @@ const AboutReport = () => {
       body={
         <ul>
           <li>
+            <NewTabLink href="https://docs.google.com/document/d/e/2PACX-1vQcSDE6VMNl-wMHhECt3RbeA3WD-tiXersevVAMDXfgImq9HMFS5yQnLx8mZ4qZ4Q/pub">
+              Final Report
+            </NewTabLink>{" "}
+            - 5.13.2021
+          </li>
+          <li>
             <NewTabLink href="https://docs.google.com/document/d/e/2PACX-1vQPQ1Qhu0jCVThVbNsUFxV8fB56fHgVf4Dnhfkf6EU_7627iMVuSHntW8VxF0j0Aw/pub">
-              Updated Proposal
+              Updated Status Report
             </NewTabLink>{" "}
             - 12.15.2020
           </li>
@@ -149,20 +155,30 @@ const AboutResources = () => {
             </NewTabLink>
           </li>
           <li>
+            <NewTabLink href="https://youtu.be/ckn0oPxvlIE">Final Presentation Video</NewTabLink> -
+            4.25.2021
+          </li>
+          <li>
+            <NewTabLink href="https://docs.google.com/presentation/d/e/2PACX-1vRcyM-65kiLgceLaU7mQjnuzqPHKMt-nWT_msYcXeXbLeoe13awn2gSudzlC_5ghpyQlLVPzywJzywj/pub?start=false&loop=false&delayms=3000">
+              Final Presentation Slides
+            </NewTabLink>{" "}
+            - 4.25.2021
+          </li>
+          <li>
             <NewTabLink href="https://web.microsoftstream.com/video/cee6b774-a010-4220-a0d8-c6a6c5240d84?st=2456">
-              Status Report 1
+              Status Report Video
             </NewTabLink>{" "}
             - 12.01.2020
           </li>
           <li>
             <NewTabLink href="https://docs.google.com/document/d/e/2PACX-1vS8sc8-Vs1qkfyGpelPXsuwvSQif3IFlnsZNoak3P7DbBmSYxWDgXL2ig-OJk8VJVHny2lCUZxCyCfJ/pub">
-              Honors Status Report 1
+              Honors Status Report
             </NewTabLink>{" "}
             - 12.01.2020
           </li>
           <li>
             <NewTabLink href="https://docs.google.com/presentation/d/e/2PACX-1vQrjMY5c-gnlvX5AAD1zIqRY0P5BLppQFT5y-3fxeR0TzuEvzUpDADYUGY_3J4TBe1PL3sq9rEqUdRA/pub?start=false&loop=false&delayms=3000">
-              Presentation 1
+              Status Report Slides
             </NewTabLink>{" "}
             - 12.01.2020
           </li>
