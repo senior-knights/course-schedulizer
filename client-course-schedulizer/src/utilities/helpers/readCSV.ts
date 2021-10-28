@@ -91,6 +91,8 @@ const callbacks: ValidFields = {
 };
 
 export const csvStringToSchedule = (csvString: string): Schedule => {
+  console.log("The csvString");
+  console.log(csvString);
   // Remove junk from Excel export to CSV
   csvString = csvString.replace("ï»¿", "");
 
@@ -136,6 +138,8 @@ export const csvStringToSchedule = (csvString: string): Schedule => {
       insertSectionCourse(schedule, section, course);
     }
   });
+  console.log("From the: csvStringToSchedule function.");
+  console.log(schedule);
   return schedule;
 };
 
@@ -219,5 +223,7 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
     course.sections.push(section);
     schedule.courses.push(course);
   }
+  console.log("From the: insertSectionCourse function.");
+  console.log(schedule);
   return schedule;
 };
