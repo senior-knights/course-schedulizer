@@ -22,7 +22,7 @@ export const ScheduleHeader = ({ headers, scheduleType }: ScheduleHeaderProps) =
           const className = `calendar-title ${getCalendarClassName(scheduleType)}`;
           return (
             <div key={header} className={className}>
-              {header}
+              {header === "*" ? "Wildcard" : header}
             </div>
           );
         })}

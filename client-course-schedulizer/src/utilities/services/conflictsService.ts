@@ -58,6 +58,7 @@ export const findConflicts = (schedule: Schedule): Schedule => {
         meeting1.term === meeting2.term &&
         meeting1.days.some(meeting2IncludesDay) &&
         (meeting1.instructors.some(meeting2IncludesInstructor) ||
+          meeting1.instructors.includes("*") ||
           meeting1.room === meeting2.room) &&
         meeting1.sectionName !== meeting2.sectionName
       ) {
