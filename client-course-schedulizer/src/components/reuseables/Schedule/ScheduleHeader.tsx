@@ -1,6 +1,7 @@
 import React from "react";
 import StickyNode from "react-stickynode";
 import { getCalendarClassName } from "utilities";
+import { WILDCARD } from "utilities/constants";
 import { ScheduleBaseProps } from "./ScheduleBase";
 
 interface ScheduleHeaderProps {
@@ -22,7 +23,7 @@ export const ScheduleHeader = ({ headers, scheduleType }: ScheduleHeaderProps) =
           const className = `calendar-title ${getCalendarClassName(scheduleType)}`;
           return (
             <div key={header} className={className}>
-              {header === "*" ? "Wildcard" : header}
+              {header === WILDCARD ? "Wildcard" : header}
             </div>
           );
         })}

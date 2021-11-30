@@ -2,6 +2,8 @@ import { Course, Meeting, Section, Term } from "./interfaces";
 
 export const INITIAL_DATE = "2000-01-02";
 
+export const WILDCARD = "*";
+
 export const emptyCourse: Course = {
   name: "",
   number: "",
