@@ -19,6 +19,17 @@ interface ConflictData {
   term: Section["term"];
 }
 
+export interface ConflictRow {
+  instructor1: string;
+  instructor2: string;
+  room1: string;
+  room2: string;
+  sectionName1: string;
+  sectionName2: string;
+  time1: string;
+  time2: string;
+}
+
 export const findConflicts = (schedule: Schedule): Schedule => {
   // flatten the schedule into a single array with just the data being checked for conflicts
   const dataToCheck: ConflictData[] = [];
@@ -41,9 +52,11 @@ export const findConflicts = (schedule: Schedule): Schedule => {
     });
   });
 
+  const conflictRows: ConflictRow[] = [];
   // loop through each pair of meetings and mark conflicts
   forEach(dataToCheck, (meeting1, i) => {
     forEach(dataToCheck, (meeting2, j) => {
+      const conflictRow: ConflictRow = {} as ConflictRow;
       const range1 = range(meeting1.startTime, meeting1.endTime);
       const range2 = range(meeting2.startTime, meeting2.endTime);
       const meeting2IncludesDay = (day: Day) => {
@@ -67,8 +80,23 @@ export const findConflicts = (schedule: Schedule): Schedule => {
         const [ci2, si2, mi2] = meeting2.indexes;
         schedule.courses[ci1].sections[si1].meetings[mi1].isConflict = true;
         schedule.courses[ci2].sections[si2].meetings[mi2].isConflict = true;
+
+        conflictRow.instructor1 = meeting1.instructors.join("");
+        conflictRow.instructor2 = meeting2.instructors.join("");
+        conflictRow.room1 = meeting1.room;
+        conflictRow.room2 = meeting2.room;
+        conflictRow.sectionName1 = meeting1.sectionName;
+        conflictRow.sectionName2 = meeting2.sectionName;
+        conflictRow.time1 = `${meeting1.startTime.format("h:mm A")} - ${meeting1.endTime.format(
+          "h:mm A",
+        )}`;
+        conflictRow.time2 = `${meeting2.startTime.format("h:mm A")} - ${meeting2.endTime.format(
+          "h:mm A",
+        )}`;
+        conflictRows.push(conflictRow);
       }
     });
   });
+  schedule.conflicts = conflictRows;
   return schedule;
 };

@@ -1,9 +1,10 @@
-import { Container, Tab, Tabs as MUITabs, Typography } from "@material-ui/core";
+import { Container, Tab, Tabs as MUITabs } from "@material-ui/core";
 import { AsyncComponent } from "components";
 import { DepartmentSchedule, FacultyLoads, FacultySchedule, RoomsSchedule } from "components/Tabs";
 import React, { ChangeEvent, useContext, useState } from "react";
 import { AppContext } from "utilities/contexts";
 import { SchedulizerTab } from "utilities/interfaces";
+import { Conflicts } from "./Conflicts";
 import { CSVActions, NoCoursesHeader, TabPanel } from "./tabComponents";
 import "./Tabs.scss";
 
@@ -60,7 +61,7 @@ export const Tabs = () => {
               <FacultyLoads />
             </TabPanel>
             <TabPanel index={4} value={tabValue}>
-              <Typography>The conflicts tab is not supported yet.</Typography>
+              <Conflicts />
             </TabPanel>
           </>
         ) : (

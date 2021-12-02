@@ -1,8 +1,57 @@
-import { Course, Meeting, Section, Term } from "./interfaces";
+import {
+  Course,
+  CourseSectionMeeting,
+  Day,
+  Meeting,
+  Section,
+  SemesterLengthOption,
+  Term,
+} from "./interfaces";
+import { SectionInput } from "./services/addSectionService";
 
 export const INITIAL_DATE = "2000-01-02";
 
 export const WILDCARD = "*";
+
+export const WILDCARD_COLOR = "silver";
+
+export const WILDCARD_DATA: SectionInput = {
+  days: [Day.Monday, Day.Tuesday, Day.Wednesday, Day.Thursday, Day.Friday],
+  duration: 50,
+  instructor: ["*"],
+  location: "*",
+  name: "*",
+  number: "*",
+  prefix: ["*"],
+  section: "*",
+  semesterLength: SemesterLengthOption.FullSemester,
+  startTime: "11:00 AM",
+  term: Term.Fall,
+  year: "2021",
+};
+
+export const WILDCARD_VALUES: CourseSectionMeeting = {
+  course: {
+    name: "*",
+    number: "*",
+    prefixes: ["*"],
+    sections: [],
+  },
+  meeting: {
+    days: [Day.Monday, Day.Tuesday, Day.Wednesday, Day.Thursday, Day.Friday],
+    duration: 50,
+    location: { building: "*", roomNumber: "*" },
+    startTime: "11:00 AM",
+  },
+  section: {
+    facultyHours: 0,
+    instructors: ["*"],
+    letter: "*",
+    meetings: [],
+    studentHours: 0,
+    term: Term.Fall,
+  },
+};
 
 export const emptyCourse: Course = {
   name: "",

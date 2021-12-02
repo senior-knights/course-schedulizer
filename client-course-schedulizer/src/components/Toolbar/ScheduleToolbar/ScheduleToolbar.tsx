@@ -17,7 +17,7 @@ export const ScheduleToolbar = () => {
       <div>{fileUrl ? `Imported URL: ${fileUrl}` : ""}</div>
       <div className="toolbar-right">
         <SemesterSelector />
-        <AddSectionButton />
+        <AddSectionButton value="false" />
       </div>
     </div>
   );

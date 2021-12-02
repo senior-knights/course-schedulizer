@@ -25,6 +25,7 @@ import {
   SectionInput,
   useAddSectionToSchedule,
   useDeleteMeetingFromSchedule,
+  WILDCARD,
 } from "utilities";
 import { AppContext } from "utilities/contexts";
 import {
@@ -61,11 +62,40 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
     setIsCSVLoading,
   } = useContext(AppContext);
 
+  // const meeting = {
+  //   days: [Day.Monday, Day.Tuesday, Day.Wednesday, Day.Thursday, Day.Friday],
+  //   duration: 50,
+  //   location: { building: "*", roomNumber: "*" },
+  //   startTime: values?.meeting.startTime,
+  // };
+
+  // const new_meeting = values?.meeting ?? meeting;
+
+  // const new_values = {
+  //   ...values,
+  //   meeting: new_meeting,
+  // } as CourseSectionMeeting;
+
+  // const methods = useForm<SectionInput>(
+  //   values?.section.instructors[0] !== WILDCARD
+  //     ? {
+  //         criteriaMode: "all",
+  //         defaultValues: mapInternalTypesToInput(values),
+  //         resolver: yupResolver(addSectionSchema),
+  //       }
+  //     : {
+  //         criteriaMode: "all",
+  //         defaultValues: mapInternalTypesToInput(new_values),
+  //         resolver: yupResolver(addWildcardSectionSchema),
+  //       },
+  // );
+
   const methods = useForm<SectionInput>({
     criteriaMode: "all",
     defaultValues: mapInternalTypesToInput(values),
     resolver: yupResolver(addSectionSchema),
   });
+
   const { reset } = methods;
   const [semesterLength, setSemesterLength] = useState<SemesterLengthOption>(
     convertFromSemesterLength(values?.section.semesterLength),
@@ -81,6 +111,9 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
         !isEqual(omitBy(dataTransformed, isNil), omitBy(mapInternalTypesToInput(values), isNil))
       ) {
         await addSectionToSchedule(data, values, removeOldMeeting);
+      } else if (data.instructor[0] === WILDCARD) {
+        await addSectionToSchedule(data, values, removeOldMeeting);
+        // await addSectionToSchedule(WILDCARD_DATA, new_values, removeOldMeeting);
       } else {
         // Close the popover
         setIsCSVLoading(true);
@@ -281,8 +314,4 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
       </form>
     </FormProvider>
   );
-};
-
-AddSectionPopover.defaultProps = {
-  values: undefined,
 };

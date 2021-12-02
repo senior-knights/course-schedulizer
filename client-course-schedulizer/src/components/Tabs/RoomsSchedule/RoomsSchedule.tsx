@@ -5,7 +5,7 @@ import { AppContext } from "utilities/contexts";
 
 export const RoomsSchedule = () => {
   const {
-    appState: { schedule, rooms },
+    appState: { rooms, schedule },
   } = useContext(AppContext);
 
   return (
