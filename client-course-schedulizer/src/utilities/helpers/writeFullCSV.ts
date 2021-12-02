@@ -1,3 +1,4 @@
+// import { Console } from "console";
 import { forEach } from "lodash";
 import moment, { Moment } from "moment";
 import { Day, Schedule, Section, Term } from "utilities/interfaces";
@@ -5,9 +6,26 @@ import { getLocationString } from "utilities/services";
 
 export const scheduleToFullCSVString = (schedule: Schedule): string => {
   const numericReg = RegExp("[0-9]");
+
+  // Sorts the schedule object by dept, term, section name
+  // console.log(schedule.courses);
+  schedule.courses = schedule.courses.sort((a,b): number => {
+    if( `${a.prefixes.length ? a.prefixes[0] : ""}-${a.number}` > `${b.prefixes.length ? b.prefixes[0] : ""}-${b.number}`) {
+      return 1;
+    }
+    return -1});
+
   let csvStr =
     "Department,Term,TermStart,AcademicYear,SectionName,SubjectCode,CourseNum,SectionCode,CourseLevelCode,MinimumCredits,FacultyLoad,Used,Day10Used,LocalMax,GlobalMax,RoomCapacity,BuildingAndRoom,MeetingDays,MeetingTime,SectionStartDate,SectionEndDate,SemesterLength,Building,RoomNumber,MeetingStart,MeetingStartInternal,MeetingDurationMinutes,MeetingEnd,MeetingEndInternal,Monday,Tuesday,Wednesday,Thursday,Friday,ShortTitle,Faculty,SectionStatus,InstructionalMethod,Comments,LastEditTimestamp\n";
   schedule.courses.forEach((course) => {
+    // Making sure the course sections are sorted (if for some reason section B was created before section A)
+    // course.sections.sort((a,b): number => {
+    //   if(a.letter < b.letter) {
+    //     return 1;
+    //   }
+    //   return 0;
+    // });
+
     course.sections.forEach((section) => {
       // Iterate through meetings to construct relevant strings
       let startMoment;
