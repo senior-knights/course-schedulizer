@@ -49,7 +49,7 @@
     "@testing-library/react": "9.5.0",
     "@testing-library/user-event": "7.2.1",
     "fs": "0.0.1-security",
-    "immer": ">=9.0.6",
+    "immer": "9.0.6",
     "isomorphic-fetch": "^3.0.0",
     "js-file-download": "^0.4.12",
     "lodash": "4.17.21",
@@ -72,7 +72,7 @@
     "react-table": "^7.7.0",
     "react-visibility-sensor": "5.1.1",
     "runtypes": "5.0.1",
-    "xlsx": ">=0.17.0",
+    "xlsx": "0.17.0",
     "yup": "^0.29.3",
     "zustand": "3.4.1"
   },
