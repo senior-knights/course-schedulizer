@@ -2,9 +2,9 @@
 
 export enum Term {
   Fall = "FA",
-  Interim = "IN", // TODO: Remove?
   Spring = "SP",
-  Summer = "SU", // TODO: Is this a thing?
+  Interim = "IN", // TODO: Remove?
+  Summer = "SU",
 }
 
 export enum SemesterLength {
