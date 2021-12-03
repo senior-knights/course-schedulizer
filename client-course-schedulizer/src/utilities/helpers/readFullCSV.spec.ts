@@ -23,15 +23,15 @@ beforeAll(async () => {
   // File read from https://stackoverflow.com/questions/32705219/nodejs-accessing-file-with-relative-path
   const fullCSVString: string = readFileSync(
     join(__dirname, "..", "..", "..", "csv", "math-schedule-full.csv"),
-    "utf8",
+    { encoding: "utf8" },
   );
   expectedFullOutputCSV = readFileSync(
     join(__dirname, "..", "..", "..", "csv", "math-schedule-full-export.csv"),
-    "utf8",
+    { encoding: "utf8" },
   );
   expectedOutputCSV = readFileSync(
     join(__dirname, "..", "..", "..", "csv", "math-schedule-export.csv"),
-    "utf8",
+    { encoding: "utf8" },
   );
   schedule = csvStringToSchedule(fullCSVString);
   [basicCourse] = schedule.courses;
