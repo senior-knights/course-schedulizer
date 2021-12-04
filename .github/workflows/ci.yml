@@ -14,6 +14,14 @@ jobs:
       working-directory: ./client-course-schedulizer
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          cache: 'npm'
+      - name: update-npm-version
+        run: |
+          npm install -g npm@lastest
+          npm -v
       - name: Install npm dependencies
         run: |
           npm ci
