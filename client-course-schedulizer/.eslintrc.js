@@ -77,6 +77,9 @@ module.exports = {
     ],
     "import/no-unresolved": "off",
 
+    // Stop no-cycle
+    "import/no-cycle": "off",
+
     // Rules related to function definitions
     "func-style": ["error", "expression"],
     "implicit-arrow-linebreak": "off",
