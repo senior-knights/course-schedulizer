@@ -78,7 +78,7 @@ module.exports = {
     "import/no-unresolved": "off",
 
     // Stop no-cycle
-    "import/no-cycle": ["error", { maxDepth: Infinity }],
+    "import/no-cycle": ["error", { maxDepth: "∞" }],
 
     // Rules related to function definitions
     "func-style": ["error", "expression"],
