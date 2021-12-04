@@ -29,7 +29,7 @@ const convertToSchedule = (result: Result): Schedule => {
       // TODO update this.
       const [prefix, number, letter] = course.split("-");
       const courseObject = result[course];
-      const { professor, time, room } = courseObject;
+      const [professor, time, room] = courseObject;
       const [building, roomNumber] = room.split(" ");
 
       schedule.courses.push({

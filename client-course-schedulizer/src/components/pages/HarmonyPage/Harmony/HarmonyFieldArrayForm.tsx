@@ -15,7 +15,7 @@ export const HarmonyFieldArrayForm = (props: HarmonyFieldArrayFormProps) => {
 
   const onSubmitCallback = React.useCallback(
     (data: object[]) => {
-      update(fieldsName, data as { [key: string]: string }[]);
+      // update(fieldsName, data as { [key: string]: string }[]);
       onSubmit && onSubmit();
     },
     [update, onSubmit, fieldsName],

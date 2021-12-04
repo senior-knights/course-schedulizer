@@ -14,7 +14,7 @@ export const useHarmonyFormsStore = create<HarmonyFormsState>(
       rooms: [],
       times: [],
       update: (key, data) => {
-        set({ [key]: data });
+        // set({ [key]: data });
       },
     };
   },

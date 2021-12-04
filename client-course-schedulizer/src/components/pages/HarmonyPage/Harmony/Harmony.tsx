@@ -27,7 +27,7 @@ export const Harmony = () => {
         button={CustomButton}
         footer={<Footer />}
         header={<></>}
-        setResult={setRes}
+        // setResult={setRes}
       />
     </>
   );

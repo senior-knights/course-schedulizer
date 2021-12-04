@@ -11,7 +11,7 @@ import "./Footer.scss";
 export const Footer = () => {
   return (
     <footer className="app-footer">
-      <Grid container justifyContent="flex-start">
+      <Grid container justify="flex-start">
         <Box p={2}>© {moment().year()} Senior Knights</Box>
       </Grid>
     </footer>
