@@ -1,4 +1,3 @@
-// import { Console } from "console";
 import { forEach } from "lodash";
 import moment, { Moment } from "moment";
 import { Day, Schedule, Section, Term } from "utilities/interfaces";
