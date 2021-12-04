@@ -1,6 +1,10 @@
 import { FieldArrayForm, FieldArrayFormProps } from "components";
 import React from "react";
-import { HarmonyFormsState, useHarmonyFormsStore } from "utilities/hooks/useHarmonyFormsStore";
+import {
+  HarmonyFormsAccessors,
+  HarmonyFormsState,
+  useHarmonyFormsStore,
+} from "utilities/hooks/useHarmonyFormsStore";
 
 interface HarmonyFieldArrayFormProps extends FieldArrayFormProps {
   onSubmit?: () => void;
@@ -15,7 +19,7 @@ export const HarmonyFieldArrayForm = (props: HarmonyFieldArrayFormProps) => {
 
   const onSubmitCallback = React.useCallback(
     (data: object[]) => {
-      // update(fieldsName, data as { [key: string]: string }[]);
+      update(fieldsName as keyof HarmonyFormsAccessors, data as { [key: string]: string }[]);
       onSubmit && onSubmit();
     },
     [update, onSubmit, fieldsName],

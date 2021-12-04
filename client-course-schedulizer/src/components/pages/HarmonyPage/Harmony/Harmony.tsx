@@ -1,23 +1,30 @@
-import { CustomButtonProps, Harmony as HarmonyBase, Result } from "@harmoniously/react";
+import {
+  CustomButtonProps,
+  Harmony as HarmonyBase,
+  // HarmonyProps,
+  // Result
+} from "@harmoniously/react";
 import { Button } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React from // useEffect,
+// useState
+"react";
 import {
   HarmonyAssignmentsState,
-  HarmonyResultState,
+  // HarmonyResultState,
   useHarmonyAssignmentsStore,
-  useHarmonyResultStore,
+  // useHarmonyResultStore,
 } from "utilities";
 
 /** Harmony returns a component to automatically create schedules. */
 export const Harmony = () => {
   const assignments = useHarmonyAssignmentsStore(selector);
-  const setResult = useHarmonyResultStore(resultSelector);
-  const [res, setRes] = useState<Result>();
+  // const setResult = useHarmonyResultStore(resultSelector);
+  // const [res, setRes] = useState<Result>();
 
   // Save state in the store.
-  useEffect(() => {
-    setResult(res);
-  }, [res, setResult]);
+  // useEffect(() => {
+  //   setResult(res);
+  // }, [res, setResult]);
 
   return (
     <>
@@ -27,7 +34,7 @@ export const Harmony = () => {
         button={CustomButton}
         footer={<Footer />}
         header={<></>}
-        // setResult={setRes}
+        // result={setResult}
       />
     </>
   );
@@ -37,9 +44,9 @@ const selector = ({ assignments }: HarmonyAssignmentsState) => {
   return assignments;
 };
 
-const resultSelector = ({ setResult }: HarmonyResultState) => {
-  return setResult;
-};
+// const resultSelector = ({ setResult }: HarmonyResultState) => {
+//   return setResult;
+// };
 
 const CustomButton = (props: CustomButtonProps) => {
   return (
