@@ -4,7 +4,7 @@ import { filter, flatten, forEach, forOwn, map, maxBy, minBy, range } from "loda
 import moment from "moment";
 import hash from "object-hash";
 import randomColor from "randomcolor";
-import { enumArray } from "utilities";
+import { enumArray, WILDCARD_COLOR } from "utilities";
 import { INITIAL_DATE } from "utilities/constants";
 import { ColorBy, Day, Location, Meeting, Schedule, Section, Term } from "utilities/interfaces";
 import { findConflicts } from "./conflictsService";
@@ -168,7 +168,10 @@ export const colorEventsByFeature = (groupedEvents: GroupedEvents, colorBy: Colo
           const building = event.extendedProps?.meeting?.location?.building;
           const roomNum = event.extendedProps?.meeting?.location?.roomNumber;
           const roomStr = `${building} ${roomNum}`;
-          event.color = randomColor({ luminosity: "light", seed: hash(roomStr) });
+          event.color =
+            event.extendedProps?.section?.instructors[0] === "*"
+              ? WILDCARD_COLOR
+              : randomColor({ luminosity: "light", seed: hash(roomStr) });
           event.textColor = "black";
         });
       });
@@ -180,10 +183,14 @@ export const colorEventsByFeature = (groupedEvents: GroupedEvents, colorBy: Colo
           forEach(event.extendedProps?.section?.instructors, (instructor) => {
             instructorStr += `${instructor}, `;
           });
-          event.color = randomColor({
-            luminosity: "light",
-            seed: hash(instructorStr),
-          });
+          // event.color = randomColor({ luminosity: "light", seed: hash(instructorStr) });
+          event.color =
+            instructorStr === "*, "
+              ? WILDCARD_COLOR
+              : randomColor({
+                  luminosity: "light",
+                  seed: hash(instructorStr),
+                });
           event.textColor = "black";
         });
       });
@@ -195,7 +202,11 @@ export const colorEventsByFeature = (groupedEvents: GroupedEvents, colorBy: Colo
           forEach(event.extendedProps?.course?.prefixes, (prefix) => {
             prefixStr += `${prefix}, `;
           });
-          event.color = randomColor({ luminosity: "light", seed: hash(prefixStr) });
+          // event.color = randomColor({ luminosity: "light", seed: hash(prefixStr) });
+          event.color =
+            event.extendedProps?.section?.instructors[0] === "*"
+              ? WILDCARD_COLOR
+              : randomColor({ luminosity: "light", seed: hash(prefixStr) });
           event.textColor = "black";
         });
       });
@@ -218,10 +229,13 @@ export const colorEventsByFeature = (groupedEvents: GroupedEvents, colorBy: Colo
               event.color = "#ffc2c2";
               break;
             default:
-              event.color = randomColor({
-                luminosity: "light",
-                seed: hash(levelStr ?? "no-level"),
-              });
+              event.color =
+                event.extendedProps?.section?.instructors[0] === "*"
+                  ? WILDCARD_COLOR
+                  : randomColor({
+                      luminosity: "light",
+                      seed: hash(levelStr ?? "no-level"),
+                    });
           }
           event.textColor = "black";
         });
