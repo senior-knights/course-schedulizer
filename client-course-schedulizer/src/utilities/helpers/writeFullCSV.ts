@@ -5,10 +5,42 @@ import { getLocationString } from "utilities/services";
 
 export const scheduleToFullCSVString = (schedule: Schedule): string => {
   const numericReg = RegExp("[0-9]");
+
+  // Sorts the schedule object by dept, class number, section letter, term
+  schedule.courses = schedule.courses.sort((a, b): number => {
+    if (typeof a.department === "string" && typeof b.department === "string") {
+      return (
+        a.department.localeCompare(b.department) ||
+        `${a.prefixes.length ? a.prefixes[0] : ""}-${a.number}`.localeCompare(
+          `${b.prefixes.length ? b.prefixes[0] : ""}-${b.number}`,
+        )
+      );
+    }
+    return -1;
+  });
+
   let csvStr =
     "Department,Term,TermStart,AcademicYear,SectionName,SubjectCode,CourseNum,SectionCode,CourseLevelCode,MinimumCredits,FacultyLoad,Used,Day10Used,LocalMax,GlobalMax,RoomCapacity,BuildingAndRoom,MeetingDays,MeetingTime,SectionStartDate,SectionEndDate,SemesterLength,Building,RoomNumber,MeetingStart,MeetingStartInternal,MeetingDurationMinutes,MeetingEnd,MeetingEndInternal,Monday,Tuesday,Wednesday,Thursday,Friday,ShortTitle,Faculty,SectionStatus,InstructionalMethod,Comments,LastEditTimestamp\n";
   schedule.courses.forEach((course) => {
+    const termOrder = Object.values(Term);
+    course.sections = course.sections.sort((a, b): number => {
+      if (typeof a.term === "string" && typeof b.term === "string") {
+        return (
+          a.letter.localeCompare(b.letter) || termOrder.indexOf(a.term) - termOrder.indexOf(b.term) // a.term.localeCompare(b.term) ||
+        );
+      }
+      return a.letter.localeCompare(b.letter);
+    });
+
     course.sections.forEach((section) => {
+      // const termOrder = Object.values(Term);
+      // if(typeof section.term !== 'string') {
+      //   section.term = section.term.sort((a,b): number => {
+      //     return(
+      //       termOrder.indexOf(b) - termOrder.indexOf(a)
+      //     );
+      // })};
+
       // Iterate through meetings to construct relevant strings
       let startMoment;
       let endMoment;
