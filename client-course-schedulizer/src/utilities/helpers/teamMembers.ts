@@ -47,7 +47,7 @@ export const team2021: TeamMember[] = [
     name: "Ryan Vreeke",
     photo:
       "https://avatars.githubusercontent.com/u/58562982?s=400&u=dad23251a36cf5a67ea0a7d3d25a204a8f6d8341&v=4",
-    website: "https://github.com/Jonri2",
+    website: "https://github.com/RyanVreeke",
   },
 ];
 
