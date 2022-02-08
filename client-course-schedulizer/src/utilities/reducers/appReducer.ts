@@ -60,6 +60,12 @@ export const reducer = (actionCallback: (item: AppState) => void = voidFn) => {
         newState = { ...state, schedulizerTab };
         break;
       }
+      case "setConstraints": {
+        let { constraints } = action.payload;
+        constraints = constraints || JSON;
+        newState = { ...state, constraints }; 
+        break;
+      }
       default:
         return state;
     }

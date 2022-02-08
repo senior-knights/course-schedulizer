@@ -76,3 +76,8 @@ export const emptySection: Section = {
   studentHours: -1,
   term: Term.Fall,
 };
+
+// TODO: Delete this code
+// export const setConstraints = (constraints: JSON) => {
+//   return constraints;
+// };

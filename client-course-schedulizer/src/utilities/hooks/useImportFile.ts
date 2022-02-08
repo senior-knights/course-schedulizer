@@ -41,6 +41,10 @@ export const useImportFile = (isAdditiveImport: boolean) => {
         file && reader.readAsBinaryString(file);
         break;
       }
+      case "json": {
+        file && reader.readAsText(file);
+        break;
+      }
       default: {
         throw Error(`FileType ${fileType} not supported.`);
       }
@@ -50,11 +54,15 @@ export const useImportFile = (isAdditiveImport: boolean) => {
       let scheduleString: string;
       if (fileType === "xlsx") {
         scheduleString = getCSVFromXLSXData(reader.result as ArrayBufferLike);
-      } else {
+      } else if (fileType === "csv") {
         scheduleString = String(reader.result);
+      } else {
+        const newConstraints = JSON.parse(String(reader.result));
+        appDispatch({ payload: { constraints: newConstraints }, type: "setConstraints"});
+        scheduleString = "";
       }
       scheduleJSON = csvStringToSchedule(scheduleString);
-
+      
       !isAdditiveImport && appDispatch({ payload: { fileUrl: "" }, type: "setFileUrl" });
       await updateScheduleInContext(schedule, scheduleJSON, appDispatch, isAdditiveImport);
       setIsCSVLoading(false);
