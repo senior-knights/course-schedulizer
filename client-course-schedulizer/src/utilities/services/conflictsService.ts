@@ -35,10 +35,6 @@ export interface Constraints {
 }
 
 export const findConflicts = (schedule: Schedule, constraints: Constraints = {"": []}): Schedule => {
-  // const {
-  //   appState: { constraints },
-  // } = useContext(AppContext);
-
   // flatten the schedule into a single array with just the data being checked for conflicts
   const dataToCheck: ConflictData[] = [];
   forEach(schedule.courses, (course, courseIndex) => {
@@ -73,6 +69,9 @@ export const findConflicts = (schedule: Schedule, constraints: Constraints = {""
       const meeting2IncludesInstructor = (instructor: Instructor) => {
         return meeting2.instructors.includes(instructor);
       };
+      const meeting2IncludesConstriant = () => {
+        return constraints[meeting1.sectionName.replace("-", "").slice(0, -2)].includes(meeting2.sectionName.replace("-", "").slice(0, -2));
+      };
 
       if (
         i !== j &&
@@ -80,10 +79,12 @@ export const findConflicts = (schedule: Schedule, constraints: Constraints = {""
         meeting1.term === meeting2.term &&
         meeting1.days.some(meeting2IncludesDay) &&
         (meeting1.instructors.some(meeting2IncludesInstructor) ||
-          constraints[meeting1.sectionName.replace("-", "").slice(0, -2)] !== undefined ? constraints[meeting1.sectionName.replace("-", "").slice(0, -2)].includes(meeting2.sectionName.replace("-", "").slice(0, -2)) : false ||
+          constraints[meeting1.sectionName.replace("-", "").slice(0, -2)] !== undefined ? meeting2IncludesConstriant : false ||
           meeting1.instructors.includes(WILDCARD) ||
           (meeting1.room === meeting2.room && meeting1.sectionName !== meeting2.sectionName)))
         ) {
+        console.log(meeting1.sectionName.replace("-", "").slice(0, -2));
+        console.log(meeting2.sectionName.replace("-", "").slice(0, -2));
         // TODO: Get rid of these comments
         // (range1.overlaps(range2) && (constraints[meeting1.sectionName.replace("-", "").slice(0, -2)] !== undefined ? constraints[meeting1.sectionName.replace("-", "").slice(0, -2)].includes(meeting2.sectionName.replace("-", "").slice(0, -2)) : false)) ||
         // (constraints[meeting1.sectionName.replace("-", "").slice(0, -2)] !== undefined ? constraints[meeting1.sectionName.replace("-", "").slice(0, -2)].includes(meeting2.sectionName.replace("-", "").slice(0, -2)) : false))) &&
