@@ -75,16 +75,21 @@ export const findConflicts = (schedule: Schedule, constraints: Constraints = {""
 
       if (
         i !== j &&
-        (range1.overlaps(range2) &&
+        range1.overlaps(range2) &&
         meeting1.term === meeting2.term &&
         meeting1.days.some(meeting2IncludesDay) &&
         (meeting1.instructors.some(meeting2IncludesInstructor) ||
-          constraints[meeting1.sectionName.replace("-", "").slice(0, -2)] !== undefined ? meeting2IncludesConstriant : false ||
+          constraints[meeting1.sectionName.replace("-", "").slice(0, -2)] !== undefined ? meeting2IncludesConstriant() : false ||
           meeting1.instructors.includes(WILDCARD) ||
-          (meeting1.room === meeting2.room && meeting1.sectionName !== meeting2.sectionName)))
+          (meeting1.room === meeting2.room && meeting1.sectionName !== meeting2.sectionName))
         ) {
-        console.log(meeting1.sectionName.replace("-", "").slice(0, -2));
-        console.log(meeting2.sectionName.replace("-", "").slice(0, -2));
+        // console.log(meeting1);
+        // console.log(meeting2);
+        // console.log(constraints[meeting1.sectionName.replace("-", "").slice(0, -2)].includes(meeting2.sectionName.replace("-", "").slice(0, -2)));
+        // console.log(meeting1.sectionName.replace("-", "").slice(0, -2));
+        // console.log(meeting2.sectionName.replace("-", "").slice(0, -2));
+        // console.log(constraints[meeting1.sectionName.replace("-", "").slice(0, -2)] !== undefined ? meeting2IncludesConstriant : false);
+        // console.log(meeting2IncludesConstriant);
         // TODO: Get rid of these comments
         // (range1.overlaps(range2) && (constraints[meeting1.sectionName.replace("-", "").slice(0, -2)] !== undefined ? constraints[meeting1.sectionName.replace("-", "").slice(0, -2)].includes(meeting2.sectionName.replace("-", "").slice(0, -2)) : false)) ||
         // (constraints[meeting1.sectionName.replace("-", "").slice(0, -2)] !== undefined ? constraints[meeting1.sectionName.replace("-", "").slice(0, -2)].includes(meeting2.sectionName.replace("-", "").slice(0, -2)) : false))) &&
