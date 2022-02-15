@@ -70,7 +70,8 @@ export const findConflicts = (schedule: Schedule, constraints: Constraints = {""
         return meeting2.instructors.includes(instructor);
       };
       const meeting2IncludesConstriant = () => {
-        return constraints[meeting1.sectionName.replace("-", "").slice(0, -2)].includes(meeting2.sectionName.replace("-", "").slice(0, -2));
+        const value = constraints[meeting1.sectionName.replace("-", "").slice(0, -2)] !== undefined ? constraints[meeting1.sectionName.replace("-", "").slice(0, -2)].includes(meeting2.sectionName.replace("-", "").slice(0, -2)) : false;
+        return value;
       };
 
       if (
@@ -79,7 +80,8 @@ export const findConflicts = (schedule: Schedule, constraints: Constraints = {""
         meeting1.term === meeting2.term &&
         meeting1.days.some(meeting2IncludesDay) &&
         (meeting1.instructors.some(meeting2IncludesInstructor) ||
-          constraints[meeting1.sectionName.replace("-", "").slice(0, -2)] !== undefined ? meeting2IncludesConstriant() : false ||
+          // constraints[meeting1.sectionName.replace("-", "").slice(0, -2)] !== undefined ? meeting2IncludesConstriant() : false ||
+          meeting2IncludesConstriant() ||
           meeting1.instructors.includes(WILDCARD) ||
           (meeting1.room === meeting2.room && meeting1.sectionName !== meeting2.sectionName))
         ) {
