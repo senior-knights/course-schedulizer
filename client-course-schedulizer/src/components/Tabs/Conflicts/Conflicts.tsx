@@ -25,6 +25,7 @@ export const Conflicts = () => {
 
   const columns = useMemo<Column<ConflictRow>[]>(() => {
     return [
+      { Header: "Conflict Type", accessor: "type" },
       { Header: "Instructor 1", accessor: "instructor1" },
       { Header: "Room 1", accessor: "room1" },
       { Header: "Section 1", accessor: "sectionName1" },

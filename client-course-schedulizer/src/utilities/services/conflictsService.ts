@@ -28,6 +28,7 @@ export interface ConflictRow {
   sectionName2: string;
   time1: string;
   time2: string;
+  type: "Instructor" | "Room" | "Wildcard" | "Constraint";
 }
 
 export interface Constraints {
@@ -67,10 +68,31 @@ export const findConflicts = (schedule: Schedule, constraints: Constraints = {""
         return meeting2.days.includes(day);
       };
       const meeting2IncludesInstructor = (instructor: Instructor) => {
-        return meeting2.instructors.includes(instructor);
+        const value = meeting2.instructors.includes(instructor);
+        if(value) {
+          conflictRow.type = "Instructor";
+        }
+        return value;
+      };
+      const meetingRoomConflict = () => {
+        const value = meeting1.room === meeting2.room && meeting1.sectionName !== meeting2.sectionName;
+        if(value) {
+          conflictRow.type = "Room";
+        }
+        return value;
+      };
+      const meeting1IncludesWildcard = () => {
+        const value = meeting1.instructors.includes(WILDCARD);
+        if(value) {
+          conflictRow.type = "Wildcard";
+        }
+        return value;
       };
       const meeting2IncludesConstriant = () => {
         const value = constraints[meeting1.sectionName.replace("-", "").slice(0, -2)] !== undefined ? constraints[meeting1.sectionName.replace("-", "").slice(0, -2)].includes(meeting2.sectionName.replace("-", "").slice(0, -2)) : false;
+        if(value) {
+          conflictRow.type = "Constraint";
+        }
         return value;
       };
 
@@ -80,31 +102,10 @@ export const findConflicts = (schedule: Schedule, constraints: Constraints = {""
         meeting1.term === meeting2.term &&
         meeting1.days.some(meeting2IncludesDay) &&
         (meeting1.instructors.some(meeting2IncludesInstructor) ||
-          // constraints[meeting1.sectionName.replace("-", "").slice(0, -2)] !== undefined ? meeting2IncludesConstriant() : false ||
           meeting2IncludesConstriant() ||
-          meeting1.instructors.includes(WILDCARD) ||
-          (meeting1.room === meeting2.room && meeting1.sectionName !== meeting2.sectionName))
+          meeting1IncludesWildcard() ||
+          meetingRoomConflict())
         ) {
-        // console.log(meeting1);
-        // console.log(meeting2);
-        // console.log(constraints[meeting1.sectionName.replace("-", "").slice(0, -2)].includes(meeting2.sectionName.replace("-", "").slice(0, -2)));
-        // console.log(meeting1.sectionName.replace("-", "").slice(0, -2));
-        // console.log(meeting2.sectionName.replace("-", "").slice(0, -2));
-        // console.log(constraints[meeting1.sectionName.replace("-", "").slice(0, -2)] !== undefined ? meeting2IncludesConstriant : false);
-        // console.log(meeting2IncludesConstriant);
-        // TODO: Get rid of these comments
-        // (range1.overlaps(range2) && (constraints[meeting1.sectionName.replace("-", "").slice(0, -2)] !== undefined ? constraints[meeting1.sectionName.replace("-", "").slice(0, -2)].includes(meeting2.sectionName.replace("-", "").slice(0, -2)) : false)) ||
-        // (constraints[meeting1.sectionName.replace("-", "").slice(0, -2)] !== undefined ? constraints[meeting1.sectionName.replace("-", "").slice(0, -2)].includes(meeting2.sectionName.replace("-", "").slice(0, -2)) : false))) &&
-        // constraints[meeting1.sectionName.replace("-", "").slice(0, -2)] !== undefined ? constraints[meeting1.sectionName.replace("-", "").slice(0, -2)].includes(meeting2.sectionName.replace("-", "").slice(0, -2) as string) : false
-        // constraints !== undefined &&
-        // !constraints[meeting1.sectionName.replace("-", "").slice(0, -2) as string].includes(meeting2.sectionName.replace("-", "").slice(0, -2) as string)
-        // meeting1.sectionName.replace("-", "").slice(0, -2) as string
-        // console.log(meeting1.sectionName); 
-        // console.log(constraints[meeting1.sectionName.replace("-", "").slice(0, -2)] !== undefined ? constraints[meeting1.sectionName.replace("-", "").slice(0, -2)] : false );
-        // console.log(constraints[meeting1.sectionName.replace("-", "").slice(0, -2)].includes(meeting2.sectionName.replace("-", "").slice(0, -2) as string))
-        // console.log(constraints);
-        // console.log(range1.overlaps(range2));
-        // console.log(constraints[meeting1.sectionName.replace("-", "").slice(0, -2)] !== undefined ? constraints[meeting1.sectionName.replace("-", "").slice(0, -2)].includes(meeting2.sectionName.replace("-", "").slice(0, -2) as string) : false)
         
         const [ci1, si1, mi1] = meeting1.indexes;
         const [ci2, si2, mi2] = meeting2.indexes;
@@ -123,6 +124,7 @@ export const findConflicts = (schedule: Schedule, constraints: Constraints = {""
         conflictRow.time2 = `${meeting2.startTime.format("h:mm A")} - ${meeting2.endTime.format(
           "h:mm A",
         )}`;
+        console.log(conflictRow);
         conflictRows.push(conflictRow);
       }
     });
