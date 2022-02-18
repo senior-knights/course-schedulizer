@@ -8,9 +8,10 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
-import React, { useContext, useMemo } from "react";
-import { Column, useSortBy, useTable } from "react-table";
-import { ConflictRow } from "utilities";
+import { UpdateNonTeachingLoadModalPagination, UpdateSectionModalPagination } from "components";
+import React, { useContext, useMemo, useRef } from "react";
+import { Cell, Column, useSortBy, useTable } from "react-table";
+import { ConflictRow, getCourseSectionMeetingFromConflictCell, Term, UpdateModalPaginationRef } from "utilities";
 import { AppContext } from "utilities/contexts";
 import "./Conflicts.scss";
 
@@ -23,14 +24,31 @@ export const Conflicts = () => {
     return schedule.conflicts || [];
   }, [schedule]);
 
+  const updateSectionModalRef = useRef<UpdateModalPaginationRef>(null);
+  const updateNonTeachingLoadModalRef = useRef<UpdateModalPaginationRef>(null);
+
+  const handleCellClick = (cell: Cell<ConflictRow>) => {
+    if (typeof cell.value === "string") {
+      const cellTerm = cell.column.Header as string === "Instructor 1" ? cell.row.values.term1 as Term : cell.row.values.term2 as Term;
+      const cellData = getCourseSectionMeetingFromConflictCell(schedule, cell.value, cellTerm);
+      if (cellData.csm) {
+        if (updateSectionModalRef.current) {
+          updateSectionModalRef.current.handleModalOpen(cellData);
+        }
+      }
+    }
+  };
+
   const columns = useMemo<Column<ConflictRow>[]>(() => {
     return [
       { Header: "Conflict Type", accessor: "type" },
       { Header: "Instructor 1", accessor: "instructor1" },
+      { Header: "Term 1", accessor: "term1" },
       { Header: "Room 1", accessor: "room1" },
       { Header: "Section 1", accessor: "sectionName1" },
       { Header: "Time 1", accessor: "time1" },
       { Header: "Instructor 2", accessor: "instructor2" },
+      { Header: "Term 2", accessor: "term2" },
       { Header: "Room 2", accessor: "room2" },
       { Header: "Section 2", accessor: "sectionName2" },
       { Header: "Time 2", accessor: "time2" },
@@ -52,6 +70,8 @@ export const Conflicts = () => {
   // https://react-table.tanstack.com/docs/quick-start
   return (
     <>
+      <UpdateSectionModalPagination ref={updateSectionModalRef} />
+      <UpdateNonTeachingLoadModalPagination ref={updateNonTeachingLoadModalRef} />
       <div>
         <h3>Conflicts</h3>
       </div>
@@ -107,11 +127,17 @@ export const Conflicts = () => {
                           cell
                             .getCellProps()
                             .key.toString()
-                            .match(/(Room 1)|(Room 2)/g)
+                            .match(/(section)/g)
                             ? "change-cursor"
                             : "";
                         return (
-                          <TableCell className={cellClass} {...cell.getCellProps()}>
+                          <TableCell 
+                            className={cellClass} 
+                            {...cell.getCellProps()}
+                            onClick={() => {
+                              handleCellClick(cell);
+                            }}  
+                          >
                             {
                               // Render the cell contents
                               cell.render("Cell")

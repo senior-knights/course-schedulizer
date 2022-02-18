@@ -174,13 +174,14 @@ export const findSection = (
   };
 };
 
-export const getCourseSectionMeetingFromCell = (
+export const getCourseSectionMeetingFromFacultyCell = (
   schedule: Schedule,
   cellValue: string,
   cellHeader: string,
 ): CSMIterableKeyMap => {
   // Remove the load hours spec from the string before splitting on comma.
   const sectionStrList = cellValue.split(loadHoursRegEx).join("").split(", ");
+  console.log(sectionStrList);
   const courseSectionHeaders = [
     "Fall Course Sections",
     "Spring Course Sections",
@@ -217,6 +218,52 @@ export const getCourseSectionMeetingFromCell = (
     iterable: sectionStrList,
     key: Term.Fall,
   };
+};
+
+export const getCourseSectionMeetingFromConflictCell = (
+  schedule: Schedule,
+  cellValue: string,
+  cellTerm: Term,
+): CSMIterableKeyMap => {
+  // Remove the load hours spec from the string before splitting on comma.
+  const sectionStrList = cellValue.split(loadHoursRegEx).join("").split(", ");
+  console.log(sectionStrList);
+  // const courseTerms = [
+  //   "FA",
+  //   "SP",
+  //   "SU",
+  // ];
+  // if (courseTerms.includes(cellHeader)) {
+  //   let term: Term = Term.Fall;
+  //   switch (cellHeader) {
+  //     case "FA":
+  //       term = Term.Fall;
+  //       break;
+  //     case "SP":
+  //       term = Term.Spring;
+  //       break;
+  //     case "SU":
+  //       term = Term.Summer;
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  const courseSectionMeeting = findSection(schedule, sectionStrList[0], cellTerm);
+    // if (courseSectionMeeting === null) {
+    //   cellTerm = Term.Interim;
+    //   courseSectionMeeting = findSection(schedule, sectionStrList[0], Term.Interim);
+    // }
+  return {
+    csm: courseSectionMeeting,
+    iterable: sectionStrList,
+    key: cellTerm,
+  };
+  
+  // return {
+  //   csm: null,
+  //   iterable: sectionStrList,
+  //   key: Term.Fall,
+  // };
 };
 
 export const findNonTeachingLoad = (
@@ -268,7 +315,7 @@ export interface CSMIterableKeyMap {
   key: string;
 }
 
-export const getNonTeachingLoadsFromCell = (
+export const getNonTeachingLoadsFromFacultyCell = (
   schedule: Schedule,
   cellValue: string,
   instructor: Instructor,
