@@ -1,7 +1,7 @@
 import { Grid } from "@material-ui/core";
 import { NewTabLink, Page } from "components/reuseables";
 import React from "react";
-import { team, TeamMember } from "utilities";
+import { team2020, team2021, teamAdvisors, TeamMember } from "utilities";
 import { TeamMemberProfile, TextSection } from ".";
 import "./AboutPage.scss";
 
@@ -11,7 +11,9 @@ export const AboutPage = () => {
   return (
     <Page>
       <AboutVision />
-      <AboutTeam />
+      <AboutTeam2021 />
+      <AboutTeam2020 />
+      <AboutTeamAdvisors />
       <AboutCode />
       <AboutReport />
       <AboutResources />
@@ -73,17 +75,47 @@ const AboutVision = () => {
   );
 };
 
-const AboutTeam = () => {
+const AboutTeam2020 = () => {
   return (
     <TextSection
       body={
         <Grid container direction="column" justify="flex-start" spacing={2}>
-          {team.map((member: TeamMember) => {
+          {team2020.map((member: TeamMember) => {
             return <TeamMemberProfile key={member.name} member={member} />;
           })}
         </Grid>
       }
-      title="Team"
+      title="Team of 2020"
+    />
+  );
+};
+
+const AboutTeam2021 = () => {
+  return (
+    <TextSection
+      body={
+        <Grid container direction="column" justify="flex-start" spacing={2}>
+          {team2021.map((member: TeamMember) => {
+            return <TeamMemberProfile key={member.name} member={member} />;
+          })}
+        </Grid>
+      }
+      title="Team of 2021"
+    />
+  );
+};
+
+const AboutTeamAdvisors = () => {
+  return (
+    <TextSection
+      body={
+        <Grid container direction="column" justify="flex-start" spacing={2}>
+          {teamAdvisors.map((member: TeamMember) => {
+            return <TeamMemberProfile key={member.name} member={member} />;
+          })}
+        </Grid>
+      }
+      title="Team Advisors"
     />
   );
 };

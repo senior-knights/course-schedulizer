@@ -1,4 +1,5 @@
 /* eslint-disable typescript-sort-keys/string-enum */
+import { ConflictRow } from "utilities";
 import { Day, SemesterLength, Term } from ".";
 
 export interface Location {
@@ -122,6 +123,7 @@ export const updateIdentifyingSectionInfo = (oldSection: Section, newSection: Se
 };
 
 export interface Schedule {
+  conflicts?: ConflictRow[] | undefined;
   courses: Course[];
 }
 

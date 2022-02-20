@@ -6,7 +6,7 @@ export interface TeamMember {
 }
 
 /* Basic information about the project team members */
-export const team: TeamMember[] = [
+export const team2020: TeamMember[] = [
   {
     bio:
       "Computer Science Student at Calvin University. Jonathan is a hard worker, a faster runner, and has previous web development experience.",
@@ -31,6 +31,27 @@ export const team: TeamMember[] = [
       "https://avatars2.githubusercontent.com/u/33156025?s=460&u=fb61bdf55f17108f9687c334b4b4abc4b09c7259&v=4",
     website: "https://github.com/charkour",
   },
+];
+
+export const team2021: TeamMember[] = [
+  {
+    bio:
+      "Computer Science Student at Calvin University. David is a gifted programmer, and has previous web development experience.",
+    name: "David Sen",
+    photo: "https://avatars.githubusercontent.com/u/31216720?v=4",
+    website: "https://github.com/das43",
+  },
+  {
+    bio:
+      "Computer Science Student at Calvin University. Ryan is a quick learner who likes to learn new technologies and create useful computer software.",
+    name: "Ryan Vreeke",
+    photo:
+      "https://avatars.githubusercontent.com/u/58562982?s=400&u=dad23251a36cf5a67ea0a7d3d25a204a8f6d8341&v=4",
+    website: "https://github.com/RyanVreeke",
+  },
+];
+
+export const teamAdvisors: TeamMember[] = [
   {
     bio:
       "Computer Science Professor and Department Chair at Calvin University. VanderLinden's research interests are in Natural Language Engineering and Human-Computer Interaction.",
