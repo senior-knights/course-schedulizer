@@ -78,7 +78,7 @@ export const ModalPagination = forwardRef(
       setOpen(false);
     };
 
-    const handleModalOpen = ({ csm, iterable, key }: CSMIterableKeyMap) => {
+    const handleModalOpen = ({ csm, iterable, key, pageNumber }: CSMIterableKeyMap) => {
       if (csm) {
         setModalValues(csm);
         setIterableKeyMap({
@@ -86,6 +86,7 @@ export const ModalPagination = forwardRef(
           key,
         });
       }
+      setPage(pageNumber !== undefined ? pageNumber : 1);
       setOpen(true);
     };
 

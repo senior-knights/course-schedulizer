@@ -26,8 +26,7 @@ export interface ConflictRow {
   room2: string;
   sectionName1: string;
   sectionName2: string;
-  term1: string;
-  term2: string;
+  term: string;
   time1: string;
   time2: string;
   type: "Instructor" | "Room" | "Wildcard" | "Constraint";
@@ -120,8 +119,7 @@ export const findConflicts = (schedule: Schedule, constraints: Constraints = {""
         conflictRow.room2 = meeting2.room;
         conflictRow.sectionName1 = meeting1.sectionName;
         conflictRow.sectionName2 = meeting2.sectionName;
-        conflictRow.term1 = meeting1.term.toString();
-        conflictRow.term2 = meeting2.term.toString(); 
+        conflictRow.term = meeting1.term.toString();
         conflictRow.time1 = `${meeting1.startTime.format("h:mm A")} - ${meeting1.endTime.format(
           "h:mm A",
         )}`;

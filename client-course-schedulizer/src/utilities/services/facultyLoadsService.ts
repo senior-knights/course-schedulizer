@@ -181,7 +181,6 @@ export const getCourseSectionMeetingFromFacultyCell = (
 ): CSMIterableKeyMap => {
   // Remove the load hours spec from the string before splitting on comma.
   const sectionStrList = cellValue.split(loadHoursRegEx).join("").split(", ");
-  console.log(sectionStrList);
   const courseSectionHeaders = [
     "Fall Course Sections",
     "Spring Course Sections",
@@ -224,46 +223,19 @@ export const getCourseSectionMeetingFromConflictCell = (
   schedule: Schedule,
   cellValue: string,
   cellTerm: Term,
+  startSection: number,
 ): CSMIterableKeyMap => {
   // Remove the load hours spec from the string before splitting on comma.
   const sectionStrList = cellValue.split(loadHoursRegEx).join("").split(", ");
-  console.log(sectionStrList);
-  // const courseTerms = [
-  //   "FA",
-  //   "SP",
-  //   "SU",
-  // ];
-  // if (courseTerms.includes(cellHeader)) {
-  //   let term: Term = Term.Fall;
-  //   switch (cellHeader) {
-  //     case "FA":
-  //       term = Term.Fall;
-  //       break;
-  //     case "SP":
-  //       term = Term.Spring;
-  //       break;
-  //     case "SU":
-  //       term = Term.Summer;
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  const courseSectionMeeting = findSection(schedule, sectionStrList[0], cellTerm);
-    // if (courseSectionMeeting === null) {
-    //   cellTerm = Term.Interim;
-    //   courseSectionMeeting = findSection(schedule, sectionStrList[0], Term.Interim);
-    // }
+  
+  const courseSectionMeeting = findSection(schedule, sectionStrList[startSection-1], cellTerm);
+   
   return {
     csm: courseSectionMeeting,
     iterable: sectionStrList,
     key: cellTerm,
+    pageNumber: startSection,
   };
-  
-  // return {
-  //   csm: null,
-  //   iterable: sectionStrList,
-  //   key: Term.Fall,
-  // };
 };
 
 export const findNonTeachingLoad = (
@@ -313,6 +285,7 @@ export interface CSMIterableKeyMap {
   csm: CourseSectionMeeting | null;
   iterable: string[];
   key: string;
+  pageNumber?: number;
 }
 
 export const getNonTeachingLoadsFromFacultyCell = (
@@ -339,5 +312,5 @@ export const getNonTeachingLoadsFromFacultyCell = (
  * @type
  */
 export type UpdateModalPaginationRef = {
-  handleModalOpen: ({ csm, iterable, key }: CSMIterableKeyMap) => void;
+  handleModalOpen: ({ csm, iterable, key, pageNumber }: CSMIterableKeyMap) => void;
 };
