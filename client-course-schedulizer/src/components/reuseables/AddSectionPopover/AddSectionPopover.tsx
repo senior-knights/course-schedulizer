@@ -6,7 +6,7 @@ import {
   GridItemRadioGroup,
   GridItemTextField,
 } from "components";
-import { isEqual, isNil, omitBy } from "lodash";
+import { forEach, isEqual, isNil, omitBy } from "lodash";
 import moment from "moment";
 import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -60,7 +60,6 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
     appState: { schedule, rooms, professors },
     setIsCSVLoading,
   } = useContext(AppContext);
-
   const methods = useForm<SectionInput>({
     criteriaMode: "all",
     defaultValues: mapInternalTypesToInput(values),
@@ -72,6 +71,28 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
   );
   const { addSectionToSchedule } = useAddSectionToSchedule();
   const { deleteMeetingFromSchedule } = useDeleteMeetingFromSchedule();
+  const getConflictMessage = () => {
+    const targetClass = values?.course.prefixes[0].concat(values?.course.number); // Not targeting specific section because "values" just gives us a course not a specific section because of the data structure hierarchy
+    let returnMessage = "None";
+    if (targetClass) {
+      // Must make sure targetClass isn't undefined
+      forEach(schedule.conflicts, (conflict, conflictIndex) => {
+        // Checks both because we plan on removing the duplicate but swapped conflict lines
+        // Checks in 2 separate "if"s so we know the conflicting section specifically
+        if (conflict.sectionName1.replaceAll("-", "").includes(targetClass)) {
+          returnMessage = "There is a conflict with ".concat(
+            conflict.sectionName1.replaceAll("-", ""),
+          );
+        }
+        if (conflict.sectionName2.replaceAll("-", "").includes(targetClass)) {
+          returnMessage = "There is a conflict with ".concat(
+            conflict.sectionName2.replaceAll("-", ""),
+          );
+        }
+      });
+    }
+    return returnMessage;
+  };
 
   const onSubmit = (removeOldMeeting: boolean) => {
     return async (data: SectionInput) => {
@@ -256,6 +277,11 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
               </Grid>
             )}
           </Grid>
+          <GridItemTextField // TODO: Make this uneditable
+            label="Conflict"
+            textFieldProps={{ multiline: true, name: "Conflicts", rows: 4 }}
+            value={getConflictMessage()}
+          />
           <GridItemTextField
             label="Notes"
             textFieldProps={{ multiline: true, name: "comments", rows: 4 }}
