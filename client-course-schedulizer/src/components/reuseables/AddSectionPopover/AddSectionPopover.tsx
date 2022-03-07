@@ -74,20 +74,18 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
   const getConflictMessage = () => {
     const targetClass = values?.course.prefixes[0].concat(values?.course.number); // Not targeting specific section because "values" just gives us a course not a specific section because of the data structure hierarchy
     let returnMessage = "None";
-    if (targetClass) {
-      // Must make sure targetClass isn't undefined
+    if (targetClass) {// Must make sure targetClass isn't undefined
+
       forEach(schedule.conflicts, (conflict, conflictIndex) => {
         // Checks both because we plan on removing the duplicate but swapped conflict lines
         // Checks in 2 separate "if"s so we know the conflicting section specifically
         if (conflict.sectionName1.replaceAll("-", "").includes(targetClass)) {
-          returnMessage = "There is a conflict with ".concat(
-            conflict.sectionName1.replaceAll("-", ""),
-          );
+          returnMessage = conflict.type.concat(" conflict with ").concat(
+            conflict.sectionName2.replaceAll("-", ""));
         }
         if (conflict.sectionName2.replaceAll("-", "").includes(targetClass)) {
-          returnMessage = "There is a conflict with ".concat(
-            conflict.sectionName2.replaceAll("-", ""),
-          );
+          returnMessage = conflict.type.concat(" conflict with ").concat(
+            conflict.sectionName1.replaceAll("-", ""));
         }
       });
     }
