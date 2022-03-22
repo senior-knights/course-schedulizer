@@ -1,3 +1,4 @@
+import { FlashOnRounded } from "@material-ui/icons";
 import { forEach } from "lodash";
 import * as AllMoment from "moment";
 import moment, { Moment } from "moment";
@@ -33,10 +34,13 @@ export interface ConflictRow {
 }
 
 export interface Constraints {
-    [key: string]: string[]
+  [key: string]: string[];
 }
 
-export const findConflicts = (schedule: Schedule, constraints: Constraints = {"": []}): Schedule => {
+export const findConflicts = (
+  schedule: Schedule,
+  constraints: Constraints = { "": [] },
+): Schedule => {
   // flatten the schedule into a single array with just the data being checked for conflicts
   const dataToCheck: ConflictData[] = [];
   forEach(schedule.courses, (course, courseIndex) => {
@@ -70,28 +74,34 @@ export const findConflicts = (schedule: Schedule, constraints: Constraints = {""
       };
       const meeting2IncludesInstructor = (instructor: Instructor) => {
         const value = meeting2.instructors.includes(instructor);
-        if(value) {
+        if (value) {
           conflictRow.type = "Instructor";
         }
         return value;
       };
       const meetingRoomConflict = () => {
-        const value = meeting1.room === meeting2.room && meeting1.sectionName !== meeting2.sectionName;
-        if(value) {
+        const value =
+          meeting1.room === meeting2.room && meeting1.sectionName !== meeting2.sectionName;
+        if (value) {
           conflictRow.type = "Room";
         }
         return value;
       };
       const meeting1IncludesWildcard = () => {
         const value = meeting1.instructors.includes(WILDCARD);
-        if(value) {
+        if (value) {
           conflictRow.type = "Wildcard";
         }
         return value;
       };
       const meeting2IncludesConstriant = () => {
-        const value = constraints[meeting1.sectionName.replace("-", "").slice(0, -2)] !== undefined ? constraints[meeting1.sectionName.replace("-", "").slice(0, -2)].includes(meeting2.sectionName.replace("-", "").slice(0, -2)) : false;
-        if(value) {
+        const value =
+          constraints[meeting1.sectionName.replace("-", "").slice(0, -2)] !== undefined
+            ? constraints[meeting1.sectionName.replace("-", "").slice(0, -2)].includes(
+                meeting2.sectionName.replace("-", "").slice(0, -2),
+              )
+            : false;
+        if (value) {
           conflictRow.type = "Constraint";
         }
         return value;
@@ -106,8 +116,7 @@ export const findConflicts = (schedule: Schedule, constraints: Constraints = {""
           meeting2IncludesConstriant() ||
           meeting1IncludesWildcard() ||
           meetingRoomConflict())
-        ) {
-        
+      ) {
         const [ci1, si1, mi1] = meeting1.indexes;
         const [ci2, si2, mi2] = meeting2.indexes;
         schedule.courses[ci1].sections[si1].meetings[mi1].isConflict = true;
@@ -126,10 +135,41 @@ export const findConflicts = (schedule: Schedule, constraints: Constraints = {""
         conflictRow.time2 = `${meeting2.startTime.format("h:mm A")} - ${meeting2.endTime.format(
           "h:mm A",
         )}`;
-        conflictRows.push(conflictRow);
+        // conflictRows.push(conflictRow);
+        // Checking for a switched-order duplicate before pushing
+        let temp = true;
+        forEach(conflictRows, (aConflict) => {
+          if (
+            aConflict.instructor1 === conflictRow.instructor2 &&
+            aConflict.instructor2 === conflictRow.instructor1 &&
+            aConflict.room1 === conflictRow.room2 &&
+            aConflict.room2 === conflictRow.room1 &&
+            aConflict.sectionName1 === conflictRow.sectionName2 &&
+            aConflict.sectionName2 === conflictRow.sectionName1 &&
+            aConflict.term === conflictRow.term &&
+            aConflict.type === conflictRow.type
+          ) {
+            temp = false;
+          }
+        });
+        if (temp) {
+          conflictRows.push(conflictRow);
+        }
       }
     });
   });
   schedule.conflicts = conflictRows;
   return schedule;
 };
+// export interface ConflictRow {
+//   instructor1: string;
+//   instructor2: string;
+//   room1: string;
+//   room2: string;
+//   sectionName1: string;
+//   sectionName2: string;
+//   term: string;
+//   time1: string;
+//   time2: string;
+//   type: "Instructor" | "Room" | "Wildcard" | "Constraint";
+// }

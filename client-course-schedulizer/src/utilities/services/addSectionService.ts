@@ -263,6 +263,7 @@ const createNewSectionFromInput = (data: SectionInput): Section => {
 const createNewCourseFromInput = (data: SectionInput): Course => {
   return {
     department: data.department,
+    importRank: 0,
     name: data.name,
     number: data.number,
     prefixes: data.prefix,

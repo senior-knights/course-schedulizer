@@ -1,5 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Grid, InputAdornment, Typography } from "@material-ui/core";
+import { LensOutlined } from "@material-ui/icons";
 import {
   GridItemAutocomplete,
   GridItemCheckboxGroup,
@@ -71,22 +72,42 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
   );
   const { addSectionToSchedule } = useAddSectionToSchedule();
   const { deleteMeetingFromSchedule } = useDeleteMeetingFromSchedule();
-  const getConflictMessage = () => {
-    const targetClass = values?.course.prefixes[0].concat(values?.course.number); // Not targeting specific section because "values" just gives us a course not a specific section because of the data structure hierarchy
-    let returnMessage = "None";
-    if (targetClass) {// Must make sure targetClass isn't undefined
 
-      forEach(schedule.conflicts, (conflict, conflictIndex) => {
+  const getConflictMessage = () => {
+    const targetClass = values?.course.prefixes[0]
+      .concat(values?.course.number)
+      .concat(values?.section.letter);
+    let returnMessage = "";
+    let temp = "";
+    if (targetClass) {
+      // Must make sure targetClass isn't undefined
+      forEach(schedule.conflicts, (conflict) => {
         // Checks both because we plan on removing the duplicate but swapped conflict lines
         // Checks in 2 separate "if"s so we know the conflicting section specifically
         if (conflict.sectionName1.replaceAll("-", "").includes(targetClass)) {
-          returnMessage = conflict.type.concat(" conflict with ").concat(
-            conflict.sectionName2.replaceAll("-", ""));
+          temp = returnMessage
+            .concat(
+              conflict.type
+                .concat(" conflict with ")
+                .concat(conflict.sectionName2.replaceAll("-", "")),
+            )
+            .concat("\n");
+          if (!returnMessage.includes(conflict.sectionName2.replaceAll("-", ""))) {
+            returnMessage = returnMessage.concat(temp);
+          }
+        } else if (conflict.sectionName2.replaceAll("-", "").includes(targetClass)) {
+          temp = returnMessage
+            .concat(
+              conflict.type
+                .concat(" conflict with ")
+                .concat(conflict.sectionName1.replaceAll("-", "")),
+            )
+            .concat("\n");
+          if (!returnMessage.includes(conflict.sectionName1.replaceAll("-", ""))) {
+            returnMessage = returnMessage.concat(temp);
+          }
         }
-        if (conflict.sectionName2.replaceAll("-", "").includes(targetClass)) {
-          returnMessage = conflict.type.concat(" conflict with ").concat(
-            conflict.sectionName1.replaceAll("-", ""));
-        }
+        temp = "";
       });
     }
     return returnMessage;

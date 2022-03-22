@@ -1,4 +1,4 @@
-import { isEqual } from "lodash";
+import { forEach, isEqual } from "lodash";
 import { ChangeEvent, useContext } from "react";
 import { csvStringToSchedule, insertSectionCourse, Schedule } from "utilities";
 import { AppContext } from "utilities/contexts";
@@ -58,11 +58,11 @@ export const useImportFile = (isAdditiveImport: boolean) => {
         scheduleString = String(reader.result);
       } else {
         const newConstraints = JSON.parse(String(reader.result));
-        appDispatch({ payload: { constraints: newConstraints }, type: "setConstraints"});
+        appDispatch({ payload: { constraints: newConstraints }, type: "setConstraints" });
         scheduleString = "";
       }
       scheduleJSON = csvStringToSchedule(scheduleString);
-      
+
       !isAdditiveImport && appDispatch({ payload: { fileUrl: "" }, type: "setFileUrl" });
       await updateScheduleInContext(schedule, scheduleJSON, appDispatch, isAdditiveImport);
       setIsCSVLoading(false);
@@ -82,18 +82,25 @@ export const useImportFile = (isAdditiveImport: boolean) => {
  * Ref: https://stackoverflow.com/a/57214316/9931154
  */
 export const updateScheduleInContext = async (
+  // Note these are the parameters, just on different lines
   currentSchedule: Schedule,
   newSchedule: Schedule,
   appDispatch: AppContext["appDispatch"],
   isAdditiveImport = false,
+  //
 ) => {
   if (!isEqual(currentSchedule, newSchedule)) {
+    // Changing the new schedule to have higher importRank
+    forEach(newSchedule.courses, (course) => {
+      course.importRank = currentSchedule.numDistinctSchedules;
+    });
     let newScheduleData: Schedule;
     if (isAdditiveImport) {
       newScheduleData = combineSchedules(currentSchedule, newSchedule);
     } else {
       newScheduleData = newSchedule;
     }
+    newScheduleData.numDistinctSchedules = currentSchedule.numDistinctSchedules + 1;
     await appDispatch({ payload: { schedule: newScheduleData }, type: "setScheduleData" });
   }
 };
