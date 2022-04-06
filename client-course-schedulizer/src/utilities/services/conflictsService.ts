@@ -161,15 +161,3 @@ export const findConflicts = (
   schedule.conflicts = conflictRows;
   return schedule;
 };
-// export interface ConflictRow {
-//   instructor1: string;
-//   instructor2: string;
-//   room1: string;
-//   room2: string;
-//   sectionName1: string;
-//   sectionName2: string;
-//   term: string;
-//   time1: string;
-//   time2: string;
-//   type: "Instructor" | "Room" | "Wildcard" | "Constraint";
-// }

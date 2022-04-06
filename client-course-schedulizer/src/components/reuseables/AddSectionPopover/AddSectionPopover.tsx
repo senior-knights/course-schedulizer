@@ -74,40 +74,33 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
   const { deleteMeetingFromSchedule } = useDeleteMeetingFromSchedule();
 
   const getConflictMessage = () => {
-    const targetClass = values?.course.prefixes[0]
+    const targetClass = values?.course.prefixes[0] // Format CS112B for example
       .concat(values?.course.number)
       .concat(values?.section.letter);
     let returnMessage = "";
-    let temp = "";
     if (targetClass) {
       // Must make sure targetClass isn't undefined
       forEach(schedule.conflicts, (conflict) => {
         // Checks both because we plan on removing the duplicate but swapped conflict lines
         // Checks in 2 separate "if"s so we know the conflicting section specifically
-        if (conflict.sectionName1.replaceAll("-", "").includes(targetClass)) {
-          temp = returnMessage
+        if (conflict.sectionName1.replace("-", "").replace("-", "").includes(targetClass)) {
+          // ^^^ The 2 distinct .replace()s are because some classes can be formatted with an additional dash as a section range "A-S" or something, and getting rid of all of them breaks things
+          returnMessage = returnMessage
             .concat(
               conflict.type
                 .concat(" conflict with ")
-                .concat(conflict.sectionName2.replaceAll("-", "")),
+                .concat(conflict.sectionName2.replace("-", "").replace("-", "")),
             )
             .concat("\n");
-          if (!returnMessage.includes(conflict.sectionName2.replaceAll("-", ""))) {
-            returnMessage = returnMessage.concat(temp);
-          }
-        } else if (conflict.sectionName2.replaceAll("-", "").includes(targetClass)) {
-          temp = returnMessage
+        } else if (conflict.sectionName2.replace("-", "").replace("-", "").includes(targetClass)) {
+          returnMessage = returnMessage
             .concat(
               conflict.type
                 .concat(" conflict with ")
-                .concat(conflict.sectionName1.replaceAll("-", "")),
+                .concat(conflict.sectionName1.replace("-", "").replace("-", "")),
             )
             .concat("\n");
-          if (!returnMessage.includes(conflict.sectionName1.replaceAll("-", ""))) {
-            returnMessage = returnMessage.concat(temp);
-          }
         }
-        temp = "";
       });
     }
     return returnMessage;
@@ -299,7 +292,12 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
           <GridItemTextField // TODO: Make this uneditable
             label="Conflict"
             textFieldProps={{ multiline: true, name: "Conflicts", rows: 4 }}
-            value={getConflictMessage()}
+            value={getConflictMessage()
+              .split("\n") // Code gets rid of duplicate lines. I ended up having to put it here, for some reason wouldn't work at the end of getConflictMessage()
+              .filter((item, i, allItems) => {
+                return i === allItems.indexOf(item);
+              })
+              .join("\n")}
           />
           <GridItemTextField
             label="Notes"
