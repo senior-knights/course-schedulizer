@@ -58,6 +58,14 @@ export const useImportFile = (isAdditiveImport: boolean) => {
         scheduleString = String(reader.result);
       } else {
         const newConstraints = JSON.parse(String(reader.result));
+        if(newConstraints.constraints) {
+          newConstraints.constraints.forEach((constraintData: string[]) => {
+            constraintData.forEach((course: string) => {
+              newConstraints[course] = constraintData.filter((c) => { return c !== course });
+            })
+          });
+          delete newConstraints.constraints;
+        }
         appDispatch({ payload: { constraints: newConstraints }, type: "setConstraints" });
         scheduleString = "";
       }
