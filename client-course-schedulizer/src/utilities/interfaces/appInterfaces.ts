@@ -44,7 +44,7 @@ export const initialAppState: AppState = loadLocal("appState") || {
   fileUrl: "",
   professors: [],
   rooms: [],
-  schedule: { courses: [] },
+  schedule: { courses: [], numDistinctSchedules: 0 },
   schedulizerTab: 0,
   selectedTerm: Term.Fall,
   slotMaxTime: "22:00",

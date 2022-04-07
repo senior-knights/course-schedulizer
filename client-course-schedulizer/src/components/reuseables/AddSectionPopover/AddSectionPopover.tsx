@@ -1,6 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Grid, InputAdornment, Typography } from "@material-ui/core";
-import { LensOutlined } from "@material-ui/icons";
 import {
   GridItemAutocomplete,
   GridItemCheckboxGroup,
