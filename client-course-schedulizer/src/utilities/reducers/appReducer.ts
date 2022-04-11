@@ -21,7 +21,7 @@ export const reducer = (actionCallback: (item: AppState) => void = voidFn) => {
     switch (action.type) {
       case "setScheduleData": {
         let { schedule } = action.payload;
-        schedule = schedule || { courses: [] };
+        schedule = schedule || { courses: [], numDistinctSchedules: 0 };
         const times = getMinAndMaxTimes(schedule);
         newState = {
           ...state,
@@ -58,6 +58,12 @@ export const reducer = (actionCallback: (item: AppState) => void = voidFn) => {
         let { schedulizerTab } = action.payload;
         schedulizerTab = schedulizerTab || SchedulizerTab.Faculty;
         newState = { ...state, schedulizerTab };
+        break;
+      }
+      case "setConstraints": {
+        let { constraints } = action.payload;
+        constraints = constraints || JSON;
+        newState = { ...state, constraints }; 
         break;
       }
       default:

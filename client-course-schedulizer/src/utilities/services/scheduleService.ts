@@ -7,7 +7,7 @@ import randomColor from "randomcolor";
 import { enumArray, WILDCARD_COLOR } from "utilities";
 import { INITIAL_DATE } from "utilities/constants";
 import { ColorBy, Day, Location, Meeting, Schedule, Section, Term } from "utilities/interfaces";
-import { findConflicts } from "./conflictsService";
+import { Constraints, findConflicts } from "./conflictsService";
 
 // Returns a list of hours to display on the Schedule
 // TODO: add better types for timing, maybe: https://stackoverflow.com/questions/51445767/how-to-define-a-regex-matched-string-type-in-typescript
@@ -36,10 +36,11 @@ const eventExistsInEventList = (event: EventInput, eventList: EventInput[]): boo
 export const getEvents = (
   schedule: Schedule,
   groups: "faculty" | "room" | "department",
+  constraints?: Constraints,
 ): GroupedEvents => {
   const events: GroupedEvents = {};
   const days: Day[] = enumArray(Day);
-  const scheduleWithConflicts = findConflicts(schedule);
+  const scheduleWithConflicts = findConflicts(schedule, constraints);
   forEach(scheduleWithConflicts.courses, (course) => {
     const dept = course.department ? course.department : "No Department";
     forEach(course.sections, (section) => {

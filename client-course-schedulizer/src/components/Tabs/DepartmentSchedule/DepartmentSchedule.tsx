@@ -8,14 +8,14 @@ import "./DepartmentSchedule.scss";
  */
 export const DepartmentSchedule = () => {
   const {
-    appState: { departments, schedule },
+    appState: { departments, schedule, constraints },
   } = useContext(AppContext);
 
   return (
     <>
       <Schedule
         calendarHeaders={departments.sort()}
-        groupedEvents={getEvents(schedule, "department")}
+        groupedEvents={getEvents(schedule, "department", constraints)}
         scheduleType="department"
       />
     </>

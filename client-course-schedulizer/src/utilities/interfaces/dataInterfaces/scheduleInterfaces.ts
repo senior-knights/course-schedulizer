@@ -25,6 +25,7 @@ export type Prefix = string;
 // If new identifying fields are added to this interface, must update updateIdentifyingCourseInfo()
 export interface Course {
   department?: string;
+  importRank: number;
   name: string;
   number: string;
   prefixes: Prefix[];
@@ -125,6 +126,7 @@ export const updateIdentifyingSectionInfo = (oldSection: Section, newSection: Se
 export interface Schedule {
   conflicts?: ConflictRow[] | undefined;
   courses: Course[];
+  numDistinctSchedules: number;
 }
 
 export interface CourseSectionMeeting {

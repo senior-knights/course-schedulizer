@@ -1,4 +1,4 @@
-import { isEqual } from "lodash";
+import { forEach, isEqual } from "lodash";
 import { ChangeEvent, useContext } from "react";
 import { csvStringToSchedule, insertSectionCourse, Schedule } from "utilities";
 import { AppContext } from "utilities/contexts";
@@ -41,6 +41,10 @@ export const useImportFile = (isAdditiveImport: boolean) => {
         file && reader.readAsBinaryString(file);
         break;
       }
+      case "json": {
+        file && reader.readAsText(file);
+        break;
+      }
       default: {
         throw Error(`FileType ${fileType} not supported.`);
       }
@@ -50,8 +54,20 @@ export const useImportFile = (isAdditiveImport: boolean) => {
       let scheduleString: string;
       if (fileType === "xlsx") {
         scheduleString = getCSVFromXLSXData(reader.result as ArrayBufferLike);
-      } else {
+      } else if (fileType === "csv") {
         scheduleString = String(reader.result);
+      } else {
+        const newConstraints = JSON.parse(String(reader.result));
+        if(newConstraints.constraints) {
+          newConstraints.constraints.forEach((constraintData: string[]) => {
+            constraintData.forEach((course: string) => {
+              newConstraints[course] = constraintData.filter((c) => { return c !== course });
+            })
+          });
+          delete newConstraints.constraints;
+        }
+        appDispatch({ payload: { constraints: newConstraints }, type: "setConstraints" });
+        scheduleString = "";
       }
       scheduleJSON = csvStringToSchedule(scheduleString);
 
@@ -74,18 +90,25 @@ export const useImportFile = (isAdditiveImport: boolean) => {
  * Ref: https://stackoverflow.com/a/57214316/9931154
  */
 export const updateScheduleInContext = async (
+  // Note these are the parameters, just on different lines
   currentSchedule: Schedule,
   newSchedule: Schedule,
   appDispatch: AppContext["appDispatch"],
   isAdditiveImport = false,
+  //
 ) => {
   if (!isEqual(currentSchedule, newSchedule)) {
+    // Changing the new schedule to have higher importRank
+    forEach(newSchedule.courses, (course) => {
+      course.importRank = currentSchedule.numDistinctSchedules;
+    });
     let newScheduleData: Schedule;
     if (isAdditiveImport) {
       newScheduleData = combineSchedules(currentSchedule, newSchedule);
     } else {
       newScheduleData = newSchedule;
     }
+    newScheduleData.numDistinctSchedules = currentSchedule.numDistinctSchedules + 1;
     await appDispatch({ payload: { schedule: newScheduleData }, type: "setScheduleData" });
   }
 };
