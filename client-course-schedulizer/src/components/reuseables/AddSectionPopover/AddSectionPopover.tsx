@@ -1,6 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, Grid, InputAdornment, Typography } from "@material-ui/core";
-import { LensOutlined } from "@material-ui/icons";
 import {
   GridItemAutocomplete,
   GridItemCheckboxGroup,
@@ -308,7 +307,14 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
         <Grid alignItems="flex-end" container justify="space-between">
           <Grid item>
             <Typography variant="caption">
-              Tip: use <b>tab</b> and <b>shift + tab</b> to navigate, <b>space bar</b> to select
+              <b>Wildcard Tip:</b> To create a Wildcard meeting put a <b>&quot;*&quot;</b> in the Prefix, Number, Section, Instructor, 
+              and Location fields. Also, put a <b>&quot;0&quot;</b> in the Faculty Hours and Student Hours fields. 
+              Finally, select the Start Time and Duration.
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="caption">
+              <b>Tip:</b> use <b>tab</b> and <b>shift + tab</b> to navigate, <b>space bar</b> to select
               days, <b>arrow keys</b> to select term and others, and <b>return</b> to submit.
             </Typography>
           </Grid>
