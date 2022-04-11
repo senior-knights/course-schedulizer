@@ -7,7 +7,7 @@ export const useHarmonyResultStore = create<HarmonyResultState>(
   (set: SetState<HarmonyResultState>, get: GetState<HarmonyResultState>) => {
     return {
       result: {},
-      schedule: { courses: [] },
+      schedule: { courses: [], numDistinctSchedules: 0 },
       setResult: (res: Result) => {
         set({ result: res, schedule: convertToSchedule(res) });
       },
@@ -23,7 +23,7 @@ export interface HarmonyResultState extends State {
 
 /** Convert the assignments to a schedule object. */
 const convertToSchedule = (result: Result): Schedule => {
-  const schedule: Schedule = { courses: [] };
+  const schedule: Schedule = { courses: [], numDistinctSchedules: 0 }; 
   if (result !== undefined) {
     Object.keys(result).forEach((course) => {
       // TODO update this.
@@ -34,6 +34,7 @@ const convertToSchedule = (result: Result): Schedule => {
 
       schedule.courses.push({
         department: "",
+        importRank: 0,
         name: "",
         number,
         prefixes: [prefix],

@@ -174,7 +174,7 @@ export const findSection = (
   };
 };
 
-export const getCourseSectionMeetingFromCell = (
+export const getCourseSectionMeetingFromFacultyCell = (
   schedule: Schedule,
   cellValue: string,
   cellHeader: string,
@@ -216,6 +216,25 @@ export const getCourseSectionMeetingFromCell = (
     csm: null,
     iterable: sectionStrList,
     key: Term.Fall,
+  };
+};
+
+export const getCourseSectionMeetingFromConflictCell = (
+  schedule: Schedule,
+  cellValue: string,
+  cellTerm: Term,
+  startSection: number,
+): CSMIterableKeyMap => {
+  // Remove the load hours spec from the string before splitting on comma.
+  const sectionStrList = cellValue.split(loadHoursRegEx).join("").split(", ");
+  
+  const courseSectionMeeting = findSection(schedule, sectionStrList[startSection-1], cellTerm);
+   
+  return {
+    csm: courseSectionMeeting,
+    iterable: sectionStrList,
+    key: cellTerm,
+    pageNumber: startSection,
   };
 };
 
@@ -266,9 +285,10 @@ export interface CSMIterableKeyMap {
   csm: CourseSectionMeeting | null;
   iterable: string[];
   key: string;
+  pageNumber?: number;
 }
 
-export const getNonTeachingLoadsFromCell = (
+export const getNonTeachingLoadsFromFacultyCell = (
   schedule: Schedule,
   cellValue: string,
   instructor: Instructor,
@@ -292,5 +312,5 @@ export const getNonTeachingLoadsFromCell = (
  * @type
  */
 export type UpdateModalPaginationRef = {
-  handleModalOpen: ({ csm, iterable, key }: CSMIterableKeyMap) => void;
+  handleModalOpen: ({ csm, iterable, key, pageNumber }: CSMIterableKeyMap) => void;
 };

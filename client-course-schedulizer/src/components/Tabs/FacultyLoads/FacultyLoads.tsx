@@ -14,9 +14,9 @@ import { Cell, Column, useSortBy, useTable } from "react-table";
 import {
   createTable,
   FacultyRow,
-  getCourseSectionMeetingFromCell,
+  getCourseSectionMeetingFromFacultyCell,
   getIdFromFaculty,
-  getNonTeachingLoadsFromCell,
+  getNonTeachingLoadsFromFacultyCell,
   UpdateModalPaginationRef,
 } from "utilities";
 import { AppContext } from "utilities/contexts";
@@ -40,8 +40,8 @@ export const FacultyLoads = () => {
       const cellHeader = cell.column.Header as string;
       const isNonTeachingLoad = cellHeader === "Other Duties";
       const cellData = isNonTeachingLoad
-        ? getNonTeachingLoadsFromCell(schedule, cell.value, cell.row.values.faculty)
-        : getCourseSectionMeetingFromCell(schedule, cell.value, cellHeader);
+        ? getNonTeachingLoadsFromFacultyCell(schedule, cell.value, cell.row.values.faculty)
+        : getCourseSectionMeetingFromFacultyCell(schedule, cell.value, cellHeader);
       if (cellData.csm) {
         if (isNonTeachingLoad && updateNonTeachingLoadModalRef.current) {
           updateNonTeachingLoadModalRef.current.handleModalOpen(cellData);

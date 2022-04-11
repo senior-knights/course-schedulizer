@@ -5,14 +5,14 @@ import { AppContext } from "utilities/contexts";
 
 export const RoomsSchedule = () => {
   const {
-    appState: { schedule, rooms },
+    appState: { schedule, rooms, constraints },
   } = useContext(AppContext);
 
   return (
     <>
       <Schedule
         calendarHeaders={rooms.sort()}
-        groupedEvents={getEvents(schedule, "room")}
+        groupedEvents={getEvents(schedule, "room", constraints)}
         scheduleType="room"
       />
     </>

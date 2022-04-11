@@ -107,6 +107,7 @@ export const csvStringToSchedule = (csvString: string): Schedule => {
   // Define variables for Schedule creation
   const schedule: Schedule = {
     courses: [],
+    numDistinctSchedules: 1,
   };
 
   // Get data and fields from the CSV
