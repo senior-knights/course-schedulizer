@@ -6,7 +6,7 @@ import {
   GridItemRadioGroup,
   GridItemTextField,
 } from "components";
-import { isEqual, isNil, omitBy } from "lodash";
+import { forEach, isEqual, isNil, omitBy } from "lodash";
 import moment from "moment";
 import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -60,7 +60,6 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
     appState: { schedule, rooms, professors },
     setIsCSVLoading,
   } = useContext(AppContext);
-
   const methods = useForm<SectionInput>({
     criteriaMode: "all",
     defaultValues: mapInternalTypesToInput(values),
@@ -72,6 +71,39 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
   );
   const { addSectionToSchedule } = useAddSectionToSchedule();
   const { deleteMeetingFromSchedule } = useDeleteMeetingFromSchedule();
+
+  const getConflictMessage = () => {
+    const targetClass = values?.course.prefixes[0] // Format CS112B for example
+      .concat(values?.course.number)
+      .concat(values?.section.letter);
+    let returnMessage = "";
+    if (targetClass) {
+      // Must make sure targetClass isn't undefined
+      forEach(schedule.conflicts, (conflict) => {
+        // Checks both because we plan on removing the duplicate but swapped conflict lines
+        // Checks in 2 separate "if"s so we know the conflicting section specifically
+        if (conflict.sectionName1.replace("-", "").replace("-", "").includes(targetClass)) {
+          // ^^^ The 2 distinct .replace()s are because some classes can be formatted with an additional dash as a section range "A-S" or something, and getting rid of all of them breaks things
+          returnMessage = returnMessage
+            .concat(
+              conflict.type
+                .concat(" conflict with ")
+                .concat(conflict.sectionName2.replace("-", "").replace("-", "")),
+            )
+            .concat("\n");
+        } else if (conflict.sectionName2.replace("-", "").replace("-", "").includes(targetClass)) {
+          returnMessage = returnMessage
+            .concat(
+              conflict.type
+                .concat(" conflict with ")
+                .concat(conflict.sectionName1.replace("-", "").replace("-", "")),
+            )
+            .concat("\n");
+        }
+      });
+    }
+    return returnMessage;
+  };
 
   const onSubmit = (removeOldMeeting: boolean) => {
     return async (data: SectionInput) => {
@@ -256,6 +288,16 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
               </Grid>
             )}
           </Grid>
+          <GridItemTextField // TODO: Make this uneditable
+            label="Conflict"
+            textFieldProps={{ multiline: true, name: "Conflicts", rows: 4 }}
+            value={getConflictMessage()
+              .split("\n") // Code gets rid of duplicate lines. I ended up having to put it here, for some reason wouldn't work at the end of getConflictMessage()
+              .filter((item, i, allItems) => {
+                return i === allItems.indexOf(item);
+              })
+              .join("\n")}
+          />
           <GridItemTextField
             label="Notes"
             textFieldProps={{ multiline: true, name: "comments", rows: 4 }}
@@ -265,7 +307,14 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
         <Grid alignItems="flex-end" container justify="space-between">
           <Grid item>
             <Typography variant="caption">
-              Tip: use <b>tab</b> and <b>shift + tab</b> to navigate, <b>space bar</b> to select
+              <b>Wildcard Tip:</b> To create a Wildcard meeting put a <b>&quot;*&quot;</b> in the Prefix, Number, Section, Instructor, 
+              and Location fields. Also, put a <b>&quot;0&quot;</b> in the Faculty Hours and Student Hours fields. 
+              Finally, select the Start Time and Duration.
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="caption">
+              <b>Tip:</b> use <b>tab</b> and <b>shift + tab</b> to navigate, <b>space bar</b> to select
               days, <b>arrow keys</b> to select term and others, and <b>return</b> to submit.
             </Typography>
           </Grid>

@@ -27,7 +27,7 @@ export const ImportInputWrapper = ({
 
   return (
     <label htmlFor={id}>
-      <input accept=".csv, .xlsx" className="hidden" id={id} onChange={onInputChange} type="file" />
+      <input accept=".csv, .xlsx, .json" className="hidden" id={id} onChange={onInputChange} type="file" />
       {children}
     </label>
   );

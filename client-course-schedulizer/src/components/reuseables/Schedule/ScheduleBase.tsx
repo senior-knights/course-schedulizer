@@ -5,6 +5,7 @@ import { bindPopover, usePopupState } from "material-ui-popup-state/hooks";
 import React, { useCallback, useMemo, useState } from "react";
 import Stick from "react-stick";
 import { CourseSectionMeeting, useAppContext } from "utilities";
+// import { Tooltip } from "bootstrap";
 import {
   colorConflictBorders,
   colorEventsByFeature,
@@ -98,6 +99,17 @@ export const ScheduleBase = ({
                       {...calendarOptions}
                       key={header}
                       eventClick={handleEventClick}
+                      // eventMouseEnter = { (info) => { //TODO Have a tooltip with a conflict message without even clicking on a class
+                      //   const tooltipInstance = new Tooltip(info.el, {
+                      //     container: "body",
+                      //     html: true,
+                      //     placement: "top",
+                      //     title: "test",
+                      //     trigger: "focus",
+                      //   });
+
+                      //   tooltipInstance.show();}}
+                      // eventMouseLeave ={toolTipInstance.hide();}
                       events={filteredEvents[header]}
                     />
                   </div>

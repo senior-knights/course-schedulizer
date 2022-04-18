@@ -8,7 +8,7 @@ export const ExportButton = (btnProps: ButtonProps) => {
 
   return (
     <Button color="secondary" component="span" onClick={onExportClick} {...btnProps}>
-      Export CSV
-    </Button>
+      EXPORT CSV
+    </Button> 
   );
 };

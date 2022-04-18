@@ -8,14 +8,14 @@ import "./FacultySchedule.scss";
  */
 export const FacultySchedule = () => {
   const {
-    appState: { professors, schedule },
+    appState: { professors, schedule, constraints },
   } = useContext(AppContext);
 
   return (
     <>
       <Schedule
         calendarHeaders={professors.sort()}
-        groupedEvents={getEvents(schedule, "faculty")}
+        groupedEvents={getEvents(schedule, "faculty", constraints)}
         scheduleType="faculty"
       />
     </>

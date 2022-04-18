@@ -32,6 +32,7 @@ export const WILDCARD_DATA: SectionInput = {
 
 export const WILDCARD_VALUES: CourseSectionMeeting = {
   course: {
+    importRank: 0,
     name: "*",
     number: "*",
     prefixes: ["*"],
@@ -54,6 +55,7 @@ export const WILDCARD_VALUES: CourseSectionMeeting = {
 };
 
 export const emptyCourse: Course = {
+  importRank: 0,
   name: "",
   number: "",
   prefixes: [],
@@ -76,3 +78,8 @@ export const emptySection: Section = {
   studentHours: -1,
   term: Term.Fall,
 };
+
+// TODO: Delete this code
+// export const setConstraints = (constraints: JSON) => {
+//   return constraints;
+// };
