@@ -152,6 +152,18 @@ const AboutReport = () => {
       body={
         <ul>
           <li>
+            <NewTabLink href="">
+              Final Report
+            </NewTabLink>{" "}
+            - 4.26.2022
+          </li>
+          <li>
+            <NewTabLink href="https://docs.google.com/document/d/e/2PACX-1vTBrCpNg8RfpGYG5-c4ZDzpADTPWUyfRhuUzgXTH19LPGs2ZPTZ5OjixdFz_zhYkPzdBkxCjWd46Klc/pub">
+              Project Proposal
+            </NewTabLink>{" "}
+            - 10.01.2021
+          </li>
+          <li>
             <NewTabLink href="https://docs.google.com/document/d/e/2PACX-1vQcSDE6VMNl-wMHhECt3RbeA3WD-tiXersevVAMDXfgImq9HMFS5yQnLx8mZ4qZ4Q/pub">
               Final Report
             </NewTabLink>{" "}
@@ -185,6 +197,18 @@ const AboutResources = () => {
             <NewTabLink href="https://computing.calvin.edu/">
               Computing@Calvin Department Website
             </NewTabLink>
+          </li>
+          <li>
+            <NewTabLink href="https://docs.google.com/presentation/d/e/2PACX-1vSGBkk_3fRIeLrlMBCgLnHLxSdt4hOVz5QovjrUs3qXfVDnx12xO7hYLEuhQx4CtW_VOJ-tBIZaoHZ9/pub?start=false&loop=false&delayms=3000">
+              Final Presentation Slides
+            </NewTabLink> -
+            4.19.2022
+          </li>
+          <li>
+            <NewTabLink href="https://docs.google.com/presentation/d/e/2PACX-1vRRNLIukj6g61oBkb41JiwW0hZFUMOGzL_m-Um_Ha9vcksYJRzmd7oUlyEs0rqz5fqgFVmncarYzbMP/pub?start=false&loop=false&delayms=3000">
+              Status Report Slides
+              </NewTabLink> -
+            12.07.2021
           </li>
           <li>
             <NewTabLink href="https://youtu.be/ckn0oPxvlIE">Final Presentation Video</NewTabLink> -
