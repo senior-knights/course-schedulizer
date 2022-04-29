@@ -44,7 +44,7 @@ const AboutVision = () => {
             <li>Faculty teaching loads cannot be “too high” or “too low”</li>
           </ul>
           These constraints make it extremely difficult for the department chair to create a
-          schedule without a tool to help them. We propose building a web application, named the
+          schedule without a tool to help them. We are building and adding on to a web application, named the
           Course Schedulizer, that will allow department chairs to visualize and manipulate their
           department course schedules. It will provide:
           <ul>
@@ -54,18 +54,18 @@ const AboutVision = () => {
             <li>Options to color the data by level, instructor, location, or prefix</li>
             <li>Functionality to create, read, update, and delete class sections</li>
             <li>A load summary for each instructor in the department</li>
-            <li>Schedule conflict detection and resolution suggestions (for honors portion)</li>
+            <li>Schedule conflict detection and resolution suggestions</li>
             <li>An optimized user interface with an efficient use of screen space</li>
             <li>An extensible interface to integrate with future systems (e.g. Workday)</li>
           </ul>
-          By offering these features and improvements on the functionality previously implemented by
+          By offering these features and developing continuous improvements on the functionality previously implemented by
           Professor Pruim and Professor VanderLinden, the Course Schedulizer will allow department
           chairs to easily create their schedules.
           <br />
           <br />
-          For an Honors Project, Charles is completing a second project relating to constraint
+          There is also a past Honors Project completed in year 2020 by Charles. It is a second project relating to constraint
           problem satisfaction alongside the Course Schedulizer. By employing constraint
-          satisfaction techniques, Charles hopes to allow department chairs the ability to upload a
+          satisfaction techniques, Charles has developed the ability to upload a
           list of classes, professors, rooms, and times to the Course Schedulizer web application
           and have the system create a schedule with no conflicts.
         </>
@@ -134,11 +134,11 @@ const AboutCode = () => {
           <code>production</code> is the working, stable build of the web application and{" "}
           <code>develop</code> is the less-stable, bleeding-edge build of our Course Schedulizer
           app. Please feel free to look around the code and interact with us on the discussion board
-          or by posting issues. The honors constraint satisfaction package is also{" "}
+          or by posting issues. The honors constraint satisfaction package from year 2020 is also{" "}
           <NewTabLink href="https://github.com/charkour/csps">hosted on GitHub</NewTabLink>. The
           Harmoniously project code is also{" "}
           <NewTabLink href="https://github.com/charkour/harmoniously">hosted on GitHub</NewTabLink>.
-          For details on the development process, please view the respective ReadMes on GitHub.
+          For details on the development process, please view the respective ReadMe files on GitHub.
         </>
       }
       title="Code"
@@ -151,6 +151,19 @@ const AboutReport = () => {
     <TextSection
       body={
         <ul>
+          <li>
+            <NewTabLink href="https://docs.google.com/document/d/e/2PACX-1vSL0Ezm-2XOCQWPv4R7J3MRZAn5PW46cayuKNxxElyVdl9W48ns2cRcd6xquoBc054_w2K_vsx2si7P/pub">
+              Final Report
+            </NewTabLink>{" "}
+            - 4.26.2022
+          </li>
+          <li>
+            <NewTabLink href="https://docs.google.com/document/d/e/2PACX-1vTBrCpNg8RfpGYG5-c4ZDzpADTPWUyfRhuUzgXTH19LPGs2ZPTZ5OjixdFz_zhYkPzdBkxCjWd46Klc/pub">
+              Project Proposal
+            </NewTabLink>{" "}
+            - 10.01.2021
+          </li>
+          <hr/>
           <li>
             <NewTabLink href="https://docs.google.com/document/d/e/2PACX-1vQcSDE6VMNl-wMHhECt3RbeA3WD-tiXersevVAMDXfgImq9HMFS5yQnLx8mZ4qZ4Q/pub">
               Final Report
@@ -186,6 +199,20 @@ const AboutResources = () => {
               Computing@Calvin Department Website
             </NewTabLink>
           </li>
+          <hr/>
+          <li>
+            <NewTabLink href="https://docs.google.com/presentation/d/e/2PACX-1vSGBkk_3fRIeLrlMBCgLnHLxSdt4hOVz5QovjrUs3qXfVDnx12xO7hYLEuhQx4CtW_VOJ-tBIZaoHZ9/pub?start=false&loop=false&delayms=3000">
+              Final Presentation Slides
+            </NewTabLink> -
+            4.19.2022
+          </li>
+          <li>
+            <NewTabLink href="https://docs.google.com/presentation/d/e/2PACX-1vRRNLIukj6g61oBkb41JiwW0hZFUMOGzL_m-Um_Ha9vcksYJRzmd7oUlyEs0rqz5fqgFVmncarYzbMP/pub?start=false&loop=false&delayms=3000">
+              Status Report Slides
+              </NewTabLink> -
+            12.07.2021
+          </li>
+          <hr/>
           <li>
             <NewTabLink href="https://youtu.be/ckn0oPxvlIE">Final Presentation Video</NewTabLink> -
             4.25.2021
