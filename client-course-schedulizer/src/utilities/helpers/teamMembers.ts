@@ -51,6 +51,37 @@ export const team2021: TeamMember[] = [
   },
 ];
 
+export const team2022: TeamMember[] = [
+  {
+    bio:
+      "Computer Science Student at Calvin University.",
+    name: "John White",
+    photo: "https://avatars.githubusercontent.com/u/90846531?v=4",
+    website: "https://github.com/jmw-75",
+  },
+  {
+    bio:
+      "Computer Science Student at Calvin University.",
+    name: "Samuel Haileselassie",
+    photo: "https://media-exp1.licdn.com/dms/image/C5603AQH8mr-DiG2BEw/profile-displayphoto-shrink_400_400/0/1634434581718?e=1671667200&v=beta&t=RyVTx8CAqQ8RmELiQN5PBXM7Bf2pQGSGu8uO40E7v4k",
+    website: "https://github.com/samuelth47",
+  },
+  {
+    bio:
+      "Computer Science Student at Calvin University.",
+    name: "Sharon Velpula",
+    photo: "https://avatars.githubusercontent.com/u/90476681?v=4",
+    website: "https://github.com/VelSharon",
+  },
+  {
+    bio:
+      "Computer Science Student at Calvin University.",
+    name: "Fitsum Maru",
+    photo: "https://avatars.githubusercontent.com/u/86684529?v=4",
+    website: "https://github.com/FitsumMaru",
+  },
+];
+
 export const teamAdvisors: TeamMember[] = [
   {
     bio:
