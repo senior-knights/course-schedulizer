@@ -198,28 +198,11 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
           <GridItemTextField label="Department" textFieldProps={{ autoFocus: true }} />
         </Grid>
         <Grid container spacing={SPACING}>
+          <GridItemAutocomplete label="Instructor" multiple options={[...professors].sort()} />
           <GridItemAutocomplete label="Prefix" multiple options={getPrefixes(schedule)} />
           <GridItemAutocomplete label="Number" options={getNumbers(schedule)} />
           <GridItemAutocomplete label="Section" options={getSectionLetters(schedule)} />
           <GridItemAutocomplete label="Name" options={getCourseNames(schedule)} />
-          <GridItemAutocomplete
-            label="Instructional Method"
-            options={getInstructionalMethods(schedule)}
-          />
-        </Grid>
-        <Grid container spacing={SPACING}>
-          <GridItemAutocomplete label="Instructor" multiple options={[...professors].sort()} />
-          <GridItemAutocomplete label="Location" options={[...rooms].sort()} />
-          <GridItemTextField label="Room Capacity" />
-          <GridItemTextField label="Faculty Hours" />
-          <GridItemTextField label="Student Hours" />
-        </Grid>
-        <Grid container spacing={SPACING}>
-          <GridItemTextField label="Anticipated Size" />
-          <GridItemTextField label="Used" />
-          <GridItemTextField label="Day 10 Used" />
-          <GridItemTextField label="Local Max" />
-          <GridItemTextField label="Global Max" />
         </Grid>
         <Grid container spacing={SPACING}>
           <GridItemTextField
@@ -234,8 +217,15 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
               },
             }}
           />
-          <GridItemTextField label="Year" />
-          <GridItemTextField label="Status" />
+          <GridItemAutocomplete label="Location" options={[...rooms].sort()} />
+          <GridItemTextField label="Faculty Hours" />
+          <GridItemTextField label="Student Hours" />
+          <GridItemAutocomplete
+            label="Delivery Mode"
+            options={getInstructionalMethods(schedule)}
+          />
+        </Grid>
+        <Grid container spacing={SPACING}>
           {/* This empty item just fills space */}
           <Grid item xs />
         </Grid>
