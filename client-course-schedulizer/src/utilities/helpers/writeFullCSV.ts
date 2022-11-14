@@ -20,7 +20,7 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
   });
 
   let csvStr =
-    "Department,Term,TermStart,AcademicYear,SectionName,SubjectCode,CourseNum,SectionCode,CourseLevelCode,MinimumCredits,FacultyLoad,Used,Day10Used,LocalMax,GlobalMax,RoomCapacity,BuildingAndRoom,MeetingDays,MeetingTime,SectionStartDate,SectionEndDate,SemesterLength,Building,RoomNumber,MeetingStart,MeetingStartInternal,MeetingDurationMinutes,MeetingEnd,MeetingEndInternal,Monday,Tuesday,Wednesday,Thursday,Friday,ShortTitle,Faculty,SectionStatus,InstructionalMethod,Comments,LastEditTimestamp\n";
+    "Department,Term,SubjectCode,CourseNum,SectionCode,CourseLevelCode,MinimumCredits,FacultyLoad,BuildingAndRoom,MeetingDays,MeetingTime,SectionStartDate,SectionEndDate,SemesterLength,Building,RoomNumber,MeetingStart,MeetingDurationMinutes,MeetingEnd,ShortTitle,Faculty,SectionStatus,InstructionalMethod,Comments,LastEditTimestamp\n";
   schedule.courses.forEach((course) => {
     const termOrder = Object.values(Term);
     course.sections = course.sections.sort((a, b): number => {
@@ -55,11 +55,11 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
       let buildingAndRoomStr = "";
       let roomCapacityStr = "";
       let daysStr = "";
-      let monStr = "";
-      let tuesStr = "";
-      let wedStr = "";
-      let thursStr = "";
-      let friStr = "";
+      // let monStr = "";
+      // let tuesStr = "";
+      // let wedStr = "";
+      // let thursStr = "";
+      // let friStr = "";
       section.meetings.forEach((meeting) => {
         startMoment = moment(meeting.startTime, "h:mm A");
         endMoment = startMoment.clone().add(meeting.duration, "minutes");
@@ -72,9 +72,9 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
         } else {
           meetingTimeStr += "\n";
           meetingStartStr += "\n";
-          meetingStartInternalStr += "\n";
+          // meetingStartInternalStr += "\n";
           meetingEndStr += "\n";
-          meetingEndInternalStr += "\n";
+          // meetingEndInternalStr += "\n";
         }
         meetingDurationMinutesStr += `${meeting.duration}\n`;
         if (meeting.location && meeting.location.building) {
@@ -86,11 +86,11 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
         }
         roomCapacityStr += `${meeting.location.roomCapacity ?? ""}\n`;
         daysStr += `${meeting.days.join("")}\n`;
-        monStr += `${meeting.days.includes(Day.Monday) ? "M" : ""}\n`;
-        tuesStr += `${meeting.days.includes(Day.Tuesday) ? "T" : ""}\n`;
-        wedStr += `${meeting.days.includes(Day.Wednesday) ? "W" : ""}\n`;
-        thursStr += `${meeting.days.includes(Day.Thursday) ? "TH" : ""}\n`;
-        friStr += `${meeting.days.includes(Day.Friday) ? "F" : ""}\n`;
+        // monStr += `${meeting.days.includes(Day.Monday) ? "M" : ""}\n`;
+        // tuesStr += `${meeting.days.includes(Day.Tuesday) ? "T" : ""}\n`;
+        // wedStr += `${meeting.days.includes(Day.Wednesday) ? "W" : ""}\n`;
+        // thursStr += `${meeting.days.includes(Day.Thursday) ? "TH" : ""}\n`;
+        // friStr += `${meeting.days.includes(Day.Friday) ? "F" : ""}\n`;
       });
       // Remove trailing newlines
       meetingTimeStr = meetingTimeStr.slice(0, -1);
@@ -104,11 +104,11 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
       buildingAndRoomStr = buildingAndRoomStr.slice(0, -1);
       roomCapacityStr = roomCapacityStr.slice(0, -1);
       daysStr = daysStr.slice(0, -1);
-      monStr = monStr.slice(0, -1);
-      tuesStr = tuesStr.slice(0, -1);
-      wedStr = wedStr.slice(0, -1);
-      thursStr = thursStr.slice(0, -1);
-      friStr = friStr.slice(0, -1);
+      // monStr = monStr.slice(0, -1);
+      // tuesStr = tuesStr.slice(0, -1);
+      // wedStr = wedStr.slice(0, -1);
+      // thursStr = thursStr.slice(0, -1);
+      // friStr = friStr.slice(0, -1);
       // Create strings for fields that need to be constructed
       const termStr = getTermsStr(section);
       const sectionNameStr = `${course.prefixes.length ? course.prefixes[0] : ""}-${
@@ -117,23 +117,14 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
       const courseLevelCodeStr = numericReg.test(course.number[0]) ? `${course.number[0]}00` : "";
 
       // Construct a row in the output CSV
-      csvStr += `"${course.department ?? ""}",${termStr},${section.termStart ?? ""},${
-        section.year ?? ""
-      },"${sectionNameStr}","${course.prefixes.join("\n")}",${course.number},${
-        section.letter
-      },${courseLevelCodeStr},${section.studentHours > -1 ? section.studentHours : ""},${
-        section.facultyHours > -1 ? section.facultyHours : ""
-      },${section.used ?? ""},${section.day10Used ?? ""},${section.localMax ?? ""},${
-        section.globalMax ?? ""
-      },"${roomCapacityStr ?? ""}","${buildingAndRoomStr}","${daysStr}","${meetingTimeStr}",${
-        section.startDate ?? ""
-      },${section.endDate ?? ""},${
-        section.semesterLength ?? ""
-      },"${buildingStr}","${roomNumberStr}","${meetingStartStr}","${meetingStartInternalStr}","${meetingDurationMinutesStr}","${meetingEndStr}","${meetingEndInternalStr}","${monStr}","${tuesStr}","${wedStr}","${thursStr}","${friStr}","${
-        section.name ?? course.name
-      }","${section.instructors.join("\n")}","${section.status ?? ""}","${
-        section.instructionalMethod ?? ""
-      }","${section.comments ?? ""}","${section.timestamp ?? ""}"\n`;
+      csvStr += `"${course.department ?? ""}",${termStr
+        },"${course.prefixes.join("\n")}",${course.number},${section.letter
+        },${courseLevelCodeStr
+        },${section.studentHours > -1 ? section.studentHours : ""}, ${section.facultyHours > -1 ? section.facultyHours : ""},"${buildingAndRoomStr
+        }","${daysStr}","${meetingTimeStr}",${section.startDate ?? ""},${section.endDate ?? ""},${section.semesterLength ?? ""},"${buildingStr
+        }","${roomNumberStr}","${meetingStartStr}","${meetingDurationMinutesStr
+        }","${meetingEndStr}","${ section.name ?? course.name 
+        }","${section.instructors.join("\n")}","${section.status ?? ""}","${section.instructionalMethod ?? "" }","${section.comments ?? ""}","${section.timestamp ?? ""}"\n`;
     });
   });
   return csvStr;
