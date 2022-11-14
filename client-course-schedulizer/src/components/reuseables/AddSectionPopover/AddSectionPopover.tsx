@@ -208,7 +208,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
           <Grid item xs = {1}>
             <GridItemAutocomplete label="Section" options={getSectionLetters(schedule)} />
           </Grid>
-          <GridItemAutocomplete label="Name" options={getCourseNames(schedule)} />
+          <GridItemAutocomplete label="Course Title" options={getCourseNames(schedule)} />
         </Grid>
         <Grid container spacing={SPACING}>
           <Grid item xs = {2}>
@@ -270,7 +270,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
             )}
             {isIntensiveSemester && (
               <GridItemRadioGroup
-                label="Intensive Semester"
+                label="Intensive Term"
                 options={Object.values(SemesterLength).filter((i) => {
                   return Object.values(Intensive).includes(i);
                 })}
@@ -289,7 +289,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
                   }}
                 />
                 <Typography variant="caption">
-                  Custom semester lengths are not supported yet.
+                  Custom term lengths are not supported yet. Please enter start date and include a note about term length.
                 </Typography>
               </Grid>
             )}

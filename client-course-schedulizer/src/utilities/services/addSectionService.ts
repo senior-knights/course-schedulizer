@@ -188,7 +188,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
     convertFromSemesterLength(data?.section.semesterLength) === SemesterLengthOption.HalfSemester
       ? data?.section.semesterLength
       : SemesterLength.HalfFirst) as unknown) as Half,
-    instructionalMethod: data?.section.instructionalMethod ?? "LEC",
+    instructionalMethod: data?.section.instructionalMethod ?? "In-person",
     instructor: data?.section.instructors ?? [],
     intensiveSemester: ((data?.section.semesterLength &&
     convertFromSemesterLength(data?.section.semesterLength) ===
