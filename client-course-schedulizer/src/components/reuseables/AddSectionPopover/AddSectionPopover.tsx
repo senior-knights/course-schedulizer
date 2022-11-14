@@ -199,27 +199,43 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
         </Grid>
         <Grid container spacing={SPACING}>
           <GridItemAutocomplete label="Instructor" multiple options={[...professors].sort()} />
-          <GridItemAutocomplete label="Prefix" multiple options={getPrefixes(schedule)} />
-          <GridItemAutocomplete label="Number" options={getNumbers(schedule)} />
-          <GridItemAutocomplete label="Section" options={getSectionLetters(schedule)} />
+          <Grid item xs = {2}>
+            <GridItemAutocomplete label="Prefix" multiple options={getPrefixes(schedule)} />
+          </Grid>
+          <Grid item xs = {1}>
+            <GridItemAutocomplete label="Number" options={getNumbers(schedule)} />
+          </Grid>
+          <Grid item xs = {1}>
+            <GridItemAutocomplete label="Section" options={getSectionLetters(schedule)} />
+          </Grid>
           <GridItemAutocomplete label="Name" options={getCourseNames(schedule)} />
         </Grid>
         <Grid container spacing={SPACING}>
-          <GridItemTextField
-            label="Start Time"
-            textFieldProps={{ fullWidth: true, type: "time" }}
-          />
-          <GridItemTextField
-            label="Duration"
-            textFieldProps={{
-              InputProps: {
-                endAdornment: <InputAdornment position="end">min</InputAdornment>,
-              },
-            }}
-          />
-          <GridItemAutocomplete label="Location" options={[...rooms].sort()} />
-          <GridItemTextField label="Faculty Hours" />
-          <GridItemTextField label="Student Hours" />
+          <Grid item xs = {2}>
+            <GridItemTextField
+              label="Start Time"
+              textFieldProps={{ fullWidth: true, type: "time" }}
+            />
+          </Grid>
+          <Grid item xs = {1}>
+            <GridItemTextField
+              label="Duration"
+              textFieldProps={{
+                InputProps: {
+                  endAdornment: <InputAdornment position="end">min</InputAdornment>,
+                },
+              }}
+            />
+          </Grid>
+          <Grid item xs = {3}>
+            <GridItemAutocomplete label="Location" options={[...rooms].sort()} />
+          </Grid>
+          <Grid item xs = {1}>
+            <GridItemTextField label="Faculty Hours" />
+          </Grid>
+          <Grid item xs = {1}>
+            <GridItemTextField label="Student Hours" />
+          </Grid>
           <GridItemAutocomplete
             label="Delivery Mode"
             options={getInstructionalMethods(schedule)}
