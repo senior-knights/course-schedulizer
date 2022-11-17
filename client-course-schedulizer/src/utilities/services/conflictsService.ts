@@ -15,6 +15,7 @@ interface ConflictData {
   instructors: Section["instructors"];
   room: string;
   sectionName: string;
+  semLength: string;
   startTime: Moment;
   term: Section["term"];
 }
@@ -54,6 +55,7 @@ export const findConflicts = (
           instructors: section.instructors,
           room: getLocationString(meeting.location),
           sectionName: getSectionName(course, section),
+          semLength: section.semesterLength!,
           startTime: startTimeMoment,
           term: section.term,
         });
@@ -154,6 +156,7 @@ export const findConflicts = (
         i !== j &&
         range1.overlaps(range2) &&
         meeting1.term === meeting2.term &&
+        meeting1.semLength === meeting2.semLength &&
         meeting1.days.some(meeting2IncludesDay) &&
         (meeting1.instructors.some(meeting2IncludesInstructor) ||
           meeting2IncludesConstriant() ||
