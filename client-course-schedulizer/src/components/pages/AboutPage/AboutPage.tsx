@@ -1,7 +1,7 @@
 import { Grid } from "@material-ui/core";
 import { NewTabLink, Page } from "components/reuseables";
 import React from "react";
-import { team2020, team2021, teamAdvisors, TeamMember } from "utilities";
+import { team2020, team2021, team2022, teamAdvisors, TeamMember } from "utilities";
 import { TeamMemberProfile, TextSection } from ".";
 import "./AboutPage.scss";
 
@@ -11,6 +11,7 @@ export const AboutPage = () => {
   return (
     <Page>
       <AboutVision />
+      <AboutTeam2022 />
       <AboutTeam2021 />
       <AboutTeam2020 />
       <AboutTeamAdvisors />
@@ -74,7 +75,6 @@ const AboutVision = () => {
     />
   );
 };
-
 const AboutTeam2020 = () => {
   return (
     <TextSection
@@ -101,6 +101,21 @@ const AboutTeam2021 = () => {
         </Grid>
       }
       title="Team of 2021"
+    />
+  );
+};
+
+const AboutTeam2022 = () => {
+  return (
+    <TextSection
+      body={
+        <Grid container direction="column" justify="flex-start" spacing={2}>
+          {team2022.map((member: TeamMember) => {
+            return <TeamMemberProfile key={member.name} member={member} />;
+          })}
+        </Grid>
+      }
+      title="Team of 2022"
     />
   );
 };
@@ -152,6 +167,13 @@ const AboutReport = () => {
       body={
         <ul>
           <li>
+            <NewTabLink href="https://docs.google.com/document/d/1MjXN3lbgYXInZyUk1V_sh4wVVs2ITd6rloYKjJW8W6c/edit?usp=sharing">
+              2022 Project Proposal
+            </NewTabLink>{" "}
+            - 10.01.2022
+          </li>
+          <hr/>
+	        <li>
             <NewTabLink href="https://docs.google.com/document/d/e/2PACX-1vSL0Ezm-2XOCQWPv4R7J3MRZAn5PW46cayuKNxxElyVdl9W48ns2cRcd6xquoBc054_w2K_vsx2si7P/pub">
               Final Report
             </NewTabLink>{" "}
