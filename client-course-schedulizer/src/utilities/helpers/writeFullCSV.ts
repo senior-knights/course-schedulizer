@@ -1,6 +1,6 @@
 import { forEach } from "lodash";
 import moment, { Moment } from "moment";
-import { Day, Schedule, Section, Term } from "utilities/interfaces";
+import { Schedule, Section, Term } from "utilities/interfaces";
 import { getLocationString } from "utilities/services";
 
 export const scheduleToFullCSVString = (schedule: Schedule): string => {
@@ -19,8 +19,8 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
     return -1;
   });
 
-  let csvStr =
-    "Department,Term,SubjectCode,CourseNum,SectionCode,CourseLevelCode,MinimumCredits,FacultyLoad,BuildingAndRoom,MeetingDays,MeetingTime,SectionStartDate,SectionEndDate,SemesterLength,Building,RoomNumber,MeetingStart,MeetingDurationMinutes,MeetingEnd,ShortTitle,Faculty,SectionStatus,InstructionalMethod,Comments,LastEditTimestamp\n";
+  let csvStr = "SubjectCode,CourseNum,SectionCode,SemesterLength,ShortTitle,FacultyLoad,MinimumCredits,Comments,InstructionalMethod,Faculty,BuildingAndRoom,MeetingStart,MeetingDurationMinutes,MeetingEnd,MeetingDays,MeetingTime,SectionStartDate,SectionEndDate,Building,RoomNumber,SectionStatus,CourseLevelCode,Department,Term,LastEditTimestamp\n";
+
   schedule.courses.forEach((course) => {
     const termOrder = Object.values(Term);
     course.sections = course.sections.sort((a, b): number => {
@@ -46,14 +46,14 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
       let endMoment;
       let meetingTimeStr = "";
       let meetingStartStr = "";
-      let meetingStartInternalStr = "";
+      // let meetingStartInternalStr = "";
       let meetingEndStr = "";
-      let meetingEndInternalStr = "";
+      // let meetingEndInternalStr = "";
       let meetingDurationMinutesStr = "";
       let buildingStr = "";
       let roomNumberStr = "";
       let buildingAndRoomStr = "";
-      let roomCapacityStr = "";
+      // let roomCapacityStr = "";
       let daysStr = "";
       // let monStr = "";
       // let tuesStr = "";
@@ -66,9 +66,9 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
         if (startMoment.isValid()) {
           meetingTimeStr += getMeetingTimeStr(startMoment, endMoment);
           meetingStartStr += `${startMoment.format("h:mm A")}\n`;
-          meetingStartInternalStr += `${startMoment.format("H:mm:ss")}\n`;
+          // meetingStartInternalStr += `${startMoment.format("H:mm:ss")}\n`;
           meetingEndStr += `${endMoment.format("h:mm A")}\n`;
-          meetingEndInternalStr += `${endMoment.format("H:mm:ss")}\n`;
+          // meetingEndInternalStr += `${endMoment.format("H:mm:ss")}\n`;
         } else {
           meetingTimeStr += "\n";
           meetingStartStr += "\n";
@@ -84,7 +84,7 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
             ? `${getLocationString(meeting.location)}\n`
             : `${meeting.location.building}\n`;
         }
-        roomCapacityStr += `${meeting.location.roomCapacity ?? ""}\n`;
+        // roomCapacityStr += `${meeting.location.roomCapacity ?? ""}\n`;
         daysStr += `${meeting.days.join("")}\n`;
         // monStr += `${meeting.days.includes(Day.Monday) ? "M" : ""}\n`;
         // tuesStr += `${meeting.days.includes(Day.Tuesday) ? "T" : ""}\n`;
@@ -95,14 +95,14 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
       // Remove trailing newlines
       meetingTimeStr = meetingTimeStr.slice(0, -1);
       meetingStartStr = meetingStartStr.slice(0, -1);
-      meetingStartInternalStr = meetingStartInternalStr.slice(0, -1);
+      // meetingStartInternalStr = meetingStartInternalStr.slice(0, -1);
       meetingEndStr = meetingEndStr.slice(0, -1);
-      meetingEndInternalStr = meetingEndInternalStr.slice(0, -1);
+      // meetingEndInternalStr = meetingEndInternalStr.slice(0, -1);
       meetingDurationMinutesStr = meetingDurationMinutesStr.slice(0, -1);
       buildingStr = buildingStr.slice(0, -1);
       roomNumberStr = roomNumberStr.slice(0, -1);
       buildingAndRoomStr = buildingAndRoomStr.slice(0, -1);
-      roomCapacityStr = roomCapacityStr.slice(0, -1);
+      // roomCapacityStr = roomCapacityStr.slice(0, -1);
       daysStr = daysStr.slice(0, -1);
       // monStr = monStr.slice(0, -1);
       // tuesStr = tuesStr.slice(0, -1);
@@ -111,20 +111,38 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
       // friStr = friStr.slice(0, -1);
       // Create strings for fields that need to be constructed
       const termStr = getTermsStr(section);
-      const sectionNameStr = `${course.prefixes.length ? course.prefixes[0] : ""}-${
-        course.number
-      }-${section.letter}`;
+      // const sectionNameStr = `${course.prefixes.length ? course.prefixes[0] : ""}-${
+      //   course.number
+      // }-${section.letter}`;
       const courseLevelCodeStr = numericReg.test(course.number[0]) ? `${course.number[0]}00` : "";
 
       // Construct a row in the output CSV
-      csvStr += `"${course.department ?? ""}",${termStr
-        },"${course.prefixes.join("\n")}",${course.number},${section.letter
-        },${courseLevelCodeStr
-        },${section.studentHours > -1 ? section.studentHours : ""}, ${section.facultyHours > -1 ? section.facultyHours : ""},"${buildingAndRoomStr
-        }","${daysStr}","${meetingTimeStr}",${section.startDate ?? ""},${section.endDate ?? ""},${section.semesterLength ?? ""},"${buildingStr
-        }","${roomNumberStr}","${meetingStartStr}","${meetingDurationMinutesStr
-        }","${meetingEndStr}","${ section.name ?? course.name 
-        }","${section.instructors.join("\n")}","${section.status ?? ""}","${section.instructionalMethod ?? "" }","${section.comments ?? ""}","${section.timestamp ?? ""}"\n`;
+      // wierd formatting here is to avoid putting linebreaks in unwanted places in text
+      csvStr += `"${course.prefixes.join("\n")
+        }",${course.number
+        },${section.letter
+        },${section.semesterLength ?? ""
+        },"${section.name ?? course.name 
+        }",${section.facultyHours > -1 ? section.facultyHours : ""
+        },${section.studentHours > -1 ? section.studentHours : ""
+        },"${section.comments ?? ""
+        }","${section.instructionalMethod ?? "" 
+        }","${section.instructors.join("\n")
+        }","${buildingAndRoomStr 
+        }","${meetingStartStr
+        }","${meetingDurationMinutesStr
+        }","${meetingEndStr
+        }","${daysStr
+        }","${meetingTimeStr
+        }",${section.startDate ?? ""
+        },${section.endDate ?? ""
+        },"${buildingStr 
+        }","${roomNumberStr
+        }","${section.status ?? ""
+        }",${courseLevelCodeStr 
+        },"${course.department ?? ""
+        }",${termStr 
+        },"${section.timestamp ?? ""}"\n`;
     });
   });
   return csvStr;
