@@ -134,6 +134,9 @@ const scrollToUpdatedFacultyRow = (instructor: string) => {
 
 // a helper to provide consistent naming and retrieve error messages
 export const useInput = <T>(label: string, errors: DeepMap<T, FieldError>) => {
+  // (temporary?) hack to match new labels to previously used labels
+  if (label === "Delivery Mode") { label = "Instructional Method" }
+  if (label === "Course Title") { label = "Name" }
   const name = camelCase(label);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const errorMessage = (errors[name as keyof T] as any)?.message;
