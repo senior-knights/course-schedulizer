@@ -120,7 +120,7 @@ describe("parses basic section", () => {
   });
 
   it("parses instructional method", () => {
-    expect(basicSection.instructionalMethod).toEqual("LEC");
+    expect(basicSection.instructionalMethod).toEqual("In-person");
   });
 
   it("parses global max", () => {
