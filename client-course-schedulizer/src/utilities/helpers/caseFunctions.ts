@@ -196,7 +196,7 @@ export const timestampCallback = (value: string, { section }: CaseCallbackParams
 };
 
 export const instructionalMethodCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.instructionalMethod = value;
+  section.instructionalMethod = instructionalMethod2deliveryMode (value);
 };
 
 export const sectionCallback = (value: string, params: CaseCallbackParams) => {
@@ -364,4 +364,18 @@ export const durationCase = (value: string): number => {
 
 export const yearCase = (value: string): number | string | undefined => {
   return value && Number.isInteger(Number(value)) ? Number(value) : value;
+};
+
+export const instructionalMethod2deliveryMode = (value: string): string | undefined => {
+  switch(value) {
+    case 'LEC':
+    case 'SEM':
+    case 'LAB':
+    case 'OFFCAMPUS':
+      return 'In-person';
+    case 'ONLINE':
+      return 'Online';
+    default:
+      return value ;
+  }
 };
