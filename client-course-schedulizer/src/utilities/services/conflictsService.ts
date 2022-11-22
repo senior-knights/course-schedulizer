@@ -37,7 +37,7 @@ export interface Constraints {
   [key: string]: string[];
 }
 
-const numericalSemLength = (semLength: string): number[] => {
+export const numericalSemLength = (semLength: string): number[] => {
   switch (semLength) {
     case 'Full': return [1, 16];
     case 'First': return [1, 8];
@@ -50,14 +50,17 @@ const numericalSemLength = (semLength: string): number[] => {
   }
 }
 
-const sign = (x: number): number => {
+export const sign = (x: number): number => {
   return x < 0 ? -1 : (x > 0 ? 1 : 0)
 }
 
-const rangesOverlap = (a: number[], b: number[]): boolean => {
+export const rangesOverlap = (a: number[], b: number[]): boolean => {
   return sign(a[0] - b[1]) * sign(a[1] - b[0]) <= 0 
 }
 
+export const termsOverlap = (term1: string, term2: string): boolean => {
+  return rangesOverlap(numericalSemLength(term1), numericalSemLength(term2)) 
+}
 
 export const findConflicts = (
   schedule: Schedule,
@@ -178,7 +181,7 @@ export const findConflicts = (
         i !== j &&
         range1.overlaps(range2) &&
         meeting1.term === meeting2.term &&
-        rangesOverlap(numericalSemLength(meeting1.semLength), numericalSemLength(meeting2.semLength)) &&
+        termsOverlap(meeting1.semLength, meeting2.semLength) &&
         meeting1.days.some(meeting2IncludesDay) &&
         (meeting1.instructors.some(meeting2IncludesInstructor) ||
           meeting2IncludesConstriant() ||
