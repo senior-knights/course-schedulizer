@@ -218,6 +218,7 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
   }
   // Otherwise, add the new course to the schedule
   else {
+    section.isNonTeaching = isNonTeaching(course, section);
     course.sections.push(section);
     schedule.courses.push(course);
   }
