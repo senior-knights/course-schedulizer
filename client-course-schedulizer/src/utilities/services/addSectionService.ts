@@ -93,7 +93,13 @@ const convertToSemesterLength = (sl: Half | Intensive | SemesterLengthOption): S
 };
 
 export const getSectionName = (course: Course, section: Section) => {
-  return `${course.prefixes[0]}-${course.number}-${section.letter}`;
+  return `${course.prefixes.length ? course.prefixes[0] : ""}-${course.number}-${section.letter}`;
+};
+
+// if isNonTeaching hasn't already been set, infer it from the 
+// section name (computed from prefix, course number, and section letter all being empty)
+export const isNonTeaching = (course: Course, section: Section) => {
+  return section.isNonTeaching || getSectionName(course, section) === "--";
 };
 
 export const getCourse = (
