@@ -10,7 +10,7 @@ import {
   updateNonIdentifyingCourseInfo,
   updateNonIdentifyingSectionInfo,
 } from "utilities";
-import { getCourse, getSection } from "utilities/services";
+import { getCourse, getSection, isNonTeaching } from "utilities/services";
 import * as cf from "./caseFunctions";
 
 interface ValidFields {
@@ -212,6 +212,7 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
     }
     // Otherwise, add the new section to the existing course
     else {
+      section.isNonTeaching = isNonTeaching(course, section);
       schedule.courses[existingCourseIndex].sections.push(section);
     }
   }
