@@ -49,6 +49,7 @@ const registrarSpreadsheetFields: ValidFields = {
   Comments: cf.commentsCallback,
   CourseNum: cf.numberCallback,
   Day10Used: cf.day10UsedCallback,
+  DeliveryMode: cf.deliveryModeCallback,
   Department: cf.departmentCallback,
   Faculty: cf.instructorCallback,
   FacultyLoad: cf.facultyHoursCallback,
@@ -165,6 +166,7 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
       section.term,
       section.instructors,
       section.instructionalMethod,
+      section.deliveryMode,
     );
 
     // Update Course fields which were changed
