@@ -16,6 +16,7 @@ import {
   convertFromSemesterLength,
   emptyMeeting,
   getCourseNames,
+  getDeliveryModes,
   getInstructionalMethods,
   getNumbers,
   getPrefixes,
@@ -238,7 +239,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
           </Grid>
           <GridItemAutocomplete
             label="Delivery Mode"
-            options={getInstructionalMethods(schedule)}
+            options={getDeliveryModes(schedule)}
           />
         </Grid>
         <Grid container spacing={SPACING}>

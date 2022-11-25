@@ -305,6 +305,22 @@ export const getInstructionalMethods = (schedule: Schedule) => {
   return instructionalMethods.sort();
 };
 
+export const getDeliveryModes = (schedule: Schedule) => {
+  const deliveryModes: string[] = [];
+  forEach(schedule.courses, (course) => {
+    forEach(course.sections, (section) => {
+      if (
+        section.deliveryMode &&
+        !deliveryModes.includes(section.deliveryMode) &&
+        !section.isNonTeaching
+      ) {
+        deliveryModes.push(section.deliveryMode);
+      }
+    });
+  });
+  return deliveryModes.sort();
+};
+
 export const getDepts = (schedule: Schedule) => {
   const departments: string[] = [];
   forEach(schedule.courses, (course) => {

@@ -59,6 +59,7 @@ export interface Section {
   comments?: string;
   // Number of students enrolled in this section 10 days into the course
   day10Used?: number;
+  deliveryMode?: string;
   // Like 2/3/2020
   endDate?: string;
   facultyHours: number;
@@ -120,6 +121,7 @@ export const updateIdentifyingSectionInfo = (oldSection: Section, newSection: Se
   oldSection.term = newSection.term;
   oldSection.instructors = newSection.instructors;
   oldSection.instructionalMethod = newSection.instructionalMethod;
+  oldSection.deliveryMode = newSection.deliveryMode;
   return oldSection;
 };
 
