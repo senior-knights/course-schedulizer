@@ -4,6 +4,7 @@ import {
   Course,
   emptyCourse,
   emptySection,
+  isStandardTime,
   Meeting,
   Schedule,
   Section,
@@ -184,6 +185,7 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
         existingSection,
       );
       const newMeetings = section.meetings;
+      newMeetings.forEach(meeting => {meeting.isNonstandardTime = !isStandardTime(meeting)});
 
       // Update Section fields which were changed
       schedule.courses[existingCourseIndex].sections[
@@ -213,14 +215,17 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
     // Otherwise, add the new section to the existing course
     else {
       section.isNonTeaching = isNonTeaching(course, section);
+      section.meetings.forEach(meeting => {meeting.isNonstandardTime = !isStandardTime(meeting)});
       schedule.courses[existingCourseIndex].sections.push(section);
     }
   }
   // Otherwise, add the new course to the schedule
   else {
     section.isNonTeaching = isNonTeaching(course, section);
+    section.meetings.forEach(meeting => {meeting.isNonstandardTime = !isStandardTime(meeting)});
     course.sections.push(section);
     schedule.courses.push(course);
   }
   return schedule;
 };
+

@@ -158,6 +158,16 @@ export const colorConflictBorders = (groupedEvents: GroupedEvents) => {
   });
 };
 
+export const colorNonstandardTimeBorders = (groupedEvents: GroupedEvents) => {
+  forOwn(groupedEvents, (_, key) => {
+    forEach(groupedEvents[key], (event) => {
+      if (event.extendedProps?.meeting?.isNonstandardTime) {
+        event.borderColor = "orange";
+      }
+    });
+  });
+};
+
 export const colorEventsByFeature = (groupedEvents: GroupedEvents, colorBy: ColorBy) => {
   // TODO: Multiple colors for multiple instructors/prefixes?
   // TODO: Pre-hashing strings too slow?

@@ -9,6 +9,7 @@ import { CourseSectionMeeting, useAppContext } from "utilities";
 import {
   colorConflictBorders,
   colorEventsByFeature,
+  colorNonstandardTimeBorders,
   filterEventsByTerm,
   filterHeadersWithNoEvents,
   getCalendarClassName,
@@ -77,6 +78,7 @@ export const ScheduleBase = ({
   // Color events by the selected feature
   colorEventsByFeature(filteredEvents, colorBy);
   colorConflictBorders(groupedEvents);
+  colorNonstandardTimeBorders(groupedEvents);
 
   return (
     <>
