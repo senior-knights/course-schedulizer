@@ -1,3 +1,6 @@
+import rawTimes from 'data/times.json';
+import { militaryTo12Hour } from './helpers';
+
 import {
   Course,
   CourseSectionMeeting,
@@ -66,6 +69,7 @@ export const emptyMeeting: Meeting = {
   days: [],
   duration: 0,
   isConflict: false,
+  isNonstandardTime: false,
   location: { building: "", roomNumber: "" },
   startTime: "",
 };
@@ -78,6 +82,19 @@ export const emptySection: Section = {
   studentHours: -1,
   term: Term.Fall,
 };
+
+export const legalTimes = new Set<string>();
+
+rawTimes.times.forEach(entry => {
+  entry.day.forEach(day => {
+    entry.time.forEach(startTime => {
+      startTime = militaryTo12Hour(startTime);
+      entry.duration.forEach(duration => {
+        legalTimes.add(`${day} -- ${startTime} -- ${duration}`);
+      })
+    })
+  })  
+ })
 
 // TODO: Delete this code
 // export const setConstraints = (constraints: JSON) => {

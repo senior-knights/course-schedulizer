@@ -11,9 +11,10 @@ export interface Location {
 export interface Meeting {
   // All days on which the given Meeting time and room is applicable
   days: Day[];
-  // In minutes (usually 50)
+  // In minutes 
   duration: number;
   isConflict?: boolean;
+  isNonstandardTime?: boolean;
   location: Location;
   // Like "8:00 AM" or "12:30 PM"
   startTime: string;

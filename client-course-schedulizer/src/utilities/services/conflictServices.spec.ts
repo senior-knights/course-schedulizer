@@ -1,4 +1,4 @@
-import { sign, rangesOverlap, numericalSemLength, termsOverlap } from "./conflictsService";
+import { sign, rangesOverlap, termsOverlap } from "./conflictsService";
 
 [
     {in: -2, out: -1}, 
