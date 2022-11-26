@@ -289,6 +289,8 @@ export const getSectionLetters = (schedule: Schedule) => {
   return letters.sort();
 };
 
+// get list of instructional methods already in use in the Schedule
+// used for autocompletion
 export const getInstructionalMethods = (schedule: Schedule) => {
   const instructionalMethods: string[] = [];
   forEach(schedule.courses, (course) => {
@@ -305,6 +307,8 @@ export const getInstructionalMethods = (schedule: Schedule) => {
   return instructionalMethods.sort();
 };
 
+// get list of delivery modes already in use in the Schedule
+// used for autocompletion
 export const getDeliveryModes = (schedule: Schedule) => {
   const deliveryModes: string[] = [];
   forEach(schedule.courses, (course) => {
