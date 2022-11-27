@@ -20,6 +20,13 @@ export interface Meeting {
   startTime: string;
 }
 
+// a subset of a meeting
+export interface MeetingPattern {
+  days: string | Day[];
+  duration: number;
+  startTime: string;
+}
+
 export type Prefix = string;
 
 // If new non-identifying fields are added to this interface, must update updateNonIdentifyingCourseInfo()
