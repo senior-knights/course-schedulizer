@@ -1,4 +1,4 @@
-import { legalTimes, Meeting} from "utilities";
+import { legalTimes, Meeting, MeetingPattern} from "utilities";
 
 
 // convert from 14:45 to 2:45 PM, etc.
@@ -13,13 +13,20 @@ export const militaryTo12Hour = (time: string): string => {
     return `${(parseInt(hour) - 12)}:${minute} PM`;
 };
 
-export const isStandardTime = (meeting: Meeting): boolean => {
-    let isStandard = true;
-    meeting.days.forEach((day) => {
-        const sessionStr = `${day} -- ${meeting.startTime} -- ${meeting.duration}`;
-      if (! legalTimes.has(sessionStr)) {
-        isStandard =  false;
-      }
-    })
-    return isStandard;
+militaryTo12Hour('15:15');
+
+export const meetingPatternCode = (meeting: MeetingPattern): string => {
+    // collapse days to a string if it is a list
+    let days = typeof meeting.days === 'string' ? meeting.days : meeting.days.join("");
+    days = days.replace('R', 'TH')
+
+    return `${days} @ ${meeting.startTime} for ${meeting.duration} mins`
+}
+
+export const isStandardTime = (meeting: Meeting, strict = true): boolean => {
+    if (strict) {
+      return legalTimes.has(meetingPatternCode(meeting));
+    } 
+    // replace this with a looser test that allows matching a subset of days
+    return legalTimes.has(meetingPatternCode(meeting));
 };
