@@ -85,8 +85,15 @@ export const emptySection: Section = {
 
 export const legalTimes = new Set<string>();
 
+// For each meeting pattern add both the full meeting pattern and also each
+// abbreviated single day version.  See issue #300.
 meetingPatterns.forEach((meetingPattern) => {
-  return legalTimes.add(meetingPatternCode(meetingPattern))
+  legalTimes.add(meetingPatternCode(meetingPattern));
+  const abbreviatedMeetingPattern = {...meetingPattern};
+  meetingPattern.days.replace("TH", "R").split("").forEach((day) => {
+    abbreviatedMeetingPattern.days = (day === 'R') ? 'TH' : day;
+    legalTimes.add(meetingPatternCode(abbreviatedMeetingPattern));
+  })
 })
 
 // TODO: Delete this code
