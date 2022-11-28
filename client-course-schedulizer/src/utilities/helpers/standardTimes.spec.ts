@@ -15,6 +15,20 @@ const test_meetings =
         }, 
     out: true},
     {meeting : {  
+        days: [Day.Monday],
+        startTime: "1:30 PM",
+        duration: 65, 
+        location: {building: "NH", roomNumber: "276"}
+        }, 
+    out: true},
+    {meeting : {  
+        days: [Day.Friday],
+        startTime: "1:30 PM",
+        duration: 65, 
+        location: {building: "NH", roomNumber: "276"}
+        }, 
+    out: true},
+    {meeting : {  
         days: [Day.Monday, Day.Wednesday, Day.Friday],
         startTime: "1:30 PM",
         duration: 65, 
@@ -22,7 +36,21 @@ const test_meetings =
         }, 
     out: true},
     {meeting : {  
+        days: [Day.Monday, Day.Friday],
+        startTime: "1:30 PM",
+        duration: 65, 
+        location: {building: "NH", roomNumber: "276"}
+        }, 
+    out: false},
+    {meeting : {  
         days: [Day.Tuesday, Day.Thursday],
+        startTime: "8:00 AM",
+        duration: 100, 
+        location: {building: "NH", roomNumber: "276"}
+        }, 
+    out: true},
+    {meeting : {  
+        days: [Day.Thursday],
         startTime: "8:00 AM",
         duration: 100, 
         location: {building: "NH", roomNumber: "276"}
