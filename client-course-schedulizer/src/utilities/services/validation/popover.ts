@@ -44,6 +44,7 @@ export const addSectionSchema = object().shape({
     .transform(emptyStringToNull)
     .nullable(),
   days: array().transform(removeUncheckedValues),
+  deliveryMode: string().nullable(),
   department: string().nullable(),
   duration: number()
     .typeError("duration must be a number")

@@ -299,20 +299,42 @@ export const getSectionLetters = (schedule: Schedule) => {
   return letters.sort();
 };
 
-export const getInstructionalMethods = (schedule: Schedule) => {
-  const instructionalMethods: string[] = [];
+// // get list of instructional methods already in use in the Schedule
+// // used for autocompletion
+// // deprecated -- using getDeliveryModes() now
+//
+// export const getInstructionalMethods = (schedule: Schedule) => {
+//   const instructionalMethods: string[] = [];
+//   forEach(schedule.courses, (course) => {
+//     forEach(course.sections, (section) => {
+//       if (
+//         section.instructionalMethod &&
+//         !instructionalMethods.includes(section.instructionalMethod) &&
+//         !section.isNonTeaching
+//       ) {
+//         instructionalMethods.push(section.instructionalMethod);
+//       }
+//     });
+//   });
+//   return instructionalMethods.sort();
+// };
+
+// get list of delivery modes already in use in the Schedule
+// used for autocompletion
+export const getDeliveryModes = (schedule: Schedule) => {
+  const deliveryModes: string[] = [];
   forEach(schedule.courses, (course) => {
     forEach(course.sections, (section) => {
       if (
-        section.instructionalMethod &&
-        !instructionalMethods.includes(section.instructionalMethod) &&
+        section.deliveryMode &&
+        !deliveryModes.includes(section.deliveryMode) &&
         !section.isNonTeaching
       ) {
-        instructionalMethods.push(section.instructionalMethod);
+        deliveryModes.push(section.deliveryMode);
       }
     });
   });
-  return instructionalMethods.sort();
+  return deliveryModes.sort();
 };
 
 export const getDepts = (schedule: Schedule) => {

@@ -31,12 +31,13 @@ export interface SectionInput {
   comments?: Section["comments"];
   day10Used?: Section["day10Used"];
   days: CheckboxDays;
+  deliveryMode?: Section["deliveryMode"];
   department?: Course["department"];
   duration?: Meeting["duration"];
   facultyHours?: Section["facultyHours"];
   globalMax?: Section["globalMax"];
   halfSemester?: Half;
-  instructionalMethod?: Section["instructionalMethod"];
+  // instructionalMethod?: Section["instructionalMethod"];
   instructor: Instructor[];
   intensiveSemester?: Intensive;
   localMax?: Section["localMax"];
@@ -121,6 +122,7 @@ export const getSection = (
   term: Section["term"],
   instructors: Section["instructors"],
   instructionalMethod: Section["instructionalMethod"],
+  deliveryMode: Section["deliveryMode"],
 ) => {
   const course = getCourse(schedule, prefixes, courseNumber);
   const sections = filter(course?.sections, (section) => {
@@ -128,7 +130,8 @@ export const getSection = (
       section.letter === letter &&
       section.term === term &&
       isEqual(section.instructors, instructors) &&
-      section.instructionalMethod === instructionalMethod
+      section.instructionalMethod === instructionalMethod &&
+      section.deliveryMode === deliveryMode
     );
   });
   return sections.length > 0 ? sections[0] : undefined;
@@ -183,6 +186,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
     comments: data?.section.comments?.trim() === "" ? undefined : data?.section.comments,
     day10Used: data?.section.day10Used,
     days,
+    deliveryMode: data?.section.deliveryMode ?? "",  // TODO: should this be "In-person"?
     department: data?.course.department,
     duration: data?.meeting?.duration,
     facultyHours:
@@ -194,7 +198,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
     convertFromSemesterLength(data?.section.semesterLength) === SemesterLengthOption.HalfSemester
       ? data?.section.semesterLength
       : SemesterLength.HalfFirst) as unknown) as Half,
-    instructionalMethod: data?.section.instructionalMethod ?? "In-person",
+    // instructionalMethod: data?.section.instructionalMethod ?? "",   // TODO: should this be "LEC"?
     instructor: data?.section.instructors ?? [],
     intensiveSemester: ((data?.section.semesterLength &&
     convertFromSemesterLength(data?.section.semesterLength) ===
@@ -236,10 +240,11 @@ const createNewSectionFromInput = (data: SectionInput): Section => {
     anticipatedSize: data.anticipatedSize,
     comments: data.comments,
     day10Used: data.day10Used,
+    deliveryMode: data.deliveryMode,
     endDate: "",
     facultyHours: Number(data.facultyHours),
     globalMax: data.globalMax,
-    instructionalMethod: data.instructionalMethod,
+    // instructionalMethod: data.instructionalMethod,
     instructors: data.instructor,
     letter: data.section,
     localMax: data.localMax,
