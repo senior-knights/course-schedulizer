@@ -1,5 +1,5 @@
 import { voidFn } from "utilities";
-import { AppAction, AppState, ColorBy, SchedulizerTab, Term } from "utilities/interfaces";
+import { AppAction, AppState, ColorBy, SchedulizerTab, SemesterLength, Term } from "utilities/interfaces";
 import {
   getClasses,
   getDepts,
@@ -52,6 +52,12 @@ export const reducer = (actionCallback: (item: AppState) => void = voidFn) => {
         let { colorBy } = action.payload;
         colorBy = colorBy || ColorBy.Level;
         newState = { ...state, colorBy };
+        break;
+      }
+      case "setSelectedSemesterPart": {
+        let { selectedSemesterPart } = action.payload;
+        selectedSemesterPart = selectedSemesterPart || SemesterLength.Full;
+        newState = { ...state, selectedSemesterPart };
         break;
       }
       case "setSchedulizerTab": {

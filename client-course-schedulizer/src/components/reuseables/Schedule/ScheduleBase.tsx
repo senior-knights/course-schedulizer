@@ -37,7 +37,7 @@ export const ScheduleBase = ({
   ...calendarOptions
 }: ScheduleBaseProps) => {
   const {
-    appState: { colorBy, selectedTerm, slotMaxTime, slotMinTime },
+    appState: { colorBy, selectedTerm, selectedSemesterPart, slotMaxTime, slotMinTime },
   } = useAppContext();
   const [popupData, setPopupData] = useState<CourseSectionMeeting>();
 
@@ -67,7 +67,7 @@ export const ScheduleBase = ({
 
   // Filter out events from other terms
   const filteredEvents = useMemo(() => {
-    return filterEventsByTerm(groupedEvents, selectedTerm);
+    return filterEventsByTerm(groupedEvents, selectedTerm, selectedSemesterPart);
   }, [groupedEvents, selectedTerm]);
 
   // Filter out headers with no events
