@@ -12,7 +12,6 @@ export const ScheduleToolbar = () => {
   return (
     <div className="schedule-toolbar">
       <div className="toolbar-left">
-        <Searchbar />
         <ColorSelector />
         <SemesterPartSelector />
       </div>
