@@ -1,6 +1,6 @@
 import { loadLocal } from "utilities/hooks/useLocal";
 import { HarmonyClass } from "utilities/services";
-import { Schedule, Term } from "./dataInterfaces";
+import { Schedule, SemesterLength, Term } from "./dataInterfaces";
 
 export enum ColorBy {
   Level,
@@ -27,6 +27,7 @@ export interface AppState {
   rooms: string[];
   schedule: Schedule;
   schedulizerTab: SchedulizerTab;
+  selectedSemesterPart: SemesterLength;
   selectedTerm: Term;
   slotMaxTime: string;
   slotMinTime: string;
@@ -46,6 +47,7 @@ export const initialAppState: AppState = loadLocal("appState") || {
   rooms: [],
   schedule: { courses: [], numDistinctSchedules: 0 },
   schedulizerTab: 0,
+  selectedSemesterPart: SemesterLength.Full,
   selectedTerm: Term.Fall,
   slotMaxTime: "22:00",
   slotMinTime: "6:00",
@@ -69,5 +71,5 @@ if (!initialAppState.rooms) {
 // structure of actions that can be sent to app dispatch
 export interface AppAction {
   payload: Partial<AppState>;
-  type: "setScheduleData" | "setSelectedTerm" | "setFileUrl" | "setColorBy" | "setSchedulizerTab" | "setConstraints"; // add | to add more actions in the future
+  type: "setScheduleData" | "setSelectedTerm" | "setFileUrl" | "setColorBy" | "setSchedulizerTab" | "setSelectedSemesterPart" | "setConstraints"; // add | to add more actions in the future
 }
