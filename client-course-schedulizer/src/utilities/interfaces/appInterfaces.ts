@@ -7,6 +7,7 @@ export enum ColorBy {
   Room,
   Instructor,
   Prefix,
+  Group,
 }
 
 export enum SchedulizerTab {

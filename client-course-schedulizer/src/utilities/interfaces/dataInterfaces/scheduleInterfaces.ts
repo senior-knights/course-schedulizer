@@ -72,6 +72,7 @@ export interface Section {
   endDate?: string;
   facultyHours: number;
   globalMax?: number;
+  group?: string;
   instructionalMethod?: string;
   instructors: Instructor[];
   isNonTeaching?: boolean;
@@ -109,6 +110,7 @@ export const updateNonIdentifyingSectionInfo = (
   oldSection.endDate = newSection.endDate;
   oldSection.facultyHours = newSection.facultyHours;
   oldSection.globalMax = newSection.globalMax;
+  oldSection.group = newSection.group;
   oldSection.isNonTeaching = newSection.isNonTeaching;
   oldSection.localMax = newSection.localMax;
   oldSection.name = newSection.name;

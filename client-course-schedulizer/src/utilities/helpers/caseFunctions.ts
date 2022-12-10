@@ -203,6 +203,10 @@ export const deliveryModeCallback = (value: string, { section }: CaseCallbackPar
   section.deliveryMode = value;
 };
 
+export const groupCallback = (value: string, { section }: CaseCallbackParams) => {
+  section.group = value;
+};
+
 
 export const sectionCallback = (value: string, params: CaseCallbackParams) => {
   if (value === "--" || value.trim() === "") {

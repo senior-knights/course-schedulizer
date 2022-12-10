@@ -63,6 +63,7 @@ export const addSectionSchema = object().shape({
     .min(0)
     .transform(emptyStringToNull)
     .nullable(),
+  group: string().nullable(),
   instructionalMethod: string().nullable(),
   instructor: array().of(string()).required(),
   localMax: number()
