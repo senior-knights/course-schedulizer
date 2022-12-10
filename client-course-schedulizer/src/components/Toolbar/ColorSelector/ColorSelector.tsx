@@ -26,6 +26,7 @@ export const ColorSelector = () => {
         <MenuItem value={ColorBy.Room}>Room</MenuItem>
         <MenuItem value={ColorBy.Instructor}>Instructor</MenuItem>
         <MenuItem value={ColorBy.Prefix}>Prefix</MenuItem>
+        <MenuItem value={ColorBy.Group}>Group</MenuItem>
       </Select>
     </div>
   );

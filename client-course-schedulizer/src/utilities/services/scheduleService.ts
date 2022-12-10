@@ -210,6 +210,15 @@ export const colorEventsByFeature = (groupedEvents: GroupedEvents, colorBy: Colo
         });
       });
       break;
+    case ColorBy.Group:
+      forOwn(groupedEvents, (_, key) => {
+        forEach(groupedEvents[key], (event) => {
+          const groupStr = event.extendedProps?.section?.group ?? "";
+          event.color = randomColor({ luminosity: "light", seed: hash(groupStr) });
+          event.textColor = "black";
+        });
+      });
+      break;
     case ColorBy.Prefix:
       forOwn(groupedEvents, (_, key) => {
         forEach(groupedEvents[key], (event) => {
@@ -339,6 +348,24 @@ export const getDeliveryModes = (schedule: Schedule) => {
     });
   });
   return deliveryModes.sort();
+};
+
+// get list of groups already in use in the Schedule
+// used for autocompletion
+export const getGroups = (schedule: Schedule) => {
+  const groupsInUse: string[] = [];
+  forEach(schedule.courses, (course) => {
+    forEach(course.sections, (section) => {
+      if (
+        section.group &&
+        !groupsInUse.includes(section.group) &&
+        !section.isNonTeaching
+      ) {
+        groupsInUse.push(section.group);
+      }
+    });
+  });
+  return groupsInUse.sort();
 };
 
 export const getDepts = (schedule: Schedule) => {

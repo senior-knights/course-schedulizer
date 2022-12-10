@@ -36,6 +36,7 @@ export interface SectionInput {
   duration?: Meeting["duration"];
   facultyHours?: Section["facultyHours"];
   globalMax?: Section["globalMax"];
+  group?: Section["group"];
   halfSemester?: Half;
   // instructionalMethod?: Section["instructionalMethod"];
   instructor: Instructor[];
@@ -131,7 +132,7 @@ export const getSection = (
       section.term === term &&
       isEqual(section.instructors, instructors) &&
       section.instructionalMethod === instructionalMethod &&
-      section.deliveryMode === deliveryMode
+      section.deliveryMode === deliveryMode 
     );
   });
   return sections.length > 0 ? sections[0] : undefined;
@@ -194,6 +195,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
         ? data.section.facultyHours
         : undefined,
     globalMax: data?.section.globalMax,
+    group: data?.section.group ?? "",
     halfSemester: ((data?.section.semesterLength &&
     convertFromSemesterLength(data?.section.semesterLength) === SemesterLengthOption.HalfSemester
       ? data?.section.semesterLength
@@ -244,6 +246,7 @@ const createNewSectionFromInput = (data: SectionInput): Section => {
     endDate: "",
     facultyHours: Number(data.facultyHours),
     globalMax: data.globalMax,
+    group: data.group,
     // instructionalMethod: data.instructionalMethod,
     instructors: data.instructor,
     letter: data.section,

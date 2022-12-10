@@ -217,7 +217,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
               textFieldProps={{ fullWidth: true, type: "time" }}
             />
           </Grid>
-          <Grid item xs = {1}>
+          <Grid item xs = {2}>
             <GridItemTextField
               label="Duration"
               textFieldProps={{
@@ -227,7 +227,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
               }}
             />
           </Grid>
-          <Grid item xs = {3}>
+          <Grid item xs = {2}>
             <GridItemAutocomplete label="Location" options={[...rooms].sort()} />
           </Grid>
           <Grid item xs = {1}>
@@ -240,6 +240,9 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
             label="Delivery Mode"
             options={getDeliveryModes(schedule)}
           />
+          <Grid item xs = {2}>
+            <GridItemTextField label="Group" />
+          </Grid>
         </Grid>
         <Grid container spacing={SPACING}>
           {/* This empty item just fills space */}
