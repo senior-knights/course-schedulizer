@@ -6,8 +6,8 @@ import hash from "object-hash";
 import randomColor from "randomcolor";
 import { enumArray, WILDCARD_COLOR } from "utilities";
 import { INITIAL_DATE } from "utilities/constants";
-import { ColorBy, Day, Location, Meeting, Schedule, Section, SemesterLength, Term } from "utilities/interfaces";
-import { Constraints, findConflicts, termsOverlap } from "./conflictsService";
+import { ColorBy, Day, Location, Meeting, Schedule, Section, Term } from "utilities/interfaces";
+import { Constraints, findConflicts } from "./conflictsService";
 
 // Returns a list of hours to display on the Schedule
 // TODO: add better types for timing, maybe: https://stackoverflow.com/questions/51445767/how-to-define-a-regex-matched-string-type-in-typescript
@@ -131,15 +131,11 @@ export const getMinAndMaxTimes = (schedule: Schedule) => {
   };
 };
 
-export const filterEventsByTerm = (
-  groupedEvents: GroupedEvents, 
-  term: Term, 
-  semesterLength: SemesterLength = SemesterLength.HalfSecond) => {
+export const filterEventsByTerm = (groupedEvents: GroupedEvents, term: Term) => {
   const tempGroupedEvents: GroupedEvents = {};
   forOwn(groupedEvents, (_, key) => {
     tempGroupedEvents[key] = filter(groupedEvents[key], (e) => {
-      return e.extendedProps?.section.term === term && 
-             termsOverlap(e.extendedProps?.section.semesterLength, semesterLength);
+      return e.extendedProps?.section.term === term;
     });
   });
   return tempGroupedEvents;
