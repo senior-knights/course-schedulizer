@@ -1,6 +1,6 @@
 import { EventInput } from "@fullcalendar/react";
 import { ScheduleBaseProps } from "components";
-import { filter, flatten, forEach, forOwn, map, maxBy, minBy, range } from "lodash";
+import { filter, flatten, forEach, forOwn, map, maxBy, minBy, pick, range } from "lodash";
 import moment from "moment";
 import hash from "object-hash";
 import randomColor from "randomcolor";
@@ -131,19 +131,41 @@ export const getMinAndMaxTimes = (schedule: Schedule) => {
   };
 };
 
-export const filterEventsByTerm = (
+// export const filterEventsByTerm = (
+//   groupedEvents: GroupedEvents, 
+//   term: Term, 
+//   semesterLength: SemesterLength = SemesterLength.Full) => {
+//   const tempGroupedEvents: GroupedEvents = {};
+//   forOwn(groupedEvents, (_, key) => {
+//     tempGroupedEvents[key] = filter(groupedEvents[key], (e) => {
+//       return e.extendedProps?.section.term === term && 
+//              termsOverlap(e.extendedProps?.section.semesterLength, semesterLength);
+//     });
+//   });
+//   return tempGroupedEvents;
+// };
+
+export const sectionFieldsForSearch = ['comments', 'deliveryMode', 'group', 'instructors', 'name', 'semesterLength'];
+export const courseFieldsForSearch = ['department', 'name', 'number', 'prefixes'];
+
+export const filterEventsByRegexAndTerm = (
   groupedEvents: GroupedEvents, 
+  regex_input: string | RegExp,
   term: Term, 
   semesterLength: SemesterLength = SemesterLength.Full) => {
+  const regex = new  RegExp(regex_input);
   const tempGroupedEvents: GroupedEvents = {};
   forOwn(groupedEvents, (_, key) => {
     tempGroupedEvents[key] = filter(groupedEvents[key], (e) => {
       return e.extendedProps?.section.term === term && 
-             termsOverlap(e.extendedProps?.section.semesterLength, semesterLength);
+             termsOverlap(e.extendedProps?.section.semesterLength, semesterLength) &&
+             ( regex.test(JSON.stringify(pick(e.extendedProps?.section, sectionFieldsForSearch))) ||
+               regex.test(JSON.stringify(pick(e.extendedProps?.course, courseFieldsForSearch))))
     });
   });
   return tempGroupedEvents;
 };
+
 
 export const filterHeadersWithNoEvents = (filteredEvents: GroupedEvents, headers: string[]) => {
   return filter(headers, (header) => {

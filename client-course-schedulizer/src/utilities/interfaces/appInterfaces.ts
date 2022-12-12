@@ -28,6 +28,7 @@ export interface AppState {
   rooms: string[];
   schedule: Schedule;
   schedulizerTab: SchedulizerTab;
+  searchRegex: string;
   selectedSemesterPart: SemesterLength;
   selectedTerm: Term;
   slotMaxTime: string;
@@ -48,6 +49,7 @@ export const initialAppState: AppState = loadLocal("appState") || {
   rooms: [],
   schedule: { courses: [], numDistinctSchedules: 0 },
   schedulizerTab: 0,
+  searchRegex: '',
   selectedSemesterPart: SemesterLength.Full,
   selectedTerm: Term.Fall,
   slotMaxTime: "22:00",
@@ -72,5 +74,5 @@ if (!initialAppState.rooms) {
 // structure of actions that can be sent to app dispatch
 export interface AppAction {
   payload: Partial<AppState>;
-  type: "setScheduleData" | "setSelectedTerm" | "setFileUrl" | "setColorBy" | "setSchedulizerTab" | "setSelectedSemesterPart" | "setConstraints"; // add | to add more actions in the future
+  type: "setScheduleData" | "setSelectedTerm" | "setFileUrl" | "setColorBy" | "setSchedulizerTab" | "setSearchRegex" | "setSelectedSemesterPart" | "setConstraints"; // add | to add more actions in the future
 }

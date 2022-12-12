@@ -10,7 +10,8 @@ import {
   colorConflictBorders,
   colorEventsByFeature,
   colorNonstandardTimeBorders,
-  filterEventsByTerm,
+  // filterEventsByTerm,
+  filterEventsByRegexAndTerm,
   filterHeadersWithNoEvents,
   getCalendarClassName,
   GroupedEvents,
@@ -37,7 +38,7 @@ export const ScheduleBase = ({
   ...calendarOptions
 }: ScheduleBaseProps) => {
   const {
-    appState: { colorBy, selectedTerm, selectedSemesterPart, slotMaxTime, slotMinTime },
+    appState: { colorBy, searchRegex, selectedSemesterPart, selectedTerm, slotMaxTime, slotMinTime },
   } = useAppContext();
   const [popupData, setPopupData] = useState<CourseSectionMeeting>();
 
@@ -67,8 +68,8 @@ export const ScheduleBase = ({
 
   // Filter out events from other terms
   const filteredEvents = useMemo(() => {
-    return filterEventsByTerm(groupedEvents, selectedTerm, selectedSemesterPart);
-  }, [groupedEvents, selectedTerm, selectedSemesterPart]);
+    return filterEventsByRegexAndTerm(groupedEvents, searchRegex, selectedTerm, selectedSemesterPart);
+  }, [groupedEvents, searchRegex, selectedTerm, selectedSemesterPart]);
 
   // Filter out headers with no events
   const calenderHeadersNoEmptyInTerm = useMemo(() => {

@@ -36,6 +36,12 @@ export const reducer = (actionCallback: (item: AppState) => void = voidFn) => {
         };
         break;
       }
+      case "setSearchRegex": {
+        let { searchRegex } = action.payload;
+        searchRegex = searchRegex || '';
+        newState = { ...state, searchRegex };
+        break;
+      }
       case "setSelectedTerm": {
         let { selectedTerm } = action.payload;
         selectedTerm = selectedTerm || Term.Fall;
@@ -75,6 +81,8 @@ export const reducer = (actionCallback: (item: AppState) => void = voidFn) => {
       default:
         return state;
     }
+    // es-lint-disable-next-line
+    console.log({action, newState});
     actionCallback(newState);
     return newState;
   };
