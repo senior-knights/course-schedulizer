@@ -134,7 +134,7 @@ export const getMinAndMaxTimes = (schedule: Schedule) => {
 export const filterEventsByTerm = (
   groupedEvents: GroupedEvents, 
   term: Term, 
-  semesterLength: SemesterLength = SemesterLength.Full) => {
+  semesterLength: SemesterLength = SemesterLength.HalfSecond) => {
   const tempGroupedEvents: GroupedEvents = {};
   forOwn(groupedEvents, (_, key) => {
     tempGroupedEvents[key] = filter(groupedEvents[key], (e) => {
