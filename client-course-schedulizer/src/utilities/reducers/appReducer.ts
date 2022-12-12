@@ -81,7 +81,7 @@ export const reducer = (actionCallback: (item: AppState) => void = voidFn) => {
       default:
         return state;
     }
-    // es-lint-disable-next-line
+    // eslint-disable-next-line
     console.log({action, newState});
     actionCallback(newState);
     return newState;
