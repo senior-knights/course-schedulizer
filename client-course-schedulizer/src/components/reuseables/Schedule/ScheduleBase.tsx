@@ -68,7 +68,7 @@ export const ScheduleBase = ({
   // Filter out events from other terms
   const filteredEvents = useMemo(() => {
     return filterEventsByTerm(groupedEvents, selectedTerm, selectedSemesterPart);
-  }, [groupedEvents, selectedTerm]);
+  }, [groupedEvents, selectedTerm, selectedSemesterPart]);
 
   // Filter out headers with no events
   const calenderHeadersNoEmptyInTerm = useMemo(() => {
