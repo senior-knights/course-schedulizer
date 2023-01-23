@@ -1,4 +1,5 @@
-import { AddSectionButton, ColorSelector, Searchbar, SemesterSelector} from "components";
+// import { AddSectionButton, ColorSelector, Searchbar, SemesterSelector} from "components";
+import { AddSectionButton, ColorSelector, SemesterSelector } from "components";
 import React, { useContext } from "react";
 import { AppContext } from "utilities/contexts";
 import { SemesterPartSelector } from "../SemesterPartSelector";
