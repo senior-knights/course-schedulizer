@@ -6,7 +6,6 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import { INITIAL_DATE } from "utilities/constants";
 import "./Calendar.scss";
 
-export * from "@fullcalendar/react";
 export const Calendar = (props: CalendarOptions) => {
   return (
     <>
