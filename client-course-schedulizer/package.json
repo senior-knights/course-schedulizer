@@ -12,8 +12,7 @@
     "test": "react-scripts test"
   },
   "husky": {
-    "hooks": {
-    }
+    "hooks": {}
   },
   "lint-staged": {
     "*.{js,jsx,tsx,ts,css,md}": "prettier --write"
@@ -34,11 +33,14 @@
     "extends": "react-app"
   },
   "dependencies": {
-    "@fullcalendar/common": "^5.3.1",
-    "@fullcalendar/interaction": "^5.3.1",
-    "@fullcalendar/moment": "^5.3.1",
-    "@fullcalendar/react": "^5.3.1",
-    "@fullcalendar/timegrid": "^5.3.1",
+    "@fullcalendar/core": "^6.1.8",
+    "@fullcalendar/daygrid": "^6.1.8",
+    "@fullcalendar/interaction": "^6.0.0",
+    "@fullcalendar/moment": "^6.0.0",
+    "@fullcalendar/react": "^6.1.8",
+    "@fullcalendar/resource": "^6.1.8",
+    "@fullcalendar/resource-timeline": "^6.1.8",
+    "@fullcalendar/timegrid": "^6.0.0",
     "@harmoniously/react": "^0.0.10",
     "@hookform/resolvers": "^1.0.0",
     "@material-ui/core": "^4.11.0",
@@ -56,7 +58,6 @@
     "material-ui-popup-state": "^1.7.0",
     "moment": "^2.29.4",
     "moment-range": "^4.0.2",
-    "sass": "^1.56.1",
     "object-hash": "^2.1.1",
     "papaparse": "^5.3.0",
     "path": "^0.12.7",
@@ -71,6 +72,7 @@
     "react-table": "^7.6.1",
     "react-visibility-sensor": "^5.1.1",
     "runtypes": "^5.0.1",
+    "sass": "^1.56.1",
     "xlsx": "^0.17.0",
     "yup": "^0.29.3",
     "zustand": "^3.4.1"

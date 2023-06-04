@@ -1,16 +1,16 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-// import FullCalendar from "01/../@fullcalendar/react";
-// import { CalendarOptions } from "@fullcalendar/common";
-// import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
-// import timeGridPlugin from "@fullcalendar/timegrid";
 import React from "react";
+import FullCalendar from "@fullcalendar/react";
+import { CalendarOptions } from "@fullcalendar/core";
+import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
+import timeGridPlugin from "@fullcalendar/timegrid";
 import { INITIAL_DATE } from "utilities/constants";
 import "./Calendar.scss";
 
-export const Calendar = (props: any) => {
+export * from "@fullcalendar/react";
+export const Calendar = (props: CalendarOptions) => {
   return (
     <>
-      {/* <FullCalendar {...props} /> */}
+      <FullCalendar {...props} />
     </>
   );
 };
@@ -31,7 +31,7 @@ Calendar.defaultProps = {
   initialDate: INITIAL_DATE,
   initialView: "timeGridWeek",
   nowIndicator: false,
-  // plugins: [interactionPlugin, timeGridPlugin],
+  plugins: [interactionPlugin, timeGridPlugin],
   selectable: true,
   slotMaxTime: "22:00:00",
   slotMinTime: "6:00:00",

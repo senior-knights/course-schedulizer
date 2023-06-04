@@ -1,4 +1,3 @@
-import { CalendarOptions, EventClickArg } from "@fullcalendar/react";
 import { Popover } from "@material-ui/core";
 import { AddSectionPopover, Calendar, ScheduleToolbar } from "components";
 import { bindPopover, usePopupState } from "material-ui-popup-state/hooks";
@@ -17,6 +16,8 @@ import {
 } from "utilities/services";
 import { ScheduleHeader } from "./ScheduleHeader";
 import { ScheduleLeftTimeAxis } from "./ScheduleLeftTimeAxis";
+import { CalendarOptions } from "@fullcalendar/core";
+import { EventClickArg } from "@fullcalendar/core";
 
 export interface ScheduleBaseProps extends CalendarOptions {
   calendarHeaders: string[];
