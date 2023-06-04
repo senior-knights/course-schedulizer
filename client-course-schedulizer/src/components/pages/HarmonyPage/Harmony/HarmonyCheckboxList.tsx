@@ -41,9 +41,9 @@ export const HarmonyCheckboxList = <T extends unknown[]>({
         const defaultValue = inferredAssignmentsList.includes(item);
         return (
           <HarmonyCheckbox
-            key={`${item}-${course}`}
             defaultValue={defaultValue}
             item={item}
+            key={`${item}-${course}`}
             setList={setList}
           />
         );

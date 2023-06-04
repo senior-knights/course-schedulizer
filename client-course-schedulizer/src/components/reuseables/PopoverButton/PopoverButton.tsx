@@ -31,11 +31,11 @@ export const PopoverButton = (props: PopoverButton) => {
       )}
       <Popover
         {...bindPopover(popupState)}
+        PaperProps={{ style: { minWidth } }}
         anchorOrigin={{
           horizontal: "left",
           vertical: "bottom",
         }}
-        PaperProps={{ style: { minWidth } }}
         transformOrigin={{
           horizontal: "right",
           vertical: "top",

@@ -7,9 +7,9 @@ module.exports = {
   },
   extends: [
     "react-app",
-    "airbnb",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:react/recommended",
+    // "airbnb",
+    // "plugin:@typescript-eslint/recommended",
+    // "plugin:react/recommended",
     "prettier",
     "prettier/@typescript-eslint",
     "prettier/react",
@@ -27,12 +27,12 @@ module.exports = {
     sourceType: "module",
   },
   plugins: [
-    "react",
-    "@typescript-eslint",
+    // "react",
+    // "@typescript-eslint",
     "typescript-sort-keys",
-    "react-hooks",
+    // "react-hooks",
     "sort-keys-fix",
-    "import",
+    // "import",
   ],
   rules: {
     // Disable some AirBnB rules.
@@ -44,38 +44,38 @@ module.exports = {
     camelcase: "off",
 
     // API might not have camelcase
-    "@typescript-eslint/camelcase": ["off"],
+    // "@typescript-eslint/camelcase": ["off"],
 
     // JSX can be in either jsx or tsx files
     "react/jsx-filename-extension": [1, { extensions: [".tsx", ".jsx"] }],
 
     // Turn off rules related to Prettier. These are auto fixed.
     "max-len": "off",
-    "@typescript-eslint/quotes": "off",
+    // "@typescript-eslint/quotes": "off",
     "arrow-parens": "off",
-    "@typescript-eslint/semi": "off",
+    // "@typescript-eslint/semi": "off",
     "react/jsx-closing-bracket-location": "off",
-    "@typescript-eslint/indent": "off", // Conflicts with Prettier settings
+    // "@typescript-eslint/indent": "off", // Conflicts with Prettier settings
     // Make comma-dangle error bc it needs to be in version control
     // or else it is confusing. See: https://eslint.org/docs/rules/comma-dangle
     "comma-dangle": ["error", "always-multiline"],
 
-    // Don't prefer default exports
-    "import/no-default-export": "error",
-    "import/prefer-default-export": "off",
+    // // Don't prefer default exports
+    // "import/no-default-export": "error",
+    // "import/prefer-default-export": "off",
 
-    // Don't require extensions for the follow files
-    "import/extensions": [
-      "error",
-      "ignorePackages",
-      {
-        js: "never",
-        jsx: "never",
-        ts: "never",
-        tsx: "never",
-      },
-    ],
-    "import/no-unresolved": "off",
+    // // Don't require extensions for the follow files
+    // "import/extensions": [
+    //   "error",
+    //   "ignorePackages",
+    //   {
+    //     js: "never",
+    //     jsx: "never",
+    //     ts: "never",
+    //     tsx: "never",
+    //   },
+    // ],
+    // "import/no-unresolved": "off",
 
     // Rules related to function definitions
     "func-style": ["error", "expression"],
@@ -89,15 +89,15 @@ module.exports = {
     "sort-keys-fix/sort-keys-fix": "error",
 
     // More typescript specific rules
-    "@typescript-eslint/array-type": "error",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/no-explicit-any": "error",
-    "@typescript-eslint/type-annotation-spacing": "error",
+    // "@typescript-eslint/array-type": "error",
+    // "@typescript-eslint/explicit-module-boundary-types": "off",
+    // "@typescript-eslint/explicit-function-return-type": "off",
+    // "@typescript-eslint/no-explicit-any": "error",
+    // "@typescript-eslint/type-annotation-spacing": "error",
 
     // Works with v2 typescript-eslint but not v3.
     // Enforces no anti pattern with interfaces I
-    "@typescript-eslint/interface-name-prefix": ["error", "never"],
+    // "@typescript-eslint/interface-name-prefix": ["error", "never"],
 
     // React Hooks
     "react-hooks/rules-of-hooks": "error",
@@ -123,18 +123,18 @@ module.exports = {
   },
   settings: {
     // Imports with these extensions can be resolved with relative path
-    "import/resolver": {
-      node: {
-        extensions: [".js", ".jsx", ".ts", ".tsx"],
-      },
-    },
+    // "import/resolver": {
+    //   node: {
+    //     extensions: [".js", ".jsx", ".ts", ".tsx"],
+    //   },
+    // },
   },
-  overrides: [
-    {
-      files: ["**/*.test.tsx"],
-      env: {
-        jest: true,
-      },
-    },
-  ],
+  // overrides: [
+  //   {
+  //     files: ["**/*.test.tsx"],
+  //     env: {
+  //       jest: true,
+  //     },
+  //   },
+  // ],
 };

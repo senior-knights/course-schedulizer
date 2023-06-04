@@ -96,11 +96,11 @@ export const ScheduleBase = ({
               {calenderHeadersNoEmptyInTerm.map((header) => {
                 const className = `hide-axis ${getCalendarClassName(scheduleType)}`;
                 return (
-                  <div key={header} className={className}>
+                  <div className={className} key={header}>
                     <Calendar
                       {...calendarOptions}
-                      key={header}
                       eventClick={handleEventClick}
+                      events={filteredEvents[header]}
                       // eventMouseEnter = { (info) => { //TODO Have a tooltip with a conflict message without even clicking on a class
                       //   const tooltipInstance = new Tooltip(info.el, {
                       //     container: "body",
@@ -112,7 +112,7 @@ export const ScheduleBase = ({
 
                       //   tooltipInstance.show();}}
                       // eventMouseLeave ={toolTipInstance.hide();}
-                      events={filteredEvents[header]}
+                      key={header}
                     />
                   </div>
                 );
@@ -123,11 +123,11 @@ export const ScheduleBase = ({
       </div>
       <Popover
         {...bindPopover(popupState)}
+        PaperProps={{ style: { maxHeight: "90%", maxWidth: "90%", minWidth: "500px" } }}
         anchorOrigin={{
           horizontal: "left",
           vertical: "bottom",
         }}
-        PaperProps={{ style: { maxHeight: "90%", maxWidth: "90%", minWidth: "500px" } }}
         transformOrigin={{
           horizontal: "right",
           vertical: "top",
