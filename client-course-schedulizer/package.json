@@ -11,6 +11,10 @@
     "start": "react-scripts start",
     "test": "react-scripts test"
   },
+  "packageManager": "pnpm@8.6.0",
+  "engines": {
+    "node": "18"
+  },
   "husky": {
     "hooks": {}
   },
