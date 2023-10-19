@@ -20,13 +20,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '20'
-          # cache: 'pnpm'
-          # cache-dependency-path: './client-course-schedulizer/pnpm-lock.yaml'
       - name: update-pnpm-version
         run: |
           pnpm install -g pnpm@latest
       - name: Install pnpm dependencies
         run: |
+          pnpm install
           pnpm start
         working-directory: ${{env.working-directory}}
       - name: Run tests
