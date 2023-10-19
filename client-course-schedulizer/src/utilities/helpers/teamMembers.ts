@@ -82,6 +82,24 @@ export const team2022: TeamMember[] = [
   },
 ];
 
+export const team2023: TeamMember[] = [
+  {
+    bio:
+      "Computer Science Student at Calvin University.",
+    name: "ZeAi Sun",
+    photo: "https://avatars.githubusercontent.com/u/112643038?s=400&v=4",
+    website: "https://github.com/SophiaSun18",
+  },
+  {
+    bio:
+      "Computer Science Student at Calvin University.",
+    name: "Faeren Madza",
+    photo:
+      "https://avatars.githubusercontent.com/u/112643038?s=400&v=4",
+    website: "https://github.com/senior-knights/course-schedulizer",
+  },
+];
+
 export const teamAdvisors: TeamMember[] = [
   {
     bio:

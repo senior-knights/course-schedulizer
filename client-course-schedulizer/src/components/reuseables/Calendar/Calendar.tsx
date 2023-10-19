@@ -6,6 +6,8 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import { INITIAL_DATE } from "utilities/constants";
 import "./Calendar.scss";
 
+// Schedulizer, calender view, basic settings
+
 export const Calendar = (props: CalendarOptions) => {
   return (
     <>

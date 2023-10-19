@@ -1,7 +1,7 @@
 import { Grid } from "@material-ui/core";
 import { NewTabLink, Page } from "components/reuseables";
 import React from "react";
-import { team2020, team2021, team2022, teamAdvisors, TeamMember } from "utilities";
+import { team2020, team2021, team2022, team2023, teamAdvisors, TeamMember } from "utilities";
 import { TeamMemberProfile, TextSection } from ".";
 import "./AboutPage.scss";
 
@@ -11,6 +11,7 @@ export const AboutPage = () => {
   return (
     <Page>
       <AboutVision />
+      <AboutTeam2023 />
       <AboutTeam2022 />
       <AboutTeam2021 />
       <AboutTeam2020 />
@@ -75,6 +76,7 @@ const AboutVision = () => {
     />
   );
 };
+
 const AboutTeam2020 = () => {
   return (
     <TextSection
@@ -116,6 +118,21 @@ const AboutTeam2022 = () => {
         </Grid>
       }
       title="Team of 2022"
+    />
+  );
+};
+
+const AboutTeam2023 = () => {
+  return (
+    <TextSection
+      body={
+        <Grid container direction="column" justify="flex-start" spacing={2}>
+          {team2023.map((member: TeamMember) => {
+            return <TeamMemberProfile key={member.name} member={member} />;
+          })}
+        </Grid>
+      }
+      title="Team of 2023"
     />
   );
 };
@@ -167,13 +184,20 @@ const AboutReport = () => {
       body={
         <ul>
           <li>
+            <NewTabLink href="https://docs.google.com/document/d/16FBgWv1JVa3SDyDcNtiC_EZ3NYhkU7Y5tBEmhjGQftM/edit?usp=sharing">
+              2023 Project Proposal
+            </NewTabLink>{" "}
+            - 10.01.2023
+          </li>
+          <hr />
+          <li>
             <NewTabLink href="https://docs.google.com/document/d/1MjXN3lbgYXInZyUk1V_sh4wVVs2ITd6rloYKjJW8W6c/edit?usp=sharing">
               2022 Project Proposal
             </NewTabLink>{" "}
             - 10.01.2022
           </li>
-          <hr/>
-	        <li>
+          <hr />
+          <li>
             <NewTabLink href="https://docs.google.com/document/d/e/2PACX-1vSL0Ezm-2XOCQWPv4R7J3MRZAn5PW46cayuKNxxElyVdl9W48ns2cRcd6xquoBc054_w2K_vsx2si7P/pub">
               Final Report
             </NewTabLink>{" "}
@@ -185,7 +209,7 @@ const AboutReport = () => {
             </NewTabLink>{" "}
             - 10.01.2021
           </li>
-          <hr/>
+          <hr />
           <li>
             <NewTabLink href="https://docs.google.com/document/d/e/2PACX-1vQcSDE6VMNl-wMHhECt3RbeA3WD-tiXersevVAMDXfgImq9HMFS5yQnLx8mZ4qZ4Q/pub">
               Final Report
@@ -221,7 +245,7 @@ const AboutResources = () => {
               Computing@Calvin Department Website
             </NewTabLink>
           </li>
-          <hr/>
+          <hr />
           <li>
             <NewTabLink href="https://docs.google.com/presentation/d/e/2PACX-1vSGBkk_3fRIeLrlMBCgLnHLxSdt4hOVz5QovjrUs3qXfVDnx12xO7hYLEuhQx4CtW_VOJ-tBIZaoHZ9/pub?start=false&loop=false&delayms=3000">
               Final Presentation Slides
@@ -231,10 +255,10 @@ const AboutResources = () => {
           <li>
             <NewTabLink href="https://docs.google.com/presentation/d/e/2PACX-1vRRNLIukj6g61oBkb41JiwW0hZFUMOGzL_m-Um_Ha9vcksYJRzmd7oUlyEs0rqz5fqgFVmncarYzbMP/pub?start=false&loop=false&delayms=3000">
               Status Report Slides
-              </NewTabLink> -
+            </NewTabLink> -
             12.07.2021
           </li>
-          <hr/>
+          <hr />
           <li>
             <NewTabLink href="https://youtu.be/ckn0oPxvlIE">Final Presentation Video</NewTabLink> -
             4.25.2021
