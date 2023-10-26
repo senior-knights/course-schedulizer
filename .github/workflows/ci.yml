@@ -26,7 +26,6 @@ jobs:
       - name: Install pnpm dependencies
         run: |
           pnpm install
-          pnpm start
         working-directory: ${{env.working-directory}}
       - name: Run tests
         run: |
