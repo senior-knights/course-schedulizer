@@ -7,7 +7,9 @@ import { TextSection } from "../AboutPage/.";
 export const HelpPage = () => {
 	return (
 		<Page>
+			<Functionality />
 			<FormatSegment />
+			<Faq />
 		</Page>
 	);
 };
@@ -16,7 +18,21 @@ const Functionality = () => {
 	return (
 		<TextSection
 			body={
-			
+				<>
+					Beginning from blank - Click the Calvin University logo in the upper left corner to make sure you're on the starting page,
+					then click "Add Section" to input a class. In the "Formatting" section on this page (below this text), you can read about some 
+					recommended ways to format your inputs. Fill in all the values according to the class's parameters.
+					
+					Once you've created a class, your screen will change to show a calendar view. To add another class, click the "plus" (+) symbol 
+					at the right side of the gray bar (this bar appears on the faculty schedule, room schedule, and department schedule pages).
+					
+					If you find yourself in the "Add Section" screen unintentionally, or need to back out of it for any reason, simply press your "Escape" key
+					on your keyboard and you will return to where you were before.
+					<br />
+					<br />
+					Importing CSV -  Presently, the system allows for the import of .csv files. You can import these files by clicking the "Import CSV" button on the main page,
+					or by clicking the "Hamburger menu" (three lines in the upper left corner of the screen) and selecting "Import New Schedule."
+				</>
 			}
 		title="Help"
 		/>
@@ -29,12 +45,12 @@ const FormatSegment = () => {
    body={
 	<>
 	
-   This is a work in progress Help page that team 2023 is planning to update.
+   This is a work in progress Help page that team 2023 is continuing to update.
 	
    Below is provided some formatting help:
 	<ul>
 	<li> Department: string (like `Mathematics`)</li>
-	<li> *Term: [0-9][0-9]/(FA | SP | IN) (like `21/SP` for Spring 2021)</li>
+	<li> *Term: (FA | SP | IN) (like `SP` for Spring)</li>
 	<li> TermStart: mm/dd/yyyy (like `3/29/2021` or `12/1/2022`)</li>
 	<li> *AcademicYear: yyyy (like `2021`)</li>
 	<li> *SectionName: SubjectCode-CourseNum-SectionCode (like `MATH-252-B`)</li>
@@ -77,3 +93,16 @@ const FormatSegment = () => {
    />
   );
 };
+
+const Faq = () => {
+	return (
+		<TextSection
+			body={
+				<>
+					To be developed over time
+				</>
+			}
+		title="Frequently Asked Questions"
+		/>
+	);
+}

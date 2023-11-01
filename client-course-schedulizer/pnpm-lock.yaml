@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -53,6 +53,9 @@ dependencies:
   '@testing-library/user-event':
     specifier: ^7.2.1
     version: 7.2.1(@testing-library/dom@9.3.0)
+  '@types/testing-library__react':
+    specifier: ^10.2.0
+    version: 10.2.0(react-dom@16.13.1)(react@16.13.1)
   fs:
     specifier: ^0.0.1-security
     version: 0.0.1-security
@@ -3156,6 +3159,16 @@ packages:
     deprecated: This is a stub types definition. testing-library__dom provides its own type definitions, so you do not need this installed.
     dependencies:
       '@testing-library/dom': 9.3.0
+    dev: false
+
+  /@types/testing-library__react@10.2.0(react-dom@16.13.1)(react@16.13.1):
+    resolution: {integrity: sha512-KbU7qVfEwml8G5KFxM+xEfentAAVj/SOQSjW0+HqzjPE0cXpt0IpSamfX4jGYCImznDHgQcfXBPajS7HjLZduw==}
+    deprecated: This is a stub types definition. testing-library__react provides its own type definitions, so you do not need this installed.
+    dependencies:
+      '@testing-library/react': 9.5.0(react-dom@16.13.1)(react@16.13.1)
+    transitivePeerDependencies:
+      - react
+      - react-dom
     dev: false
 
   /@types/testing-library__react@9.1.3:

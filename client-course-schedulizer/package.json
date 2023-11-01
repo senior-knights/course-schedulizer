@@ -53,6 +53,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "@types/testing-library__react": "^10.2.0",
     "fs": "^0.0.1-security",
     "immer": "^9.0.6",
     "isomorphic-fetch": "^3.0.0",
