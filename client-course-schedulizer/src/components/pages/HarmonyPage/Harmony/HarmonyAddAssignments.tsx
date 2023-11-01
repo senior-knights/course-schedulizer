@@ -11,7 +11,7 @@ export const HarmonyAddAssignments = () => {
   return (
     <>
       {(courses as HarmonyFormsAccessors["courses"]).map((courseObj) => {
-        return <HarmonyCourseCheckboxes key={courseObj.Course} course={courseObj.Course} />;
+        return <HarmonyCourseCheckboxes course={courseObj.Course} key={courseObj.Course} />;
       })}
     </>
   );

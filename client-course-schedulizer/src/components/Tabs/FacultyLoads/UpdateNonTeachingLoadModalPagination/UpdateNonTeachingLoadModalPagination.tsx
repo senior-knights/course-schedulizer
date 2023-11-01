@@ -13,9 +13,9 @@ export const UpdateNonTeachingLoadModalPagination = forwardRef(
   (props, ref: Ref<UpdateModalPaginationRef>) => {
     return (
       <ModalPagination
-        ref={ref}
-        findCourseSectionMeeting={findNonTeachingLoad}
         PopoverComponent={AddNonTeachingLoadPopover}
+        findCourseSectionMeeting={findNonTeachingLoad}
+        ref={ref}
       />
     );
   },

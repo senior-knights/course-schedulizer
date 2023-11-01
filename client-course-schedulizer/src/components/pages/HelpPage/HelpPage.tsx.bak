@@ -99,10 +99,10 @@ const Faq = () => {
 		<TextSection
 			body={
 				<>
-					Frequently Asked Questions - To be developed over time
+					To be developed over time
 				</>
 			}
-		title="FAQ"
+		title="Frequently Asked Questions"
 		/>
 	);
 }
