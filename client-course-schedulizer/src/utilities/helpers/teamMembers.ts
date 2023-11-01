@@ -95,8 +95,8 @@ export const team2023: TeamMember[] = [
       "Computer Science Student at Calvin University.",
     name: "Faeren Madza",
     photo:
-      "https://avatars.githubusercontent.com/u/112643038?s=400&v=4",
-    website: "https://github.com/senior-knights/course-schedulizer",
+      "https://avatars.githubusercontent.com/u/143450134?v=4",
+    website: "https://github.com/NycoCC1993",
   },
 ];
 
