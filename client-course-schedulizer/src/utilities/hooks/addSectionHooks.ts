@@ -2,8 +2,9 @@ import { camelCase, forEach } from "lodash";
 import moment from "moment";
 import { useContext } from "react";
 import { DeepMap, FieldError } from "react-hook-form";
-import { insertSectionCourse } from "utilities";
+import { insertSectionCourse} from "utilities";
 import { AppContext } from "utilities/contexts";
+import { isStandardTime } from "utilities/";
 import {
   AppAction,
   Course,
@@ -76,6 +77,7 @@ export const useAddSectionToSchedule = () => {
     scrollToUpdatedFacultyRow(newSection.instructors[newSection.instructors.length - 1]);
   };
 
+
   const addToSchedule = ({
     newCourse,
     newSection,
@@ -83,6 +85,9 @@ export const useAddSectionToSchedule = () => {
     removeOldMeeting,
   }: AddToScheduleParams) => {
     newSection.timestamp = moment().format();
+    newSection.meetings.forEach((meeting) => {
+      meeting.isNonstandardTime = ! isStandardTime(meeting)
+    })
     handleOldMeeting(oldData, newSection, newCourse, removeOldMeeting, schedule);
     insertSectionCourse(schedule, newSection, newCourse);
     appDispatch({ payload: { schedule }, type: "setScheduleData" });
@@ -135,7 +140,7 @@ const scrollToUpdatedFacultyRow = (instructor: string) => {
 // a helper to provide consistent naming and retrieve error messages
 export const useInput = <T>(label: string, errors: DeepMap<T, FieldError>) => {
   // (temporary?) hack to match new labels to previously used labels
-  if (label === "Delivery Mode") { label = "Instructional Method" }
+  // if (label === "Delivery Mode") { label = "Instructional Method" }
   if (label === "Course Title") { label = "Name" }
   const name = camelCase(label);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

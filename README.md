@@ -26,44 +26,45 @@ For more information, please visit the [About Page](https://senior-knights.githu
 
 ## How to use
 
-Detailed information can be found on our [Help Page](https://senior-knights.github.io/course-schedulizer/#/help) (once we make it). Access our production website and upload a CSV following the prescribed specifications:
+Detailed information can be found on our [Help Page](https://senior-knights.github.io/course-schedulizer/#/help) (once we make it). Access our production website and upload a CSV following the prescribed specifications (items marked with * are optional and ignored, but were required in older versions of the app)
 
 - Department: string (like `Mathematics`)
-- Term: [0-9][0-9]/(FA | SP | IN) (like `21/SP` for Spring 2021)
+- *Term: [0-9][0-9]/(FA | SP | IN) (like `21/SP` for Spring 2021)
 - TermStart: mm/dd/yyyy (like `3/29/2021` or `12/1/2022`)
-- AcademicYear: yyyy (like `2021`)
-- SectionName: SubjectCode-CourseNum-SectionCode (like `MATH-252-B`)
+- *AcademicYear: yyyy (like `2021`)
+- *SectionName: SubjectCode-CourseNum-SectionCode (like `MATH-252-B`)
 - SubjectCode: string (like `MATH`)
 - CourseNum: string (like `252` or `252L` for a lab)
 - SectionCode: string (like `B`)
 - CourseLevelCode: pos num (like `200` for a 200 level course)
 - MinimumCredits: pos num (like `3` or `3.5`)
 - FacultyLoad: pos num (like `4` or `4.5`)
-- Used: pos num (like `20`)
-- Day10Used: pos num (like `22`)
-- LocalMax: pos num (like `25`)
-- GlobalMax: pos num (like `30`)
-- RoomCapacity: pos num (like `32`)
+- *Used: pos num (like `20`)
+- *Day10Used: pos num (like `22`)
+- *LocalMax: pos num (like `25`)
+- *GlobalMax: pos num (like `30`)
+- *RoomCapacity: pos num (like `32`)
 - BuildingAndRoom: string (like `HH 345`)
 - MeetingDays: M?T?W?(TH)?F? (like `MWTHF`)
 - MeetingTime: xx:xx(AM | PM) - xx:xx(AM | PM) (like `9:00AM - 9:50AM`)
 - SectionStartDate: mm/dd/yyyy (like `3/29/2021` or `12/1/2022`)
 - SectionEndDate: mm/dd/yyyy (like `3/29/2021` or `12/1/2022`)
-- Building: string (like `HH`)
-- RoomNumber: string (like `345`)
+- *Building: string (like `HH`)
+- *RoomNumber: string (like `345`)
 - MeetingStart: xx:xx(AM | PM) (like `2:30PM`)
-- MeetingStartInternal: xx:xx:xx 24-hour (like `14:30:00`)
+- *MeetingStartInternal: xx:xx:xx 24-hour (like `14:30:00`)
 - MeetingEnd: xx:xx(AM | PM) (like `3:20PM`)
-- MeetingEndInternal: xx:xx:xx 24-hour (like `13:20:00`)
-- Monday: `M` or empty
-- Tuesday: `T` or empty
-- Wednesday: `W` or empty
-- Thursday: `TH` or empty
-- Friday: `F` or empty
+- *MeetingEndInternal: xx:xx:xx 24-hour (like `13:20:00`)
+- *Monday: `M` or empty
+- *Tuesday: `T` or empty
+- *Wednesday: `W` or empty
+- *Thursday: `TH` or empty
+- *Friday: `F` or empty
 - ShortTitle: string (like `Number Theory`)
 - Faculty: string (first and last) (like `Paul Erdos`)
-- SectionStatus: string (like `Active`)
+- *SectionStatus: string (like `Active`)
 - InstructionalMethod: `LEC`, `CPI`, `IND`, `TUT`, or `SEM`
+- DeliveryMode: `In-person`, `Online (synchronous)`, `Online (asynchronous)`, `Hybrid`
 
 ## Development
 

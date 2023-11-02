@@ -1,12 +1,13 @@
 import { loadLocal } from "utilities/hooks/useLocal";
 import { HarmonyClass } from "utilities/services";
-import { Schedule, Term } from "./dataInterfaces";
+import { Schedule, SemesterLength, Term } from "./dataInterfaces";
 
 export enum ColorBy {
   Level,
   Room,
   Instructor,
   Prefix,
+  Group,
 }
 
 export enum SchedulizerTab {
@@ -27,6 +28,7 @@ export interface AppState {
   rooms: string[];
   schedule: Schedule;
   schedulizerTab: SchedulizerTab;
+  selectedSemesterPart: SemesterLength;
   selectedTerm: Term;
   slotMaxTime: string;
   slotMinTime: string;
@@ -36,7 +38,7 @@ export interface AppState {
 // Defaults for the app state when it launches, will try to load
 //  previous appState to launch app from.
 //  If no previous state saved, will default to the object below.
-export const initialAppState: AppState = loadLocal("appState") || {
+export const initialAppState: AppState = {
   classes: [],
   colorBy: 0,
   constraints: {},
@@ -46,6 +48,7 @@ export const initialAppState: AppState = loadLocal("appState") || {
   rooms: [],
   schedule: { courses: [], numDistinctSchedules: 0 },
   schedulizerTab: 0,
+  selectedSemesterPart: SemesterLength.Full,
   selectedTerm: Term.Fall,
   slotMaxTime: "22:00",
   slotMinTime: "6:00",
@@ -63,11 +66,11 @@ if (!initialAppState.professors) {
   initialAppState.departments = [];
 }
 if (!initialAppState.rooms) {
-  initialAppState.departments = []; 
+  initialAppState.departments = [];
 }
 
 // structure of actions that can be sent to app dispatch
 export interface AppAction {
   payload: Partial<AppState>;
-  type: "setScheduleData" | "setSelectedTerm" | "setFileUrl" | "setColorBy" | "setSchedulizerTab" | "setConstraints"; // add | to add more actions in the future
+  type: "setScheduleData" | "setSelectedTerm" | "setFileUrl" | "setColorBy" | "setSchedulizerTab" | "setSelectedSemesterPart" | "setConstraints"; // add | to add more actions in the future
 }

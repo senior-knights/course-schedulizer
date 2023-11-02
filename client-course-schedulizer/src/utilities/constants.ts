@@ -1,3 +1,6 @@
+import meetingPatterns from 'data/meeting-patterns.json';
+import { meetingPatternCode } from './helpers';
+
 import {
   Course,
   CourseSectionMeeting,
@@ -66,6 +69,7 @@ export const emptyMeeting: Meeting = {
   days: [],
   duration: 0,
   isConflict: false,
+  isNonstandardTime: false,
   location: { building: "", roomNumber: "" },
   startTime: "",
 };
@@ -78,6 +82,19 @@ export const emptySection: Section = {
   studentHours: -1,
   term: Term.Fall,
 };
+
+export const legalTimes = new Set<string>();
+
+// For each meeting pattern add both the full meeting pattern and also each
+// abbreviated single day version.  See issue #300.
+meetingPatterns.forEach((meetingPattern) => {
+  legalTimes.add(meetingPatternCode(meetingPattern));
+  const abbreviatedMeetingPattern = {...meetingPattern};
+  meetingPattern.days.replace("TH", "R").split("").forEach((day) => {
+    abbreviatedMeetingPattern.days = (day === 'R') ? 'TH' : day;
+    legalTimes.add(meetingPatternCode(abbreviatedMeetingPattern));
+  })
+})
 
 // TODO: Delete this code
 // export const setConstraints = (constraints: JSON) => {

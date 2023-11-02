@@ -16,7 +16,7 @@ import {
   convertFromSemesterLength,
   emptyMeeting,
   getCourseNames,
-  getInstructionalMethods,
+  getDeliveryModes,
   getNumbers,
   getPrefixes,
   getSectionLetters,
@@ -38,6 +38,9 @@ import {
   Weekday,
 } from "utilities/interfaces";
 import "./AddSectionPopover.scss";
+
+// Schedulizer -> add section
+// Conflict message: after adding a section, click on it, and the conflict message will show up in the conflict box
 
 const SPACING = 2;
 
@@ -217,7 +220,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
               textFieldProps={{ fullWidth: true, type: "time" }}
             />
           </Grid>
-          <Grid item xs = {1}>
+          <Grid item xs = {2}>
             <GridItemTextField
               label="Duration"
               textFieldProps={{
@@ -227,7 +230,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
               }}
             />
           </Grid>
-          <Grid item xs = {3}>
+          <Grid item xs = {2}>
             <GridItemAutocomplete label="Location" options={[...rooms].sort()} />
           </Grid>
           <Grid item xs = {1}>
@@ -238,8 +241,11 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
           </Grid>
           <GridItemAutocomplete
             label="Delivery Mode"
-            options={getInstructionalMethods(schedule)}
+            options={getDeliveryModes(schedule)}
           />
+          <Grid item xs = {2}>
+            <GridItemTextField label="Group" />
+          </Grid>
         </Grid>
         <Grid container spacing={SPACING}>
           {/* This empty item just fills space */}

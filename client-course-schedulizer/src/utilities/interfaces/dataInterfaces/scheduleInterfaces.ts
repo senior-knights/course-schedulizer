@@ -11,11 +11,19 @@ export interface Location {
 export interface Meeting {
   // All days on which the given Meeting time and room is applicable
   days: Day[];
-  // In minutes (usually 50)
+  // In minutes 
   duration: number;
   isConflict?: boolean;
+  isNonstandardTime?: boolean;
   location: Location;
   // Like "8:00 AM" or "12:30 PM"
+  startTime: string;
+}
+
+// a subset of a meeting
+export interface MeetingPattern {
+  days: string | Day[];
+  duration: number;
   startTime: string;
 }
 
@@ -59,10 +67,12 @@ export interface Section {
   comments?: string;
   // Number of students enrolled in this section 10 days into the course
   day10Used?: number;
+  deliveryMode?: string;
   // Like 2/3/2020
   endDate?: string;
   facultyHours: number;
   globalMax?: number;
+  group?: string;
   instructionalMethod?: string;
   instructors: Instructor[];
   isNonTeaching?: boolean;
@@ -100,6 +110,7 @@ export const updateNonIdentifyingSectionInfo = (
   oldSection.endDate = newSection.endDate;
   oldSection.facultyHours = newSection.facultyHours;
   oldSection.globalMax = newSection.globalMax;
+  oldSection.group = newSection.group;
   oldSection.isNonTeaching = newSection.isNonTeaching;
   oldSection.localMax = newSection.localMax;
   oldSection.name = newSection.name;
@@ -120,6 +131,7 @@ export const updateIdentifyingSectionInfo = (oldSection: Section, newSection: Se
   oldSection.term = newSection.term;
   oldSection.instructors = newSection.instructors;
   oldSection.instructionalMethod = newSection.instructionalMethod;
+  oldSection.deliveryMode = newSection.deliveryMode;
   return oldSection;
 };
 

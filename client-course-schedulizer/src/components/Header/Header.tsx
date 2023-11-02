@@ -18,9 +18,9 @@ export const Header = () => {
           <Link component={RouterLink} to="/">
             Schedulizer
           </Link>
-          <Link component={RouterLink} to="/harmony">
+          {/* <Link component={RouterLink} to="/harmony">
             Harmony
-          </Link>
+          </Link> */}
           <Link component={RouterLink} to="/about">
             About
           </Link>

@@ -28,9 +28,9 @@ export const App = () => {
               <Route path="/help">
                 <HelpPage />
               </Route>
-              <Route path="/harmony">
+              {/* <Route path="/harmony">
                 <HarmonyPage />
-              </Route>
+              </Route> */}
               <Route path="/">
                 <SchedulizerPage />
               </Route>

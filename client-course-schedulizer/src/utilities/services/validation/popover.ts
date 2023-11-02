@@ -44,6 +44,7 @@ export const addSectionSchema = object().shape({
     .transform(emptyStringToNull)
     .nullable(),
   days: array().transform(removeUncheckedValues),
+  deliveryMode: string().nullable(),
   department: string().nullable(),
   duration: number()
     .typeError("duration must be a number")
@@ -62,6 +63,7 @@ export const addSectionSchema = object().shape({
     .min(0)
     .transform(emptyStringToNull)
     .nullable(),
+  group: string().nullable(),
   instructionalMethod: string().nullable(),
   instructor: array().of(string()).required(),
   localMax: number()

@@ -4,13 +4,14 @@ import {
   Course,
   emptyCourse,
   emptySection,
+  isStandardTime,
   Meeting,
   Schedule,
   Section,
   updateNonIdentifyingCourseInfo,
   updateNonIdentifyingSectionInfo,
 } from "utilities";
-import { getCourse, getSection } from "utilities/services";
+import { getCourse, getSection, isNonTeaching } from "utilities/services";
 import * as cf from "./caseFunctions";
 
 interface ValidFields {
@@ -49,10 +50,12 @@ const registrarSpreadsheetFields: ValidFields = {
   Comments: cf.commentsCallback,
   CourseNum: cf.numberCallback,
   Day10Used: cf.day10UsedCallback,
+  DeliveryMode: cf.deliveryModeCallback,
   Department: cf.departmentCallback,
   Faculty: cf.instructorCallback,
   FacultyLoad: cf.facultyHoursCallback,
   GlobalMax: cf.globalMaxCallback,
+  Group: cf.groupCallback,
   InstructionalMethod: cf.instructionalMethodCallback,
   LastEditTimestamp: cf.timestampCallback,
   LocalMax: cf.localMaxCallback,
@@ -165,6 +168,7 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
       section.term,
       section.instructors,
       section.instructionalMethod,
+      section.deliveryMode,
     );
 
     // Update Course fields which were changed
@@ -184,6 +188,7 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
         existingSection,
       );
       const newMeetings = section.meetings;
+      newMeetings.forEach(meeting => {meeting.isNonstandardTime = !isStandardTime(meeting)});
 
       // Update Section fields which were changed
       schedule.courses[existingCourseIndex].sections[
@@ -212,13 +217,18 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
     }
     // Otherwise, add the new section to the existing course
     else {
+      section.isNonTeaching = isNonTeaching(course, section);
+      section.meetings.forEach(meeting => {meeting.isNonstandardTime = !isStandardTime(meeting)});
       schedule.courses[existingCourseIndex].sections.push(section);
     }
   }
   // Otherwise, add the new course to the schedule
   else {
+    section.isNonTeaching = isNonTeaching(course, section);
+    section.meetings.forEach(meeting => {meeting.isNonstandardTime = !isStandardTime(meeting)});
     course.sections.push(section);
     schedule.courses.push(course);
   }
   return schedule;
 };
+

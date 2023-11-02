@@ -15,9 +15,10 @@ export const scheduleToNonTeachingCSVString = (schedule: Schedule): string => {
 
         // TODO: Should instructionalMethod be used for Non-Teaching Activity or should we add a new field?
         // Construct a row in the output CSV
-        csvStr += `${termStr},${section.instructionalMethod},${section.facultyHours.toFixed(
-          2,
-        )},"${section.instructors.join("\n")}"\n`;
+        csvStr += `${termStr},${section.instructionalMethod},${section.deliveryMode
+          },${section.facultyHours.toFixed(
+            2,
+            )},"${section.instructors.join("\n")}"\n`;
       });
     }
   });

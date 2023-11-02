@@ -199,6 +199,15 @@ export const instructionalMethodCallback = (value: string, { section }: CaseCall
   section.instructionalMethod = value;
 };
 
+export const deliveryModeCallback = (value: string, { section }: CaseCallbackParams) => {
+  section.deliveryMode = value;
+};
+
+export const groupCallback = (value: string, { section }: CaseCallbackParams) => {
+  section.group = value;
+};
+
+
 export const sectionCallback = (value: string, params: CaseCallbackParams) => {
   if (value === "--" || value.trim() === "") {
     params.section.isNonTeaching = true;
@@ -219,6 +228,7 @@ export const timeCallback = (value: string, params: CaseCallbackParams) => {
 export const nonTeachingActivityCallback = (value: string, params: CaseCallbackParams) => {
   params.section.isNonTeaching = true;
   instructionalMethodCallback(value, params);
+  deliveryModeCallback(value, params);
 };
 
 export const startTimeCase = (value: string): string => {

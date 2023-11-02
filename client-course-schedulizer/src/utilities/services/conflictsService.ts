@@ -15,6 +15,7 @@ interface ConflictData {
   instructors: Section["instructors"];
   room: string;
   sectionName: string;
+  semLength: string;
   startTime: Moment;
   term: Section["term"];
 }
@@ -36,6 +37,31 @@ export interface Constraints {
   [key: string]: string[];
 }
 
+export const numericalSemLength = (semLength: string): number[] => {
+  switch (semLength) {
+    case 'Full': return [1, 16];
+    case 'First': return [1, 8];
+    case 'Second': return [9, 16];
+    case 'A': return [1, 4];
+    case 'B': return [5, 8];
+    case 'C': return [9, 12];
+    case 'D': return [13, 16];
+    default: return [0, 0];
+  }
+}
+
+export const sign = (x: number): number => {
+  return x < 0 ? -1 : (x > 0 ? 1 : 0)
+}
+
+export const rangesOverlap = (a: number[], b: number[]): boolean => {
+  return sign(a[0] - b[1]) * sign(a[1] - b[0]) <= 0 
+}
+
+export const termsOverlap = (term1: string, term2: string): boolean => {
+  return rangesOverlap(numericalSemLength(term1), numericalSemLength(term2)) 
+}
+
 export const findConflicts = (
   schedule: Schedule,
   constraints: Constraints = { "": [] },
@@ -54,6 +80,7 @@ export const findConflicts = (
           instructors: section.instructors,
           room: getLocationString(meeting.location),
           sectionName: getSectionName(course, section),
+          semLength: section.semesterLength || 'Full',
           startTime: startTimeMoment,
           term: section.term,
         });
@@ -154,6 +181,7 @@ export const findConflicts = (
         i !== j &&
         range1.overlaps(range2) &&
         meeting1.term === meeting2.term &&
+        termsOverlap(meeting1.semLength, meeting2.semLength) &&
         meeting1.days.some(meeting2IncludesDay) &&
         (meeting1.instructors.some(meeting2IncludesInstructor) ||
           meeting2IncludesConstriant() ||

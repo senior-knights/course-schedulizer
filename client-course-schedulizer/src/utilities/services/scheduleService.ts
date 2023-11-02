@@ -1,4 +1,3 @@
-import { EventInput } from "@fullcalendar/react";
 import { ScheduleBaseProps } from "components";
 import { filter, flatten, forEach, forOwn, map, maxBy, minBy, range } from "lodash";
 import moment from "moment";
@@ -6,8 +5,9 @@ import hash from "object-hash";
 import randomColor from "randomcolor";
 import { enumArray, WILDCARD_COLOR } from "utilities";
 import { INITIAL_DATE } from "utilities/constants";
-import { ColorBy, Day, Location, Meeting, Schedule, Section, Term } from "utilities/interfaces";
-import { Constraints, findConflicts } from "./conflictsService";
+import { ColorBy, Day, Location, Meeting, Schedule, Section, SemesterLength, Term } from "utilities/interfaces";
+import { Constraints, findConflicts, termsOverlap } from "./conflictsService";
+import { EventInput } from "@fullcalendar/core";
 
 // Returns a list of hours to display on the Schedule
 // TODO: add better types for timing, maybe: https://stackoverflow.com/questions/51445767/how-to-define-a-regex-matched-string-type-in-typescript
@@ -131,11 +131,15 @@ export const getMinAndMaxTimes = (schedule: Schedule) => {
   };
 };
 
-export const filterEventsByTerm = (groupedEvents: GroupedEvents, term: Term) => {
+export const filterEventsByTerm = (
+  groupedEvents: GroupedEvents,
+  term: Term,
+  semesterLength: SemesterLength = SemesterLength.Full) => {
   const tempGroupedEvents: GroupedEvents = {};
   forOwn(groupedEvents, (_, key) => {
     tempGroupedEvents[key] = filter(groupedEvents[key], (e) => {
-      return e.extendedProps?.section.term === term;
+      return e.extendedProps?.section.term === term &&
+             termsOverlap(e.extendedProps?.section.semesterLength, semesterLength);
     });
   });
   return tempGroupedEvents;
@@ -153,6 +157,16 @@ export const colorConflictBorders = (groupedEvents: GroupedEvents) => {
     forEach(groupedEvents[key], (event) => {
       if (event.extendedProps?.meeting?.isConflict) {
         event.borderColor = "red";
+      }
+    });
+  });
+};
+
+export const colorNonstandardTimeBorders = (groupedEvents: GroupedEvents) => {
+  forOwn(groupedEvents, (_, key) => {
+    forEach(groupedEvents[key], (event) => {
+      if (event.extendedProps?.meeting?.isNonstandardTime) {
+        event.borderColor = "orange";
       }
     });
   });
@@ -192,6 +206,15 @@ export const colorEventsByFeature = (groupedEvents: GroupedEvents, colorBy: Colo
                   luminosity: "light",
                   seed: hash(instructorStr),
                 });
+          event.textColor = "black";
+        });
+      });
+      break;
+    case ColorBy.Group:
+      forOwn(groupedEvents, (_, key) => {
+        forEach(groupedEvents[key], (event) => {
+          const groupStr = event.extendedProps?.section?.group ?? "";
+          event.color = randomColor({ luminosity: "light", seed: hash(groupStr) });
           event.textColor = "black";
         });
       });
@@ -289,20 +312,60 @@ export const getSectionLetters = (schedule: Schedule) => {
   return letters.sort();
 };
 
-export const getInstructionalMethods = (schedule: Schedule) => {
-  const instructionalMethods: string[] = [];
+// // get list of instructional methods already in use in the Schedule
+// // used for autocompletion
+// // deprecated -- using getDeliveryModes() now
+//
+// export const getInstructionalMethods = (schedule: Schedule) => {
+//   const instructionalMethods: string[] = [];
+//   forEach(schedule.courses, (course) => {
+//     forEach(course.sections, (section) => {
+//       if (
+//         section.instructionalMethod &&
+//         !instructionalMethods.includes(section.instructionalMethod) &&
+//         !section.isNonTeaching
+//       ) {
+//         instructionalMethods.push(section.instructionalMethod);
+//       }
+//     });
+//   });
+//   return instructionalMethods.sort();
+// };
+
+// get list of delivery modes already in use in the Schedule
+// used for autocompletion
+export const getDeliveryModes = (schedule: Schedule) => {
+  const deliveryModes: string[] = [];
   forEach(schedule.courses, (course) => {
     forEach(course.sections, (section) => {
       if (
-        section.instructionalMethod &&
-        !instructionalMethods.includes(section.instructionalMethod) &&
+        section.deliveryMode &&
+        !deliveryModes.includes(section.deliveryMode) &&
         !section.isNonTeaching
       ) {
-        instructionalMethods.push(section.instructionalMethod);
+        deliveryModes.push(section.deliveryMode);
       }
     });
   });
-  return instructionalMethods.sort();
+  return deliveryModes.sort();
+};
+
+// get list of groups already in use in the Schedule
+// used for autocompletion
+export const getGroups = (schedule: Schedule) => {
+  const groupsInUse: string[] = [];
+  forEach(schedule.courses, (course) => {
+    forEach(course.sections, (section) => {
+      if (
+        section.group &&
+        !groupsInUse.includes(section.group) &&
+        !section.isNonTeaching
+      ) {
+        groupsInUse.push(section.group);
+      }
+    });
+  });
+  return groupsInUse.sort();
 };
 
 export const getDepts = (schedule: Schedule) => {

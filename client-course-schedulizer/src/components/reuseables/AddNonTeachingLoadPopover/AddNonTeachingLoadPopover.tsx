@@ -19,6 +19,8 @@ import {
 import { AppContext } from "utilities/contexts";
 import "./AddNonTeachingLoadPopover.scss";
 
+// Schedulizer -> Teaching loads -> Add/update non-teaching activity
+
 const SPACING = 2;
 
 export const AddNonTeachingLoadPopover = ({ values }: PopoverValueProps) => {
