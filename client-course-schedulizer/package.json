@@ -13,7 +13,7 @@
   },
   "packageManager": "pnpm@8.6.0",
   "engines": {
-    "node": "20"
+    "node": "18"
   },
   "husky": {
     "hooks": {}
