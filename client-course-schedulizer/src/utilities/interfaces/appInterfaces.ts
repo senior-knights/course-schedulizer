@@ -38,7 +38,7 @@ export interface AppState {
 // Defaults for the app state when it launches, will try to load
 //  previous appState to launch app from.
 //  If no previous state saved, will default to the object below.
-export const initialAppState: AppState = loadLocal("appState") || {
+export const initialAppState: AppState = {
   classes: [],
   colorBy: 0,
   constraints: {},
@@ -66,7 +66,7 @@ if (!initialAppState.professors) {
   initialAppState.departments = [];
 }
 if (!initialAppState.rooms) {
-  initialAppState.departments = []; 
+  initialAppState.departments = [];
 }
 
 // structure of actions that can be sent to app dispatch

@@ -15,14 +15,14 @@ export const FieldArrayFields = () => {
     <>
       {fields.map((field, index) => {
         return (
-          <Grid key={field.id} container>
+          <Grid container key={field.id}>
             <DeleteFieldButton index={index} />
             {Object.keys(field)
               .filter((f) => {
                 return f !== "id";
               })
               .map((key) => {
-                return <FieldArrayField key={key} fieldIndex={key} index={index} />;
+                return <FieldArrayField fieldIndex={key} index={index} key={key} />;
               })}
           </Grid>
         );

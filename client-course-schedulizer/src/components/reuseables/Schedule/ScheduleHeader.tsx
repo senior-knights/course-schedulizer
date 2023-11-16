@@ -21,7 +21,7 @@ export const ScheduleHeader = ({ headers, scheduleType }: ScheduleHeaderProps) =
         {headers.map((header) => {
           const className = `calendar-title ${getCalendarClassName(scheduleType)}`;
           return (
-            <div key={header} className={className}>
+            <div className={className} key={header}>
               {header}
             </div>
           );

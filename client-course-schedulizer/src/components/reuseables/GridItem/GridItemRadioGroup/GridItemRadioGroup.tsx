@@ -40,8 +40,8 @@ export const GridItemRadioGroup = ({
               {options.map((opt) => {
                 return (
                   <FormControlLabel
-                    key={opt}
                     control={<Radio onChange={onChange} />}
+                    key={opt}
                     label={opt}
                     value={opt}
                   />
