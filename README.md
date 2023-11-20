@@ -8,6 +8,7 @@
 <a href="https://sharp-babbage-a45ee2.netlify.app/"><img alt="dev build" src="https://img.shields.io/badge/schedulizer%20dev-71B1C8?logo=internet-explorer" /></a>
 
 > Created by current students at [Calvin University](https://calvin.edu/) for their [computer science senior project](https://cs.calvin.edu/courses/cs/396/).
+> Find DOCUMENTATION at our [documentation page](https://docs.google.com/document/d/1lzlC1wNSYjhr5y5d4IxUpMyLuw5_kaxHmdN8W6C4j00/edit?usp=sharing).
 
 ## Built with
 
