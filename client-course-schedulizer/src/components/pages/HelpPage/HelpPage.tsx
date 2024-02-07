@@ -1,7 +1,7 @@
-import { Grid } from "@material-ui/core";
+//import { Grid } from "@material-ui/core";
 import React from "react";
 //import "../AboutPage/AboutPage.scss";
-import { NewTabLink, Page } from "components/reuseables";
+import { Page } from "components/reuseables"; //Removed "NewTabLink" import
 import { TextSection } from "../AboutPage/.";
 
 export const HelpPage = () => {

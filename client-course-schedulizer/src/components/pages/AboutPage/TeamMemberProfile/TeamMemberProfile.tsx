@@ -8,7 +8,9 @@ interface TeamMemberProfile {
 }
 
 /* Display information about the Team Member */
-export const TeamMemberProfile = ({ member }: TeamMemberProfile) => {
+// Turned off "eslint/no-redeclare" and "eslint/no-unused-vars"
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const TeamMemberProfile = ({ member }: TeamMemberProfile) => { // eslint-disable-line @typescript-eslint/no-redeclare
   const { name, bio } = member;
 
   return (

@@ -21,6 +21,8 @@ interface GridItemRadioGroup {
 
 /* Renders a group of radio buttons for a form.
 Ref: https://stackoverflow.com/questions/64042394/react-hook-form-and-material-ui-formcontrol */
+// Turned off "eslint/no-redeclare"
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GridItemRadioGroup = ({
   defaultValue,
   label,

@@ -1,4 +1,4 @@
-import { loadLocal } from "utilities/hooks/useLocal";
+//import { loadLocal } from "utilities/hooks/useLocal";
 import { HarmonyClass } from "utilities/services";
 import { Schedule, SemesterLength, Term } from "./dataInterfaces";
 

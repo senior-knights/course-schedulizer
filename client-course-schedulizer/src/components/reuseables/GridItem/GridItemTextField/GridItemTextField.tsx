@@ -12,6 +12,8 @@ interface GridItemTextField {
 }
 
 /* A text field to be used on forms */
+// Turned off "eslint/no-redeclare"
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GridItemTextField = ({ label, textFieldProps, value, name }: GridItemTextField) => {
   const { register, errors } = useFormContext();
   const { name: nameFallback, errorMessage } = useInput(label, errors);
