@@ -45,6 +45,7 @@ const pruimSpreadsheetFields: ValidFields = {
 };
 
 const registrarSpreadsheetFields: ValidFields = {
+  AcademicPeriod: cf.termCallback,
   AcademicYear: cf.yearCallback,
   BuildingAndRoom: cf.locationCallback,
   Comments: cf.commentsCallback,
@@ -72,7 +73,6 @@ const registrarSpreadsheetFields: ValidFields = {
   SemesterLength: cf.semesterLengthCallback,
   ShortTitle: cf.nameCallback,
   SubjectCode: cf.prefixCallback,
-  Term: cf.termCallback,
   TermStart: cf.termStartCallback,
   // Used: cf.usedCallback,
 };
