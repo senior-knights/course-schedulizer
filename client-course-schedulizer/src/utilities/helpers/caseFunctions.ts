@@ -114,13 +114,13 @@ export const letterCallback = (value: string, { section }: CaseCallbackParams) =
   section.letter = value;
 };
 
-export const globalMaxCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.globalMax = integerDefaultZeroCase(value);
-};
+// export const globalMaxCallback = (value: string, { section }: CaseCallbackParams) => {
+//   section.globalMax = integerDefaultZeroCase(value);
+// };
 
-export const localMaxCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.localMax = integerDefaultZeroCase(value);
-};
+// export const localMaxCallback = (value: string, { section }: CaseCallbackParams) => {
+//   section.localMax = integerDefaultZeroCase(value);
+// };
 
 export const anticipatedSizeCallback = (value: string, { section }: CaseCallbackParams) => {
   section.anticipatedSize = integerDefaultZeroCase(value);
@@ -166,13 +166,13 @@ export const termStartCallback = (value: string, { section }: CaseCallbackParams
   section.termStart = value;
 };
 
-export const usedCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.used = integerDefaultZeroCase(value);
-};
+// export const usedCallback = (value: string, { section }: CaseCallbackParams) => {
+//   section.used = integerDefaultZeroCase(value);
+// };
 
-export const day10UsedCallback = (value: string, { section }: CaseCallbackParams) => {
-  section.day10Used = integerDefaultZeroCase(value);
-};
+// export const day10UsedCallback = (value: string, { section }: CaseCallbackParams) => {
+//   section.day10Used = integerDefaultZeroCase(value);
+// };
 
 export const startDateCallback = (value: string, { section }: CaseCallbackParams) => {
   if (value.trim() !== "") {

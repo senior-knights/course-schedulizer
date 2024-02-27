@@ -95,13 +95,13 @@ describe("parses basic section", () => {
     expect(basicSection.studentHours).toEqual(3);
   });
 
-  it("parses used", () => {
-    expect(basicSection.used).toEqual(32);
-  });
+  // it("parses used", () => {
+  //   expect(basicSection.used).toEqual(32);
+  // });
 
-  it("parses day 10 used", () => {
-    expect(basicSection.day10Used).toEqual(undefined);
-  });
+  // it("parses day 10 used", () => {
+  //   expect(basicSection.day10Used).toEqual(undefined);
+  // });
 
   it("parses term start", () => {
     expect(basicSection.termStart).toEqual("2/3/2020");
@@ -123,13 +123,13 @@ describe("parses basic section", () => {
     expect(basicSection.instructionalMethod).toEqual("LEC");
   });
 
-  it("parses global max", () => {
-    expect(basicSection.globalMax).toEqual(32);
-  });
+  // it("parses global max", () => {
+  //   expect(basicSection.globalMax).toEqual(32);
+  // });
 
-  it("parses local max", () => {
-    expect(basicSection.localMax).toEqual(32);
-  });
+  // it("parses local max", () => {
+  //   expect(basicSection.localMax).toEqual(32);
+  // });
 
   it("parses letter", () => {
     expect(basicSection.letter).toEqual("A");

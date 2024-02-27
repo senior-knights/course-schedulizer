@@ -29,19 +29,19 @@ type CheckboxDays = (Day | boolean)[];
 export interface SectionInput {
   anticipatedSize?: Section["anticipatedSize"];
   comments?: Section["comments"];
-  day10Used?: Section["day10Used"];
+  // day10Used?: Section["day10Used"];
   days: CheckboxDays;
   deliveryMode?: Section["deliveryMode"];
   department?: Course["department"];
   duration?: Meeting["duration"];
   facultyHours?: Section["facultyHours"];
-  globalMax?: Section["globalMax"];
+  // globalMax?: Section["globalMax"];
   group?: Section["group"];
   halfSemester?: Half;
   // instructionalMethod?: Section["instructionalMethod"];
   instructor: Instructor[];
   intensiveSemester?: Intensive;
-  localMax?: Section["localMax"];
+  // localMax?: Section["localMax"];
   location: string;
   name: Course["name"];
   number: Course["number"];
@@ -53,7 +53,7 @@ export interface SectionInput {
   status?: Section["status"];
   studentHours?: Section["studentHours"];
   term: Section["term"];
-  used?: Section["used"];
+  // used?: Section["used"];
   year: string; // Assume string till yearCase() decides
 }
 
@@ -185,7 +185,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
   return {
     anticipatedSize: data?.section.anticipatedSize,
     comments: data?.section.comments?.trim() === "" ? undefined : data?.section.comments,
-    day10Used: data?.section.day10Used,
+    // day10Used: data?.section.day10Used,
     days,
     deliveryMode: data?.section.deliveryMode ?? "",  // TODO: should this be "In-person"?
     department: data?.course.department,
@@ -194,7 +194,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
       data?.section.facultyHours !== undefined && data.section.facultyHours > -1
         ? data.section.facultyHours
         : undefined,
-    globalMax: data?.section.globalMax,
+    // globalMax: data?.section.globalMax,
     group: data?.section.group ?? "",
     halfSemester: ((data?.section.semesterLength &&
     convertFromSemesterLength(data?.section.semesterLength) === SemesterLengthOption.HalfSemester
@@ -207,7 +207,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
       SemesterLengthOption.IntensiveSemester
       ? data?.section.semesterLength
       : SemesterLength.IntensiveA) as unknown) as Intensive,
-    localMax: data?.section.localMax,
+    // localMax: data?.section.localMax,
     location: locationValue,
     name: data?.section.name ?? data?.course.name ?? "",
     number: data?.course.number ?? "",
@@ -224,7 +224,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
         ? data.section.studentHours
         : undefined,
     term: defaultTerm || Term.Fall,
-    used: data?.section.used,
+    // used: data?.section.used,
     year: data?.section.year?.toString() ?? "",
   };
 };
@@ -241,16 +241,16 @@ const createNewSectionFromInput = (data: SectionInput): Section => {
   return {
     anticipatedSize: data.anticipatedSize,
     comments: data.comments,
-    day10Used: data.day10Used,
+    // day10Used: data.day10Used,
     deliveryMode: data.deliveryMode,
     endDate: "",
     facultyHours: Number(data.facultyHours),
-    globalMax: data.globalMax,
+    // globalMax: data.globalMax,
     group: data.group,
     // instructionalMethod: data.instructionalMethod,
     instructors: data.instructor,
     letter: data.section,
-    localMax: data.localMax,
+    // localMax: data.localMax,
     meetings: [
       {
         days: data.days as Day[],
@@ -269,7 +269,7 @@ const createNewSectionFromInput = (data: SectionInput): Section => {
     studentHours: Number(data.studentHours),
     term: data.term,
     termStart: "",
-    used: data.used,
+    // used: data.used,
     year: yearCase(data.year),
   };
 };
