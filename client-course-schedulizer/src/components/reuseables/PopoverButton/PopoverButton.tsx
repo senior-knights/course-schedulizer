@@ -11,7 +11,6 @@ interface PopoverButton extends ButtonProps {
   popupId?: string;
 }
 
-// Turned off "eslint/no-redeclare"
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PopoverButton = (props: PopoverButton) => {
   const { isIcon, popupId, buttonTitle, minWidth, children, ...buttonProps } = props;

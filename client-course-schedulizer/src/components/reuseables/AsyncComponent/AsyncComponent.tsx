@@ -10,7 +10,6 @@ interface AsyncComponent {
 const SubComponents = Union(Literal("Loading"), Literal("Loaded"));
 
 // Some boiler plate to get useable types.
-// Turned off "eslint/no-redeclare"
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 type SubComponents = Static<typeof SubComponents>;
 type AsyncSubComponents = { [key in SubComponents]: FC<{}> };
@@ -33,7 +32,6 @@ type AsyncSubComponents = { [key in SubComponents]: FC<{}> };
     - https://dev.to/shayanypn/buckle-with-react-sub-component-10ll
 */
 
-// Turned off "eslint/no-redeclare"
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const AsyncComponent: FC<AsyncComponent> & AsyncSubComponents = ({
   children,

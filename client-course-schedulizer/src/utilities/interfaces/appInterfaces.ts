@@ -1,4 +1,3 @@
-//import { loadLocal } from "utilities/hooks/useLocal";
 import { HarmonyClass } from "utilities/services";
 import { Schedule, SemesterLength, Term } from "./dataInterfaces";
 
@@ -19,7 +18,7 @@ export enum SchedulizerTab {
 
 // structure for the global app state
 export interface AppState {
-  classes: HarmonyClass[];
+  classes: HarmonyClass[]; //Removing HarmonyClass causes errors in HarmonyPage/Harmony/HarmonyStepper/HarmonyStepperImportData.tsx
   colorBy: ColorBy;
   constraints: {};
   departments: string[];

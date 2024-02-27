@@ -1,4 +1,4 @@
-import { AddSectionButton, ColorSelector, SemesterSelector} from "components"; //Removed "Searchbar" from import
+import { AddSectionButton, ColorSelector, SemesterSelector} from "components";
 import React, { useContext } from "react";
 import { AppContext } from "utilities/contexts";
 import { SemesterPartSelector } from "../SemesterPartSelector";
