@@ -145,6 +145,11 @@ export const yearCallback = (value: string, { section }: CaseCallbackParams) => 
   section.year = yearCase(value);
 };
 
+export const semesterHourCallback = (value: string, params: CaseCallbackParams) => {
+  studentHoursCallback(value, params);
+  facultyHoursCallback(value, params);
+}
+
 export const studentHoursCallback = (value: string, { section }: CaseCallbackParams) => {
   // Remove '$' is Excel prepended it to the student hours
   section.studentHours = value.startsWith("$") ? Number(value.substr(1)) : Number(value);
