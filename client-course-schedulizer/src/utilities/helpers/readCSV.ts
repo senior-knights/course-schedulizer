@@ -50,9 +50,9 @@ const registrarSpreadsheetFields: ValidFields = {
   BuildingAndRoom: cf.locationCallback,
   Comments: cf.commentsCallback,
   CourseNum: cf.numberCallback,
+  CourseSection: cf.departmentCallback,
   // Day10Used: cf.day10UsedCallback,
   DeliveryMode: cf.deliveryModeCallback,
-  Department: cf.departmentCallback,
   Faculty: cf.instructorCallback,
   FacultyLoad: cf.facultyHoursCallback,
   // GlobalMax: cf.globalMaxCallback,
@@ -72,8 +72,8 @@ const registrarSpreadsheetFields: ValidFields = {
   SectionStatus: cf.statusCallback,
   SemesterLength: cf.semesterLengthCallback,
   ShortTitle: cf.nameCallback,
+  StartDate: cf.termStartCallback,
   SubjectCode: cf.prefixCallback,
-  TermStart: cf.termStartCallback,
   // Used: cf.usedCallback,
 };
 

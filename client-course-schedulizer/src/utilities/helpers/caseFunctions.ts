@@ -159,7 +159,7 @@ export const roomCapacityCallback = (value: string, params: CaseCallbackParams) 
 };
 
 export const departmentCallback = (value: string, { course }: CaseCallbackParams) => {
-  course.department = value;
+  course.department = value.split(" ")[0];
 };
 
 export const termStartCallback = (value: string, { section }: CaseCallbackParams) => {
