@@ -47,7 +47,6 @@ const pruimSpreadsheetFields: ValidFields = {
 const registrarSpreadsheetFields: ValidFields = {
   AcademicPeriod: cf.termCallback,
   AcademicYear: cf.yearCallback,
-  BuildingAndRoom: cf.locationCallback,
   Comments: cf.commentsCallback,
   CourseNum: cf.numberCallback,
   CourseSection: cf.courseSectionCallback,
@@ -60,6 +59,8 @@ const registrarSpreadsheetFields: ValidFields = {
   InstructionalMethod: cf.instructionalMethodCallback,
   Instructors: cf.instructorCallback,
   LastEditTimestamp: cf.timestampCallback,
+  Location1: cf.locationCallback,
+  Location2: cf.locationCallback,
   // LocalMax: cf.localMaxCallback,
   MeetingDays: cf.daysCallback,
   MeetingDurationMinutes: cf.durationCallback,

@@ -61,7 +61,7 @@ export const startTimeCallback = (value: string, params: CaseCallbackParams) => 
 
 export const locationCallback = (value: string, params: CaseCallbackParams) => {
   assignWithMeetings(value, params, (location, i, meetings) => {
-    [meetings[i].location.building, meetings[i].location.roomNumber] = locationCase(location);
+    [meetings[i].location.building, meetings[i].location.roomNumber] = locationCase(location.split("-")[0]);
   });
 };
 
