@@ -30,7 +30,8 @@ export const useImportRemoteFile = () => {
       const xlsxUrl = url.slice(xlsxIndex + getXLSXStr.length);
       if (xlsxUrl !== "" && xlsxUrl !== fileUrl) {
         setIsCSVLoading(true);
-        fetch(xlsxUrl)
+        // Avoid caching.
+        fetch(xlsxUrl, { cache: "no-store" })
           .then((response) => {
             if (response.status === 404) {
               return null;
@@ -78,7 +79,8 @@ export const loadRemoteCSV = (url: string, csvIndex: number, appContext: AppCont
   const csvUrl = url.slice(csvIndex + getCSVStr.length);
   if (csvUrl !== "" && csvUrl !== fileUrl) {
     setIsCSVLoading(true);
-    fetch(csvUrl)
+    // Avoid caching
+    fetch(csvUrl, { cache: "no-store" })
       .then((response) => {
         if (response.status === 404) {
           return null;
