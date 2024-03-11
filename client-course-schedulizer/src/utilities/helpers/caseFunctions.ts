@@ -99,13 +99,15 @@ export const instructorCallback = (value: string, { section }: CaseCallbackParam
   section.instructors = instructorCase(value);
 };
 
+export const courseCallback = (value: string, { course }: CaseCallbackParams) => {
+  course.department = value.split(" ")[0];
+  course.prefixes = [value.split(" ")[0]];
+  course.number = value.split(" ")[1];
+}
+
 export const courseSectionCallback = (value: string, { course, section }: CaseCallbackParams) => {
-  var origin = value.split(" ");
-  course.department = origin[0];
-  course.prefixes = [origin[0]];
-  course.number = origin[1].split("-")[0];
-  section.letter = origin[1].split("-")[1];
-  course.name = origin.slice(3).join(" ");
+  section.letter = value.split("-")[1];
+  course.name = value.split("-")[2];
 }
 
 export const prefixCallback = (value: string, { course }: CaseCallbackParams) => {

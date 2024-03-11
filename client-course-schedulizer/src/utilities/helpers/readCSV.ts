@@ -48,6 +48,7 @@ const registrarSpreadsheetFields: ValidFields = {
   AcademicPeriod: cf.termCallback,
   AcademicYear: cf.yearCallback,
   Comments: cf.commentsCallback,
+  Course: cf.courseCallback,
   CourseNum: cf.numberCallback,
   CourseSection: cf.courseSectionCallback,
   // Day10Used: cf.day10UsedCallback,
