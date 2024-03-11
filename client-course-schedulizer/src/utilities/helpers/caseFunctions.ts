@@ -1,5 +1,6 @@
 import { cloneDeep, forEach } from "lodash";
 import moment from "moment";
+import { Case } from "runtypes";
 import { emptyMeeting } from "utilities/constants";
 import { Course, Day, Meeting, Section, SemesterLength, Term } from "utilities/interfaces";
 
@@ -232,6 +233,15 @@ export const sectionCallback = (value: string, params: CaseCallbackParams) => {
     letterCallback(sectionParts[2], params);
   }
 };
+
+export const meetingPatternCallback = (value: string, params: CaseCallbackParams) => {
+  const meetingDays = value.split("|")[0];
+  const startTime = value.split(" ")[2];
+  const endTime = value.split(" ")[4];
+
+  daysCallback(meetingDays, params);
+  timeCallback(startTime + " - " + endTime, params);
+}
 
 export const timeCallback = (value: string, params: CaseCallbackParams) => {
   const [startTime] = value.split(" ").join("").split("-");
