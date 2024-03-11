@@ -1,4 +1,3 @@
-import { EventInput } from "@fullcalendar/react";
 import { ScheduleBaseProps } from "components";
 import { filter, flatten, forEach, forOwn, map, maxBy, minBy, range } from "lodash";
 import moment from "moment";
@@ -8,6 +7,7 @@ import { enumArray, WILDCARD_COLOR } from "utilities";
 import { INITIAL_DATE } from "utilities/constants";
 import { ColorBy, Day, Location, Meeting, Schedule, Section, SemesterLength, Term } from "utilities/interfaces";
 import { Constraints, findConflicts, termsOverlap } from "./conflictsService";
+import { EventInput } from "@fullcalendar/core";
 
 // Returns a list of hours to display on the Schedule
 // TODO: add better types for timing, maybe: https://stackoverflow.com/questions/51445767/how-to-define-a-regex-matched-string-type-in-typescript
@@ -132,13 +132,13 @@ export const getMinAndMaxTimes = (schedule: Schedule) => {
 };
 
 export const filterEventsByTerm = (
-  groupedEvents: GroupedEvents, 
-  term: Term, 
+  groupedEvents: GroupedEvents,
+  term: Term,
   semesterLength: SemesterLength = SemesterLength.Full) => {
   const tempGroupedEvents: GroupedEvents = {};
   forOwn(groupedEvents, (_, key) => {
     tempGroupedEvents[key] = filter(groupedEvents[key], (e) => {
-      return e.extendedProps?.section.term === term && 
+      return e.extendedProps?.section.term === term &&
              termsOverlap(e.extendedProps?.section.semesterLength, semesterLength);
     });
   });

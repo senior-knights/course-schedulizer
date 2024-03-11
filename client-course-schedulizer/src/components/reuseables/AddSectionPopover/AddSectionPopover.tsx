@@ -39,6 +39,9 @@ import {
 } from "utilities/interfaces";
 import "./AddSectionPopover.scss";
 
+// Schedulizer -> add section
+// Conflict message: after adding a section, click on it, and the conflict message will show up in the conflict box
+
 const SPACING = 2;
 
 const transformDataToTrueSectionInput = (data: SectionInput): SectionInput => {

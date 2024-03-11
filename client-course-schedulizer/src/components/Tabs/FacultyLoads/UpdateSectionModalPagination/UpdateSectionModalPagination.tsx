@@ -12,9 +12,9 @@ export const UpdateSectionModalPagination = forwardRef(
   (props, ref: Ref<UpdateModalPaginationRef>) => {
     return (
       <ModalPagination
-        ref={ref}
-        findCourseSectionMeeting={findSection as FindCourseSectionMeetingFunction}
         PopoverComponent={AddSectionPopover}
+        findCourseSectionMeeting={findSection as FindCourseSectionMeetingFunction}
+        ref={ref}
       />
     );
   },

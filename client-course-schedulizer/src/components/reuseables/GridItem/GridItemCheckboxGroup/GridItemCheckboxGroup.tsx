@@ -63,7 +63,7 @@ export const GridItemCheckboxGroup = ({
           <Grid container direction="column">
             {options.map((opt, i) => {
               return (
-                <Grid key={opt} item>
+                <Grid item key={opt}>
                   <FormControlLabel
                     control={
                       <Checkbox
