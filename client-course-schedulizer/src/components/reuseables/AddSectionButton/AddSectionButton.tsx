@@ -8,6 +8,7 @@ interface AddSectionButton extends ButtonProps {
   isIcon?: boolean;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const AddSectionButton = (props: AddSectionButton) => {
   const { isIcon } = props;
 

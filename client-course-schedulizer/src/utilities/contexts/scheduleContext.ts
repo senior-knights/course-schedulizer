@@ -9,6 +9,8 @@ interface ScheduleContext {
 }
 
 /* Provide a context for each Schedule (Faculty, Room, etc.) */
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ScheduleContext = createContext<ScheduleContext>({
   isScheduleLoading: false,
   setIsScheduleLoading: voidFn,

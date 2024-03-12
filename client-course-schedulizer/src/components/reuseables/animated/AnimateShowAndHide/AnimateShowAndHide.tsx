@@ -13,6 +13,8 @@ interface AnimateShowAndHide {
   - https://codesandbox.io/embed/zn2q57vn13
   - https://stackoverflow.com/questions/56928771/reactjs-react-countup-visible-only-once-in-visibility-sensor
 */
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const AnimateShowAndHide = ({ children, once }: PropsWithChildren<AnimateShowAndHide>) => {
   const [isActive, setIsActive] = useState(true);
   const [isVisible, setIsVisible] = useState(false);

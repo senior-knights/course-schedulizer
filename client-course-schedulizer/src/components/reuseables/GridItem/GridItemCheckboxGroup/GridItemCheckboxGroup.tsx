@@ -19,6 +19,7 @@ interface GridItemCheckboxGroup {
   options: string[];
 }
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GridItemCheckboxGroup = ({
   label,
   name,

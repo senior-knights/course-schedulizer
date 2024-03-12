@@ -31,6 +31,8 @@ enum Term {
   and a dispatcher to perform updates against the
   state of the app.
 */
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const AppContext = createContext<AppContext>({
   appDispatch: voidFn,
   appState: {
