@@ -86,6 +86,12 @@ export const useExportExcel = () => {
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Schedule");
 
+    // Create a second sheet with just the export time
+    const currentTime = moment().format("YYYY-MM-DD HH:mm:ss");
+    const metadataData = [{ ExportTime: currentTime }];
+    const metadataWorksheet = XLSX.utils.json_to_sheet(metadataData);
+    XLSX.utils.book_append_sheet(workbook, metadataWorksheet, "Metadata");
+
     // Generate Excel buffer and trigger download
     const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
     download(excelBuffer, `schedule_${moment().format("YYYY-MM-DD_HH-mm-ss")}.xlsx`);
