@@ -424,3 +424,10 @@ export const courseLevelCallback = (value: string, data: CaseCallbackParams): vo
     data.course.courseLevel = value.trim();
   }
 };
+
+export const maxStudentHoursCallback = (value: string, { section }: CaseCallbackParams) => {
+  // Only set maxStudentHours if the value is not empty
+  if (value && value.trim() !== '') {
+    section.maxStudentHours = value.startsWith("$") ? Number(value.substr(1)) : Number(value);
+  }
+};

@@ -105,7 +105,7 @@ const newFormatFields: ValidFields = {
   FacultyLoad: cf.facultyHoursCallback,
   Group: cf.groupCallback,
   InstructionalMethod: cf.instructionalMethodCallback,
-  MaximumCredits: cf.roomCapacityCallback,
+  MaximumCredits: cf.maxStudentHoursCallback,
   MeetingDays: cf.daysCallback,
   MeetingDuration: cf.durationCallback,
   MinimumCredits: cf.studentHoursCallback,

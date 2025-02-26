@@ -1,4 +1,3 @@
-/* eslint-disable typescript-sort-keys/string-enum */
 import { ConflictRow } from "utilities";
 import { Day, SemesterLength, Term } from ".";
 
@@ -78,9 +77,10 @@ export interface Section {
   instructors: Instructor[];
   isNonTeaching?: boolean;
   letter: string;
+  maxStudentHours?: number;
   // localMax?: number;
-  // Multiple Meetings possible if time/room differs on different days
-  // Asynchronous classes should have an empty array of meeting times
+// Multiple Meetings possible if time/room differs on different days
+// Asynchronous classes should have an empty array of meeting times
   meetings: Meeting[];
   name?: string;
   semesterLength?: SemesterLength;

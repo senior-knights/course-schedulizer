@@ -12,6 +12,12 @@ const formatNumber = (num: number | undefined): string => {
 
 const formatTime = (time: string | undefined): string => {
   if (!time) return "";
+  // Validate the time format
+  if (!/^\d{1,2}:\d{2}\s?[AP]M$/i.test(time)) {
+    console.warn(`Invalid time format: ${time}`);
+    return "";
+  }
+
   return moment(time, "h:mm A").format("HH:mm:00");
 };
 
@@ -30,19 +36,30 @@ export const useExportExcel = () => {
           AcademicYear: section.year ?? "",
           Term: section.term ?? "",
           TermPart: section.semesterLength ?? "",
-          Prefix: Array.isArray(course.prefixes) ? course.prefixes.join(", ") : (course.prefix ?? ""),
+          Prefix: Array.isArray(course.prefixes)
+            ? course.prefixes.join(", ")
+            : (typeof course.prefix === 'string' ? course.prefix.replace(/\s+/g, "") : ""),
           CourseNumber: course.number ?? "",
           Section: section.letter ?? "",
           Faculty: Array.isArray(section.instructors) ? section.instructors.join(", ") : (section.instructors ?? ""),
           FacultyLoad: formatNumber(section.facultyHours),
           MinimumCredits: formatNumber(section.studentHours),
-          MaximumCredits: formatNumber(section.meetings?.[0]?.location?.roomCapacity),
+          MaximumCredits: formatNumber(section.maxStudentHours),
           MeetingDays: section.meetings ? section.meetings.map((m: any) => {
-            return m.days ? m.days.map((day: string) => {return day === "TH" ? "R" : day}).join("") : "";
+            return m.days ? m.days.map((day: string) => {
+              return day.replace(/^TH$/i, "R");
+            }).join("") : "";
           }).join("; ") : "",
           StartTime: section.meetings && section.meetings.length > 0 ? formatTime(section.meetings[0].startTime) : "",
           MeetingDuration: section.meetings && section.meetings.length > 0 ? section.meetings[0].duration ?? "" : "",
-          Classroom: section.meetings ? section.meetings.map((m: any) => {return m.location ? `${m.location.building} ${m.location.roomNumber}` : "";}).join(", ") : "",
+          Classroom: section.meetings ? section.meetings.map((m: any) => {
+            if (!m.location || !m.location.building || !m.location.roomNumber) return "";
+            // Remove extra whitespace from building and room number
+            const building = m.location.building.trim().replace(/\s+/g, " ");
+            const roomNumber = m.location.roomNumber.toString().replace(/^0+/, "");
+
+            return `${building} ${roomNumber}`;
+          }).join(", ") : "",
           ShortTitle: course.name ?? "",
           InstructionalMethod: section.instructionalMethod ?? "",
           CourseLevel: course.courseLevel ?? "",
