@@ -49,7 +49,7 @@ export const useExportExcel = () => {
             return m.days ? m.days.map((day: string) => {
               return day.replace(/^TH$/i, "R");
             }).join("") : "";
-          }).join("; ") : "",
+          }).join("\n") : "",
           StartTime: section.meetings && section.meetings.length > 0 ? formatTime(section.meetings[0].startTime) : "",
           MeetingDuration: section.meetings && section.meetings.length > 0 ? section.meetings[0].duration ?? "" : "",
           Classroom: section.meetings ? section.meetings.map((m: any) => {
