@@ -431,3 +431,15 @@ export const maxStudentHoursCallback = (value: string, { section }: CaseCallback
     section.maxStudentHours = value.startsWith("$") ? Number(value.substr(1)) : Number(value);
   }
 };
+
+export const buildingCallback = (value: string, params: CaseCallbackParams) => {
+  assignWithMeetings(value, params, (building, i, meetings) => {
+    meetings[i].location.building = building.trim();
+  });
+};
+
+export const roomNumberCallback = (value: string, params: CaseCallbackParams) => {
+  assignWithMeetings(value, params, (roomNumber, i, meetings) => {
+    meetings[i].location.roomNumber = roomNumber.trim();
+  });
+};

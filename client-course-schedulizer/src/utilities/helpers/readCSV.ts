@@ -117,11 +117,41 @@ const newFormatFields: ValidFields = {
   TermPart: cf.semesterLengthCallback,
 };
 
+const newCSVFormatFields: ValidFields = {
+  Building: cf.buildingCallback,
+  BuildingAndRoom: cf.locationCallback,
+  Comments: cf.commentsCallback,
+  CourseLevelCode: cf.courseLevelCallback,
+  CourseNum: cf.numberCallback,
+  DeliveryMode: cf.deliveryModeCallback,
+  Department: cf.departmentCallback,
+  Faculty: cf.instructorCallback,
+  FacultyLoad: cf.facultyHoursCallback,
+  Group: cf.groupCallback,
+  InstructionalMethod: cf.instructionalMethodCallback,
+  LastEditTimestamp: cf.timestampCallback,
+  MeetingDays: cf.daysCallback,
+  MeetingDurationMinutes: cf.durationCallback,
+  MeetingStart: cf.startTimeCallback,
+  MeetingTime: cf.timeCallback,
+  MinimumCredits: cf.studentHoursCallback,
+  RoomNumber: cf.roomNumberCallback,
+  SectionCode: cf.letterCallback,
+  SectionEndDate: cf.endDateCallback,
+  SectionStartDate: cf.startDateCallback,
+  SectionStatus: cf.statusCallback,
+  SemesterLength: cf.semesterLengthCallback,
+  ShortTitle: cf.nameCallback,
+  SubjectCode: cf.prefixCallback,
+  Term: cf.termCallback,
+};
+
 const callbacks: ValidFields = {
   ...pruimSpreadsheetFields,
   ...registrarSpreadsheetFields,
   ...templateSpreadsheetFields,
   ...newFormatFields,
+  ...newCSVFormatFields,
 };
 
 export const csvStringToSchedule = (csvString: string): Schedule => {
