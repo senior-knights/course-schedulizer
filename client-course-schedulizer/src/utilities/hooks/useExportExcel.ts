@@ -17,7 +17,6 @@ const formatTime = (time: string | undefined): string => {
     console.warn(`Invalid time format: ${time}`);
     return "";
   }
-
   return moment(time, "h:mm A").format("HH:mm:00");
 };
 
@@ -27,8 +26,8 @@ export const useExportExcel = () => {
   } = useContext(AppContext);
 
   const onExportExcelClick = () => {
-    // Build export data from schedule
-    const exportData: any[] = [];
+    // First sheet: Original Schedule
+    const exportData1: any[] = [];
     schedule.courses.forEach((course: any) => {
       course.sections.forEach((section: any) => {
         const row = {
@@ -38,28 +37,43 @@ export const useExportExcel = () => {
           TermPart: section.semesterLength ?? "",
           Prefix: Array.isArray(course.prefixes)
             ? course.prefixes.join(", ")
-            : (typeof course.prefix === 'string' ? course.prefix.replace(/\s+/g, "") : ""),
+            : (typeof course.prefix === "string" ? course.prefix.replace(/\s+/g, "") : ""),
           CourseNumber: course.number ?? "",
           Section: section.letter ?? "",
-          Faculty: Array.isArray(section.instructors) ? section.instructors.join(", ") : (section.instructors ?? ""),
+          Faculty: Array.isArray(section.instructors)
+            ? section.instructors.join(", ")
+            : (section.instructors ?? ""),
           FacultyLoad: formatNumber(section.facultyHours),
           MinimumCredits: formatNumber(section.studentHours),
           MaximumCredits: formatNumber(section.maxStudentHours),
-          MeetingDays: section.meetings ? section.meetings.map((m: any) => {
-            return m.days ? m.days.map((day: string) => {
-              return day.replace(/^TH$/i, "R");
-            }).join("") : "";
-          }).join("\n") : "",
-          StartTime: section.meetings && section.meetings.length > 0 ? formatTime(section.meetings[0].startTime) : "",
-          MeetingDuration: section.meetings && section.meetings.length > 0 ? section.meetings[0].duration ?? "" : "",
-          Classroom: section.meetings ? section.meetings.map((m: any) => {
-            if (!m.location || !m.location.building || !m.location.roomNumber) return "";
-            // Remove extra whitespace from building and room number
-            const building = m.location.building.trim().replace(/\s+/g, " ");
-            const roomNumber = m.location.roomNumber.toString().replace(/^0+/, "");
-
-            return `${building} ${roomNumber}`;
-          }).join(", ") : "",
+          MeetingDays: section.meetings
+            ? section.meetings
+                .map((m: any) => {
+                  return m.days
+                    ? m.days.map((day: string) => {return day.replace(/^TH$/i, "R")}).join("")
+                    : "";
+                })
+                .join("\n")
+            : "",
+          StartTime:
+            section.meetings && section.meetings.length > 0
+              ? formatTime(section.meetings[0].startTime)
+              : "",
+          MeetingDuration:
+            section.meetings && section.meetings.length > 0
+              ? section.meetings[0].duration ?? ""
+              : "",
+          Classroom: section.meetings
+            ? section.meetings
+                .map((m: any) => {
+                  if (!m.location || !m.location.building || !m.location.roomNumber)
+                    return "";
+                  const building = m.location.building.trim().replace(/\s+/g, " ");
+                  const roomNumber = m.location.roomNumber.toString().replace(/^0+/, "");
+                  return `${building} ${roomNumber}`;
+                })
+                .join(", ")
+            : "",
           ShortTitle: course.name ?? "",
           InstructionalMethod: section.instructionalMethod ?? "",
           CourseLevel: course.courseLevel ?? "",
@@ -68,12 +82,11 @@ export const useExportExcel = () => {
           Enrollment: section.anticipatedSize ?? 0,
           EnrollmentDay10: section.day10Used ?? 0,
         };
-        exportData.push(row);
+        exportData1.push(row);
       });
     });
 
-    // Define header order for sheet
-    const headers = [
+    const headers1 = [
       "Department",
       "AcademicYear",
       "Term",
@@ -98,16 +111,111 @@ export const useExportExcel = () => {
       "EnrollmentDay10",
     ];
 
-    // Create worksheet with headers in the specified order
-    const worksheet = XLSX.utils.json_to_sheet(exportData, { header: headers });
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Schedule");
+    const worksheet1 = XLSX.utils.json_to_sheet(exportData1, { header: headers1 });
 
-    // Create a second sheet with just the export time
+    // Second sheet: Registrar Schedule
+    const exportData2: any[] = [];
+    schedule.courses.forEach((course: any) => {
+      course.sections.forEach((section: any) => {
+        // Calculate MeetingTime from start time and duration
+        const meetingTime =
+          section.meetings && section.meetings.length > 0
+            ? (() => {
+                const start = section.meetings[0].startTime;
+                const duration = section.meetings[0].duration;
+                if (start && duration) {
+                  const formattedStart = formatTime(start);
+                  const formattedEnd = moment(start, "h:mm A")
+                    .add(Number(duration), "minutes")
+                    .format("HH:mm:00");
+                  return `${formattedStart} - ${formattedEnd}`;
+                }
+                return "";
+              })()
+            : "";
+        // Combine Term and SemesterPart to form TermAndPart
+        const termAndPart = section.term
+          ? section.semesterLength
+            ? `${section.term}-${section.semesterLength}`
+            : section.term
+          : "";
+
+        const row = {
+          Term: section.term ?? "",
+          Prefix: Array.isArray(course.prefixes)
+            ? course.prefixes.join(", ")
+            : (typeof course.prefix === "string" ? course.prefix.replace(/\s+/g, "") : ""),
+          CourseNumber: course.number ?? "",
+          Section: section.letter ?? "",
+          StudentCredits: formatNumber(section.studentHours),
+          FacultyLoad: formatNumber(section.facultyHours),
+          MeetingDays: section.meetings
+            ? section.meetings
+                .map((m: any) => {
+                  return m.days
+                    ? m.days.map((day: string) => {return day.replace(/^TH$/i, "R")}).join("")
+                    : "";
+                })
+                .join("\n")
+            : "",
+          MeetingTime: meetingTime,
+          BuildingAndRoom: section.meetings
+            ? section.meetings
+                .map((m: any) => {
+                  if (!m.location || !m.location.building || !m.location.roomNumber)
+                    return "";
+                  const building = m.location.building.trim().replace(/\s+/g, " ");
+                  const roomNumber = m.location.roomNumber.toString().replace(/^0+/, "");
+                  return `${building} ${roomNumber}`;
+                })
+                .join(", ")
+            : "",
+          TermPart: section.semesterLength ?? "",
+          TermAndPart: termAndPart,
+          Duration:
+            section.meetings && section.meetings.length > 0
+              ? section.meetings[0].duration ?? ""
+              : "",
+          ShortTitle: course.name ?? "",
+          Faculty: Array.isArray(section.instructors)
+            ? section.instructors.join(", ")
+            : (section.instructors ?? ""),
+          InstructionalMethod: section.instructionalMethod ?? "",
+        };
+        exportData2.push(row);
+      });
+    });
+
+    const headers2 = [
+      "Term",
+      "Prefix",
+      "CourseNumber",
+      "Section",
+      "StudentCredits",
+      "FacultyLoad",
+      "MeetingDays",
+      "MeetingTime",
+      "BuildingAndRoom",
+      "TermPart",
+      "TermAndPart",
+      "Duration",
+      "ShortTitle",
+      "Faculty",
+      "InstructionalMethod",
+    ];
+
+    const worksheet2 = XLSX.utils.json_to_sheet(exportData2, { header: headers2 });
+
+    // Third sheet: Metadata
     const currentTime = moment().format("YYYY-MM-DD HH:mm:ss");
     const metadataData = [{ ExportTime: currentTime }];
-    const metadataWorksheet = XLSX.utils.json_to_sheet(metadataData);
-    XLSX.utils.book_append_sheet(workbook, metadataWorksheet, "Metadata");
+    const worksheet3 = XLSX.utils.json_to_sheet(metadataData);
+
+    // Create workbook and append sheets in order
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet1, "Schedule");
+    XLSX.utils.book_append_sheet(workbook, worksheet2, "Registrar Schedule");
+    XLSX.utils.book_append_sheet(workbook, worksheet3, "Metadata");
 
     // Generate Excel buffer and trigger download
     const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
