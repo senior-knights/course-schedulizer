@@ -140,11 +140,11 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
       //   },${section.studentHours > -1 ? section.studentHours : ""}, ${section.facultyHours > -1 ? section.facultyHours : ""},"${buildingAndRoomStr
       //   }","${daysStr}","${meetingTimeStr}",${section.startDate ?? ""},${section.endDate ?? ""},${section.semesterLength ?? ""},"${buildingStr
       //   }","${roomNumberStr}","${meetingStartStr}","${meetingDurationMinutesStr
-      //   }","${meetingEndStr}","${ section.name ?? course.name 
+      //   }","${meetingEndStr}","${ section.name ?? course.name
       //   }","${section.instructors.join("\n")}","${section.status ?? ""
-      //   }","${section.instructionalMethod ?? "" 
-      //   }","${section.deliveryMode ?? "" 
-      //   }","${section.group ?? "" 
+      //   }","${section.instructionalMethod ?? ""
+      //   }","${section.deliveryMode ?? ""
+      //   }","${section.group ?? ""
       //   }","${section.comments ?? ""}","${section.timestamp ?? ""}"\n`;
     });
   });

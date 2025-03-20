@@ -92,10 +92,57 @@ const templateSpreadsheetFields: ValidFields = {
   Terms: cf.termCallback,
 };
 
+const newFormatFields: ValidFields = {
+  AcademicYear: cf.yearCallback,
+  Classroom: cf.locationCallback,
+  Comment: cf.commentsCallback,
+  CourseLevel: cf.courseLevelCallback,
+  CourseNumber: cf.numberCallback,
+  Department: cf.departmentCallback,
+  Enrollment: cf.anticipatedSizeCallback,
+  EnrollmentDay10: cf.day10UsedCallback,
+  Faculty: cf.instructorCallback,
+  FacultyLoad: cf.facultyHoursCallback,
+  Group: cf.groupCallback,
+  InstructionalMethod: cf.instructionalMethodCallback,
+  MaximumCredits: cf.maxStudentHoursCallback,
+  MeetingDays: cf.daysCallback,
+  MeetingDuration: cf.durationCallback,
+  MinimumCredits: cf.studentHoursCallback,
+  Prefix: cf.prefixCallback,
+  Section: cf.letterCallback,
+  ShortTitle: cf.nameCallback,
+  StartTime: cf.startTimeCallback,
+  Term: cf.termCallback,
+  TermPart: cf.semesterLengthCallback,
+};
+
+const newCSVFormatFields: ValidFields = {
+  Building: cf.buildingCallback,
+  BuildingAndRoom: cf.locationCallback,
+  Comments: cf.commentsCallback,
+  CourseLevelCode: cf.courseLevelCallback,
+  CourseNum: cf.numberCallback,
+  DeliveryMode: cf.deliveryModeCallback,
+  LastEditTimestamp: cf.timestampCallback,
+  MeetingDurationMinutes: cf.durationCallback,
+  MeetingStart: cf.startTimeCallback,
+  MeetingTime: cf.timeCallback,
+  RoomNumber: cf.roomNumberCallback,
+  SectionCode: cf.letterCallback,
+  SectionEndDate: cf.endDateCallback,
+  SectionStartDate: cf.startDateCallback,
+  SectionStatus: cf.statusCallback,
+  SemesterLength: cf.semesterLengthCallback,
+  SubjectCode: cf.prefixCallback,
+};
+
 const callbacks: ValidFields = {
   ...pruimSpreadsheetFields,
   ...registrarSpreadsheetFields,
   ...templateSpreadsheetFields,
+  ...newFormatFields,
+  ...newCSVFormatFields,
 };
 
 export const csvStringToSchedule = (csvString: string): Schedule => {
@@ -236,4 +283,5 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
   }
   return schedule;
 };
+
 
