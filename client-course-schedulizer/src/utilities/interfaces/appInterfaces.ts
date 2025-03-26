@@ -14,6 +14,7 @@ export enum SchedulizerTab {
   Room,
   Loads,
   Conflicts,
+  Meta,
 }
 
 // structure for the global app state
