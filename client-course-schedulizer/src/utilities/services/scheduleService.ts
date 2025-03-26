@@ -335,7 +335,10 @@ export const getSectionLetters = (schedule: Schedule) => {
 // get list of delivery modes already in use in the Schedule
 // used for autocompletion
 export const getDeliveryModes = (schedule: Schedule) => {
-  const deliveryModes: string[] = [];
+  // Ensure always includes these standard options
+  const standardModes = ["Online", "In-Person", "Hybrid"];
+  const deliveryModes: string[] = [...standardModes];
+
   forEach(schedule.courses, (course) => {
     forEach(course.sections, (section) => {
       if (
