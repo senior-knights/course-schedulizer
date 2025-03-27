@@ -86,7 +86,7 @@
   "devDependencies": {
     "@types/isomorphic-fetch": "^0.0.39",
     "@types/jest": "^29.5.14",
-    "@types/lodash": "4.14.190",
+    "@types/lodash": "4.17.16",
     "@types/node": "^22.13.13",
     "@types/object-hash": "^3.0.6",
     "@types/papaparse": "^5.3.15",
