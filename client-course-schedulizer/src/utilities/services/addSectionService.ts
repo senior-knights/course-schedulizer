@@ -370,6 +370,25 @@ export const handleOldMeeting = (
   const oldSection = oldData?.section;
   const oldCourse = oldData?.course;
 
+  // Preserve fields that might be missing
+  if (oldSection) {
+    newSection.year = newSection.year || oldSection.year;
+    newSection.maxStudentHours = newSection.maxStudentHours || oldSection.maxStudentHours;
+    newSection.instructionalMethod = newSection.instructionalMethod || oldSection.instructionalMethod;
+
+    if (oldSection.anticipatedSize !== undefined && newSection.anticipatedSize === undefined) {
+      newSection.anticipatedSize = oldSection.anticipatedSize;
+    }
+
+    if (oldSection.day10Used !== undefined && newSection.day10Used === undefined) {
+      newSection.day10Used = oldSection.day10Used;
+    }
+  }
+
+  if (oldCourse && oldCourse.courseLevel) {
+    newCourse.courseLevel = newCourse.courseLevel || oldCourse.courseLevel;
+  }
+
   // If the year, term, and semester length haven't changed...
   if (oldSection &&
     newSection.year === oldSection.year &&
@@ -380,31 +399,6 @@ export const handleOldMeeting = (
     newSection.termStart = oldSection.termStart;
     newSection.startDate = oldSection.startDate;
     newSection.endDate = oldSection.endDate;
-  }
-
-  // Preserve critical fields that might be missing from the form
-  if (oldSection) {
-    // Preserve these fields if they're not in the new section
-    if (oldSection.instructionalMethod && !newSection.instructionalMethod) {
-      newSection.instructionalMethod = oldSection.instructionalMethod;
-    }
-    if (oldSection.year && !newSection.year) {
-      newSection.year = oldSection.year;
-    }
-    if (oldSection.anticipatedSize !== undefined && newSection.anticipatedSize === undefined) {
-      newSection.anticipatedSize = oldSection.anticipatedSize;
-    }
-    if (oldSection.day10Used !== undefined && newSection.day10Used === undefined) {
-      newSection.day10Used = oldSection.day10Used;
-    }
-    if (oldSection.maxStudentHours !== undefined && newSection.maxStudentHours === undefined) {
-      newSection.maxStudentHours = oldSection.maxStudentHours;
-    }
-  }
-
-  // Copy courseLevel from old course to new course
-  if (oldCourse && oldCourse.courseLevel && !newCourse.courseLevel) {
-    newCourse.courseLevel = oldCourse.courseLevel;
   }
 
   // If the user pressed 'update' rather than 'add'...
@@ -436,9 +430,6 @@ export const handleOldMeeting = (
       const updatedSection = updateIdentifyingSectionInfo(oldSection, newSection);
       updateNonIdentifyingSectionInfo(updatedSection, newSection);
 
-      // Additional protection for courseLevel which is a course property, not a section property
-      updatedCourse.courseLevel = oldCourse.courseLevel || newCourse.courseLevel;
-
       schedule.courses[courseIndex] = updatedCourse;
       updatedCourse.sections[sectionIndex] = updatedSection;
 
@@ -448,6 +439,12 @@ export const handleOldMeeting = (
         if (meetingIndex >= 0) {
           updatedSection.meetings.splice(meetingIndex, 1);
         }
+
+        // Add the new meeting from newSection to the updatedSection
+        if (newSection.meetings && newSection.meetings.length > 0) {
+          updatedSection.meetings.push(...newSection.meetings);
+        }
+
         // If section has no meetings left, remove it and check if the course is empty
         if (updatedSection.meetings.length === 0) {
           updatedCourse.sections.splice(sectionIndex, 1);

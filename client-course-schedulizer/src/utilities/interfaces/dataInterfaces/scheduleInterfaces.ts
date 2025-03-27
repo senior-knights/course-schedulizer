@@ -55,6 +55,7 @@ export const updateNonIdentifyingCourseInfo = (oldCourse: Course, newCourse: Cou
 export const updateIdentifyingCourseInfo = (oldCourse: Course, newCourse: Course): Course => {
   oldCourse.prefixes = newCourse.prefixes;
   oldCourse.number = newCourse.number;
+  oldCourse.courseLevel = newCourse.courseLevel ?? oldCourse.courseLevel;
   return oldCourse;
 };
 
@@ -131,8 +132,12 @@ export const updateIdentifyingSectionInfo = (oldSection: Section, newSection: Se
   oldSection.letter = newSection.letter;
   oldSection.term = newSection.term;
   oldSection.instructors = newSection.instructors;
-  oldSection.instructionalMethod = newSection.instructionalMethod;
-  oldSection.deliveryMode = newSection.deliveryMode;
+  oldSection.instructionalMethod = newSection.instructionalMethod ?? oldSection.instructionalMethod;
+  oldSection.deliveryMode = newSection.deliveryMode ?? oldSection.deliveryMode;
+  oldSection.year = newSection.year ?? oldSection.year;
+  oldSection.anticipatedSize = newSection.anticipatedSize ?? oldSection.anticipatedSize;
+  oldSection.day10Used = newSection.day10Used ?? oldSection.day10Used;
+  oldSection.maxStudentHours = newSection.maxStudentHours ?? oldSection.maxStudentHours;
   return oldSection;
 };
 
