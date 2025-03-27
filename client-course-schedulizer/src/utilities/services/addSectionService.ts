@@ -19,6 +19,7 @@ import {
   Term,
   updateIdentifyingCourseInfo,
   updateIdentifyingSectionInfo,
+  updateNonIdentifyingSectionInfo,
   Weekday,
 } from "utilities/interfaces";
 import { getLocationString } from "./scheduleService";
@@ -381,6 +382,31 @@ export const handleOldMeeting = (
     newSection.endDate = oldSection.endDate;
   }
 
+  // Preserve critical fields that might be missing from the form
+  if (oldSection) {
+    // Preserve these fields if they're not in the new section
+    if (oldSection.instructionalMethod && !newSection.instructionalMethod) {
+      newSection.instructionalMethod = oldSection.instructionalMethod;
+    }
+    if (oldSection.year && !newSection.year) {
+      newSection.year = oldSection.year;
+    }
+    if (oldSection.anticipatedSize !== undefined && newSection.anticipatedSize === undefined) {
+      newSection.anticipatedSize = oldSection.anticipatedSize;
+    }
+    if (oldSection.day10Used !== undefined && newSection.day10Used === undefined) {
+      newSection.day10Used = oldSection.day10Used;
+    }
+    if (oldSection.maxStudentHours !== undefined && newSection.maxStudentHours === undefined) {
+      newSection.maxStudentHours = oldSection.maxStudentHours;
+    }
+  }
+
+  // Copy courseLevel from old course to new course
+  if (oldCourse && oldCourse.courseLevel && !newCourse.courseLevel) {
+    newCourse.courseLevel = oldCourse.courseLevel;
+  }
+
   // If the user pressed 'update' rather than 'add'...
   if (removeOldMeeting && oldCourse && oldSection) {
     const courseIndex = schedule.courses.indexOf(oldCourse);
@@ -399,12 +425,19 @@ export const handleOldMeeting = (
       // Create new course with updated info
       schedule.courses.push({
         ...newCourse,
+        courseLevel: oldCourse.courseLevel || newCourse.courseLevel,
         sections: [newSection],
       });
     } else {
       // Update identifying Course fields which were changed
       const updatedCourse = updateIdentifyingCourseInfo(oldCourse, newCourse);
+
+      // Update both identifying and non-identifying fields of the section
       const updatedSection = updateIdentifyingSectionInfo(oldSection, newSection);
+      updateNonIdentifyingSectionInfo(updatedSection, newSection);
+
+      // Additional protection for courseLevel which is a course property, not a section property
+      updatedCourse.courseLevel = oldCourse.courseLevel || newCourse.courseLevel;
 
       schedule.courses[courseIndex] = updatedCourse;
       updatedCourse.sections[sectionIndex] = updatedSection;
