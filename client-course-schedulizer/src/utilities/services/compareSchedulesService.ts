@@ -41,6 +41,84 @@ interface FlattenedRow {
   year: number;
 }
 
+// Map of field names to display labels for formatting differences
+const FIELD_DISPLAY_LABELS: Record<string, string> = {
+  anticipatedSize: "Enrollment",
+  comments: "Comments",
+  courseLevel: "Course level",
+  day10Used: "Day 10 enrollment",
+  days: "Days",
+  deliveryMode: "Delivery mode",
+  duration: "Duration",
+  facultyHours: "Faculty hours",
+  instructionalMethod: "Instructional method",
+  instructors: "Instructor",
+  location: "Location",
+  maxStudentHours: "Max student hours",
+  prefix: "Prefix",
+  sectionLetter: "Section",
+  semesterLength: "Semester Length",
+  shortTitle: "Short title",
+  startTime: "Start time",
+  studentHours: "Student hours",
+  term: "Term",
+};
+
+// Map UI column names to FlattenedRow field names
+const COLUMN_MAPPINGS: Record<string, string> = {
+  department: "department",
+  prefix: "prefix",
+  number: "number",
+  sectionLetter: "sectionLetter",
+  instructors: "instructors",
+  term: "term",
+  semesterLength: "semesterLength",
+  days: "days",
+  startTime: "startTime",
+  duration: "duration",
+  location: "location",
+  facultyHours: "facultyHours",
+  studentHours: "studentHours",
+};
+
+// Excel export headers in desired order
+const EXCEL_HEADERS = [
+  "Department",
+  "AcademicYear",
+  "Term",
+  "TermPart",
+  "Prefix",
+  "CourseNumber",
+  "Section",
+  "Faculty",
+  "FacultyLoad",
+  "MinimumCredits",
+  "MaximumCredits",
+  "MeetingDays",
+  "StartTime",
+  "MeetingDuration",
+  "Classroom",
+  "ShortTitle",
+  "InstructionalMethod",
+  "CourseLevel",
+  "Group",
+  "DeliveryMode",
+  "Comment",
+  "Enrollment",
+  "EnrollmentDay10",
+  "Status",
+  "Differences",
+];
+
+/**
+ * Format a value for display in differences
+ */
+const formatValue = (val: any): string => {
+  if (val === undefined || val === null) return "none";
+  if (val === "") return "empty";
+  return String(val);
+};
+
 /**
  * Compares two schedules and returns the differences based on the selected columns
  */
@@ -65,6 +143,18 @@ export const compareSchedules = (
   const allKeys = [...new Set([...Object.keys(refGroups), ...Object.keys(compGroups)])];
 
   // Compare groups
+  return compareGroups(allKeys, refGroups, compGroups, columnsToCompare);
+};
+
+/**
+ * Compare groups of rows and generate comparison results
+ */
+const compareGroups = (
+  allKeys: string[],
+  refGroups: Record<string, FlattenedRow[]>,
+  compGroups: Record<string, FlattenedRow[]>,
+  columnsToCompare: string[],
+): ComparisonResult[] => {
   const results: ComparisonResult[] = [];
 
   allKeys.forEach((key) => {
@@ -90,84 +180,7 @@ export const compareSchedules = (
         });
       });
     } else {
-      // Both groups have rows, compare them in detail
-      // Track which reference rows have been matched
-      const matchedRefRows = new Set<string>();
-
-      // First pass: Process all rows from comparison schedule against reference
-      compGroup.forEach((compRow) => {
-        // Try to find an exact match
-        const exactMatch = refGroup.findIndex((refRow) => {
-          return (
-            refRow.department === compRow.department &&
-            refRow.prefix === compRow.prefix &&
-            refRow.number === compRow.number &&
-            refRow.sectionLetter === compRow.sectionLetter &&
-            refRow.instructors === compRow.instructors &&
-            refRow.term === compRow.term &&
-            refRow.semesterLength === compRow.semesterLength &&
-            refRow.days === compRow.days &&
-            refRow.startTime === compRow.startTime &&
-            refRow.duration === compRow.duration &&
-            refRow.location === compRow.location &&
-            refRow.facultyHours === compRow.facultyHours &&
-            refRow.studentHours === compRow.studentHours &&
-            refRow.maxStudentHours === compRow.maxStudentHours &&
-            refRow.shortTitle === compRow.shortTitle &&
-            refRow.instructionalMethod === compRow.instructionalMethod &&
-            refRow.courseLevel === compRow.courseLevel &&
-            refRow.deliveryMode === compRow.deliveryMode &&
-            refRow.comments === compRow.comments &&
-            refRow.anticipatedSize === compRow.anticipatedSize &&
-            refRow.day10Used === compRow.day10Used
-          );
-        });
-
-        if (exactMatch !== -1) {
-          // Found exact match - unchanged row
-          matchedRefRows.add(refGroup[exactMatch].id);
-          results.push({
-            differences: [],
-            row: compRow,
-            status: "unchanged",
-          });
-        } else {
-          // No exact match - look for best match to identify modifications
-          const differences = findRowDifferences(compRow, refGroup);
-          if (differences.length > 0 && differences[0] !== "New entry") {
-            // This is a modified row
-            // Find the reference row that was matched
-            const bestMatch = findBestMatch(compRow, refGroup);
-            if (bestMatch) {
-              matchedRefRows.add(bestMatch.id);
-            }
-
-            results.push({
-              differences,
-              row: compRow,
-              status: "modified",
-            });
-          } else {
-            // Truly new entry
-            results.push({
-              differences: ["New entry"],
-              row: compRow,
-              status: "added",
-            });
-          }
-        }
-      });
-
-      // Second pass: Check for reference rows that weren't matched (removed)
-      refGroup.forEach((refRow) => {
-        if (!matchedRefRows.has(refRow.id)) {
-          results.push({
-            differences: ["Entry removed"],
-            row: refRow,
-            status: "removed",
-          });
-        }
-      });
+      compareAndAddResults(refGroup, compGroup, results);
 
       // Add summary row with counts
       results.push({
@@ -186,6 +199,98 @@ export const compareSchedules = (
 };
 
 /**
+ * Compare two groups in detail and add the comparison results
+ */
+const compareAndAddResults = (
+  refGroup: FlattenedRow[],
+  compGroup: FlattenedRow[],
+  results: ComparisonResult[],
+): void => {
+  // Track which reference rows have been matched
+  const matchedRefRows = new Set<string>();
+
+  // First pass: Process all rows from comparison schedule against reference
+  compGroup.forEach((compRow) => {
+    // Try to find an exact match
+    const exactMatchIndex = findExactMatchIndex(compRow, refGroup);
+
+    if (exactMatchIndex !== -1) {
+      // Found exact match - unchanged row
+      matchedRefRows.add(refGroup[exactMatchIndex].id);
+      results.push({
+        differences: [],
+        row: compRow,
+        status: "unchanged",
+      });
+    } else {
+      // No exact match - look for best match to identify modifications
+      const differences = findRowDifferences(compRow, refGroup);
+      if (differences.length > 0 && differences[0] !== "New entry") {
+        // This is a modified row
+        // Find the reference row that was matched
+        const bestMatch = findBestMatch(compRow, refGroup);
+        if (bestMatch) {
+          matchedRefRows.add(bestMatch.id);
+        }
+
+        results.push({
+          differences,
+          row: compRow,
+          status: "modified",
+        });
+      } else {
+        // Truly new entry
+        results.push({
+          differences: ["New entry"],
+          row: compRow,
+          status: "added",
+        });
+      }
+    }
+  });
+
+  // Second pass: Check for reference rows that weren't matched (removed)
+  refGroup.forEach((refRow) => {
+    if (!matchedRefRows.has(refRow.id)) {
+      results.push({
+        differences: ["Entry removed"],
+        row: refRow,
+        status: "removed",
+      });
+    }
+  });
+};
+
+/**
+ * Find the index of an exact match in the reference group
+ */
+const findExactMatchIndex = (compRow: FlattenedRow, refGroup: FlattenedRow[]): number => {
+  return refGroup.findIndex(refRow => {
+    return refRow.department === compRow.department &&
+    refRow.prefix === compRow.prefix &&
+    refRow.number === compRow.number &&
+    refRow.sectionLetter === compRow.sectionLetter &&
+    refRow.instructors === compRow.instructors &&
+    refRow.term === compRow.term &&
+    refRow.semesterLength === compRow.semesterLength &&
+    refRow.days === compRow.days &&
+    refRow.startTime === compRow.startTime &&
+    refRow.duration === compRow.duration &&
+    refRow.location === compRow.location &&
+    refRow.facultyHours === compRow.facultyHours &&
+    refRow.studentHours === compRow.studentHours &&
+    refRow.maxStudentHours === compRow.maxStudentHours &&
+    refRow.shortTitle === compRow.shortTitle &&
+    refRow.instructionalMethod === compRow.instructionalMethod &&
+    refRow.courseLevel === compRow.courseLevel &&
+    refRow.deliveryMode === compRow.deliveryMode &&
+    refRow.comments === compRow.comments &&
+    refRow.anticipatedSize === compRow.anticipatedSize &&
+    refRow.day10Used === compRow.day10Used;
+  });
+};
+
+/**
  * Flattens a schedule into an array of rows for easier comparison
  */
 const flattenSchedule = (schedule: Schedule): FlattenedRow[] => {
@@ -195,63 +300,11 @@ const flattenSchedule = (schedule: Schedule): FlattenedRow[] => {
     course.sections.forEach((section) => {
       // Handle case with no meetings
       if (!section.meetings || section.meetings.length === 0) {
-        rows.push({
-          days: "",
-          department: course.department || "",
-          duration: "",
-          facultyHours: section.facultyHours || 0,
-          id: `${course.department}-${course.prefixes.join("/")}-${course.number}-${section.letter}`,
-          instructors: Array.isArray(section.instructors) ? section.instructors.join(", ") : "",
-          location: "",
-          number: course.number?.toString() || "",
-          prefix: Array.isArray(course.prefixes) ? course.prefixes.join("/") : "",
-          sectionLetter: section.letter || "",
-          semesterLength: section.semesterLength || "",
-          startTime: "",
-          studentHours: section.studentHours || 0,
-          term: typeof section.term === 'string' ? section.term : Array.isArray(section.term) ? section.term.join("/") : "",
-          year: typeof section.year === 'number' ? section.year : new Date().getFullYear(),
-          // Additional fields
-          maxStudentHours: section.maxStudentHours,
-          shortTitle: course.name,
-          instructionalMethod: section.instructionalMethod,
-          courseLevel: course.courseLevel,
-          deliveryMode: section.deliveryMode,
-          comments: section.comments,
-          anticipatedSize: section.anticipatedSize,
-          day10Used: section.day10Used,
-        });
+        rows.push(createFlattenedRow(course, section));
       } else {
         // With meetings, create a row for each meeting
         section.meetings.forEach((meeting) => {
-          rows.push({
-            days: meeting.days ? meeting.days.join("") : "",
-            department: course.department || "",
-            duration: meeting.duration?.toString() || "",
-            facultyHours: section.facultyHours || 0,
-            id: `${course.department}-${course.prefixes.join("/")}-${course.number}-${section.letter}-${meeting.days?.join("")}-${meeting.startTime}`,
-            instructors: Array.isArray(section.instructors) ? section.instructors.join(", ") : "",
-            location: meeting.location
-              ? `${meeting.location.building || ""} ${meeting.location.roomNumber || ""}`.trim()
-              : "",
-            number: course.number?.toString() || "",
-            prefix: Array.isArray(course.prefixes) ? course.prefixes.join("/") : "",
-            sectionLetter: section.letter || "",
-            semesterLength: section.semesterLength || "",
-            startTime: meeting.startTime || "",
-            studentHours: section.studentHours || 0,
-            term: typeof section.term === 'string' ? section.term : Array.isArray(section.term) ? section.term.join("/") : "",
-            year: typeof section.year === 'number' ? section.year : new Date().getFullYear(),
-            // Additional fields
-            maxStudentHours: section.maxStudentHours,
-            shortTitle: course.name,
-            instructionalMethod: section.instructionalMethod,
-            courseLevel: course.courseLevel,
-            deliveryMode: section.deliveryMode,
-            comments: section.comments,
-            anticipatedSize: section.anticipatedSize,
-            day10Used: section.day10Used,
-          });
+          rows.push(createFlattenedRowWithMeeting(course, section, meeting));
         });
       }
     });
@@ -261,26 +314,76 @@ const flattenSchedule = (schedule: Schedule): FlattenedRow[] => {
 };
 
 /**
+ * Creates a flattened row for a course section without a meeting
+ */
+const createFlattenedRow = (course: Course, section: Section): FlattenedRow => {
+  return {
+    days: "",
+    department: course.department || "",
+    duration: "",
+    facultyHours: section.facultyHours || 0,
+    id: `${course.department}-${course.prefixes.join("/")}-${course.number}-${section.letter}`,
+    instructors: Array.isArray(section.instructors) ? section.instructors.join(", ") : "",
+    location: "",
+    number: course.number?.toString() || "",
+    prefix: Array.isArray(course.prefixes) ? course.prefixes.join("/") : "",
+    sectionLetter: section.letter || "",
+    semesterLength: section.semesterLength || "",
+    startTime: "",
+    studentHours: section.studentHours || 0,
+    term: typeof section.term === 'string' ? section.term : Array.isArray(section.term) ? section.term.join("/") : "",
+    year: typeof section.year === 'number' ? section.year : new Date().getFullYear(),
+    // Additional fields
+    maxStudentHours: section.maxStudentHours,
+    shortTitle: course.name,
+    instructionalMethod: section.instructionalMethod,
+    courseLevel: course.courseLevel,
+    deliveryMode: section.deliveryMode,
+    comments: section.comments,
+    anticipatedSize: section.anticipatedSize,
+    day10Used: section.day10Used,
+  };
+};
+
+/**
+ * Creates a flattened row for a course section with a meeting
+ */
+const createFlattenedRowWithMeeting = (course: Course, section: Section, meeting: Meeting): FlattenedRow => {
+  return {
+    days: meeting.days ? meeting.days.join("") : "",
+    department: course.department || "",
+    duration: meeting.duration?.toString() || "",
+    facultyHours: section.facultyHours || 0,
+    id: `${course.department}-${course.prefixes.join("/")}-${course.number}-${section.letter}-${meeting.days?.join("")}-${meeting.startTime}`,
+    instructors: Array.isArray(section.instructors) ? section.instructors.join(", ") : "",
+    location: meeting.location
+      ? `${meeting.location.building || ""} ${meeting.location.roomNumber || ""}`.trim()
+      : "",
+    number: course.number?.toString() || "",
+    prefix: Array.isArray(course.prefixes) ? course.prefixes.join("/") : "",
+    sectionLetter: section.letter || "",
+    semesterLength: section.semesterLength || "",
+    startTime: meeting.startTime || "",
+    studentHours: section.studentHours || 0,
+    term: typeof section.term === 'string' ? section.term : Array.isArray(section.term) ? section.term.join("/") : "",
+    year: typeof section.year === 'number' ? section.year : new Date().getFullYear(),
+    // Additional fields
+    maxStudentHours: section.maxStudentHours,
+    shortTitle: course.name,
+    instructionalMethod: section.instructionalMethod,
+    courseLevel: course.courseLevel,
+    deliveryMode: section.deliveryMode,
+    comments: section.comments,
+    anticipatedSize: section.anticipatedSize,
+    day10Used: section.day10Used,
+  };
+};
+
+/**
  * Maps UI column names to FlattenedRow field names
  */
 const mapColumnNames = (column: string): string => {
-  const columnMappings: { [key: string]: string } = {
-    department: "department",
-    prefix: "prefix",
-    number: "number",
-    sectionLetter: "sectionLetter",
-    instructors: "instructors",
-    term: "term",
-    semesterLength: "semesterLength",
-    days: "days",
-    startTime: "startTime",
-    duration: "duration",
-    location: "location",
-    facultyHours: "facultyHours",
-    studentHours: "studentHours",
-  };
-
-  return columnMappings[column] || column;
+  return COLUMN_MAPPINGS[column] || column;
 };
 
 /**
@@ -313,51 +416,6 @@ const groupRowsByColumns = (
 };
 
 /**
- * Checks if two groups of rows are equal
- */
-const areGroupsEqual = (group1: FlattenedRow[], group2: FlattenedRow[]): boolean => {
-  if (group1.length !== group2.length) {
-    return false;
-  }
-
-  // Do a more thorough comparison of each row
-  // For each row in group1, try to find an exact match in group2
-  for (const row1 of group1) {
-    const exactMatch = group2.some((row2) => {
-      return (
-        row1.department === row2.department &&
-        row1.prefix === row2.prefix &&
-        row1.number === row2.number &&
-        row1.sectionLetter === row2.sectionLetter &&
-        row1.instructors === row2.instructors &&
-        row1.term === row2.term &&
-        row1.semesterLength === row2.semesterLength &&
-        row1.days === row2.days &&
-        row1.startTime === row2.startTime &&
-        row1.duration === row2.duration &&
-        row1.location === row2.location &&
-        row1.facultyHours === row2.facultyHours &&
-        row1.studentHours === row2.studentHours &&
-        row1.maxStudentHours === row2.maxStudentHours &&
-        row1.shortTitle === row2.shortTitle &&
-        row1.instructionalMethod === row2.instructionalMethod &&
-        row1.courseLevel === row2.courseLevel &&
-        row1.deliveryMode === row2.deliveryMode &&
-        row1.comments === row2.comments &&
-        row1.anticipatedSize === row2.anticipatedSize &&
-        row1.day10Used === row2.day10Used
-      );
-    });
-
-    if (!exactMatch) {
-      return false;
-    }
-  }
-
-  return true;
-};
-
-/**
  * Finds differences between a row and a group of rows
  */
 const findRowDifferences = (row: FlattenedRow, group: FlattenedRow[]): string[] => {
@@ -376,53 +434,32 @@ const findRowDifferences = (row: FlattenedRow, group: FlattenedRow[]): string[] 
 
   // If we found a primary match, check what fields are different
   if (primaryMatch) {
-    // Format values for display, handling undefined/null values properly
-    const formatValue = (val: any): string => {
-      if (val === undefined || val === null) return "none";
-      if (val === "") return "empty";
-      return String(val);
-    };
-
     // Helper to add difference if values are different
-    const addDiffIfChanged = (field: string, label: string, ref: any, comp: any) => {
+    const addDiffIfChanged = (field: keyof FlattenedRow, ref: any, comp: any) => {
       if (ref !== comp) {
+        const label = FIELD_DISPLAY_LABELS[field] || field;
         differences.push(`${label}: ${formatValue(ref)} → ${formatValue(comp)}`);
       }
     };
 
     // Compare all fields that aren't part of the primary key
-    addDiffIfChanged("instructors", "Instructor", primaryMatch.instructors, row.instructors);
-    addDiffIfChanged("term", "Term", primaryMatch.term, row.term);
-    addDiffIfChanged("semesterLength", "Semester Length", primaryMatch.semesterLength, row.semesterLength);
-    addDiffIfChanged("days", "Days", primaryMatch.days, row.days);
-    addDiffIfChanged("startTime", "Start time", primaryMatch.startTime, row.startTime);
-    addDiffIfChanged("duration", "Duration", primaryMatch.duration, row.duration);
-    addDiffIfChanged("location", "Location", primaryMatch.location, row.location);
-    addDiffIfChanged("facultyHours", "Faculty hours", primaryMatch.facultyHours, row.facultyHours);
-    addDiffIfChanged("studentHours", "Student hours", primaryMatch.studentHours, row.studentHours);
-    addDiffIfChanged(
-      "maxStudentHours",
-      "Max student hours",
-      primaryMatch.maxStudentHours,
-      row.maxStudentHours,
-    );
-    addDiffIfChanged("shortTitle", "Short title", primaryMatch.shortTitle, row.shortTitle);
-    addDiffIfChanged(
-      "instructionalMethod",
-      "Instructional method",
-      primaryMatch.instructionalMethod,
-      row.instructionalMethod,
-    );
-    addDiffIfChanged("courseLevel", "Course level", primaryMatch.courseLevel, row.courseLevel);
-    addDiffIfChanged("deliveryMode", "Delivery mode", primaryMatch.deliveryMode, row.deliveryMode);
-    addDiffIfChanged("comments", "Comments", primaryMatch.comments, row.comments);
-    addDiffIfChanged(
-      "anticipatedSize",
-      "Enrollment",
-      primaryMatch.anticipatedSize,
-      row.anticipatedSize,
-    );
-    addDiffIfChanged("day10Used", "Day 10 enrollment", primaryMatch.day10Used, row.day10Used);
+    addDiffIfChanged("instructors", primaryMatch.instructors, row.instructors);
+    addDiffIfChanged("term", primaryMatch.term, row.term);
+    addDiffIfChanged("semesterLength", primaryMatch.semesterLength, row.semesterLength);
+    addDiffIfChanged("days", primaryMatch.days, row.days);
+    addDiffIfChanged("startTime", primaryMatch.startTime, row.startTime);
+    addDiffIfChanged("duration", primaryMatch.duration, row.duration);
+    addDiffIfChanged("location", primaryMatch.location, row.location);
+    addDiffIfChanged("facultyHours", primaryMatch.facultyHours, row.facultyHours);
+    addDiffIfChanged("studentHours", primaryMatch.studentHours, row.studentHours);
+    addDiffIfChanged("maxStudentHours", primaryMatch.maxStudentHours, row.maxStudentHours);
+    addDiffIfChanged("shortTitle", primaryMatch.shortTitle, row.shortTitle);
+    addDiffIfChanged("instructionalMethod", primaryMatch.instructionalMethod, row.instructionalMethod);
+    addDiffIfChanged("courseLevel", primaryMatch.courseLevel, row.courseLevel);
+    addDiffIfChanged("deliveryMode", primaryMatch.deliveryMode, row.deliveryMode);
+    addDiffIfChanged("comments", primaryMatch.comments, row.comments);
+    addDiffIfChanged("anticipatedSize", primaryMatch.anticipatedSize, row.anticipatedSize);
+    addDiffIfChanged("day10Used", primaryMatch.day10Used, row.day10Used);
 
     // If no specific differences were found but rows aren't exactly the same,
     // add a general message
@@ -441,13 +478,6 @@ const findRowDifferences = (row: FlattenedRow, group: FlattenedRow[]): string[] 
     });
 
     if (secondaryMatch) {
-      // Format values for display
-      const formatValue = (val: any): string => {
-        if (val === undefined || val === null) return "none";
-        if (val === "") return "empty";
-        return String(val);
-      };
-
       // Start with the section identifier change
       differences.push(`Section changed: ${formatValue(secondaryMatch.sectionLetter)} → ${formatValue(row.sectionLetter)}`);
 
@@ -546,10 +576,7 @@ const summarizeGroup = (
  */
 const truncateSheetName = (sheetName: string): string => {
   const MAX_SHEET_NAME_LENGTH = 31;
-  if (sheetName.length <= MAX_SHEET_NAME_LENGTH) {
-    return sheetName;
-  }
-  return sheetName.substring(0, MAX_SHEET_NAME_LENGTH);
+  return sheetName.length <= MAX_SHEET_NAME_LENGTH ? sheetName : sheetName.substring(0, MAX_SHEET_NAME_LENGTH);
 };
 
 /**
@@ -574,74 +601,43 @@ export const exportComparisonToExcel = (
   }
 
   // Format data for the comparison sheet using the same structure as useExportExcel
-  const comparisonData = comparison.map((result) => {
-    const flatRow = result.row;
+  const comparisonData = comparison
+    .filter(result => { return result.count === undefined; }) // Exclude summary rows
+    .map((result) => {
+      const flatRow = result.row;
 
-    // Only include rows that aren't summary rows (with counts)
-    if (result.count !== undefined) {
-      return null;
-    }
+      return {
+        // Main identification fields and other fields matching useExportExcel order
+        Department: flatRow.department || "",
+        AcademicYear: flatRow.year || "",
+        Term: flatRow.term || "",
+        TermPart: flatRow.semesterLength || "",
+        Prefix: flatRow.prefix || "",
+        CourseNumber: flatRow.number || "",
+        Section: flatRow.sectionLetter || "",
+        Faculty: flatRow.instructors || "",
+        FacultyLoad: flatRow.facultyHours || "",
+        MinimumCredits: flatRow.studentHours || "",
+        MaximumCredits: flatRow.maxStudentHours || "",
+        MeetingDays: flatRow.days || "",
+        StartTime: flatRow.startTime || "",
+        MeetingDuration: flatRow.duration || "",
+        Classroom: flatRow.location || "",
+        ShortTitle: flatRow.shortTitle || "",
+        InstructionalMethod: flatRow.instructionalMethod || "",
+        CourseLevel: flatRow.courseLevel || "",
+        Group: "", // This field isn't in Course type, leave blank
+        DeliveryMode: flatRow.deliveryMode || "",
+        Comment: flatRow.comments || "",
+        Enrollment: flatRow.anticipatedSize || "",
+        EnrollmentDay10: flatRow.day10Used || "",
+        // Status and Differences at the end
+        Status: result.status || "",
+        Differences: result.differences.join("; ") || "",
+      };
+    });
 
-    return {
-      // Main identification fields and other fields matching useExportExcel order
-      Department: flatRow.department || "",
-      AcademicYear: flatRow.year || "",
-      Term: flatRow.term || "",
-      TermPart: flatRow.semesterLength || "",
-      Prefix: flatRow.prefix || "",
-      CourseNumber: flatRow.number || "",
-      Section: flatRow.sectionLetter || "",
-      Faculty: flatRow.instructors || "",
-      FacultyLoad: flatRow.facultyHours || "",
-      MinimumCredits: flatRow.studentHours || "",
-      MaximumCredits: flatRow.maxStudentHours || "",
-      MeetingDays: flatRow.days || "",
-      StartTime: flatRow.startTime || "",
-      MeetingDuration: flatRow.duration || "",
-      Classroom: flatRow.location || "",
-      ShortTitle: flatRow.shortTitle || "",
-      InstructionalMethod: flatRow.instructionalMethod || "",
-      CourseLevel: flatRow.courseLevel || "",
-      Group: "", // This field isn't in Course type, leave blank
-      DeliveryMode: flatRow.deliveryMode || "",
-      Comment: flatRow.comments || "",
-      Enrollment: flatRow.anticipatedSize || "",
-      EnrollmentDay10: flatRow.day10Used || "",
-      // Status and Differences at the end
-      Status: result.status || "",
-      Differences: result.differences.join("; ") || "",
-    };
-  }).filter(Boolean);
-
-  const headers = [
-    "Department",
-    "AcademicYear",
-    "Term",
-    "TermPart",
-    "Prefix",
-    "CourseNumber",
-    "Section",
-    "Faculty",
-    "FacultyLoad",
-    "MinimumCredits",
-    "MaximumCredits",
-    "MeetingDays",
-    "StartTime",
-    "MeetingDuration",
-    "Classroom",
-    "ShortTitle",
-    "InstructionalMethod",
-    "CourseLevel",
-    "Group",
-    "DeliveryMode",
-    "Comment",
-    "Enrollment",
-    "EnrollmentDay10",
-    "Status",
-    "Differences",
-  ];
-
-  const comparisonWs = XLSX.utils.json_to_sheet(comparisonData, { header: headers });
+  const comparisonWs = XLSX.utils.json_to_sheet(comparisonData, { header: EXCEL_HEADERS });
 
   // Apply styling to highlight differences
   applyExcelStylingByStatus(comparisonWs, comparisonData);
