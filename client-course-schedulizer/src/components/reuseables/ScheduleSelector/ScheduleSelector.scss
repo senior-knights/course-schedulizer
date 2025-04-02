@@ -1,7 +1,68 @@
 @import "../../../styles/constants.scss";
 
+.schedule-selector-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.toggle-button {
+  display: flex;
+  align-items: center;
+  border-radius: 0;
+  padding: 5px 12px;
+  background-color: #f5f5f5;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+
+  .toggle-label {
+    margin-left: 8px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+
 .schedule-selector-container {
-  margin: $spacing;
-  padding: $spacing;
-  max-width: 300px;
+  position: absolute;
+  top: auto;
+  bottom: 45px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  width: 280px;
+  z-index: 1000;
+  padding: $spacing * 1.5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease-in-out;
+
+  &.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .schedule-selector-title {
+    margin-bottom: $spacing;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.7);
+  }
+}
+
+.schedules-chip-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  .active-schedule {
+    color: white;
+    font-weight: 500;
+  }
+
+  .inactive-schedule {
+    border: 1px solid rgba(0, 0, 0, 0.23);
+  }
 }

@@ -17,6 +17,29 @@
   // TODO: there is slight squishing when scrolling down before sticky headers get picked up
   margin-bottom: 1.5 * $spacing;
   min-height: 10vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 0;
+  margin-bottom: $spacing;
+
+  .toolbar-left, .toolbar-center, .toolbar-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .toolbar-center {
+    flex-grow: 1;
+    justify-content: center;
+    position: relative;
+  }
+
+  .schedule-selector-position {
+    position: relative;
+    z-index: 1000;
+    margin: 0 $spacing;
+  }
 }
 
 .toolbar-left {

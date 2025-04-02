@@ -17,7 +17,9 @@ export const ScheduleToolbar = () => {
       </div>
       <div className="toolbar-center">
         {fileUrl ? `Imported URL: ${fileUrl}` : ""}
-        <ScheduleSelector />
+        <div className="schedule-selector-position">
+          <ScheduleSelector />
+        </div>
       </div>
       <div className="toolbar-right">
         <SemesterSelector />
