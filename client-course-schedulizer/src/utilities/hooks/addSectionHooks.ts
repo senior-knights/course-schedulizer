@@ -36,7 +36,7 @@ interface AddToScheduleParams {
 
 export const useAddSectionToSchedule = () => {
   const {
-    appState: { schedule, selectedTerm, schedulizerTab },
+    appState: { schedule, selectedTerm, schedulizerTab, schedules, activeScheduleIds },
     appDispatch,
     setIsCSVLoading,
   } = useContext(AppContext);
@@ -88,9 +88,34 @@ export const useAddSectionToSchedule = () => {
     newSection.meetings.forEach((meeting) => {
       meeting.isNonstandardTime = ! isStandardTime(meeting)
     })
+
+    // First, update the main working schedule
     handleOldMeeting(oldData, newSection, newCourse, removeOldMeeting, schedule);
     insertSectionCourse(schedule, newSection, newCourse);
-    appDispatch({ payload: { schedule }, type: "setScheduleData" });
+
+    // Create a copy of the schedules array
+    const updatedSchedules = [...schedules];
+
+    // Find which schedule is currently being edited by matching it with schedule
+    // In most cases, this will be one of the active schedules
+    for (let i = 0; i < updatedSchedules.length; i++) {
+      // If this is the schedule we're currently working with
+      if (activeScheduleIds.includes(i)) {
+        // Preserve the schedule name when updating
+        const scheduleName = updatedSchedules[i].name;
+        updatedSchedules[i] = { ...schedule, name: scheduleName };
+      }
+    }
+
+    // Dispatch with all schedule state preserved
+    appDispatch({
+      payload: {
+        activeScheduleIds,
+        schedule,
+        schedules: updatedSchedules,
+      },
+      type: "setScheduleData",
+    });
   };
 
   return { addNonTeachingLoadToSchedule, addSectionToSchedule };
