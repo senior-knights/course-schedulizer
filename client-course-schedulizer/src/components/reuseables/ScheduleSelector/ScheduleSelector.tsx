@@ -46,6 +46,9 @@ export const ScheduleSelector = () => {
         </FormLabel>
         <FormGroup>
           {schedules.map((schedule, index) => {
+            // Get schedule name from file name or use default
+            const scheduleName = schedule.name || `Schedule ${index + 1}`;
+
             return (
               <FormControlLabel
                 control={
@@ -58,7 +61,7 @@ export const ScheduleSelector = () => {
                   />
                 }
                 key={`schedule-${index}`}
-                label={`Schedule ${index + 1}`}
+                label={scheduleName}
               />
             );
           })}

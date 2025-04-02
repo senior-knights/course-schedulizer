@@ -27,6 +27,7 @@ export const useImportFile = (isAdditiveImport: boolean) => {
     const file: File | null = e.target.files && e.target.files[0];
     const fileNameTokens = file?.name.split(".") || [];
     const fileType = fileNameTokens[fileNameTokens.length - 1];
+    const fileName = file?.name || "";
     const reader = new FileReader();
     let scheduleJSON: Schedule;
 
@@ -68,6 +69,11 @@ export const useImportFile = (isAdditiveImport: boolean) => {
         scheduleString = "";
       }
       scheduleJSON = csvStringToSchedule(scheduleString);
+
+      // Set the schedule name to the file name
+      if (fileName) {
+        scheduleJSON.name = fileName;
+      }
 
       !isAdditiveImport && appDispatch({ payload: { fileUrl: "" }, type: "setFileUrl" });
 

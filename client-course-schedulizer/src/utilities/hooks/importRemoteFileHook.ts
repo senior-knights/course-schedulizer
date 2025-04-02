@@ -105,6 +105,12 @@ export const loadRemoteCSV = (url: string, csvIndex: number, appContext: AppCont
         appDispatch({ payload: { fileUrl: csvUrl }, type: "setFileUrl" });
         if (result) {
           const newSchedule = csvStringToSchedule(result);
+
+          // Try to extract filename from URL
+          const urlParts = csvUrl.split('/');
+          const fileName = urlParts[urlParts.length - 1] || csvUrl;
+          newSchedule.name = fileName;
+
           // Use the new schedule system
           await appDispatch({
             payload: {
