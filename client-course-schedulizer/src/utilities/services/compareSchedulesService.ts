@@ -90,28 +90,84 @@ export const compareSchedules = (
         });
       });
     } else {
-      // Both groups have rows, compare them
-      // If there are differences between the groups, mark as modified
-      if (!areGroupsEqual(refGroup, compGroup)) {
-        // Add all rows from the comparison schedule
-        compGroup.forEach((row) => {
-          const differences = findRowDifferences(row, refGroup);
-          results.push({
-            differences,
-            row: row,
-            status: differences.length > 0 ? "modified" : "unchanged",
-          });
+      // Both groups have rows, compare them in detail
+      // Track which reference rows have been matched
+      const matchedRefRows = new Set<string>();
+
+      // First pass: Process all rows from comparison schedule against reference
+      compGroup.forEach((compRow) => {
+        // Try to find an exact match
+        const exactMatch = refGroup.findIndex((refRow) => {
+          return (
+            refRow.department === compRow.department &&
+            refRow.prefix === compRow.prefix &&
+            refRow.number === compRow.number &&
+            refRow.sectionLetter === compRow.sectionLetter &&
+            refRow.instructors === compRow.instructors &&
+            refRow.term === compRow.term &&
+            refRow.semesterLength === compRow.semesterLength &&
+            refRow.days === compRow.days &&
+            refRow.startTime === compRow.startTime &&
+            refRow.duration === compRow.duration &&
+            refRow.location === compRow.location &&
+            refRow.facultyHours === compRow.facultyHours &&
+            refRow.studentHours === compRow.studentHours &&
+            refRow.maxStudentHours === compRow.maxStudentHours &&
+            refRow.shortTitle === compRow.shortTitle &&
+            refRow.instructionalMethod === compRow.instructionalMethod &&
+            refRow.courseLevel === compRow.courseLevel &&
+            refRow.deliveryMode === compRow.deliveryMode &&
+            refRow.comments === compRow.comments &&
+            refRow.anticipatedSize === compRow.anticipatedSize &&
+            refRow.day10Used === compRow.day10Used
+          );
         });
-      } else {
-        // Groups are equal, mark as unchanged
-        compGroup.forEach((row) => {
+
+        if (exactMatch !== -1) {
+          // Found exact match - unchanged row
+          matchedRefRows.add(refGroup[exactMatch].id);
           results.push({
             differences: [],
-            row: row,
+            row: compRow,
             status: "unchanged",
           });
-        });
-      }
+        } else {
+          // No exact match - look for best match to identify modifications
+          const differences = findRowDifferences(compRow, refGroup);
+          if (differences.length > 0 && differences[0] !== "New entry") {
+            // This is a modified row
+            // Find the reference row that was matched
+            const bestMatch = findBestMatch(compRow, refGroup);
+            if (bestMatch) {
+              matchedRefRows.add(bestMatch.id);
+            }
+
+            results.push({
+              differences,
+              row: compRow,
+              status: "modified",
+            });
+          } else {
+            // Truly new entry
+            results.push({
+              differences: ["New entry"],
+              row: compRow,
+              status: "added",
+            });
+          }
+        }
+      });
+
+      // Second pass: Check for reference rows that weren't matched (removed)
+      refGroup.forEach((refRow) => {
+        if (!matchedRefRows.has(refRow.id)) {
+          results.push({
+            differences: ["Entry removed"],
+            row: refRow,
+            status: "removed",
+          });
+        }
+      });
 
       // Add summary row with counts
       results.push({
@@ -264,8 +320,40 @@ const areGroupsEqual = (group1: FlattenedRow[], group2: FlattenedRow[]): boolean
     return false;
   }
 
-  // This is a simplistic approach - we're just checking if the groups have the same number of elements
-  // For more detailed comparison, we'd need to check all fields of all rows
+  // Do a more thorough comparison of each row
+  // For each row in group1, try to find an exact match in group2
+  for (const row1 of group1) {
+    const exactMatch = group2.some((row2) => {
+      return (
+        row1.department === row2.department &&
+        row1.prefix === row2.prefix &&
+        row1.number === row2.number &&
+        row1.sectionLetter === row2.sectionLetter &&
+        row1.instructors === row2.instructors &&
+        row1.term === row2.term &&
+        row1.semesterLength === row2.semesterLength &&
+        row1.days === row2.days &&
+        row1.startTime === row2.startTime &&
+        row1.duration === row2.duration &&
+        row1.location === row2.location &&
+        row1.facultyHours === row2.facultyHours &&
+        row1.studentHours === row2.studentHours &&
+        row1.maxStudentHours === row2.maxStudentHours &&
+        row1.shortTitle === row2.shortTitle &&
+        row1.instructionalMethod === row2.instructionalMethod &&
+        row1.courseLevel === row2.courseLevel &&
+        row1.deliveryMode === row2.deliveryMode &&
+        row1.comments === row2.comments &&
+        row1.anticipatedSize === row2.anticipatedSize &&
+        row1.day10Used === row2.day10Used
+      );
+    });
+
+    if (!exactMatch) {
+      return false;
+    }
+  }
+
   return true;
 };
 
@@ -275,84 +363,109 @@ const areGroupsEqual = (group1: FlattenedRow[], group2: FlattenedRow[]): boolean
 const findRowDifferences = (row: FlattenedRow, group: FlattenedRow[]): string[] => {
   const differences: string[] = [];
 
-  // Check if there's an exact match for this row in the group
-  const match = group.find((r) => {
+  // First, try to find a match based on department, prefix, number, and section
+  // These are the primary keys that identify the "same" course
+  const primaryMatch = group.find((r) => {
     return (
       r.department === row.department &&
       r.prefix === row.prefix &&
       r.number === row.number &&
-      r.sectionLetter === row.sectionLetter &&
-      r.instructors === row.instructors &&
-      r.term === row.term &&
-      r.semesterLength === row.semesterLength &&
-      r.days === row.days &&
-      r.startTime === row.startTime &&
-      r.duration === row.duration &&
-      r.location === row.location &&
-      r.facultyHours === row.facultyHours &&
-      r.studentHours === row.studentHours &&
-      r.maxStudentHours === row.maxStudentHours &&
-      r.shortTitle === row.shortTitle &&
-      r.instructionalMethod === row.instructionalMethod &&
-      r.courseLevel === row.courseLevel &&
-      r.deliveryMode === row.deliveryMode &&
-      r.comments === row.comments &&
-      r.anticipatedSize === row.anticipatedSize &&
-      r.day10Used === row.day10Used
+      r.sectionLetter === row.sectionLetter
     );
   });
 
-  if (!match) {
-    // No exact match, find the specific differences
-    const bestMatch = findBestMatch(row, group);
-    if (bestMatch) {
-      if (bestMatch.instructors !== row.instructors) {
-        differences.push(`Instructor changed: ${bestMatch.instructors} → ${row.instructors}`);
+  // If we found a primary match, check what fields are different
+  if (primaryMatch) {
+    // Format values for display, handling undefined/null values properly
+    const formatValue = (val: any): string => {
+      if (val === undefined || val === null) return "none";
+      if (val === "") return "empty";
+      return String(val);
+    };
+
+    // Helper to add difference if values are different
+    const addDiffIfChanged = (field: string, label: string, ref: any, comp: any) => {
+      if (ref !== comp) {
+        differences.push(`${label}: ${formatValue(ref)} → ${formatValue(comp)}`);
       }
-      if (bestMatch.days !== row.days) {
-        differences.push(`Days changed: ${bestMatch.days} → ${row.days}`);
+    };
+
+    // Compare all fields that aren't part of the primary key
+    addDiffIfChanged("instructors", "Instructor", primaryMatch.instructors, row.instructors);
+    addDiffIfChanged("term", "Term", primaryMatch.term, row.term);
+    addDiffIfChanged("semesterLength", "Semester Length", primaryMatch.semesterLength, row.semesterLength);
+    addDiffIfChanged("days", "Days", primaryMatch.days, row.days);
+    addDiffIfChanged("startTime", "Start time", primaryMatch.startTime, row.startTime);
+    addDiffIfChanged("duration", "Duration", primaryMatch.duration, row.duration);
+    addDiffIfChanged("location", "Location", primaryMatch.location, row.location);
+    addDiffIfChanged("facultyHours", "Faculty hours", primaryMatch.facultyHours, row.facultyHours);
+    addDiffIfChanged("studentHours", "Student hours", primaryMatch.studentHours, row.studentHours);
+    addDiffIfChanged(
+      "maxStudentHours",
+      "Max student hours",
+      primaryMatch.maxStudentHours,
+      row.maxStudentHours,
+    );
+    addDiffIfChanged("shortTitle", "Short title", primaryMatch.shortTitle, row.shortTitle);
+    addDiffIfChanged(
+      "instructionalMethod",
+      "Instructional method",
+      primaryMatch.instructionalMethod,
+      row.instructionalMethod,
+    );
+    addDiffIfChanged("courseLevel", "Course level", primaryMatch.courseLevel, row.courseLevel);
+    addDiffIfChanged("deliveryMode", "Delivery mode", primaryMatch.deliveryMode, row.deliveryMode);
+    addDiffIfChanged("comments", "Comments", primaryMatch.comments, row.comments);
+    addDiffIfChanged(
+      "anticipatedSize",
+      "Enrollment",
+      primaryMatch.anticipatedSize,
+      row.anticipatedSize,
+    );
+    addDiffIfChanged("day10Used", "Day 10 enrollment", primaryMatch.day10Used, row.day10Used);
+
+    // If no specific differences were found but rows aren't exactly the same,
+    // add a general message
+    if (differences.length === 0) {
+      // This shouldn't happen often since we check all fields, but just in case
+      differences.push("Modified (details unknown)");
+    }
+  } else {
+    // Try a secondary match with less strict criteria
+    const secondaryMatch = group.find((r) => {
+      // Match on just department and number (partial match)
+      return (
+        r.department === row.department &&
+        r.number === row.number
+      );
+    });
+
+    if (secondaryMatch) {
+      // Format values for display
+      const formatValue = (val: any): string => {
+        if (val === undefined || val === null) return "none";
+        if (val === "") return "empty";
+        return String(val);
+      };
+
+      // Start with the section identifier change
+      differences.push(`Section changed: ${formatValue(secondaryMatch.sectionLetter)} → ${formatValue(row.sectionLetter)}`);
+
+      // Add prefix change if different
+      if (secondaryMatch.prefix !== row.prefix) {
+        differences.push(`Prefix changed: ${formatValue(secondaryMatch.prefix)} → ${formatValue(row.prefix)}`);
       }
-      if (bestMatch.startTime !== row.startTime) {
-        differences.push(`Start time changed: ${bestMatch.startTime} → ${row.startTime}`);
+
+      // Add other key differences
+      if (secondaryMatch.instructors !== row.instructors) {
+        differences.push(`Instructor changed: ${formatValue(secondaryMatch.instructors)} → ${formatValue(row.instructors)}`);
       }
-      if (bestMatch.duration !== row.duration) {
-        differences.push(`Duration changed: ${bestMatch.duration} → ${row.duration}`);
-      }
-      if (bestMatch.location !== row.location) {
-        differences.push(`Location changed: ${bestMatch.location} → ${row.location}`);
-      }
-      if (bestMatch.facultyHours !== row.facultyHours) {
-        differences.push(`Faculty hours changed: ${bestMatch.facultyHours} → ${row.facultyHours}`);
-      }
-      if (bestMatch.studentHours !== row.studentHours) {
-        differences.push(`Student hours changed: ${bestMatch.studentHours} → ${row.studentHours}`);
-      }
-      if (bestMatch.maxStudentHours !== row.maxStudentHours) {
-        differences.push(`Max student hours changed: ${bestMatch.maxStudentHours} → ${row.maxStudentHours}`);
-      }
-      if (bestMatch.shortTitle !== row.shortTitle) {
-        differences.push(`Short title changed: ${bestMatch.shortTitle} → ${row.shortTitle}`);
-      }
-      if (bestMatch.instructionalMethod !== row.instructionalMethod) {
-        differences.push(`Instructional method changed: ${bestMatch.instructionalMethod} → ${row.instructionalMethod}`);
-      }
-      if (bestMatch.courseLevel !== row.courseLevel) {
-        differences.push(`Course level changed: ${bestMatch.courseLevel} → ${row.courseLevel}`);
-      }
-      if (bestMatch.deliveryMode !== row.deliveryMode) {
-        differences.push(`Delivery mode changed: ${bestMatch.deliveryMode} → ${row.deliveryMode}`);
-      }
-      if (bestMatch.comments !== row.comments) {
-        differences.push(`Comments changed: ${bestMatch.comments} → ${row.comments}`);
-      }
-      if (bestMatch.anticipatedSize !== row.anticipatedSize) {
-        differences.push(`Enrollment changed: ${bestMatch.anticipatedSize} → ${row.anticipatedSize}`);
-      }
-      if (bestMatch.day10Used !== row.day10Used) {
-        differences.push(`Day 10 enrollment changed: ${bestMatch.day10Used} → ${row.day10Used}`);
+      if (secondaryMatch.term !== row.term) {
+        differences.push(`Term changed: ${formatValue(secondaryMatch.term)} → ${formatValue(row.term)}`);
       }
     } else {
-      differences.push("Completely new entry");
+      // No match found at all, this is a completely new entry
+      differences.push("New entry");
     }
   }
 
@@ -363,18 +476,37 @@ const findRowDifferences = (row: FlattenedRow, group: FlattenedRow[]): string[] 
  * Finds the best match for a row in a group
  */
 const findBestMatch = (row: FlattenedRow, group: FlattenedRow[]): FlattenedRow | null => {
-  // This is a simplistic approach - we're just finding the first row that matches
-  // department, prefix, number, and section
-  return (
-    group.find((r) => {
-      return (
-        r.department === row.department &&
-        r.prefix === row.prefix &&
-        r.number === row.number &&
-        r.sectionLetter === row.sectionLetter
-      );
-    }) || null
-  );
+  // Find the first row that matches department, prefix, number, and section
+  // This is our primary key for identifying the "same" course
+  const primaryMatch = group.find((r) => {
+    return (
+      r.department === row.department &&
+      r.prefix === row.prefix &&
+      r.number === row.number &&
+      r.sectionLetter === row.sectionLetter
+    );
+  });
+
+  if (primaryMatch) {
+    return primaryMatch;
+  }
+
+  // If we can't find a match by the primary key,
+  // try a less strict match using department + number + section
+  const secondaryMatch = group.find((r) => {
+    return (
+      r.department === row.department &&
+      r.number === row.number &&
+      r.sectionLetter === row.sectionLetter
+    );
+  });
+
+  if (secondaryMatch) {
+    return secondaryMatch;
+  }
+
+  // No match found
+  return null;
 };
 
 /**
@@ -430,8 +562,16 @@ export const exportComparisonToExcel = (
 ): void => {
   const comparison = compareSchedules(referenceSchedule, comparisonSchedule, columnsToCompare);
 
-  // Create workbook
+  // Create workbook with style options enabled
   const wb = XLSX.utils.book_new();
+
+  // Ensure Workbook has the necessary style properties
+  if (!wb.Workbook) {
+    wb.Workbook = {
+      Views: [{ RTL: false }],
+      WBProps: { date1904: false },
+    };
+  }
 
   // Format data for the comparison sheet using the same structure as useExportExcel
   const comparisonData = comparison.map((result) => {
@@ -529,7 +669,16 @@ export const exportComparisonToExcel = (
 
   // Save the file
   const fileName = `schedule_comparison_${moment().format("YYYY-MM-DD_HH-mm-ss")}.xlsx`;
-  XLSX.writeFile(wb, fileName);
+
+  // Use write options to ensure styles are included
+  const writeOptions = {
+    bookType: 'xlsx' as const,
+    bookSST: false,
+    type: 'binary' as const,
+    cellStyles: true, // Enable cell styles
+  };
+
+  XLSX.writeFile(wb, fileName, writeOptions);
 };
 
 /**
@@ -601,57 +750,99 @@ const formatScheduleData = (schedule: Schedule): any[] => {
  * Applies styling to the Excel worksheet based on status
  */
 const applyExcelStylingByStatus = (worksheet: XLSX.WorkSheet, data: any[]): void => {
-  // Initialize cell styles if they don't exist
+  // Validate input
+  if (!worksheet || !data || data.length === 0) {
+    return;
+  }
+
+  // Ensure we have column data
+  const firstRow = data[0];
+  if (!firstRow) {
+    return;
+  }
+
+  // Initialize column settings
   if (!worksheet["!cols"]) {
     worksheet["!cols"] = [];
   }
 
-  // Set column widths
-  const columns = Object.keys(data[0] || {});
+  const columns = Object.keys(firstRow);
+
+  // Set default column widths
   columns.forEach((_, index) => {
-    if (!worksheet["!cols"]) {
-      worksheet["!cols"] = [];
-    }
-    worksheet["!cols"][index] = { width: 15 };
-  });
-
-  // Find status column index
-  const statusColumnIndex = columns.indexOf("Status");
-  if (statusColumnIndex === -1) return;
-
-  // Apply styles based on status
-  data.forEach((row, rowIndex) => {
-    // Skip header row
-    if (rowIndex > 0) {
-      // Get status value
-      const status = row.Status;
-      if (!status) return;
-
-      // Convert to A1 notation for the entire row
-      const rowCells = columns.map((_, colIndex) => {
-        return XLSX.utils.encode_cell({ c: colIndex, r: rowIndex + 1 }); // +1 for header row
-      });
-
-      // Apply row styling based on status
-      rowCells.forEach(cell => {
-        if (worksheet[cell] && status) {
-          let fillColor = "";
-
-          if (status === "added") {
-            fillColor = "CCFFCC"; // Light green
-          } else if (status === "removed") {
-            fillColor = "FFCCCC"; // Light red
-          } else if (status === "modified") {
-            fillColor = "FFFFCC"; // Light yellow
-          }
-
-          if (fillColor) {
-            worksheet[cell].s = {
-              fill: { fgColor: { rgb: fillColor } },
-            };
-          }
-        }
-      });
+    if (worksheet["!cols"]) {
+      worksheet["!cols"][index] = { width: 15 };
     }
   });
+
+  // Make Differences column wider
+  const diffIndex = columns.indexOf("Differences");
+  if (diffIndex !== -1 && worksheet["!cols"]) {
+    worksheet["!cols"][diffIndex] = { width: 40 };
+  }
+
+  // If no Status column, we can't colorize
+  const statusIndex = columns.indexOf("Status");
+  if (statusIndex === -1) {
+    return;
+  }
+
+  // Define color styles with full ARGB color codes
+  const styles = {
+    added: {
+      fill: {
+        patternType: "solid",
+        fgColor: { rgb: "FF99FF99" }, // Light green with alpha
+      },
+    },
+    modified: {
+      fill: {
+        patternType: "solid",
+        fgColor: { rgb: "FFFFFF99" }, // Light yellow with alpha
+      },
+    },
+    removed: {
+      fill: {
+        patternType: "solid",
+        fgColor: { rgb: "FFFF9999" }, // Light red with alpha
+      },
+    },
+  };
+
+  // Create style cache
+  const stylecache: {[key: string]: number} = {};
+  if (!worksheet["!sharedFormulasBase"]) {
+    worksheet["!sharedFormulasBase"] = {};
+  }
+
+  // Apply styles to each row (skip header row at index 0)
+  for (let rowIndex = 1; rowIndex < data.length + 1; rowIndex++) {
+    const rowData = data[rowIndex - 1];
+
+    // Skip rows without status or with "unchanged" status
+    if (!rowData || !rowData.Status || rowData.Status === "unchanged") {
+      continue;
+    }
+
+    // Get appropriate style based on status
+    const status = rowData.Status as "added" | "removed" | "modified";
+    const style = status && styles[status];
+
+    if (!style) {
+      continue;
+    }
+
+    // Apply style to each cell in the row
+    for (let colIndex = 0; colIndex < columns.length; colIndex++) {
+      const cellAddress = XLSX.utils.encode_cell({ r: rowIndex, c: colIndex });
+
+      // Create cell if it doesn't exist
+      if (!worksheet[cellAddress]) {
+        worksheet[cellAddress] = { t: 's', v: '' };
+      }
+
+      // Apply style directly to cell
+      worksheet[cellAddress].s = style;
+    }
+  }
 };
