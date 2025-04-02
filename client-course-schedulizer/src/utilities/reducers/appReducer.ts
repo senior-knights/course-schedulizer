@@ -83,8 +83,28 @@ export const reducer = (actionCallback: (item: AppState) => void = voidFn) => {
       }
       case "setActiveScheduleIds": {
         const { activeScheduleIds } = action.payload;
-        if (!activeScheduleIds || activeScheduleIds.length === 0) {
-          // If no schedules are active, use empty schedule
+
+        // If no schedules are active but we have schedules, default to the first one
+        if ((!activeScheduleIds || activeScheduleIds.length === 0) && state.schedules.length > 0) {
+          // Default to the first schedule
+          const defaultIds = [0];
+          const displaySchedule = combineActiveSchedules(state.schedules, defaultIds);
+          const times = getMinAndMaxTimes(displaySchedule);
+
+          newState = {
+            ...state,
+            activeScheduleIds: defaultIds,
+            classes: getClasses(displaySchedule),
+            departments: getDepts(displaySchedule),
+            professors: getProfs(displaySchedule),
+            rooms: getRooms(displaySchedule),
+            schedule: displaySchedule,
+            slotMaxTime: times.maxTime,
+            slotMinTime: times.minTime,
+            times: getTimes(displaySchedule),
+          };
+        } else if (!activeScheduleIds || activeScheduleIds.length === 0) {
+          // No schedules available, use empty schedule
           const emptySchedule = { courses: [], numDistinctSchedules: 0 };
           newState = {
             ...state,

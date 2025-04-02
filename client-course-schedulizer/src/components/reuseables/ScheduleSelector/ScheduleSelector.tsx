@@ -28,6 +28,13 @@ export const ScheduleSelector = () => {
       updatedIds.push(scheduleId);
     } else {
       // Remove the ID if it exists
+
+      // Prevent unchecking the last active schedule
+      if (updatedIds.length === 1) {
+        // If this is the last active schedule, don't allow removal
+        return;
+      }
+
       updatedIds.splice(index, 1);
     }
 
