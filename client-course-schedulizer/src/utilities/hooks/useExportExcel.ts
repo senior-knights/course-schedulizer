@@ -5,6 +5,17 @@ import moment from "moment";
 import { useContext } from "react";
 import { AppContext } from "utilities/contexts";
 
+/**
+ * Truncates sheet names to ensure they don't exceed Excel's 31-character limit
+ */
+const truncateSheetName = (sheetName: string): string => {
+  const MAX_SHEET_NAME_LENGTH = 31;
+  if (sheetName.length <= MAX_SHEET_NAME_LENGTH) {
+    return sheetName;
+  }
+  return sheetName.substring(0, MAX_SHEET_NAME_LENGTH);
+};
+
 const formatNumber = (num: number | undefined): string => {
   if (num === undefined) return "";
   return Number.isInteger(num) ? Math.floor(num).toString() : num.toFixed(1);
@@ -219,9 +230,9 @@ export const useExportExcel = () => {
 
     // Create workbook and append sheets in order
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet1, "Schedule");
-    XLSX.utils.book_append_sheet(workbook, worksheet2, "Registrar Schedule");
-    XLSX.utils.book_append_sheet(workbook, worksheet3, "Metadata");
+    XLSX.utils.book_append_sheet(workbook, worksheet1, truncateSheetName("Schedule"));
+    XLSX.utils.book_append_sheet(workbook, worksheet2, truncateSheetName("Registrar Schedule"));
+    XLSX.utils.book_append_sheet(workbook, worksheet3, truncateSheetName("Metadata"));
 
     // Generate Excel buffer and trigger download
     const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });

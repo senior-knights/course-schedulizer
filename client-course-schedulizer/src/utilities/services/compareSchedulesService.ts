@@ -331,6 +331,17 @@ const summarizeGroup = (
 };
 
 /**
+ * Truncates sheet names to ensure they don't exceed Excel's 31-character limit
+ */
+const truncateSheetName = (sheetName: string): string => {
+  const MAX_SHEET_NAME_LENGTH = 31;
+  if (sheetName.length <= MAX_SHEET_NAME_LENGTH) {
+    return sheetName;
+  }
+  return sheetName.substring(0, MAX_SHEET_NAME_LENGTH);
+};
+
+/**
  * Exports the comparison to Excel
  */
 export const exportComparisonToExcel = (
@@ -371,7 +382,7 @@ export const exportComparisonToExcel = (
   XLSX.utils.book_append_sheet(
     wb,
     comparisonWs,
-    "Schedule Comparison",
+    truncateSheetName("Schedule Comparison"),
   );
 
   // Also add the original schedules for reference
@@ -381,12 +392,12 @@ export const exportComparisonToExcel = (
   // Add reference schedule sheet
   const refData = flattenSchedule(referenceSchedule);
   const refWs = XLSX.utils.json_to_sheet(refData);
-  XLSX.utils.book_append_sheet(wb, refWs, refScheduleName);
+  XLSX.utils.book_append_sheet(wb, refWs, truncateSheetName(refScheduleName));
 
   // Add comparison schedule sheet
   const compData = flattenSchedule(comparisonSchedule);
   const compWs = XLSX.utils.json_to_sheet(compData);
-  XLSX.utils.book_append_sheet(wb, compWs, compScheduleName);
+  XLSX.utils.book_append_sheet(wb, compWs, truncateSheetName(compScheduleName));
 
   // Save the file
   const fileName = `schedule_comparison_${moment().format("YYYY-MM-DD_HH-mm-ss")}.xlsx`;
