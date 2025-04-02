@@ -34,7 +34,7 @@ export const CSVActions = () => {
           <MenuItem button>IMPORT NEW SCHEDULE</MenuItem>
         </ImportInputWrapper>
         <ImportInputWrapper isAdditiveImport>
-          <MenuItem button>ADD SCHEDULE</MenuItem>
+          <MenuItem button>ADD ADDITIONAL SCHEDULE</MenuItem>
         </ImportInputWrapper>
         <ImportInputWrapper isAdditiveImport>
           <MenuItem button>IMPORT CONSTRAINTS</MenuItem>

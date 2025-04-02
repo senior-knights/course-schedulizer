@@ -1,6 +1,5 @@
-import { forEach, isEqual } from "lodash";
 import { ChangeEvent, useContext } from "react";
-import { csvStringToSchedule, insertSectionCourse, Schedule } from "utilities";
+import { csvStringToSchedule, Schedule } from "utilities";
 import { AppContext } from "utilities/contexts";
 import { read, utils } from "xlsx";
 
@@ -15,7 +14,6 @@ import { read, utils } from "xlsx";
  */
 export const useImportFile = (isAdditiveImport: boolean) => {
   const {
-    appState: { schedule },
     appDispatch,
     setIsCSVLoading,
   } = useContext(AppContext);
@@ -72,8 +70,26 @@ export const useImportFile = (isAdditiveImport: boolean) => {
       scheduleJSON = csvStringToSchedule(scheduleString);
 
       !isAdditiveImport && appDispatch({ payload: { fileUrl: "" }, type: "setFileUrl" });
-      await updateScheduleInContext(schedule, scheduleJSON, appDispatch, isAdditiveImport);
-      setIsCSVLoading(false);
+
+      if (fileType === "json") {
+        // Already handled constraints
+        setIsCSVLoading(false);
+      } else if (isAdditiveImport) {
+        // Use the new addSchedule action for adding a new schedule
+        await appDispatch({ payload: { schedule: scheduleJSON }, type: "addSchedule" });
+        setIsCSVLoading(false);
+      } else {
+        // Replace the current schedules with a new one
+        await appDispatch({
+          payload: {
+            activeScheduleIds: [0],
+            schedule: scheduleJSON,
+            schedules: [scheduleJSON],
+          },
+          type: "setScheduleData",
+        });
+        setIsCSVLoading(false);
+      }
     };
   };
 
@@ -81,62 +97,14 @@ export const useImportFile = (isAdditiveImport: boolean) => {
 };
 
 /**
- * Update the Schedule information in the context
- * @param currentSchedule
- * @param newSchedule
- * @param appDispatch
- * @param isAdditiveImport
+ * Converts XLSX data to CSV string.
  *
- * Ref: https://stackoverflow.com/a/57214316/9931154
- */
-export const updateScheduleInContext = async (
-  // Note these are the parameters, just on different lines
-  currentSchedule: Schedule,
-  newSchedule: Schedule,
-  appDispatch: AppContext["appDispatch"],
-  isAdditiveImport = false,
-  //
-) => {
-  if (!isEqual(currentSchedule, newSchedule)) {
-    // Changing the new schedule to have higher importRank
-    forEach(newSchedule.courses, (course) => {
-      course.importRank = currentSchedule.numDistinctSchedules;
-    });
-    let newScheduleData: Schedule;
-    if (isAdditiveImport) {
-      newScheduleData = combineSchedules(currentSchedule, newSchedule);
-    } else {
-      newScheduleData = newSchedule;
-    }
-    newScheduleData.numDistinctSchedules = currentSchedule.numDistinctSchedules + 1;
-    await appDispatch({ payload: { schedule: newScheduleData }, type: "setScheduleData" });
-  }
-};
-
-/**
- * Convert XLSX Data to CSV
- *
- * @param  {ArrayBufferLike} xlsxData
+ * @param  {ArrayBufferLike} data
  * @returns string
  */
-export const getCSVFromXLSXData = (xlsxData: ArrayBufferLike): string => {
-  const data = new Uint8Array(xlsxData);
-  const workBook = read(data, { type: "array" });
-  const firstSheet = workBook.Sheets[workBook.SheetNames[0]];
-  return utils.sheet_to_csv(firstSheet);
-};
-
-/**
- * Combine two schedule courses together.
- *
- * @param  {Schedule} currentSchedule
- * @param  {Schedule} newSchedule
- */
-const combineSchedules = (currentSchedule: Schedule, newSchedule: Schedule) => {
-  newSchedule.courses.forEach((newCourse) => {
-    newCourse.sections.forEach((newSection) => {
-      currentSchedule = insertSectionCourse(currentSchedule, newSection, newCourse);
-    });
-  });
-  return currentSchedule;
+export const getCSVFromXLSXData = (data: ArrayBufferLike): string => {
+  const workbook = read(data, { type: "array" });
+  const worksheetName = workbook.SheetNames[0];
+  const worksheet = workbook.Sheets[worksheetName];
+  return utils.sheet_to_csv(worksheet);
 };

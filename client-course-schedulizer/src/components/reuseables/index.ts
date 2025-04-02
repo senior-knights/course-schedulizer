@@ -13,3 +13,4 @@ export * from "./Page";
 export * from "./PopoverButton";
 export * from "./Schedule";
 export * from "./ViewDemoButton";
+export * from "./ScheduleSelector";

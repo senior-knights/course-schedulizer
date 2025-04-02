@@ -24,6 +24,14 @@
   width: 20%;
 }
 
+.toolbar-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 60%;
+}
+
 .toolbar-right {
   width: 20%;
 }

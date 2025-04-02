@@ -1,4 +1,4 @@
-import { AddSectionButton, ColorSelector, SemesterSelector} from "components";
+import { AddSectionButton, ColorSelector, ScheduleSelector, SemesterSelector} from "components";
 import React, { useContext } from "react";
 import { AppContext } from "utilities/contexts";
 import { SemesterPartSelector } from "../SemesterPartSelector";
@@ -15,7 +15,10 @@ export const ScheduleToolbar = () => {
         <ColorSelector />
         <SemesterPartSelector />
       </div>
-      <div>{fileUrl ? `Imported URL: ${fileUrl}` : ""}</div>
+      <div className="toolbar-center">
+        {fileUrl ? `Imported URL: ${fileUrl}` : ""}
+        <ScheduleSelector />
+      </div>
       <div className="toolbar-right">
         <SemesterSelector />
         <AddSectionButton />

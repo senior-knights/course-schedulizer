@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { csvStringToSchedule, getCSVFromXLSXData, updateScheduleInContext } from "utilities";
+import { csvStringToSchedule, getCSVFromXLSXData } from "utilities";
 import { AppContext } from "utilities/contexts";
 
 export const getCSVStr = "?csv=";
@@ -44,7 +44,15 @@ export const useImportRemoteFile = () => {
               const newSchedule = csvStringToSchedule(
                 getCSVFromXLSXData(result as ArrayBufferLike),
               );
-              await updateScheduleInContext(schedule, newSchedule, appDispatch);
+              // Use the new schedule system
+              await appDispatch({
+                payload: {
+                  activeScheduleIds: [0],
+                  schedule: newSchedule,
+                  schedules: [newSchedule],
+                },
+                type: "setScheduleData",
+              });
             }
             clearSearchParams();
             setIsCSVLoading(false);
@@ -55,12 +63,18 @@ export const useImportRemoteFile = () => {
     }
   };
 
-  return { importRemoteFile };
+  return importRemoteFile;
 };
 
-const clearSearchParams = () => {
+/**
+ * Removes URL parameters from the URL bar without a refresh
+ */
+export const clearSearchParams = () => {
+  // Remove GET parameters from URL without refreshing the page
   // eslint-disable-next-line no-restricted-globals
-  location.href = "";
+  const url = new URL(location.href);
+  url.search = "";
+  window.history.replaceState({}, document.title, url.toString());
 };
 
 /**
@@ -91,7 +105,15 @@ export const loadRemoteCSV = (url: string, csvIndex: number, appContext: AppCont
         appDispatch({ payload: { fileUrl: csvUrl }, type: "setFileUrl" });
         if (result) {
           const newSchedule = csvStringToSchedule(result);
-          await updateScheduleInContext(schedule, newSchedule, appDispatch);
+          // Use the new schedule system
+          await appDispatch({
+            payload: {
+              activeScheduleIds: [0],
+              schedule: newSchedule,
+              schedules: [newSchedule],
+            },
+            type: "setScheduleData",
+          });
         }
         clearSearchParams();
         setIsCSVLoading(false);

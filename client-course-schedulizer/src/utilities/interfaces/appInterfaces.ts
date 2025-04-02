@@ -19,6 +19,7 @@ export enum SchedulizerTab {
 
 // structure for the global app state
 export interface AppState {
+  activeScheduleIds: number[];
   classes: HarmonyClass[]; //Removing HarmonyClass causes errors in HarmonyPage/Harmony/HarmonyStepper/HarmonyStepperImportData.tsx
   colorBy: ColorBy;
   constraints: {};
@@ -27,6 +28,7 @@ export interface AppState {
   professors: string[];
   rooms: string[];
   schedule: Schedule;
+  schedules: Schedule[];
   schedulizerTab: SchedulizerTab;
   selectedSemesterPart: SemesterLength;
   selectedTerm: Term;
@@ -39,6 +41,7 @@ export interface AppState {
 //  previous appState to launch app from.
 //  If no previous state saved, will default to the object below.
 export const initialAppState: AppState = {
+  activeScheduleIds: [],
   classes: [],
   colorBy: 0,
   constraints: {},
@@ -47,6 +50,7 @@ export const initialAppState: AppState = {
   professors: [],
   rooms: [],
   schedule: { courses: [], numDistinctSchedules: 0 },
+  schedules: [],
   schedulizerTab: 0,
   selectedSemesterPart: SemesterLength.Full,
   selectedTerm: Term.Fall,
@@ -72,5 +76,5 @@ if (!initialAppState.rooms) {
 // structure of actions that can be sent to app dispatch
 export interface AppAction {
   payload: Partial<AppState>;
-  type: "setScheduleData" | "setSelectedTerm" | "setFileUrl" | "setColorBy" | "setSchedulizerTab" | "setSelectedSemesterPart" | "setConstraints"; // add | to add more actions in the future
+  type: "setScheduleData" | "setSelectedTerm" | "setFileUrl" | "setColorBy" | "setSchedulizerTab" | "setSelectedSemesterPart" | "setConstraints" | "addSchedule" | "setActiveScheduleIds"; // add | to add more actions in the future
 }
