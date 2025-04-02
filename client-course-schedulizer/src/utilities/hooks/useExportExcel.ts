@@ -78,8 +78,8 @@ export const useExportExcel = () => {
           InstructionalMethod: section.instructionalMethod ?? "",
           CourseLevel: course.courseLevel ?? "",
           Group: course.group ?? "",
-          Comment: section.comments ?? "",
           DeliveryMode: section.deliveryMode ?? "",
+          Comment: section.comments ?? "",
           Enrollment: section.anticipatedSize ?? 0,
           EnrollmentDay10: section.day10Used ?? 0,
         };
@@ -107,8 +107,8 @@ export const useExportExcel = () => {
       "InstructionalMethod",
       "CourseLevel",
       "Group",
-      "Comment",
       "DeliveryMode",
+      "Comment",
       "Enrollment",
       "EnrollmentDay10",
     ];
@@ -183,8 +183,8 @@ export const useExportExcel = () => {
             ? section.instructors.join(", ")
             : (section.instructors ?? ""),
           InstructionalMethod: section.instructionalMethod ?? "",
-          Comment: section.comments ?? "",
           DeliveryMode: section.deliveryMode ?? "",
+          Comment: section.comments ?? "",
         };
         exportData2.push(row);
       });
@@ -206,8 +206,8 @@ export const useExportExcel = () => {
       "ShortTitle",
       "Faculty",
       "InstructionalMethod",
-      "Comment",
       "DeliveryMode",
+      "Comment",
     ];
 
     const worksheet2 = XLSX.utils.json_to_sheet(exportData2, { header: headers2 });
