@@ -91,21 +91,19 @@ export const useAddSectionToSchedule = () => {
 
     // First, update the main working schedule
     handleOldMeeting(oldData, newSection, newCourse, removeOldMeeting, schedule);
-    insertSectionCourse(schedule, newSection, newCourse);
+    insertSectionCourse(schedule, newSection, newCourse, oldData, removeOldMeeting);
 
     // Create a copy of the schedules array
     const updatedSchedules = [...schedules];
 
-    // Find which schedule is currently being edited by matching it with schedule
-    // In most cases, this will be one of the active schedules
-    for (let i = 0; i < updatedSchedules.length; i++) {
-      // If this is the schedule we're currently working with
-      if (activeScheduleIds.includes(i)) {
+    // Only update the active schedules, not all schedules
+    activeScheduleIds.forEach(scheduleId => {
+      if (scheduleId >= 0 && scheduleId < updatedSchedules.length) {
         // Preserve the schedule name when updating
-        const scheduleName = updatedSchedules[i].name;
-        updatedSchedules[i] = { ...schedule, name: scheduleName };
+        const scheduleName = updatedSchedules[scheduleId].name;
+        updatedSchedules[scheduleId] = { ...schedule, name: scheduleName };
       }
-    }
+    });
 
     // Dispatch with all schedule state preserved
     appDispatch({
