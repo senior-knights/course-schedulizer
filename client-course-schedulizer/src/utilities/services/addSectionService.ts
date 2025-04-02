@@ -404,7 +404,22 @@ export const handleOldMeeting = (
 
   // Copy courseLevel from old course to new course
   if (oldCourse && oldCourse.courseLevel && !newCourse.courseLevel) {
-    newCourse.courseLevel = oldCourse.courseLevel;
+    // Only copy if the course number hasn't changed or if we can't derive from the new number
+    if (oldCourse.number === newCourse.number || !newCourse.number || !newCourse.number[0].match(/\d/)) {
+      newCourse.courseLevel = oldCourse.courseLevel;
+    } else {
+      // Recalculate courseLevel based on first digit of new course number
+      const firstDigit = newCourse.number[0];
+      if (/\d/.test(firstDigit)) {
+        newCourse.courseLevel = `${firstDigit}00`;
+      }
+    }
+  } else if (newCourse.number && !newCourse.courseLevel) {
+    // Set courseLevel if not already set but we have a course number
+    const firstDigit = newCourse.number[0];
+    if (/\d/.test(firstDigit)) {
+      newCourse.courseLevel = `${firstDigit}00`;
+    }
   }
 
   // If the user pressed 'update' rather than 'add'...
@@ -422,10 +437,16 @@ export const handleOldMeeting = (
       oldCourse.sections.splice(sectionIndex, 1);
       removeEmptyCourse(oldCourse, schedule);
 
+      // Recalculate courseLevel if course number changed
+      if (oldCourse.number !== newCourse.number && newCourse.number && /\d/.test(newCourse.number[0])) {
+        newCourse.courseLevel = `${newCourse.number[0]}00`;
+      } else if (oldCourse.courseLevel && !newCourse.courseLevel) {
+        newCourse.courseLevel = oldCourse.courseLevel;
+      }
+
       // Create new course with updated info
       schedule.courses.push({
         ...newCourse,
-        courseLevel: oldCourse.courseLevel || newCourse.courseLevel,
         sections: [newSection],
       });
     } else {
@@ -437,7 +458,12 @@ export const handleOldMeeting = (
       updateNonIdentifyingSectionInfo(updatedSection, newSection);
 
       // Additional protection for courseLevel which is a course property, not a section property
-      updatedCourse.courseLevel = oldCourse.courseLevel || newCourse.courseLevel;
+      if (oldCourse.number !== updatedCourse.number && updatedCourse.number && /\d/.test(updatedCourse.number[0])) {
+        // If course number changed, recalculate courseLevel
+        updatedCourse.courseLevel = `${updatedCourse.number[0]}00`;
+      } else {
+        updatedCourse.courseLevel = oldCourse.courseLevel || newCourse.courseLevel;
+      }
 
       schedule.courses[courseIndex] = updatedCourse;
       updatedCourse.sections[sectionIndex] = updatedSection;
