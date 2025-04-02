@@ -36,16 +36,26 @@ export const ScheduleComparer = () => {
   const [selectedColumns, setSelectedColumns] = useState<{
     [key: string]: boolean;
   }>({
+    academicYear: false,
+    comment: false,
+    courseLevel: false,
     days: false,
+    deliveryMode: false,
     department: true,
     duration: false,
+    enrollment: false,
+    enrollmentDay10: false,
     facultyHours: false,
+    group: false,
+    instructionalMethod: false,
     instructors: true,
     location: false,
+    maxStudentHours: false,
     number: true,
     prefix: true,
     sectionLetter: true,
     semesterLength: true,
+    shortTitle: false,
     startTime: false,
     studentHours: false,
     term: true,
@@ -191,6 +201,17 @@ export const ScheduleComparer = () => {
                     <FormControlLabel
                       control={
                         <Checkbox
+                          checked={selectedColumns.academicYear}
+                          onChange={() => {
+                            return handleToggleColumn("academicYear");
+                          }}
+                        />
+                      }
+                      label="AcademicYear"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
                           checked={selectedColumns.prefix}
                           onChange={() => {
                             return handleToggleColumn("prefix");
@@ -252,7 +273,7 @@ export const ScheduleComparer = () => {
                           }}
                         />
                       }
-                      label="Semester Length"
+                      label="TermPart"
                     />
                     <FormControlLabel
                       control={
@@ -319,6 +340,105 @@ export const ScheduleComparer = () => {
                         />
                       }
                       label="MinimumCredits"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={selectedColumns.maxStudentHours}
+                          onChange={() => {
+                            return handleToggleColumn("maxStudentHours");
+                          }}
+                        />
+                      }
+                      label="MaximumCredits"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={selectedColumns.shortTitle}
+                          onChange={() => {
+                            return handleToggleColumn("shortTitle");
+                          }}
+                        />
+                      }
+                      label="ShortTitle"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={selectedColumns.instructionalMethod}
+                          onChange={() => {
+                            return handleToggleColumn("instructionalMethod");
+                          }}
+                        />
+                      }
+                      label="InstructionalMethod"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={selectedColumns.courseLevel}
+                          onChange={() => {
+                            return handleToggleColumn("courseLevel");
+                          }}
+                        />
+                      }
+                      label="CourseLevel"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={selectedColumns.group}
+                          onChange={() => {
+                            return handleToggleColumn("group");
+                          }}
+                        />
+                      }
+                      label="Group"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={selectedColumns.deliveryMode}
+                          onChange={() => {
+                            return handleToggleColumn("deliveryMode");
+                          }}
+                        />
+                      }
+                      label="DeliveryMode"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={selectedColumns.comment}
+                          onChange={() => {
+                            return handleToggleColumn("comment");
+                          }}
+                        />
+                      }
+                      label="Comment"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={selectedColumns.enrollment}
+                          onChange={() => {
+                            return handleToggleColumn("enrollment");
+                          }}
+                        />
+                      }
+                      label="Enrollment"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={selectedColumns.enrollmentDay10}
+                          onChange={() => {
+                            return handleToggleColumn("enrollmentDay10");
+                          }}
+                        />
+                      }
+                      label="EnrollmentDay10"
                     />
                   </div>
                 </FormGroup>

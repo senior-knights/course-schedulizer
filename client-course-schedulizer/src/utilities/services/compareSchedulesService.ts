@@ -38,7 +38,7 @@ interface FlattenedRow {
   startTime: string;
   studentHours: number;
   term: string;
-  year: number;
+  year: string | number;
 }
 
 // Map of field names to display labels for formatting differences
@@ -66,19 +66,29 @@ const FIELD_DISPLAY_LABELS: Record<string, string> = {
 
 // Map UI column names to FlattenedRow field names
 const COLUMN_MAPPINGS: Record<string, string> = {
-  department: "department",
-  prefix: "prefix",
-  number: "number",
-  sectionLetter: "sectionLetter",
-  instructors: "instructors",
-  term: "term",
-  semesterLength: "semesterLength",
+  academicYear: "year",
+  comment: "comments",
+  courseLevel: "courseLevel",
   days: "days",
-  startTime: "startTime",
+  deliveryMode: "deliveryMode",
+  department: "department",
   duration: "duration",
-  location: "location",
+  enrollment: "anticipatedSize",
+  enrollmentDay10: "day10Used",
   facultyHours: "facultyHours",
+  group: "group",
+  instructionalMethod: "instructionalMethod",
+  instructors: "instructors",
+  location: "location",
+  maxStudentHours: "maxStudentHours",
+  number: "number",
+  prefix: "prefix",
+  sectionLetter: "sectionLetter",
+  semesterLength: "semesterLength",
+  shortTitle: "shortTitle",
+  startTime: "startTime",
   studentHours: "studentHours",
+  term: "term",
 };
 
 // Excel export headers in desired order
@@ -332,7 +342,7 @@ const createFlattenedRow = (course: Course, section: Section): FlattenedRow => {
     startTime: "",
     studentHours: section.studentHours || 0,
     term: typeof section.term === 'string' ? section.term : Array.isArray(section.term) ? section.term.join("/") : "",
-    year: typeof section.year === 'number' ? section.year : new Date().getFullYear(),
+    year: section.year || "",
     // Additional fields
     maxStudentHours: section.maxStudentHours,
     shortTitle: course.name,
@@ -366,7 +376,7 @@ const createFlattenedRowWithMeeting = (course: Course, section: Section, meeting
     startTime: meeting.startTime || "",
     studentHours: section.studentHours || 0,
     term: typeof section.term === 'string' ? section.term : Array.isArray(section.term) ? section.term.join("/") : "",
-    year: typeof section.year === 'number' ? section.year : new Date().getFullYear(),
+    year: section.year || "",
     // Additional fields
     maxStudentHours: section.maxStudentHours,
     shortTitle: course.name,
