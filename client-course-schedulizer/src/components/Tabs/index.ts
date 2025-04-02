@@ -2,6 +2,7 @@ export * from "./Conflicts";
 export * from "./DepartmentSchedule";
 export * from "./FacultyLoads";
 export * from "./FacultySchedule";
+export * from "./Meta";
 export * from "./RoomsSchedule";
 export * from "./tabComponents";
 export * from "./Tabs";

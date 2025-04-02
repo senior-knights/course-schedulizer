@@ -335,19 +335,24 @@ export const getSectionLetters = (schedule: Schedule) => {
 // get list of delivery modes already in use in the Schedule
 // used for autocompletion
 export const getDeliveryModes = (schedule: Schedule) => {
-  const deliveryModes: string[] = [];
+  // Ensure always includes these standard options
+  const standardModes = ["In-Person", "Online", "Hybrid"];
+  const deliveryModes: string[] = [...standardModes];
+
+  const customModes: string[] = [];
   forEach(schedule.courses, (course) => {
     forEach(course.sections, (section) => {
       if (
         section.deliveryMode &&
         !deliveryModes.includes(section.deliveryMode) &&
+        !customModes.includes(section.deliveryMode) &&
         !section.isNonTeaching
       ) {
-        deliveryModes.push(section.deliveryMode);
+        customModes.push(section.deliveryMode);
       }
     });
   });
-  return deliveryModes.sort();
+  return [...deliveryModes, ...customModes.sort()];
 };
 
 // get list of groups already in use in the Schedule

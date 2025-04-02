@@ -19,6 +19,7 @@ import {
   Term,
   updateIdentifyingCourseInfo,
   updateIdentifyingSectionInfo,
+  updateNonIdentifyingSectionInfo,
   Weekday,
 } from "utilities/interfaces";
 import { getLocationString } from "./scheduleService";
@@ -381,6 +382,46 @@ export const handleOldMeeting = (
     newSection.endDate = oldSection.endDate;
   }
 
+  // Preserve critical fields that might be missing from the form
+  if (oldSection) {
+    // Preserve these fields if they're not in the new section
+    if (oldSection.instructionalMethod && !newSection.instructionalMethod) {
+      newSection.instructionalMethod = oldSection.instructionalMethod;
+    }
+    if (oldSection.year && !newSection.year) {
+      newSection.year = oldSection.year;
+    }
+    if (oldSection.anticipatedSize !== undefined && newSection.anticipatedSize === undefined) {
+      newSection.anticipatedSize = oldSection.anticipatedSize;
+    }
+    if (oldSection.day10Used !== undefined && newSection.day10Used === undefined) {
+      newSection.day10Used = oldSection.day10Used;
+    }
+    if (oldSection.maxStudentHours !== undefined && newSection.maxStudentHours === undefined) {
+      newSection.maxStudentHours = oldSection.maxStudentHours;
+    }
+  }
+
+  // Copy courseLevel from old course to new course
+  if (oldCourse && oldCourse.courseLevel && !newCourse.courseLevel) {
+    // Only copy if the course number hasn't changed or if we can't derive from the new number
+    if (oldCourse.number === newCourse.number || !newCourse.number || !newCourse.number[0].match(/\d/)) {
+      newCourse.courseLevel = oldCourse.courseLevel;
+    } else {
+      // Recalculate courseLevel based on first digit of new course number
+      const firstDigit = newCourse.number[0];
+      if (/\d/.test(firstDigit)) {
+        newCourse.courseLevel = `${firstDigit}00`;
+      }
+    }
+  } else if (newCourse.number && !newCourse.courseLevel) {
+    // Set courseLevel if not already set but we have a course number
+    const firstDigit = newCourse.number[0];
+    if (/\d/.test(firstDigit)) {
+      newCourse.courseLevel = `${firstDigit}00`;
+    }
+  }
+
   // If the user pressed 'update' rather than 'add'...
   if (removeOldMeeting && oldCourse && oldSection) {
     const courseIndex = schedule.courses.indexOf(oldCourse);
@@ -396,6 +437,13 @@ export const handleOldMeeting = (
       oldCourse.sections.splice(sectionIndex, 1);
       removeEmptyCourse(oldCourse, schedule);
 
+      // Recalculate courseLevel if course number changed
+      if (oldCourse.number !== newCourse.number && newCourse.number && /\d/.test(newCourse.number[0])) {
+        newCourse.courseLevel = `${newCourse.number[0]}00`;
+      } else if (oldCourse.courseLevel && !newCourse.courseLevel) {
+        newCourse.courseLevel = oldCourse.courseLevel;
+      }
+
       // Create new course with updated info
       schedule.courses.push({
         ...newCourse,
@@ -404,7 +452,18 @@ export const handleOldMeeting = (
     } else {
       // Update identifying Course fields which were changed
       const updatedCourse = updateIdentifyingCourseInfo(oldCourse, newCourse);
+
+      // Update both identifying and non-identifying fields of the section
       const updatedSection = updateIdentifyingSectionInfo(oldSection, newSection);
+      updateNonIdentifyingSectionInfo(updatedSection, newSection);
+
+      // Additional protection for courseLevel which is a course property, not a section property
+      if (oldCourse.number !== updatedCourse.number && updatedCourse.number && /\d/.test(updatedCourse.number[0])) {
+        // If course number changed, recalculate courseLevel
+        updatedCourse.courseLevel = `${updatedCourse.number[0]}00`;
+      } else {
+        updatedCourse.courseLevel = oldCourse.courseLevel || newCourse.courseLevel;
+      }
 
       schedule.courses[courseIndex] = updatedCourse;
       updatedCourse.sections[sectionIndex] = updatedSection;
