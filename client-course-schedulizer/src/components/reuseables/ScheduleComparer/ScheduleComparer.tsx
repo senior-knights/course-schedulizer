@@ -109,6 +109,7 @@ export const ScheduleComparer = () => {
       </Tooltip>
 
       <Dialog
+        className="compare-dialog"
         fullWidth
         maxWidth="md"
         onClose={handleClose}
@@ -229,7 +230,7 @@ export const ScheduleComparer = () => {
                           }}
                         />
                       }
-                      label="Instructors"
+                      label="Faculty"
                     />
                     <FormControlLabel
                       control={
@@ -262,7 +263,7 @@ export const ScheduleComparer = () => {
                           }}
                         />
                       }
-                      label="Days"
+                      label="MeetingDays"
                     />
                     <FormControlLabel
                       control={
@@ -273,7 +274,7 @@ export const ScheduleComparer = () => {
                           }}
                         />
                       }
-                      label="Start Time"
+                      label="StartTime"
                     />
                     <FormControlLabel
                       control={
@@ -284,7 +285,7 @@ export const ScheduleComparer = () => {
                           }}
                         />
                       }
-                      label="Duration"
+                      label="MeetingDuration"
                     />
                     <FormControlLabel
                       control={
@@ -295,7 +296,7 @@ export const ScheduleComparer = () => {
                           }}
                         />
                       }
-                      label="Location"
+                      label="Classroom"
                     />
                     <FormControlLabel
                       control={
@@ -306,7 +307,7 @@ export const ScheduleComparer = () => {
                           }}
                         />
                       }
-                      label="Faculty Hours"
+                      label="FacultyLoad"
                     />
                     <FormControlLabel
                       control={
@@ -317,7 +318,7 @@ export const ScheduleComparer = () => {
                           }}
                         />
                       }
-                      label="Student Hours"
+                      label="MinimumCredits"
                     />
                   </div>
                 </FormGroup>

@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys-fix/sort-keys-fix */
 import * as XLSX from "xlsx";
 import { flatten } from "lodash";
 import moment from "moment";
@@ -15,20 +16,25 @@ interface ComparisonResult {
 }
 
 interface FlattenedRow {
-  course: Course;
+  anticipatedSize?: number;
+  comments?: string;
+  courseLevel?: string;
+  day10Used?: number;
   days: string;
+  deliveryMode?: string;
   department: string;
   duration: string;
   facultyHours: number;
   id: string;
+  instructionalMethod?: string;
   instructors: string;
   location: string;
-  meeting?: Meeting;
+  maxStudentHours?: number;
   number: string;
   prefix: string;
-  section: Section;
   sectionLetter: string;
   semesterLength: string;
+  shortTitle?: string;
   startTime: string;
   studentHours: number;
   term: string;
@@ -134,7 +140,6 @@ const flattenSchedule = (schedule: Schedule): FlattenedRow[] => {
       // Handle case with no meetings
       if (!section.meetings || section.meetings.length === 0) {
         rows.push({
-          course,
           days: "",
           department: course.department || "",
           duration: "",
@@ -144,19 +149,26 @@ const flattenSchedule = (schedule: Schedule): FlattenedRow[] => {
           location: "",
           number: course.number?.toString() || "",
           prefix: Array.isArray(course.prefixes) ? course.prefixes.join("/") : "",
-          section,
           sectionLetter: section.letter || "",
           semesterLength: section.semesterLength || "",
           startTime: "",
           studentHours: section.studentHours || 0,
           term: typeof section.term === 'string' ? section.term : Array.isArray(section.term) ? section.term.join("/") : "",
           year: typeof section.year === 'number' ? section.year : new Date().getFullYear(),
+          // Additional fields
+          maxStudentHours: section.maxStudentHours,
+          shortTitle: course.name,
+          instructionalMethod: section.instructionalMethod,
+          courseLevel: course.courseLevel,
+          deliveryMode: section.deliveryMode,
+          comments: section.comments,
+          anticipatedSize: section.anticipatedSize,
+          day10Used: section.day10Used,
         });
       } else {
         // With meetings, create a row for each meeting
         section.meetings.forEach((meeting) => {
           rows.push({
-            course,
             days: meeting.days ? meeting.days.join("") : "",
             department: course.department || "",
             duration: meeting.duration?.toString() || "",
@@ -166,16 +178,23 @@ const flattenSchedule = (schedule: Schedule): FlattenedRow[] => {
             location: meeting.location
               ? `${meeting.location.building || ""} ${meeting.location.roomNumber || ""}`.trim()
               : "",
-            meeting,
             number: course.number?.toString() || "",
             prefix: Array.isArray(course.prefixes) ? course.prefixes.join("/") : "",
-            section,
             sectionLetter: section.letter || "",
             semesterLength: section.semesterLength || "",
             startTime: meeting.startTime || "",
             studentHours: section.studentHours || 0,
             term: typeof section.term === 'string' ? section.term : Array.isArray(section.term) ? section.term.join("/") : "",
             year: typeof section.year === 'number' ? section.year : new Date().getFullYear(),
+            // Additional fields
+            maxStudentHours: section.maxStudentHours,
+            shortTitle: course.name,
+            instructionalMethod: section.instructionalMethod,
+            courseLevel: course.courseLevel,
+            deliveryMode: section.deliveryMode,
+            comments: section.comments,
+            anticipatedSize: section.anticipatedSize,
+            day10Used: section.day10Used,
           });
         });
       }
@@ -183,6 +202,29 @@ const flattenSchedule = (schedule: Schedule): FlattenedRow[] => {
   });
 
   return rows;
+};
+
+/**
+ * Maps UI column names to FlattenedRow field names
+ */
+const mapColumnNames = (column: string): string => {
+  const columnMappings: { [key: string]: string } = {
+    department: "department",
+    prefix: "prefix",
+    number: "number",
+    sectionLetter: "sectionLetter",
+    instructors: "instructors",
+    term: "term",
+    semesterLength: "semesterLength",
+    days: "days",
+    startTime: "startTime",
+    duration: "duration",
+    location: "location",
+    facultyHours: "facultyHours",
+    studentHours: "studentHours",
+  };
+
+  return columnMappings[column] || column;
 };
 
 /**
@@ -198,8 +240,10 @@ const groupRowsByColumns = (
     // Create a key based on the selected columns
     const key = columnsToCompare
       .map((column) => {
+        // Map the column name to the appropriate field in the FlattenedRow
+        const fieldName = mapColumnNames(column);
         // Safely access column using type assertion
-        return (row as any)[column] || "";
+        return (row as any)[fieldName] || "";
       })
       .join("|");
 
@@ -246,7 +290,15 @@ const findRowDifferences = (row: FlattenedRow, group: FlattenedRow[]): string[] 
       r.duration === row.duration &&
       r.location === row.location &&
       r.facultyHours === row.facultyHours &&
-      r.studentHours === row.studentHours
+      r.studentHours === row.studentHours &&
+      r.maxStudentHours === row.maxStudentHours &&
+      r.shortTitle === row.shortTitle &&
+      r.instructionalMethod === row.instructionalMethod &&
+      r.courseLevel === row.courseLevel &&
+      r.deliveryMode === row.deliveryMode &&
+      r.comments === row.comments &&
+      r.anticipatedSize === row.anticipatedSize &&
+      r.day10Used === row.day10Used
     );
   });
 
@@ -274,6 +326,30 @@ const findRowDifferences = (row: FlattenedRow, group: FlattenedRow[]): string[] 
       }
       if (bestMatch.studentHours !== row.studentHours) {
         differences.push(`Student hours changed: ${bestMatch.studentHours} → ${row.studentHours}`);
+      }
+      if (bestMatch.maxStudentHours !== row.maxStudentHours) {
+        differences.push(`Max student hours changed: ${bestMatch.maxStudentHours} → ${row.maxStudentHours}`);
+      }
+      if (bestMatch.shortTitle !== row.shortTitle) {
+        differences.push(`Short title changed: ${bestMatch.shortTitle} → ${row.shortTitle}`);
+      }
+      if (bestMatch.instructionalMethod !== row.instructionalMethod) {
+        differences.push(`Instructional method changed: ${bestMatch.instructionalMethod} → ${row.instructionalMethod}`);
+      }
+      if (bestMatch.courseLevel !== row.courseLevel) {
+        differences.push(`Course level changed: ${bestMatch.courseLevel} → ${row.courseLevel}`);
+      }
+      if (bestMatch.deliveryMode !== row.deliveryMode) {
+        differences.push(`Delivery mode changed: ${bestMatch.deliveryMode} → ${row.deliveryMode}`);
+      }
+      if (bestMatch.comments !== row.comments) {
+        differences.push(`Comments changed: ${bestMatch.comments} → ${row.comments}`);
+      }
+      if (bestMatch.anticipatedSize !== row.anticipatedSize) {
+        differences.push(`Enrollment changed: ${bestMatch.anticipatedSize} → ${row.anticipatedSize}`);
+      }
+      if (bestMatch.day10Used !== row.day10Used) {
+        differences.push(`Day 10 enrollment changed: ${bestMatch.day10Used} → ${row.day10Used}`);
       }
     } else {
       differences.push("Completely new entry");
@@ -314,10 +390,13 @@ const summarizeGroup = (
 
   // Add the grouped columns
   columnsToCompare.forEach((column, index) => {
+    // Map the column name to the internal field name
+    const fieldName = mapColumnNames(column);
+
     // Extract the value from the key
     const values = key.split("|");
     if (index < values.length) {
-      summary[column] = values[index];
+      summary[fieldName] = values[index];
     }
   });
 
@@ -354,29 +433,78 @@ export const exportComparisonToExcel = (
   // Create workbook
   const wb = XLSX.utils.book_new();
 
-  // Create the comparison sheet
+  // Format data for the comparison sheet using the same structure as useExportExcel
   const comparisonData = comparison.map((result) => {
-    const row = { ...result.row };
+    const flatRow = result.row;
 
-    // Add status and differences
-    row.status = result.status;
-    row.differences = result.differences.join("; ");
-
-    // Add count and faculty load if available
+    // Only include rows that aren't summary rows (with counts)
     if (result.count !== undefined) {
-      row.count = result.count;
-    }
-    if (result.totalFacultyLoad !== undefined) {
-      row.totalFacultyLoad = result.totalFacultyLoad;
+      return null;
     }
 
-    return row;
-  });
+    return {
+      // Main identification fields and other fields matching useExportExcel order
+      Department: flatRow.department || "",
+      AcademicYear: flatRow.year || "",
+      Term: flatRow.term || "",
+      TermPart: flatRow.semesterLength || "",
+      Prefix: flatRow.prefix || "",
+      CourseNumber: flatRow.number || "",
+      Section: flatRow.sectionLetter || "",
+      Faculty: flatRow.instructors || "",
+      FacultyLoad: flatRow.facultyHours || "",
+      MinimumCredits: flatRow.studentHours || "",
+      MaximumCredits: flatRow.maxStudentHours || "",
+      MeetingDays: flatRow.days || "",
+      StartTime: flatRow.startTime || "",
+      MeetingDuration: flatRow.duration || "",
+      Classroom: flatRow.location || "",
+      ShortTitle: flatRow.shortTitle || "",
+      InstructionalMethod: flatRow.instructionalMethod || "",
+      CourseLevel: flatRow.courseLevel || "",
+      Group: "", // This field isn't in Course type, leave blank
+      DeliveryMode: flatRow.deliveryMode || "",
+      Comment: flatRow.comments || "",
+      Enrollment: flatRow.anticipatedSize || "",
+      EnrollmentDay10: flatRow.day10Used || "",
+      // Status and Differences at the end
+      Status: result.status || "",
+      Differences: result.differences.join("; ") || "",
+    };
+  }).filter(Boolean);
 
-  const comparisonWs = XLSX.utils.json_to_sheet(comparisonData);
+  const headers = [
+    "Department",
+    "AcademicYear",
+    "Term",
+    "TermPart",
+    "Prefix",
+    "CourseNumber",
+    "Section",
+    "Faculty",
+    "FacultyLoad",
+    "MinimumCredits",
+    "MaximumCredits",
+    "MeetingDays",
+    "StartTime",
+    "MeetingDuration",
+    "Classroom",
+    "ShortTitle",
+    "InstructionalMethod",
+    "CourseLevel",
+    "Group",
+    "DeliveryMode",
+    "Comment",
+    "Enrollment",
+    "EnrollmentDay10",
+    "Status",
+    "Differences",
+  ];
+
+  const comparisonWs = XLSX.utils.json_to_sheet(comparisonData, { header: headers });
 
   // Apply styling to highlight differences
-  applyExcelStyling(comparisonWs, comparison);
+  applyExcelStylingByStatus(comparisonWs, comparisonData);
 
   // Add sheets to workbook
   XLSX.utils.book_append_sheet(
@@ -389,14 +517,14 @@ export const exportComparisonToExcel = (
   const refScheduleName = referenceSchedule.name || "Reference Schedule";
   const compScheduleName = comparisonSchedule.name || "Comparison Schedule";
 
-  // Add reference schedule sheet
-  const refData = flattenSchedule(referenceSchedule);
-  const refWs = XLSX.utils.json_to_sheet(refData);
+  // Add reference schedule sheet - using the same format as Schedule tab
+  const refData = formatScheduleData(referenceSchedule);
+  const refWs = XLSX.utils.json_to_sheet(refData, { header: Object.keys(refData[0] || {}) });
   XLSX.utils.book_append_sheet(wb, refWs, truncateSheetName(refScheduleName));
 
-  // Add comparison schedule sheet
-  const compData = flattenSchedule(comparisonSchedule);
-  const compWs = XLSX.utils.json_to_sheet(compData);
+  // Add comparison schedule sheet - using the same format as Schedule tab
+  const compData = formatScheduleData(comparisonSchedule);
+  const compWs = XLSX.utils.json_to_sheet(compData, { header: Object.keys(compData[0] || {}) });
   XLSX.utils.book_append_sheet(wb, compWs, truncateSheetName(compScheduleName));
 
   // Save the file
@@ -405,16 +533,81 @@ export const exportComparisonToExcel = (
 };
 
 /**
- * Applies styling to the Excel worksheet to highlight differences
+ * Formats the schedule data in the same way as useExportExcel
  */
-const applyExcelStyling = (worksheet: XLSX.WorkSheet, comparison: ComparisonResult[]): void => {
+const formatScheduleData = (schedule: Schedule): any[] => {
+  const exportData: any[] = [];
+
+  schedule.courses.forEach((course) => {
+    course.sections.forEach((section) => {
+      const row = {
+        Department: course.department || "",
+        AcademicYear: section.year || "",
+        Term: section.term || "",
+        TermPart: section.semesterLength || "",
+        Prefix: Array.isArray(course.prefixes)
+          ? course.prefixes.join(", ")
+          : "",
+        CourseNumber: course.number || "",
+        Section: section.letter || "",
+        Faculty: Array.isArray(section.instructors)
+          ? section.instructors.join(", ")
+          : (section.instructors || ""),
+        FacultyLoad: section.facultyHours || "",
+        MinimumCredits: section.studentHours || "",
+        MaximumCredits: section.maxStudentHours || "",
+        MeetingDays: section.meetings
+          ? section.meetings
+              .map((m) => {
+                return m.days
+                  ? m.days.map((day) => { return day.replace(/^TH$/i, "R"); }).join("")
+                  : "";
+              })
+              .join("\n")
+          : "",
+        StartTime:
+          section.meetings && section.meetings.length > 0
+            ? section.meetings[0].startTime || ""
+            : "",
+        MeetingDuration:
+          section.meetings && section.meetings.length > 0
+            ? section.meetings[0].duration || ""
+            : "",
+        Classroom: section.meetings
+          ? section.meetings
+              .map((m) => {
+                if (!m.location || !m.location.building || !m.location.roomNumber)
+                  return "";
+                const building = m.location.building.trim().replace(/\s+/g, " ");
+                const roomNumber = m.location.roomNumber.toString().replace(/^0+/, "");
+                return `${building} ${roomNumber}`;
+              })
+              .join(", ")
+          : "",
+        ShortTitle: course.name || "",
+        InstructionalMethod: section.instructionalMethod || "",
+        CourseLevel: course.courseLevel || "",
+        DeliveryMode: section.deliveryMode || "",
+        Comment: section.comments || "",
+      };
+      exportData.push(row);
+    });
+  });
+
+  return exportData;
+};
+
+/**
+ * Applies styling to the Excel worksheet based on status
+ */
+const applyExcelStylingByStatus = (worksheet: XLSX.WorkSheet, data: any[]): void => {
   // Initialize cell styles if they don't exist
   if (!worksheet["!cols"]) {
     worksheet["!cols"] = [];
   }
 
   // Set column widths
-  const columns = Object.keys(comparison[0]?.row || {});
+  const columns = Object.keys(data[0] || {});
   columns.forEach((_, index) => {
     if (!worksheet["!cols"]) {
       worksheet["!cols"] = [];
@@ -422,27 +615,43 @@ const applyExcelStyling = (worksheet: XLSX.WorkSheet, comparison: ComparisonResu
     worksheet["!cols"][index] = { width: 15 };
   });
 
-  // Apply styles based on status
-  comparison.forEach((result, rowIndex) => {
-    // Skip header row (rowIndex 0)
-    if (rowIndex > 0) {
-      // Convert to A1 notation
-      const cell = XLSX.utils.encode_cell({ c: 0, r: rowIndex + 1 }); // +1 for header row
+  // Find status column index
+  const statusColumnIndex = columns.indexOf("Status");
+  if (statusColumnIndex === -1) return;
 
-      // Apply cell style based on status
-      if (result.status === "added") {
-        worksheet[cell].s = {
-          fill: { fgColor: { rgb: "CCFFCC" } }, // Light green
-        };
-      } else if (result.status === "removed") {
-        worksheet[cell].s = {
-          fill: { fgColor: { rgb: "FFCCCC" } }, // Light red
-        };
-      } else if (result.status === "modified") {
-        worksheet[cell].s = {
-          fill: { fgColor: { rgb: "FFFFCC" } }, // Light yellow
-        };
-      }
+  // Apply styles based on status
+  data.forEach((row, rowIndex) => {
+    // Skip header row
+    if (rowIndex > 0) {
+      // Get status value
+      const status = row.Status;
+      if (!status) return;
+
+      // Convert to A1 notation for the entire row
+      const rowCells = columns.map((_, colIndex) => {
+        return XLSX.utils.encode_cell({ c: colIndex, r: rowIndex + 1 }); // +1 for header row
+      });
+
+      // Apply row styling based on status
+      rowCells.forEach(cell => {
+        if (worksheet[cell] && status) {
+          let fillColor = "";
+
+          if (status === "added") {
+            fillColor = "CCFFCC"; // Light green
+          } else if (status === "removed") {
+            fillColor = "FFCCCC"; // Light red
+          } else if (status === "modified") {
+            fillColor = "FFFFCC"; // Light yellow
+          }
+
+          if (fillColor) {
+            worksheet[cell].s = {
+              fill: { fgColor: { rgb: fillColor } },
+            };
+          }
+        }
+      });
     }
   });
 };
