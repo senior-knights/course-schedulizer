@@ -13,6 +13,7 @@ import {
   Section,
   Term,
 } from "utilities/interfaces";
+import { combineActiveSchedules } from "utilities/reducers/appReducer";
 import {
   createEventClassName,
   handleOldMeeting,
@@ -86,30 +87,115 @@ export const useAddSectionToSchedule = () => {
   }: AddToScheduleParams) => {
     newSection.timestamp = moment().format();
     newSection.meetings.forEach((meeting) => {
-      meeting.isNonstandardTime = ! isStandardTime(meeting)
-    })
-
-    // First, update the main working schedule
-    handleOldMeeting(oldData, newSection, newCourse, removeOldMeeting, schedule);
-    insertSectionCourse(schedule, newSection, newCourse, oldData, removeOldMeeting);
+      meeting.isNonstandardTime = !isStandardTime(meeting)
+    });
 
     // Create a copy of the schedules array
     const updatedSchedules = [...schedules];
 
-    // Only update the active schedules, not all schedules
-    activeScheduleIds.forEach(scheduleId => {
+    // If this is an update operation (has oldData and removeOldMeeting is true),
+    // find which schedule the section belongs to
+    let targetScheduleIds: number[] = [...activeScheduleIds];
+
+    if (removeOldMeeting && oldData?.course && oldData?.section) {
+      // Find which schedule(s) contain the section being updated
+      targetScheduleIds = updatedSchedules.map((schedule, idx) => {
+        // Check if this schedule contains the section we're updating
+        const containsSection = schedule.courses.some((course: Course) => {
+          // Find a matching course
+          if (course.prefixes[0] === oldData.course.prefixes[0] &&
+              course.number === oldData.course.number) {
+            // Find a matching section
+            return course.sections.some((section: Section) => {
+              return section.letter === oldData.section.letter &&
+                JSON.stringify(section.term) === JSON.stringify(oldData.section.term) &&
+                section.instructors.length === oldData.section.instructors.length &&
+                section.instructors.every((i: string) => {
+                  return oldData.section.instructors.includes(i);
+                });
+            });
+          }
+          return false;
+        });
+
+        // Return the schedule index if it contains the section
+        if (containsSection) {
+          return idx;
+        } else {
+          return -1;
+        }
+      }).filter((idx) => {
+        return idx !== -1;
+      });
+
+      // If no matching schedule found, default to the first active schedule
+      if (targetScheduleIds.length === 0 && activeScheduleIds.length > 0) {
+        targetScheduleIds = [activeScheduleIds[0]];
+      }
+    }
+
+    // Only update the target schedules
+    targetScheduleIds.forEach(scheduleId => {
       if (scheduleId >= 0 && scheduleId < updatedSchedules.length) {
+        // Create a deep copy of the current schedule to modify independently
+        const scheduleCopy = JSON.parse(JSON.stringify(updatedSchedules[scheduleId]));
+
+        // Create independent copies of the section and course for each schedule
+        const sectionCopy = JSON.parse(JSON.stringify(newSection));
+        const courseCopy = JSON.parse(JSON.stringify(newCourse));
+
+        if (removeOldMeeting && oldData) {
+          // For updates, explicitly remove the old section first to ensure it's gone
+          // Find and remove the old section in this specific schedule copy
+          const oldCourse = oldData.course;
+          const oldSection = oldData.section;
+
+          if (oldCourse && oldSection) {
+            const courseIndex = scheduleCopy.courses.findIndex((c: Course) => {
+              return c.prefixes[0] === oldCourse.prefixes[0] && c.number === oldCourse.number;
+            });
+
+            if (courseIndex !== -1) {
+              const sectionIndex = scheduleCopy.courses[courseIndex].sections.findIndex((s: Section) => {
+                return s.letter === oldSection.letter &&
+                  JSON.stringify(s.term) === JSON.stringify(oldSection.term) &&
+                  s.instructors.length === oldSection.instructors.length &&
+                  s.instructors.every((i: string) => {
+                    return oldSection.instructors.includes(i);
+                  });
+              });
+
+              if (sectionIndex !== -1) {
+                // Remove the old section entirely
+                scheduleCopy.courses[courseIndex].sections.splice(sectionIndex, 1);
+
+                // If no sections left, remove the course too
+                if (scheduleCopy.courses[courseIndex].sections.length === 0) {
+                  scheduleCopy.courses.splice(courseIndex, 1);
+                }
+              }
+            }
+          }
+        }
+
+        // Apply updates to this specific schedule copy
+        handleOldMeeting(oldData, sectionCopy, courseCopy, removeOldMeeting, scheduleCopy);
+        insertSectionCourse(scheduleCopy, sectionCopy, courseCopy, oldData, removeOldMeeting);
+
         // Preserve the schedule name when updating
         const scheduleName = updatedSchedules[scheduleId].name;
-        updatedSchedules[scheduleId] = { ...schedule, name: scheduleName };
+        updatedSchedules[scheduleId] = { ...scheduleCopy, name: scheduleName };
       }
     });
+
+    // Generate the combined display schedule from the updated schedules
+    const displaySchedule = combineActiveSchedules(updatedSchedules, activeScheduleIds);
 
     // Dispatch with all schedule state preserved
     appDispatch({
       payload: {
         activeScheduleIds,
-        schedule,
+        schedule: displaySchedule,
         schedules: updatedSchedules,
       },
       type: "setScheduleData",
