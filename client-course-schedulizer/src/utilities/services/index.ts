@@ -8,3 +8,4 @@ export * from "./roomsScheduleService";
 export * from "./scheduleService";
 export * from "./timesScheduleService";
 export * from "./validation";
+export * from "./compareSchedulesService";

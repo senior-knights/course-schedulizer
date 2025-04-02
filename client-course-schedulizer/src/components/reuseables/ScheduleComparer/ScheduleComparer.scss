@@ -1,0 +1,77 @@
+@import "../../../styles/constants.scss";
+
+.compare-button {
+  display: flex;
+  align-items: center;
+  border-radius: 0;
+  padding: 5px 12px;
+  background-color: #f5f5f5;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+
+  .compare-label {
+    margin-left: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+}
+
+.schedule-comparer-form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing;
+}
+
+.schedule-selector-section {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing / 2;
+}
+
+.column-selector-section {
+  margin-top: $spacing / 2;
+}
+
+.column-checkboxes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: $spacing / 6;
+  margin-top: $spacing / 2;
+
+  // Make checkbox labels more compact
+  .MuiFormControlLabel-root {
+    margin-left: -8px;
+    margin-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: -6px;
+    margin-bottom: -6px;
+
+    .MuiFormControlLabel-label {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+.compare-dialog {
+  .MuiDialogContent-root {
+    padding: $spacing $spacing * 1.5;
+  }
+
+  .MuiFormControl-root {
+    margin-bottom: $spacing / 2;
+  }
+
+  .MuiSelect-root {
+    font-size: 0.875rem;
+  }
+
+  .MuiFormLabel-root {
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+  }
+}

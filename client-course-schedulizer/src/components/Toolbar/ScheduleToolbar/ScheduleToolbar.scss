@@ -39,6 +39,9 @@
     position: relative;
     z-index: 1000;
     margin: 0 $spacing;
+    display: flex;
+    align-items: center;
+    gap: $spacing;
   }
 }
 
