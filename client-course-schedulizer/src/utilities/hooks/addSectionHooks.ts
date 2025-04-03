@@ -93,46 +93,9 @@ export const useAddSectionToSchedule = () => {
     // Create a copy of the schedules array
     const updatedSchedules = [...schedules];
 
-    // If this is an update operation (has oldData and removeOldMeeting is true),
-    // find which schedule the section belongs to
+    // IMPORTANT: Only target active schedules, regardless of which schedules contain the section
+    // This ensures we only modify visible schedules
     let targetScheduleIds: number[] = [...activeScheduleIds];
-
-    if (removeOldMeeting && oldData?.course && oldData?.section) {
-      // Find which schedule(s) contain the section being updated
-      targetScheduleIds = updatedSchedules.map((schedule, idx) => {
-        // Check if this schedule contains the section we're updating
-        const containsSection = schedule.courses.some((course: Course) => {
-          // Find a matching course
-          if (course.prefixes[0] === oldData.course.prefixes[0] &&
-              course.number === oldData.course.number) {
-            // Find a matching section
-            return course.sections.some((section: Section) => {
-              return section.letter === oldData.section.letter &&
-                JSON.stringify(section.term) === JSON.stringify(oldData.section.term) &&
-                section.instructors.length === oldData.section.instructors.length &&
-                section.instructors.every((i: string) => {
-                  return oldData.section.instructors.includes(i);
-                });
-            });
-          }
-          return false;
-        });
-
-        // Return the schedule index if it contains the section
-        if (containsSection) {
-          return idx;
-        } else {
-          return -1;
-        }
-      }).filter((idx) => {
-        return idx !== -1;
-      });
-
-      // If no matching schedule found, default to the first active schedule
-      if (targetScheduleIds.length === 0 && activeScheduleIds.length > 0) {
-        targetScheduleIds = [activeScheduleIds[0]];
-      }
-    }
 
     // Only update the target schedules
     targetScheduleIds.forEach(scheduleId => {
