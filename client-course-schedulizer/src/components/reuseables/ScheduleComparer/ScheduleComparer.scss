@@ -22,37 +22,61 @@
 
 .schedule-comparer-form {
   display: flex;
-  flex-direction: column;
-  gap: $spacing;
+  flex-direction: row;
+  gap: $spacing * 2;
+  width: 100%;
+
+  @media (max-width: 800px) {
+    flex-direction: column;
+  }
 }
 
 .schedule-selector-section {
   display: flex;
   flex-direction: column;
   gap: $spacing / 2;
+  flex: 0 0 30%;
+
+  @media (max-width: 800px) {
+    flex: 1 1 auto;
+    width: 100%;
+  }
 }
 
 .column-selector-section {
   margin-top: $spacing / 2;
+  flex: 1 1 70%;
 }
 
 .column-checkboxes {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-  gap: $spacing / 6;
-  margin-top: $spacing / 2;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing / 3;
+  margin-top: $spacing;
+  width: 100%;
 
-  // Make checkbox labels more compact
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+
+  // Make checkbox labels more compact and consistent
   .MuiFormControlLabel-root {
-    margin-left: -8px;
-    margin-right: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-    margin-top: -6px;
-    margin-bottom: -6px;
+    margin: 0;
+    padding: $spacing / 6;
+    display: flex;
+    align-items: center;
 
     .MuiFormControlLabel-label {
       font-size: 0.875rem;
+      white-space: nowrap;
+    }
+
+    .MuiCheckbox-root {
+      padding: 4px;
     }
   }
 }
@@ -67,7 +91,7 @@
 
 .compare-dialog {
   .MuiDialogContent-root {
-    padding: $spacing $spacing * 1.5;
+    padding: $spacing * 1.5;
   }
 
   .MuiFormControl-root {
@@ -79,7 +103,13 @@
   }
 
   .MuiFormLabel-root {
-    margin-bottom: 4px;
+    margin-bottom: 8px;
     font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .MuiDialogActions-root {
+    padding: $spacing;
+    justify-content: flex-end;
   }
 }

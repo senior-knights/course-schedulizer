@@ -5,6 +5,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
   FormControl,
   FormControlLabel,
   FormGroup,
@@ -180,10 +181,20 @@ export const ScheduleComparer = () => {
             <div className="column-selector-section">
               <FormControl
                 component="fieldset"
+                fullWidth
                 size="small"
               >
                 <FormLabel component="legend">
-                  Select columns to match rows (identical values in these columns will be considered the same row)
+                  <Typography variant="subtitle2">
+                    Select columns to match rows
+                    <Typography
+                      color="textSecondary"
+                      display="block"
+                      variant="caption"
+                    >
+                      Identical values in these columns will be considered the same row
+                    </Typography>
+                  </Typography>
                 </FormLabel>
                 <FormGroup>
                   <div className="column-checkboxes">
@@ -446,6 +457,8 @@ export const ScheduleComparer = () => {
             </div>
           </div>
         </DialogContent>
+
+        <Divider />
 
         <DialogActions>
           <Button color="default" onClick={handleClose}>
