@@ -442,7 +442,6 @@ const findRowDifferences = (row: FlattenedRow, group: FlattenedRow[]): string[] 
     );
   });
 
-  // If we found a primary match, check what fields are different
   if (primaryMatch) {
     // Helper to add difference if values are different
     const addDiffIfChanged = (field: keyof FlattenedRow, ref: any, comp: any) => {
@@ -488,21 +487,37 @@ const findRowDifferences = (row: FlattenedRow, group: FlattenedRow[]): string[] 
     });
 
     if (secondaryMatch) {
-      // Start with the section identifier change
-      differences.push(`Section changed: ${formatValue(secondaryMatch.sectionLetter)} → ${formatValue(row.sectionLetter)}`);
+      // Helper to add difference if values are different - reused from above
+      const addDiffIfChanged = (field: keyof FlattenedRow, ref: any, comp: any, customLabel?: string) => {
+        if (ref !== comp) {
+          const defaultLabel = FIELD_DISPLAY_LABELS[field] || field;
+          const label = customLabel || defaultLabel;
+          differences.push(`${label}: ${formatValue(ref)} → ${formatValue(comp)}`);
+        }
+      };
 
-      // Add prefix change if different
-      if (secondaryMatch.prefix !== row.prefix) {
-        differences.push(`Prefix changed: ${formatValue(secondaryMatch.prefix)} → ${formatValue(row.prefix)}`);
-      }
+      // Add special-case differences first with custom labels
+      addDiffIfChanged("sectionLetter", secondaryMatch.sectionLetter, row.sectionLetter, "Section changed");
+      addDiffIfChanged("prefix", secondaryMatch.prefix, row.prefix, "Prefix changed");
+      addDiffIfChanged("instructors", secondaryMatch.instructors, row.instructors, "Instructor changed");
+      addDiffIfChanged("term", secondaryMatch.term, row.term, "Term changed");
 
-      // Add other key differences
-      if (secondaryMatch.instructors !== row.instructors) {
-        differences.push(`Instructor changed: ${formatValue(secondaryMatch.instructors)} → ${formatValue(row.instructors)}`);
-      }
-      if (secondaryMatch.term !== row.term) {
-        differences.push(`Term changed: ${formatValue(secondaryMatch.term)} → ${formatValue(row.term)}`);
-      }
+      // Check all other fields using the same helper function
+      addDiffIfChanged("semesterLength", secondaryMatch.semesterLength, row.semesterLength);
+      addDiffIfChanged("days", secondaryMatch.days, row.days);
+      addDiffIfChanged("startTime", secondaryMatch.startTime, row.startTime);
+      addDiffIfChanged("duration", secondaryMatch.duration, row.duration);
+      addDiffIfChanged("location", secondaryMatch.location, row.location);
+      addDiffIfChanged("facultyHours", secondaryMatch.facultyHours, row.facultyHours);
+      addDiffIfChanged("studentHours", secondaryMatch.studentHours, row.studentHours);
+      addDiffIfChanged("maxStudentHours", secondaryMatch.maxStudentHours, row.maxStudentHours);
+      addDiffIfChanged("shortTitle", secondaryMatch.shortTitle, row.shortTitle);
+      addDiffIfChanged("instructionalMethod", secondaryMatch.instructionalMethod, row.instructionalMethod);
+      addDiffIfChanged("courseLevel", secondaryMatch.courseLevel, row.courseLevel);
+      addDiffIfChanged("deliveryMode", secondaryMatch.deliveryMode, row.deliveryMode);
+      addDiffIfChanged("comments", secondaryMatch.comments, row.comments);
+      addDiffIfChanged("anticipatedSize", secondaryMatch.anticipatedSize, row.anticipatedSize);
+      addDiffIfChanged("day10Used", secondaryMatch.day10Used, row.day10Used);
     } else {
       // No match found at all, this is a completely new entry
       differences.push("New entry");
