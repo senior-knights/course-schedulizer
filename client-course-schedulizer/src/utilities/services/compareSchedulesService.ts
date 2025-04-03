@@ -652,11 +652,63 @@ export const exportComparisonToExcel = (
   // Apply styling to highlight differences
   applyExcelStylingByStatus(comparisonWs, comparisonData);
 
+  // Format data for the summary sheet (grouped by selected columns)
+  const summaryData = comparison
+    .filter(result => { return result.count !== undefined; }) // Only include summary rows
+    .map((result) => {
+      const row = result.row;
+
+      // Create a summary record with the grouped fields
+      const summaryRow: any = {};
+
+      // Add all non-empty fields from the row to the summary
+      Object.entries(row).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== "") {
+          // Use standardized header names
+          const headerKey = Object.entries(COLUMN_MAPPINGS).find(([_, val]) => { return val === key; })?.[0] || key;
+          const displayKey = headerKey.charAt(0).toUpperCase() + headerKey.slice(1);
+          summaryRow[displayKey] = value;
+        }
+      });
+
+      // Add summary fields
+      summaryRow["SectionCount"] = result.count;
+      summaryRow["TotalFacultyLoad"] = result.totalFacultyLoad;
+
+      return summaryRow;
+    });
+
+  // Create headers for summary sheet
+  let summaryHeaders: string[] = [];
+  if (summaryData.length > 0) {
+    summaryHeaders = Object.keys(summaryData[0]);
+  }
+
+  // Create summary worksheet
+  const summaryWs = XLSX.utils.json_to_sheet(summaryData, { header: summaryHeaders });
+
+  // Set column widths
+  if (!summaryWs["!cols"]) {
+    summaryWs["!cols"] = [];
+  }
+  summaryHeaders.forEach((_, index) => {
+    if (summaryWs["!cols"]) {
+      summaryWs["!cols"][index] = { width: 15 };
+    }
+  });
+
   // Add sheets to workbook
   XLSX.utils.book_append_sheet(
     wb,
     comparisonWs,
-    truncateSheetName("Schedule Comparison"),
+    truncateSheetName("Detailed Comparison"),
+  );
+
+  // Add the summary sheet
+  XLSX.utils.book_append_sheet(
+    wb,
+    summaryWs,
+    truncateSheetName("Grouped Summary"),
   );
 
   // Also add the original schedules for reference
