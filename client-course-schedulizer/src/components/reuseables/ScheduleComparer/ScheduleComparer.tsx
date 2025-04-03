@@ -458,7 +458,7 @@ export const ScheduleComparer = () => {
           </div>
         </DialogContent>
 
-        <Divider />
+        <Divider variant="fullWidth" />
 
         <DialogActions>
           <Button color="default" onClick={handleClose}>

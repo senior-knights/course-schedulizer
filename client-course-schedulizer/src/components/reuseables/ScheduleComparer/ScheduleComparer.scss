@@ -112,4 +112,9 @@
     padding: $spacing;
     justify-content: flex-end;
   }
+
+  .MuiDivider-root {
+    margin: 0;
+    width: 100%;
+  }
 }
