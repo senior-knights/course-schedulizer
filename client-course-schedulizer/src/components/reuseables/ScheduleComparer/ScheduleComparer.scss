@@ -21,49 +21,50 @@
 }
 
 .schedule-comparer-form {
-  display: flex;
-  flex-direction: row;
-  gap: $spacing * 2;
   width: 100%;
-
-  @media (max-width: 800px) {
-    flex-direction: column;
-  }
 }
 
 .schedule-selector-section {
-  display: flex;
-  flex-direction: column;
-  gap: $spacing / 2;
-  flex: 0 0 30%;
+  height: 100%;
+  position: relative;
 
-  @media (max-width: 800px) {
-    flex: 1 1 auto;
+  .swap-button {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    margin-top: -12px;
+    background-color: #f5f5f5;
+    z-index: 1;
+
+    &:hover {
+      background-color: #e0e0e0;
+    }
+  }
+}
+
+.column-category {
+  margin-bottom: $spacing;
+
+  .MuiFormControlLabel-root {
+    margin-left: 0;
+    margin-bottom: $spacing / 2;
+    background-color: rgba(0, 0, 0, 0.02);
+    border-radius: 4px;
     width: 100%;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
   }
 }
 
-.column-selector-section {
-  margin-top: $spacing / 2;
-  flex: 1 1 70%;
+.column-categories-container {
+  max-height: 360px;
+  overflow-y: auto;
+  padding-right: $spacing / 2;
 }
 
-.column-checkboxes {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: $spacing / 3;
-  margin-top: $spacing;
-  width: 100%;
-
-  @media (max-width: 1200px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
-  }
-
-  // Make checkbox labels more compact and consistent
+.column-checkboxes-container {
   .MuiFormControlLabel-root {
     margin: 0;
     padding: $spacing / 6;
@@ -72,26 +73,170 @@
 
     .MuiFormControlLabel-label {
       font-size: 0.875rem;
-      white-space: nowrap;
+      line-height: 1.2;
     }
 
     .MuiCheckbox-root {
       padding: 4px;
     }
   }
+
+  .MuiTypography-subtitle2 {
+    background-color: #f0f4f8;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-weight: 600;
+    color: #37474f;
+    margin-bottom: 8px;
+    border-left: 4px solid;
+
+    &:nth-of-type(1) {
+      border-left-color: #1976d2; // Essential - blue
+    }
+
+    &:nth-of-type(2) {
+      border-left-color: #388e3c; // Teaching - green
+    }
+
+    &:nth-of-type(3) {
+      border-left-color: #f57c00; // Schedule - orange
+    }
+
+    &:nth-of-type(4) {
+      border-left-color: #7b1fa2; // Details - purple
+    }
+  }
+
+  .MuiDivider-root {
+    margin-bottom: 8px;
+  }
+
+  .MuiGrid-container {
+    > .MuiGrid-item:nth-child(even) {
+      .MuiFormControlLabel-root {
+        background-color: rgba(0, 0, 0, 0.01);
+      }
+    }
+  }
 }
 
-.export-info {
-  font-size: 0.75rem;
-  color: rgba(0, 0, 0, 0.54);
+.preview-container {
+  margin-top: $spacing * 2;
+}
+
+.stats-container {
+  .preview-stat {
+    margin-right: 8px;
+    margin-bottom: 4px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.preview-stat {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.7rem !important;
+
+  &.preview-added {
+    background-color: rgba(76, 175, 80, 0.12);
+    color: #2e7d32;
+  }
+
+  &.preview-removed {
+    background-color: rgba(244, 67, 54, 0.12);
+    color: #d32f2f;
+  }
+
+  &.preview-modified {
+    background-color: rgba(255, 152, 0, 0.12);
+    color: #ed6c02;
+  }
+
+  &.preview-unchanged {
+    background-color: rgba(33, 150, 243, 0.12);
+    color: #0288d1;
+  }
+}
+
+.preview-results {
+  max-height: 350px;
+  overflow-y: auto;
   padding: $spacing;
-  margin-left: auto;
-  font-style: italic;
+  margin-top: $spacing / 2;
+}
+
+.preview-item {
+  border-left: 3px solid #ccc;
+  border-radius: 0 4px 4px 0;
+
+  &.preview-added {
+    border-left-color: #4caf50;
+    background-color: rgba(76, 175, 80, 0.08);
+  }
+
+  &.preview-removed {
+    border-left-color: #f44336;
+    background-color: rgba(244, 67, 54, 0.08);
+  }
+
+  &.preview-modified {
+    border-left-color: #ff9800;
+    background-color: rgba(255, 152, 0, 0.08);
+  }
+
+  &.preview-unchanged {
+    border-left-color: #2196f3;
+    background-color: rgba(33, 150, 243, 0.08);
+  }
+
+  .status-badge {
+    margin-left: $spacing / 2;
+    padding: 2px $spacing / 2;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: 600;
+
+    .preview-added & {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    .preview-removed & {
+      background-color: #f44336;
+      color: white;
+    }
+
+    .preview-modified & {
+      background-color: #ff9800;
+      color: white;
+    }
+
+    .preview-unchanged & {
+      background-color: #2196f3;
+      color: white;
+    }
+  }
+
+  .differences {
+    margin-top: $spacing / 3;
+    padding-left: $spacing / 2;
+    color: rgba(0, 0, 0, 0.6);
+  }
 }
 
 .compare-dialog {
+  .MuiDialogTitle-root {
+    padding: $spacing * 1.5 $spacing * 2;
+  }
+
   .MuiDialogContent-root {
-    padding: $spacing * 1.5;
+    padding: $spacing * 2;
   }
 
   .MuiFormControl-root {
@@ -109,12 +254,51 @@
   }
 
   .MuiDialogActions-root {
-    padding: $spacing;
+    padding: $spacing * 1.5;
     justify-content: flex-end;
   }
 
-  .MuiDivider-root {
-    margin: 0;
-    width: 100%;
+  .MuiTabs-root {
+    margin-top: $spacing;
+  }
+
+  .MuiTab-root {
+    min-width: 120px;
+    font-size: 0.8rem;
+  }
+
+  .no-results {
+    padding: $spacing * 2;
+    text-align: center;
+  }
+}
+
+// Optimizations for smaller screens
+@media (max-width: 960px) {
+  .column-checkboxes {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .schedule-selector-section {
+    .swap-button {
+      top: auto;
+      bottom: -15px;
+      right: 50%;
+      margin-right: -15px;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .column-checkboxes {
+    grid-template-columns: 1fr;
+  }
+
+  .schedule-comparer-form {
+    flex-direction: column;
+  }
+
+  .MuiDialogContent-root {
+    padding: $spacing;
   }
 }
