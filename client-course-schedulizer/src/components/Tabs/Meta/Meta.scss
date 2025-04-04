@@ -1,22 +1,72 @@
 .meta-container {
-  margin-top: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-.meta-paper {
-  padding: 20px;
-  text-align: center;
+.meta-title {
+  font-weight: 500 !important;
+  margin-bottom: 8px !important;
+}
+
+.meta-subtitle {
+  color: rgba(0, 0, 0, 0.6) !important;
+  margin-bottom: 24px !important;
+}
+
+.meta-card {
+  height: 100%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08) !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12) !important;
+  }
+}
+
+.time-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.section-title {
+  font-weight: 500 !important;
+  margin-bottom: 12px !important;
+}
+
+.section-divider {
+  margin-bottom: 20px !important;
+  width: 100% !important;
 }
 
 .meta-field {
-  margin: 10px 0;
-  font-size: 1rem;
+  margin-bottom: 16px !important;
 }
 
-.meta-field span {
-  font-weight: bold;
+.meta-field-group {
+  margin-top: 8px !important;
 }
 
-.meta-time {
-  margin-top: 20px;
-  font-size: 3rem;
+.time-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80%;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.date-display {
+  font-size: 1.1rem !important;
+  color: rgba(0, 0, 0, 0.7) !important;
+  margin-bottom: 16px !important;
+}
+
+.time-display {
+  font-weight: 400 !important;
+  font-size: 2.2rem !important;
+  line-height: 1.2 !important;
+  color: rgba(0, 0, 0, 0.87) !important;
 }

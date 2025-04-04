@@ -224,9 +224,30 @@ export const useExportExcel = () => {
     const worksheet2 = XLSX.utils.json_to_sheet(exportData2, { header: headers2 });
 
     // Third sheet: Metadata
-    const currentTime = moment().format("YYYY-MM-DD HH:mm:ss");
-    const metadataData = [{ ExportTime: currentTime }];
+    const currentDate = moment().format("YYYY-MM-DD");
+    const currentTime = moment().format("HH:mm:ss");
+
+    // Retrieve metadata from localStorage
+    const notes = localStorage.getItem("schedulizerNotes") || "";
+    const version = localStorage.getItem("schedulizerVersion") || "1.0.0";
+    const year = localStorage.getItem("schedulizerYear") || new Date().getFullYear().toString();
+
+    const metadataData = [
+      { Label: "Export Date", Value: currentDate },
+      { Label: "Export Time", Value: currentTime },
+      { Label: "Academic Year", Value: year },
+      { Label: "Version", Value: version },
+      { Label: "Notes", Value: notes },
+    ];
+
     const worksheet3 = XLSX.utils.json_to_sheet(metadataData);
+
+    // Adjust column widths for metadata sheet
+    const metadataColWidths = [
+      { wch: 15 }, // Label column
+      { wch: 50 }, // Value column
+    ];
+    worksheet3["!cols"] = metadataColWidths;
 
     // Create workbook and append sheets in order
     const workbook = XLSX.utils.book_new();
