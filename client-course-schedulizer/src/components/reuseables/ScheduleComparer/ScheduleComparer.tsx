@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Checkbox,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -14,6 +15,9 @@ import {
   Grid,
   IconButton,
   InputAdornment,
+  List,
+  ListItem,
+  ListItemText,
   MenuItem,
   Paper,
   Select,
@@ -45,10 +49,6 @@ interface ComparisonResult {
   status: ResultStatus;
   totalFacultyLoad?: number;
 }
-
-// Maximum number of preview results to show
-const MAX_PREVIEW_RESULTS = 100;
-const DEFAULT_PREVIEW_RESULTS = 25;
 
 // Status display order priority (lower index = higher priority)
 const STATUS_PRIORITY: ResultStatus[] = ['modified', 'removed', 'added', 'unchanged'];
@@ -102,7 +102,14 @@ export const ScheduleComparer = () => {
   const [activeTab, setActiveTab] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [previewResults, setPreviewResults] = useState<ComparisonResult[]>([]);
-  const [showAllResults, setShowAllResults] = useState<boolean>(false);
+  const [statusFilters, setStatusFilters] = useState<{
+    [key in ResultStatus]: boolean;
+  }>({
+    added: true,
+    modified: true,
+    removed: true,
+    unchanged: true,
+  });
   const [summaryStats, setSummaryStats] = useState<{
     added: number;
     modified: number;
@@ -231,6 +238,14 @@ export const ScheduleComparer = () => {
     });
   };
 
+  // Handle toggling a status filter
+  const handleToggleStatusFilter = (status: ResultStatus) => {
+    setStatusFilters({
+      ...statusFilters,
+      [status]: !statusFilters[status],
+    });
+  };
+
   const handlePreviewComparison = () => {
     if (referenceScheduleId >= 0 && comparisonScheduleId >= 0) {
       const referenceSchedule = schedules[referenceScheduleId];
@@ -264,8 +279,8 @@ export const ScheduleComparer = () => {
         return priorityA - priorityB;
       });
 
-      // Display all results or limit based on showAllResults flag
-      setPreviewResults(showAllResults ? sortedResults : sortedResults.slice(0, MAX_PREVIEW_RESULTS));
+      // Always save the full set of results
+      setPreviewResults(sortedResults);
     }
   };
 
@@ -390,76 +405,184 @@ export const ScheduleComparer = () => {
       );
     }
 
-    const displayCount = showAllResults ? summaryStats.total : Math.min(previewResults.length, MAX_PREVIEW_RESULTS);
+    // Filter results based on status filters
+    const filteredResults = previewResults.filter((result) => { return statusFilters[result.status]; });
+
+    // Always show all filtered results
+    const displayedResults = filteredResults;
+    const totalResults = filteredResults.length;
 
     return (
       <Box className="preview-container">
-        <Box alignItems="center" display="flex" justifyContent="space-between" mb={1}>
-          <Typography gutterBottom style={{ marginBottom: 0 }} variant="subtitle2">
-            Preview Results (showing {displayCount} of {summaryStats.total} entries)
-          </Typography>
-
-          {summaryStats.total > DEFAULT_PREVIEW_RESULTS && (
-            <Button
-              color="primary"
-              onClick={() => {
-                setShowAllResults(!showAllResults);
-                handlePreviewComparison();
-              }}
-              size="small"
-            >
-              {showAllResults ? "Show Less" : "Show All"}
-            </Button>
-          )}
+        <Box mb={2}>
+          <Tabs
+            indicatorColor="primary"
+            onChange={handleTabChange}
+            textColor="primary"
+            value={activeTab}
+            variant="scrollable"
+          >
+            <Tab label="Changes List" />
+            <Tab label="Summary" />
+          </Tabs>
         </Box>
 
-        <Box display="flex" justifyContent="space-between" mb={1}>
-          <Box className="stats-container" display="flex" flexWrap="wrap">
-            <Typography className="preview-stat preview-modified" variant="caption">
-              Modified: {summaryStats.modified}
-            </Typography>
-            <Typography className="preview-stat preview-removed" variant="caption">
-              Removed: {summaryStats.removed}
-            </Typography>
-            <Typography className="preview-stat preview-added" variant="caption">
-              Added: {summaryStats.added}
-            </Typography>
-            <Typography className="preview-stat preview-unchanged" variant="caption">
-              Unchanged: {summaryStats.unchanged}
-            </Typography>
-          </Box>
+        {activeTab === 0 && (
+          <>
+            <Box alignItems="center" display="flex" mb={1}>
+              <Typography gutterBottom style={{ marginBottom: 0 }} variant="subtitle2">
+                Preview Results ({totalResults} entries)
+              </Typography>
+            </Box>
 
-          {!showAllResults && previewResults.length < summaryStats.total && (
-            <Typography color="textSecondary" variant="caption">
-              {summaryStats.total > MAX_PREVIEW_RESULTS ? "Click 'Show All' to see all differences" : "Export to see all differences"}
-            </Typography>
-          )}
-        </Box>
-
-        <Paper className="preview-results" variant="outlined">
-          {previewResults.map((result, index) => {
-            return (
-              <Box
-                className={`preview-item preview-${result.status}`}
-                key={index}
-                mb={1}
-                p={1}
-              >
-                <Typography variant="body2">
-                  <strong>
-                    {result.row.prefix} {result.row.number}-{result.row.sectionLetter} {result.row.term}
-                  </strong>
-                  <span className="status-badge">{result.status}</span>
-                </Typography>
-                {result.differences.length > 0 && (
-                  <Typography className="differences" component="div" variant="caption">
-                    Changes: {result.differences.join(", ")}
-                  </Typography>
-                )}
+            <Box mb={2}>
+              <Typography gutterBottom variant="subtitle2">
+                Filter by Status:
+              </Typography>
+              <Box display="flex" flexWrap="wrap">
+                <Chip
+                  clickable
+                  color={statusFilters.modified ? "primary" : "default"}
+                  label={`Modified (${summaryStats.modified})`}
+                  onClick={() => { handleToggleStatusFilter('modified'); }}
+                  style={{
+                    backgroundColor: statusFilters.modified ? '#ff9800' : undefined,
+                    color: statusFilters.modified ? 'white' : undefined,
+                    margin: '0 8px 8px 0',
+                  }}
+                />
+                <Chip
+                  clickable
+                  color={statusFilters.removed ? "primary" : "default"}
+                  label={`Removed (${summaryStats.removed})`}
+                  onClick={() => { handleToggleStatusFilter('removed'); }}
+                  style={{
+                    backgroundColor: statusFilters.removed ? '#f44336' : undefined,
+                    color: statusFilters.removed ? 'white' : undefined,
+                    margin: '0 8px 8px 0',
+                  }}
+                />
+                <Chip
+                  clickable
+                  color={statusFilters.added ? "primary" : "default"}
+                  label={`Added (${summaryStats.added})`}
+                  onClick={() => { handleToggleStatusFilter('added'); }}
+                  style={{
+                    backgroundColor: statusFilters.added ? '#4caf50' : undefined,
+                    color: statusFilters.added ? 'white' : undefined,
+                    margin: '0 8px 8px 0',
+                  }}
+                />
+                <Chip
+                  clickable
+                  color={statusFilters.unchanged ? "primary" : "default"}
+                  label={`Unchanged (${summaryStats.unchanged})`}
+                  onClick={() => { handleToggleStatusFilter('unchanged'); }}
+                  style={{
+                    backgroundColor: statusFilters.unchanged ? '#2196f3' : undefined,
+                    color: statusFilters.unchanged ? 'white' : undefined,
+                    margin: '0 8px 8px 0',
+                  }}
+                />
               </Box>
-            );
-          })}
-        </Paper>
+            </Box>
+
+            {filteredResults.length === 0 ? (
+              <Box p={3} textAlign="center">
+                <Typography color="textSecondary" variant="body2">
+                  No results match your current filters. Try adjusting the filters above.
+                </Typography>
+              </Box>
+            ) : (
+              <Paper className="preview-results" variant="outlined">
+                <List disablePadding>
+                  {displayedResults.map((result, index) => {
+                    return (
+                      <ListItem
+                        className={`preview-item preview-${result.status}`}
+                        divider={index < displayedResults.length - 1}
+                        key={index}
+                      >
+                        <ListItemText
+                          primary={
+                            <Box alignItems="center" display="flex" justifyContent="space-between">
+                              <Typography variant="body2">
+                                <strong>
+                                  {result.row.prefix} {result.row.number}-{result.row.sectionLetter} {result.row.term}
+                                </strong>
+                              </Typography>
+                              <Chip
+                                className={`status-chip status-${result.status}`}
+                                label={result.status}
+                                size="small"
+                              />
+                            </Box>
+                          }
+                          secondary={
+                            result.differences.length > 0 ? (
+                              <Typography className="differences" component="div" variant="caption">
+                                <strong>Changes:</strong> {result.differences.join(", ")}
+                              </Typography>
+                            ) : (
+                              <Typography className="differences" component="div" variant="caption">
+                                <em>Course is {result.status === 'unchanged' ? 'identical' : 'completely different'} between schedules</em>
+                              </Typography>
+                            )
+                          }
+                        />
+                      </ListItem>
+                    );
+                  })}
+                </List>
+              </Paper>
+            )}
+          </>
+        )}
+
+        {activeTab === 1 && (
+          <Paper className="summary-tab" variant="outlined">
+            <Box p={2}>
+              <Typography gutterBottom variant="subtitle2">
+                Changes Summary
+              </Typography>
+              {summaryStats.total === 0 ? (
+                <Box mt={2} textAlign="center">
+                  <Typography color="textSecondary" variant="body2">
+                    No comparison data available. Select columns to compare and click "Preview Comparison".
+                  </Typography>
+                </Box>
+              ) : (
+                <Box display="flex" flexDirection="column">
+                  <Box className="summary-item">
+                    <Typography variant="body2">
+                      <strong>Total Changes:</strong> {summaryStats.total}
+                    </Typography>
+                  </Box>
+                  <Box className="summary-item">
+                    <Typography className="modified-text" variant="body2">
+                      <strong>Modified Courses:</strong> {summaryStats.modified}
+                    </Typography>
+                  </Box>
+                  <Box className="summary-item">
+                    <Typography className="removed-text" variant="body2">
+                      <strong>Removed Courses:</strong> {summaryStats.removed}
+                    </Typography>
+                  </Box>
+                  <Box className="summary-item">
+                    <Typography className="added-text" variant="body2">
+                      <strong>Added Courses:</strong> {summaryStats.added}
+                    </Typography>
+                  </Box>
+                  <Box className="summary-item">
+                    <Typography className="unchanged-text" variant="body2">
+                      <strong>Unchanged Courses:</strong> {summaryStats.unchanged}
+                    </Typography>
+                  </Box>
+                </Box>
+              )}
+            </Box>
+          </Paper>
+        )}
       </Box>
     );
   };

@@ -230,6 +230,72 @@
   }
 }
 
+// New styles for the enhanced UI
+.status-chip {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  &.status-added {
+    background-color: #4caf50;
+    color: white;
+  }
+
+  &.status-removed {
+    background-color: #f44336;
+    color: white;
+  }
+
+  &.status-modified {
+    background-color: #ff9800;
+    color: white;
+  }
+
+  &.status-unchanged {
+    background-color: #2196f3;
+    color: white;
+  }
+}
+
+.preview-container {
+  .MuiTabs-root {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    margin-bottom: $spacing;
+  }
+
+  .MuiTab-root {
+    min-width: 120px;
+    font-size: 0.85rem;
+  }
+}
+
+.summary-tab {
+  .summary-item {
+    padding: $spacing / 2 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .modified-text strong {
+    color: #ff9800;
+  }
+
+  .removed-text strong {
+    color: #f44336;
+  }
+
+  .added-text strong {
+    color: #4caf50;
+  }
+
+  .unchanged-text strong {
+    color: #2196f3;
+  }
+}
+
 .compare-dialog {
   .MuiDialogTitle-root {
     padding: $spacing * 1.5 $spacing * 2;
