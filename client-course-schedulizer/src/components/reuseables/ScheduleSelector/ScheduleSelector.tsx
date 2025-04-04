@@ -99,10 +99,6 @@ export const ScheduleSelector = () => {
           vertical: 'bottom',
         }}
       >
-        <Typography className="schedule-selector-title" variant="subtitle1">
-          Toggle Schedules ({scheduleCounter})
-        </Typography>
-
         <div className="schedules-chip-container">
           {schedules.map((schedule, index) => {
             // Get schedule name from file name or use default
