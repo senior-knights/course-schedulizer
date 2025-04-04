@@ -51,8 +51,24 @@ export const useImportFile = (isAdditiveImport: boolean) => {
 
     reader.onloadend = async () => {
       let scheduleString: string;
+      let metadataFound = false;
+
+      // Clear existing metadata when importing a new file (not for additive imports)
+      if (!isAdditiveImport) {
+        clearMetadata();
+      }
+
       if (fileType === "xlsx") {
-        scheduleString = getCSVFromXLSXData(reader.result as ArrayBufferLike);
+        // For XLSX files, first check if there's a metadata sheet
+        const workbook = read(reader.result as ArrayBufferLike, { type: "array" });
+
+        // Extract metadata if available in the file
+        metadataFound = extractMetadataFromWorkbook(workbook);
+
+        // Get CSV data from the first sheet
+        const worksheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[worksheetName];
+        scheduleString = utils.sheet_to_csv(worksheet);
       } else if (fileType === "csv") {
         scheduleString = String(reader.result);
       } else {
@@ -103,6 +119,61 @@ export const useImportFile = (isAdditiveImport: boolean) => {
 };
 
 /**
+ * Clears all metadata from localStorage
+ */
+const clearMetadata = (): void => {
+  localStorage.removeItem("schedulizerNotes");
+  localStorage.removeItem("schedulizerVersion");
+  localStorage.removeItem("schedulizerYear");
+};
+
+/**
+ * Extracts metadata from an XLSX workbook and updates localStorage
+ * @param workbook XLSX workbook object
+ * @returns boolean indicating if any metadata was found
+ */
+const extractMetadataFromWorkbook = (workbook: any): boolean => {
+  // Look for a metadata sheet (case insensitive)
+  const metadataSheetName = workbook.SheetNames.find((name: string) => {
+    return name.toLowerCase() === "metadata";
+  });
+
+  if (metadataSheetName) {
+    try {
+      const metadataSheet = workbook.Sheets[metadataSheetName];
+      const metadataArray = utils.sheet_to_json(metadataSheet);
+
+      let foundMetadata = false;
+
+      // Process metadata
+      metadataArray.forEach((item: any) => {
+        if (item.Label && item.Value) {
+          foundMetadata = true;
+          switch (item.Label) {
+            case "Academic Year":
+              localStorage.setItem("schedulizerYear", item.Value.toString());
+              break;
+            case "Version":
+              localStorage.setItem("schedulizerVersion", item.Value.toString());
+              break;
+            case "Notes":
+              localStorage.setItem("schedulizerNotes", item.Value.toString());
+              break;
+          }
+        }
+      });
+
+      return foundMetadata;
+    } catch (error) {
+      console.error("Error parsing metadata sheet:", error);
+      return false;
+    }
+  }
+
+  return false;
+};
+
+/**
  * Converts XLSX data to CSV string.
  *
  * @param  {ArrayBufferLike} data
@@ -110,6 +181,13 @@ export const useImportFile = (isAdditiveImport: boolean) => {
  */
 export const getCSVFromXLSXData = (data: ArrayBufferLike): string => {
   const workbook = read(data, { type: "array" });
+
+  // Clear existing metadata before checking for new metadata
+  clearMetadata();
+
+  // Extract metadata when loading remote XLSX files
+  extractMetadataFromWorkbook(workbook);
+
   const worksheetName = workbook.SheetNames[0];
   const worksheet = workbook.Sheets[worksheetName];
   return utils.sheet_to_csv(worksheet);

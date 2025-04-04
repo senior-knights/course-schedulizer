@@ -36,7 +36,9 @@ export const Meta = () => {
 
   return (
     <div className="meta-container">
-      <Typography className="meta-title" variant="h5">Schedule Metadata</Typography>
+      <div>
+        <h3>Schedule Metadata</h3>
+      </div>
       <Typography className="meta-subtitle" variant="subtitle1">
         Add information about your schedule that will be included in exports
       </Typography>

@@ -5,6 +5,13 @@ import { AppContext } from "utilities/contexts";
 export const getCSVStr = "?csv=";
 const getXLSXStr = "?xlsx=";
 
+// Helper function to clear metadata
+const clearMetadata = (): void => {
+  localStorage.removeItem("schedulizerNotes");
+  localStorage.removeItem("schedulizerVersion");
+  localStorage.removeItem("schedulizerYear");
+};
+
 export const useImportRemoteFile = () => {
   const appContext = useContext(AppContext);
   const {
@@ -41,6 +48,9 @@ export const useImportRemoteFile = () => {
           .then(async (result) => {
             appDispatch({ payload: { fileUrl: xlsxUrl }, type: "setFileUrl" });
             if (result) {
+              // Clear metadata before importing
+              clearMetadata();
+
               const newSchedule = csvStringToSchedule(
                 getCSVFromXLSXData(result as ArrayBufferLike),
               );
@@ -104,6 +114,9 @@ export const loadRemoteCSV = (url: string, csvIndex: number, appContext: AppCont
       .then(async (result) => {
         appDispatch({ payload: { fileUrl: csvUrl }, type: "setFileUrl" });
         if (result) {
+          // Clear metadata before importing a new CSV file
+          clearMetadata();
+
           const newSchedule = csvStringToSchedule(result);
 
           // Try to extract filename from URL
