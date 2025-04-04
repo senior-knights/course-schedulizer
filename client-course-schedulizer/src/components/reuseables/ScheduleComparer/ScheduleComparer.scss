@@ -81,42 +81,30 @@
     }
   }
 
-  .MuiTypography-subtitle2 {
-    background-color: #f0f4f8;
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-weight: 600;
-    color: #37474f;
-    margin-bottom: 8px;
-    border-left: 4px solid;
-
-    &:nth-of-type(1) {
-      border-left-color: #1976d2; // Essential - blue
-    }
-
-    &:nth-of-type(2) {
-      border-left-color: #388e3c; // Teaching - green
-    }
-
-    &:nth-of-type(3) {
-      border-left-color: #f57c00; // Schedule - orange
-    }
-
-    &:nth-of-type(4) {
-      border-left-color: #7b1fa2; // Details - purple
-    }
+  .MuiTypography-subtitle1 {
+    color: #3f51b5;
+    font-weight: 500;
+    font-size: 1rem;
   }
 
   .MuiDivider-root {
-    margin-bottom: 8px;
+    margin-bottom: $spacing / 2;
+    height: 2px;
+    background-color: #e0e0e0;
   }
 
   .MuiGrid-container {
+    padding-bottom: $spacing;
+
     > .MuiGrid-item:nth-child(even) {
       .MuiFormControlLabel-root {
         background-color: rgba(0, 0, 0, 0.01);
       }
     }
+  }
+
+  .MuiFormControlLabel-root {
+    margin-left: -8px;
   }
 }
 
@@ -334,8 +322,33 @@
   }
 
   .no-results {
-    padding: $spacing * 2;
+    margin: $spacing * 2 0;
     text-align: center;
+    color: rgba(0, 0, 0, 0.54);
+  }
+
+  .column-checkboxes-container {
+    .MuiDivider-root {
+      margin-bottom: $spacing / 2;
+    }
+
+    .MuiTypography-subtitle1 {
+      font-size: 1rem;
+      letter-spacing: 0.01em;
+    }
+
+    .MuiGrid-container {
+      padding-bottom: $spacing;
+    }
+
+    .MuiFormControlLabel-root {
+      margin-left: -8px;
+    }
+  }
+
+  .MuiDivider-root {
+    height: 2px;
+    background-color: #e0e0e0;
   }
 }
 

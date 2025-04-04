@@ -822,13 +822,20 @@ export const ScheduleComparer = () => {
                           return (
                             <React.Fragment key={category}>
                               <Grid item xs={12}>
-                                <Typography style={{ marginTop: 16 }} variant="subtitle2">
-                                  {category === "ESSENTIAL" ? "Course Info" :
-                                   category === "TEACHING" ? "Faculty & Scheduling" :
-                                   category === "SCHEDULE" ? "Meeting Details" :
-                                   "Additional Information"}
-                                </Typography>
-                                <Divider />
+                                <Box mb={1} mt={2}>
+                                  <Typography
+                                    color="primary"
+                                    gutterBottom
+                                    style={{ fontWeight: 500 }}
+                                    variant="subtitle1"
+                                  >
+                                    {category === "ESSENTIAL" ? "Course Info" :
+                                     category === "TEACHING" ? "Faculty & Scheduling" :
+                                     category === "SCHEDULE" ? "Meeting Details" :
+                                     "Additional Information"}
+                                  </Typography>
+                                  <Divider />
+                                </Box>
                               </Grid>
 
                               {columns.map(column => {return (
