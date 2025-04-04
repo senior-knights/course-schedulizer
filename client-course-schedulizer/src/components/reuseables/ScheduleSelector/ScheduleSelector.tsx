@@ -1,4 +1,4 @@
-import { Chip, IconButton, Paper, Tooltip, Typography } from "@material-ui/core";
+import { Chip, IconButton, Menu, Tooltip, Typography } from "@material-ui/core";
 import ToggleOnIcon from "@material-ui/icons/ToggleOn";
 import React, { useContext, useState } from "react";
 import { AppContext } from "utilities/contexts";
@@ -13,14 +13,24 @@ export const ScheduleSelector = () => {
     appState: { schedules, activeScheduleIds },
     appDispatch,
   } = useContext(AppContext);
-  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   // Hide if there are no schedules or only one schedule
   if (schedules.length <= 1) {
     return null;
   }
 
-  const handleToggleSchedule = (scheduleId: number) => {
+  const handleToggleOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(anchorEl ? null : event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleToggleSchedule = (scheduleId: number, event: React.MouseEvent) => {
+    event.stopPropagation();
+
     // Create a new array with the changed schedule
     const updatedIds = [...activeScheduleIds];
     const index = updatedIds.indexOf(scheduleId);
@@ -50,16 +60,19 @@ export const ScheduleSelector = () => {
   // Get display colors for the chips
   const getChipColor = (index: number) => {
     // A simple array of distinctive colors
-    const colors = ["#4CAF50", "#2196F3", "#FF9800", "#E91E63", "#9C27B0", "#00BCD4"];
+    const colors = ["#4CAF50", "#2196F3", "#FF9800", "#E91E63", "#9C27B0", "#00BCD4", "#607D8B", "#795548", "#8BC34A", "#3F51B5"];
     return colors[index % colors.length];
   };
 
+  // Display count of active/total schedules
+  const scheduleCounter = `${activeScheduleIds.length}/${schedules.length}`;
+
   const toggleButton = (
     <Tooltip title="Toggle Schedules">
-      <IconButton className="toggle-button" onClick={() => { setOpen(!open); }}>
+      <IconButton className="toggle-button" onClick={handleToggleOpen}>
         <ToggleOnIcon />
         <Typography className="toggle-label" variant="button">
-          Toggle Schedules
+          Toggle Schedules <span className="schedule-counter">({scheduleCounter})</span>
         </Typography>
       </IconButton>
     </Tooltip>
@@ -69,9 +82,25 @@ export const ScheduleSelector = () => {
     <div className="schedule-selector-wrapper">
       {toggleButton}
 
-      <Paper className={`schedule-selector-container ${open ? 'open' : ''}`}>
+      <Menu
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          horizontal: 'center',
+          vertical: 'top',
+        }}
+        className="schedules-menu"
+        getContentAnchorEl={null}
+        id="schedules-menu"
+        keepMounted
+        onClose={handleClose}
+        open={Boolean(anchorEl)}
+        transformOrigin={{
+          horizontal: 'center',
+          vertical: 'bottom',
+        }}
+      >
         <Typography className="schedule-selector-title" variant="subtitle1">
-          Toggle Schedules
+          Toggle Schedules ({scheduleCounter})
         </Typography>
 
         <div className="schedules-chip-container">
@@ -86,7 +115,7 @@ export const ScheduleSelector = () => {
                 color={isActive ? "primary" : "default"}
                 key={`schedule-${index}`}
                 label={scheduleName}
-                onClick={() => { handleToggleSchedule(index); }}
+                onClick={(event) => { handleToggleSchedule(index, event); }}
                 style={{
                   backgroundColor: isActive ? getChipColor(index) : undefined,
                   fontWeight: isActive ? 'bold' : 'normal',
@@ -97,7 +126,7 @@ export const ScheduleSelector = () => {
             );
           })}
         </div>
-      </Paper>
+      </Menu>
     </div>
   );
 };
