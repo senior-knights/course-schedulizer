@@ -70,6 +70,12 @@
     padding: $spacing / 6;
     display: flex;
     align-items: center;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
 
     .MuiFormControlLabel-label {
       font-size: 0.875rem;
@@ -95,12 +101,6 @@
 
   .MuiGrid-container {
     padding-bottom: $spacing;
-
-    > .MuiGrid-item:nth-child(even) {
-      .MuiFormControlLabel-root {
-        background-color: rgba(0, 0, 0, 0.01);
-      }
-    }
   }
 
   .MuiFormControlLabel-root {
