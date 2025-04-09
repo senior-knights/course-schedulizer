@@ -806,6 +806,8 @@ export const ScheduleComparer = () => {
                           updatedColumns[key] = true;
                         });
                         setSelectedColumns(updatedColumns);
+                        // Automatically update preview
+                        setTimeout(handlePreviewComparison, 0);
                       }}
                       size="small"
                       style={{ marginRight: 8 }}
@@ -821,6 +823,8 @@ export const ScheduleComparer = () => {
                           updatedColumns[key] = false;
                         });
                         setSelectedColumns(updatedColumns);
+                        // Automatically update preview
+                        setTimeout(handlePreviewComparison, 0);
                       }}
                       size="small"
                       style={{ marginRight: 8 }}
@@ -844,6 +848,8 @@ export const ScheduleComparer = () => {
                         updatedColumns.term = true;
                         updatedColumns.semesterLength = true;
                         setSelectedColumns(updatedColumns);
+                        // Automatically update preview
+                        setTimeout(handlePreviewComparison, 0);
                       }}
                       size="small"
                     >
