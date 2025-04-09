@@ -66,3 +66,20 @@
   line-height: 1.2 !important;
   color: rgba(0, 0, 0, 0.87) !important;
 }
+
+.meta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+
+  h3 {
+    margin: 0;
+  }
+}
+
+.unsaved-indicator {
+  color: #f44336;
+  font-weight: 500;
+  margin-left: 8px;
+}

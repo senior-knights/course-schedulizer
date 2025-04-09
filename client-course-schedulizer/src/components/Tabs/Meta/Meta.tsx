@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import {
+  Button,
   Card,
   CardContent,
   Divider,
   Grid,
   Paper,
+  Snackbar,
   TextField,
   Typography,
 } from "@material-ui/core";
+import SaveIcon from "@material-ui/icons/Save";
+import Alert from "@material-ui/lab/Alert";
 import "./Meta.scss";
 
 /* Creates a Meta tab for notes, version, year, and time display
@@ -17,6 +21,15 @@ export const Meta = () => {
   const [notes, setNotes] = useState(localStorage.getItem("schedulizerNotes") || "");
   const [version, setVersion] = useState(localStorage.getItem("schedulizerVersion") || "1.0.0");
   const [year, setYear] = useState(localStorage.getItem("schedulizerYear") || new Date().getFullYear().toString());
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [showSaveSuccess, setShowSaveSuccess] = useState(false);
+
+  // Store original values for comparison
+  const [originalValues, setOriginalValues] = useState({
+    notes: localStorage.getItem("schedulizerNotes") || "",
+    version: localStorage.getItem("schedulizerVersion") || "1.0.0",
+    year: localStorage.getItem("schedulizerYear") || new Date().getFullYear().toString(),
+  });
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -27,20 +40,57 @@ export const Meta = () => {
     };
   }, []);
 
-  // Save data to localStorage when it changes
+  // Check for unsaved changes when data changes
   useEffect(() => {
+    const hasChanges =
+      notes !== originalValues.notes ||
+      version !== originalValues.version ||
+      year !== originalValues.year;
+
+    setHasUnsavedChanges(hasChanges);
+  }, [notes, version, year, originalValues]);
+
+  // Handle save action
+  const handleSave = () => {
     localStorage.setItem("schedulizerNotes", notes);
     localStorage.setItem("schedulizerVersion", version);
     localStorage.setItem("schedulizerYear", year);
-  }, [notes, version, year]);
+
+    // Update original values to match current values
+    setOriginalValues({
+      notes,
+      version,
+      year,
+    });
+
+    setHasUnsavedChanges(false);
+    setShowSaveSuccess(true);
+  };
+
+  // Handle closing the save success notification
+  const handleCloseSnackbar = () => {
+    setShowSaveSuccess(false);
+  };
 
   return (
     <div className="meta-container">
-      <div>
+      <div className="meta-header">
         <h3>Schedule Metadata</h3>
+        <Button
+          color="primary"
+          disabled={!hasUnsavedChanges}
+          onClick={handleSave}
+          startIcon={<SaveIcon />}
+          variant="contained"
+        >
+          Save Changes
+        </Button>
       </div>
       <Typography className="meta-subtitle" variant="subtitle1">
         Add information about your schedule that will be included in exports
+        {hasUnsavedChanges && (
+          <span className="unsaved-indicator"> (unsaved changes)</span>
+        )}
       </Typography>
 
       <Grid container spacing={3}>
@@ -125,6 +175,16 @@ export const Meta = () => {
           </Card>
         </Grid>
       </Grid>
+
+      <Snackbar
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        open={showSaveSuccess}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success">
+          Changes saved successfully!
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
