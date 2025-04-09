@@ -26,6 +26,7 @@ import {
   TextField,
   Tooltip,
   Typography,
+  makeStyles,
 } from "@material-ui/core";
 import CompareIcon from "@material-ui/icons/Compare";
 import SearchIcon from "@material-ui/icons/Search";
@@ -37,6 +38,35 @@ import { AppContext } from "utilities/contexts";
 import { Schedule } from "utilities/interfaces";
 import { compareSchedules, exportComparisonToExcel } from "utilities/services";
 import "./ScheduleComparer.scss";
+
+// Define styles using makeStyles for better organization
+const useStyles = makeStyles((theme) => {
+  return {
+    compareButton: {
+      '&:hover': {
+        backgroundColor: '#e0e0e0',
+      },
+      alignItems: 'center',
+      backgroundColor: '#f5f5f5',
+      border: 'none',
+      borderRadius: '20px',
+      display: 'flex',
+      padding: '5px 12px',
+      transition: 'background-color 0.2s',
+    },
+    compareIcon: {
+      marginRight: theme.spacing(0.5),
+    },
+    compareLabel: {
+      alignItems: 'center',
+      display: 'flex',
+      fontSize: '14px',
+      fontWeight: 500,
+      marginLeft: '8px',
+      whiteSpace: 'nowrap',
+    },
+  };
+});
 
 // Define a type for comparison result status
 type ResultStatus = 'modified' | 'removed' | 'added' | 'unchanged';
@@ -92,6 +122,7 @@ const COLUMN_CATEGORIES = {
  * Component that allows users to compare two schedules and export the differences
  */
 export const ScheduleComparer = () => {
+  const classes = useStyles();
   const {
     appState: { schedules },
   } = useContext(AppContext);
@@ -188,6 +219,16 @@ export const ScheduleComparer = () => {
     });
 
     setSelectedColumns(updatedColumns);
+
+    // Clear preview when columns change
+    setPreviewResults([]);
+    setSummaryStats({
+      added: 0,
+      modified: 0,
+      removed: 0,
+      total: 0,
+      unchanged: 0,
+    });
   }, [selectedColumns]);
 
   // Filter columns based on search
@@ -216,15 +257,14 @@ export const ScheduleComparer = () => {
     return Object.keys(filteredColumns).length > 0;
   }, [filteredColumns, searchQuery]);
 
-  // Hide if there are fewer than 2 schedules
-  if (schedules.length < 2) {
-    return null;
-  }
-
-  const handleToggleColumn = (column: string) => {
-    setSelectedColumns({
-      ...selectedColumns,
-      [column]: !selectedColumns[column],
+  // Handle toggling a column selection
+  const handleToggleColumn = useCallback((column: string) => {
+    setSelectedColumns(prevColumns => {
+      const newColumns = {
+        ...prevColumns,
+        [column]: !prevColumns[column],
+      };
+      return newColumns;
     });
 
     // Clear preview when columns change
@@ -236,15 +276,22 @@ export const ScheduleComparer = () => {
       total: 0,
       unchanged: 0,
     });
-  };
+  }, []);
 
   // Handle toggling a status filter
-  const handleToggleStatusFilter = (status: ResultStatus) => {
-    setStatusFilters({
-      ...statusFilters,
-      [status]: !statusFilters[status],
+  const handleToggleStatusFilter = useCallback((status: ResultStatus) => {
+    setStatusFilters(prevFilters => {
+      return {
+        ...prevFilters,
+        [status]: !prevFilters[status],
+      };
     });
-  };
+  }, []);
+
+  // Hide if there are fewer than 2 schedules
+  if (schedules.length < 2) {
+    return null;
+  }
 
   const handlePreviewComparison = () => {
     if (referenceScheduleId >= 0 && comparisonScheduleId >= 0) {
@@ -590,9 +637,9 @@ export const ScheduleComparer = () => {
   return (
     <>
       <Tooltip title="Compare Schedules">
-        <IconButton className="compare-button" onClick={handleOpen}>
-          <CompareIcon />
-          <Typography className="compare-label" variant="button">
+        <IconButton className={classes.compareButton} onClick={handleOpen}>
+          <CompareIcon className={classes.compareIcon} />
+          <Typography className={classes.compareLabel} variant="button">
             COMPARE&nbsp;SCHEDULES
           </Typography>
         </IconButton>

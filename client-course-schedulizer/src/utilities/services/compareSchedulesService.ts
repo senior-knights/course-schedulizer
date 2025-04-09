@@ -5,7 +5,7 @@ import moment from "moment";
 import { Course, Meeting, Schedule, Section } from "utilities/interfaces";
 
 // Define a structure for the comparison result
-interface ComparisonResult {
+export interface ComparisonResult {
   count?: number;
   differences: string[];
   row: {
@@ -15,7 +15,7 @@ interface ComparisonResult {
   totalFacultyLoad?: number;
 }
 
-interface FlattenedRow {
+export interface FlattenedRow {
   anticipatedSize?: number;
   comments?: string;
   courseLevel?: string;
@@ -65,7 +65,7 @@ const FIELD_DISPLAY_LABELS: Record<string, string> = {
 };
 
 // Map UI column names to FlattenedRow field names
-const COLUMN_MAPPINGS: Record<string, string> = {
+const COLUMN_MAPPINGS: Record<string, keyof FlattenedRow> = {
   academicYear: "year",
   comment: "comments",
   courseLevel: "courseLevel",
@@ -76,7 +76,7 @@ const COLUMN_MAPPINGS: Record<string, string> = {
   enrollment: "anticipatedSize",
   enrollmentDay10: "day10Used",
   facultyHours: "facultyHours",
-  group: "group",
+  group: "comments", // Map group to comments field
   instructionalMethod: "instructionalMethod",
   instructors: "instructors",
   location: "location",
@@ -130,7 +130,46 @@ const formatValue = (val: any): string => {
 };
 
 /**
+ * Map column names from UI to internal field names
+ */
+const mapColumnName = (column: string): keyof FlattenedRow => {
+  return COLUMN_MAPPINGS[column] || column as keyof FlattenedRow;
+};
+
+/**
+ * Cache for flattened schedules
+ */
+const scheduleCache = new Map<string, FlattenedRow[]>();
+
+/**
+ * Groups rows by the selected columns
+ */
+const groupRowsByColumns = (
+  rows: FlattenedRow[],
+  columnsToCompare: Array<keyof FlattenedRow>,
+): { [key: string]: FlattenedRow[] } => {
+  const groups: { [key: string]: FlattenedRow[] } = {};
+
+  rows.forEach((row) => {
+    // Create a key based on the selected columns
+    const key = columnsToCompare
+      .map((column) => {
+        return String(row[column] || "");
+      })
+      .join("|");
+
+    if (!groups[key]) {
+      groups[key] = [];
+    }
+    groups[key].push(row);
+  });
+
+  return groups;
+};
+
+/**
  * Compares two schedules and returns the differences based on the selected columns
+ * Uses memoization for performance improvements
  */
 export const compareSchedules = (
   referenceSchedule: Schedule,
@@ -141,19 +180,39 @@ export const compareSchedules = (
     return [];
   }
 
-  // First, we need to flatten the schedule data for easier comparison
-  const refRows = flattenSchedule(referenceSchedule);
-  const compRows = flattenSchedule(comparisonSchedule);
+  // Generate cache keys based on schedule content
+  const refCacheKey = `${referenceSchedule.name || ''}-${referenceSchedule.courses.length}`;
+  const compCacheKey = `${comparisonSchedule.name || ''}-${comparisonSchedule.courses.length}`;
+
+  // Get or create flattened schedule data with caching
+  let refRows: FlattenedRow[];
+  if (scheduleCache.has(refCacheKey)) {
+    refRows = scheduleCache.get(refCacheKey)!;
+  } else {
+    refRows = flattenSchedule(referenceSchedule);
+    scheduleCache.set(refCacheKey, refRows);
+  }
+
+  let compRows: FlattenedRow[];
+  if (scheduleCache.has(compCacheKey)) {
+    compRows = scheduleCache.get(compCacheKey)!;
+  } else {
+    compRows = flattenSchedule(comparisonSchedule);
+    scheduleCache.set(compCacheKey, compRows);
+  }
+
+  // Pre-process columns for comparison (map UI columns to field names)
+  const mappedColumns = columnsToCompare.map(mapColumnName);
 
   // Group rows by the selected columns to compare
-  const refGroups = groupRowsByColumns(refRows, columnsToCompare);
-  const compGroups = groupRowsByColumns(compRows, columnsToCompare);
+  const refGroups = groupRowsByColumns(refRows, mappedColumns);
+  const compGroups = groupRowsByColumns(compRows, mappedColumns);
 
   // Combine all keys
   const allKeys = [...new Set([...Object.keys(refGroups), ...Object.keys(compGroups)])];
 
   // Compare groups
-  return compareGroups(allKeys, refGroups, compGroups, columnsToCompare);
+  return compareGroups(allKeys, refGroups, compGroups, mappedColumns);
 };
 
 /**
@@ -163,7 +222,7 @@ const compareGroups = (
   allKeys: string[],
   refGroups: Record<string, FlattenedRow[]>,
   compGroups: Record<string, FlattenedRow[]>,
-  columnsToCompare: string[],
+  columnsToCompare: Array<keyof FlattenedRow>,
 ): ComparisonResult[] => {
   const results: ComparisonResult[] = [];
 
@@ -190,18 +249,24 @@ const compareGroups = (
         });
       });
     } else {
-      compareAndAddResults(refGroup, compGroup, results);
+      compareAndAddResults(refGroup, compGroup, columnsToCompare, results);
 
-      // Add summary row with counts
-      results.push({
-        count: compGroup.length,
-        differences: [],
-        row: summarizeGroup(compGroup, key, columnsToCompare),
-        status: "unchanged",
-        totalFacultyLoad: compGroup.reduce((sum, row) => {
-          return sum + (row.facultyHours || 0);
-        }, 0),
-      });
+      // Add summary row with counts if there are differences
+      if (results.some((r) => {
+        return r.status === "modified" ||
+          r.status === "added" ||
+          r.status === "removed";
+      })) {
+        results.push({
+          count: compGroup.length,
+          differences: [],
+          row: summarizeGroup(compGroup, key, columnsToCompare),
+          status: "unchanged",
+          totalFacultyLoad: compGroup.reduce((sum, row) => {
+            return sum + (row.facultyHours || 0);
+          }, 0),
+        });
+      }
     }
   });
 
@@ -214,6 +279,7 @@ const compareGroups = (
 const compareAndAddResults = (
   refGroup: FlattenedRow[],
   compGroup: FlattenedRow[],
+  columnsToCompare: Array<keyof FlattenedRow>,
   results: ComparisonResult[],
 ): void => {
   // Track which reference rows have been matched
@@ -234,11 +300,11 @@ const compareAndAddResults = (
       });
     } else {
       // No exact match - look for best match to identify modifications
-      const differences = findRowDifferences(compRow, refGroup);
+      const differences = findRowDifferences(compRow, refGroup, columnsToCompare);
       if (differences.length > 0 && differences[0] !== "New entry") {
         // This is a modified row
         // Find the reference row that was matched
-        const bestMatch = findBestMatch(compRow, refGroup);
+        const bestMatch = findBestMatch(compRow, refGroup, columnsToCompare);
         if (bestMatch) {
           matchedRefRows.add(bestMatch.id);
         }
@@ -249,7 +315,7 @@ const compareAndAddResults = (
           status: "modified",
         });
       } else {
-        // Truly new entry
+        // This is a new row
         results.push({
           differences: ["New entry"],
           row: compRow,
@@ -259,9 +325,10 @@ const compareAndAddResults = (
     }
   });
 
-  // Second pass: Check for reference rows that weren't matched (removed)
+  // Second pass: Find reference rows that weren't matched
   refGroup.forEach((refRow) => {
     if (!matchedRefRows.has(refRow.id)) {
+      // This row was in reference but not in comparison - it was removed
       results.push({
         differences: ["Entry removed"],
         row: refRow,
@@ -390,45 +457,9 @@ const createFlattenedRowWithMeeting = (course: Course, section: Section, meeting
 };
 
 /**
- * Maps UI column names to FlattenedRow field names
- */
-const mapColumnNames = (column: string): string => {
-  return COLUMN_MAPPINGS[column] || column;
-};
-
-/**
- * Groups rows by the selected columns
- */
-const groupRowsByColumns = (
-  rows: FlattenedRow[],
-  columnsToCompare: string[],
-): { [key: string]: FlattenedRow[] } => {
-  const groups: { [key: string]: FlattenedRow[] } = {};
-
-  rows.forEach((row) => {
-    // Create a key based on the selected columns
-    const key = columnsToCompare
-      .map((column) => {
-        // Map the column name to the appropriate field in the FlattenedRow
-        const fieldName = mapColumnNames(column);
-        // Safely access column using type assertion
-        return (row as any)[fieldName] || "";
-      })
-      .join("|");
-
-    if (!groups[key]) {
-      groups[key] = [];
-    }
-    groups[key].push(row);
-  });
-
-  return groups;
-};
-
-/**
  * Finds differences between a row and a group of rows
  */
-const findRowDifferences = (row: FlattenedRow, group: FlattenedRow[]): string[] => {
+const findRowDifferences = (row: FlattenedRow, group: FlattenedRow[], columnsToCompare: Array<keyof FlattenedRow>): string[] => {
   const differences: string[] = [];
 
   // First, try to find a match based on department, prefix, number, and section
@@ -530,7 +561,7 @@ const findRowDifferences = (row: FlattenedRow, group: FlattenedRow[]): string[] 
 /**
  * Finds the best match for a row in a group
  */
-const findBestMatch = (row: FlattenedRow, group: FlattenedRow[]): FlattenedRow | null => {
+const findBestMatch = (row: FlattenedRow, group: FlattenedRow[], columnsToCompare: Array<keyof FlattenedRow>): FlattenedRow | null => {
   // Find the first row that matches department, prefix, number, and section
   // This is our primary key for identifying the "same" course
   const primaryMatch = group.find((r) => {
@@ -570,7 +601,7 @@ const findBestMatch = (row: FlattenedRow, group: FlattenedRow[]): FlattenedRow |
 const summarizeGroup = (
   group: FlattenedRow[],
   key: string,
-  columnsToCompare: string[],
+  columnsToCompare: Array<keyof FlattenedRow>,
 ): { [key: string]: any } => {
   // Create a summary row with the matching columns
   const summary: { [key: string]: any } = {};
@@ -578,7 +609,7 @@ const summarizeGroup = (
   // Add the grouped columns
   columnsToCompare.forEach((column, index) => {
     // Map the column name to the internal field name
-    const fieldName = mapColumnNames(column);
+    const fieldName = mapColumnName(column.toString());
 
     // Extract the value from the key
     const values = key.split("|");

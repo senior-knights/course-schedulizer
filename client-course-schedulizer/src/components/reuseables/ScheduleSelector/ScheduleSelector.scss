@@ -8,7 +8,7 @@
 .toggle-button {
   display: flex;
   align-items: center;
-  border-radius: 0;
+  border-radius: 20px;
   padding: 5px 12px;
   background-color: #f5f5f5;
   transition: background-color 0.2s;
@@ -21,6 +21,7 @@
     margin-left: 8px;
     font-size: 14px;
     font-weight: 500;
+    white-space: nowrap;
 
     .schedule-counter {
       opacity: 0.7;

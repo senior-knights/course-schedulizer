@@ -1,24 +1,25 @@
 @import "../../../styles/constants.scss";
 
-.compare-button {
-  display: flex;
-  align-items: center;
-  border-radius: 0;
-  padding: 5px 12px;
-  background-color: #f5f5f5;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: #e0e0e0;
-  }
-
-  .compare-label {
-    margin-left: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    white-space: nowrap;
-  }
-}
+// Old button styles now handled by makeStyles - keeping this commented for reference
+// .compare-button {
+//   display: flex;
+//   align-items: center;
+//   border-radius: 20px;
+//   padding: 5px 12px;
+//   background-color: #f5f5f5;
+//   transition: background-color 0.2s;
+//
+//   &:hover {
+//     background-color: #e0e0e0;
+//   }
+//
+//   .compare-label {
+//     margin-left: 8px;
+//     font-size: 14px;
+//     font-weight: 500;
+//     white-space: nowrap;
+//   }
+// }
 
 .schedule-comparer-form {
   width: 100%;
