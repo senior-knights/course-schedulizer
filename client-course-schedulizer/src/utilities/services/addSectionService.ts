@@ -197,13 +197,13 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
     // globalMax: data?.section.globalMax,
     group: data?.section.group ?? "",
     halfSemester: ((data?.section.semesterLength &&
-    convertFromSemesterLength(data?.section.semesterLength) === SemesterLengthOption.HalfSemester
+      convertFromSemesterLength(data?.section.semesterLength) === SemesterLengthOption.HalfSemester
       ? data?.section.semesterLength
       : SemesterLength.HalfFirst) as unknown) as Half,
     // instructionalMethod: data?.section.instructionalMethod ?? "",   // TODO: should this be "LEC"?
     instructor: data?.section.instructors ?? [],
     intensiveSemester: ((data?.section.semesterLength &&
-    convertFromSemesterLength(data?.section.semesterLength) ===
+      convertFromSemesterLength(data?.section.semesterLength) ===
       SemesterLengthOption.IntensiveSemester
       ? data?.section.semesterLength
       : SemesterLength.IntensiveA) as unknown) as Intensive,
@@ -329,7 +329,7 @@ const createNewCourseFromInput = (data: SectionInput): Course => {
 
 export const addFalseToDaysCheckboxList = (days?: Day[]): CheckboxDays => {
   const weekdays = Object.values(Day).filter((day) => {
-    return Object.values(Weekday).includes(day);
+    return Object.values(Weekday).includes(day as unknown as Weekday);
   });
 
   if (!days) {
