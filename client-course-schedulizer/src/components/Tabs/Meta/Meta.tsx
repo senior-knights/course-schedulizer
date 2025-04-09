@@ -4,13 +4,18 @@ import {
   Card,
   CardContent,
   Divider,
+  FormControlLabel,
   Grid,
+  IconButton,
   Paper,
   Snackbar,
+  Switch,
   TextField,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
 import SaveIcon from "@material-ui/icons/Save";
+import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import Alert from "@material-ui/lab/Alert";
 import "./Meta.scss";
 
@@ -23,6 +28,11 @@ export const Meta = () => {
   const [year, setYear] = useState(localStorage.getItem("schedulizerYear") || new Date().getFullYear().toString());
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showSaveSuccess, setShowSaveSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [autoSave, setAutoSave] = useState(localStorage.getItem("schedulizerAutoSave") === "true");
+  const [versionError, setVersionError] = useState("");
+  const [yearError, setYearError] = useState("");
 
   // Store original values for comparison
   const [originalValues, setOriginalValues] = useState({
@@ -48,23 +58,93 @@ export const Meta = () => {
       year !== originalValues.year;
 
     setHasUnsavedChanges(hasChanges);
-  }, [notes, version, year, originalValues]);
+
+    // Auto-save if enabled and there are changes
+    if (autoSave && hasChanges) {
+      const timeoutId = setTimeout(() => {
+        saveToLocalStorage();
+      }, 2000); // Auto-save after 2 seconds of inactivity
+
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
+  }, [notes, version, year, originalValues, autoSave]);
+
+  // Save auto-save preference
+  useEffect(() => {
+    try {
+      localStorage.setItem("schedulizerAutoSave", autoSave.toString());
+    } catch (error) {
+      console.error("Failed to save auto-save preference:", error);
+    }
+  }, [autoSave]);
+
+  // Validate version (semantic versioning format)
+  const validateVersion = (value: string) => {
+    const semverRegex = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/;
+    if (!semverRegex.test(value) && value !== "") {
+      setVersionError("Please use semantic versioning (e.g., 1.0.0)");
+      return false;
+    }
+    setVersionError("");
+    return true;
+  };
+
+  // Validate year (current year or range format YYYY-YYYY)
+  const validateYear = (value: string) => {
+    const yearRegex = /^(\d{4})(?:-(\d{4}))?$/;
+    if (!yearRegex.test(value) && value !== "") {
+      setYearError("Use YYYY or YYYY-YYYY format");
+      return false;
+    }
+    setYearError("");
+    return true;
+  };
+
+  // Save data to localStorage with error handling
+  const saveToLocalStorage = () => {
+    try {
+      // Validate inputs before saving
+      const isVersionValid = validateVersion(version);
+      const isYearValid = validateYear(year);
+
+      if (!isVersionValid || !isYearValid) {
+        return false;
+      }
+
+      localStorage.setItem("schedulizerNotes", notes);
+      localStorage.setItem("schedulizerVersion", version);
+      localStorage.setItem("schedulizerYear", year);
+
+      // Update original values to match current values
+      setOriginalValues({
+        notes,
+        version,
+        year,
+      });
+
+      setHasUnsavedChanges(false);
+      return true;
+    } catch (error) {
+      console.error("Failed to save to localStorage:", error);
+      setErrorMessage("Failed to save changes. Local storage may be full or unavailable.");
+      setShowError(true);
+      return false;
+    }
+  };
 
   // Handle save action
   const handleSave = () => {
-    localStorage.setItem("schedulizerNotes", notes);
-    localStorage.setItem("schedulizerVersion", version);
-    localStorage.setItem("schedulizerYear", year);
+    const saveSuccessful = saveToLocalStorage();
+    if (saveSuccessful) {
+      setShowSaveSuccess(true);
+    }
+  };
 
-    // Update original values to match current values
-    setOriginalValues({
-      notes,
-      version,
-      year,
-    });
-
-    setHasUnsavedChanges(false);
-    setShowSaveSuccess(true);
+  // Toggle auto-save feature
+  const handleAutoSaveToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAutoSave(event.target.checked);
   };
 
   // Handle closing the save success notification
@@ -72,19 +152,44 @@ export const Meta = () => {
     setShowSaveSuccess(false);
   };
 
+  // Handle closing the error notification
+  const handleCloseErrorSnackbar = () => {
+    setShowError(false);
+  };
+
   return (
     <div className="meta-container">
-      <div className="meta-header">
-        <h3>Schedule Metadata</h3>
-        <Button
-          color="primary"
-          disabled={!hasUnsavedChanges}
-          onClick={handleSave}
-          startIcon={<SaveIcon />}
-          variant="contained"
-        >
-          Save Changes
-        </Button>
+      <div className="meta-header-simplified">
+        <Typography variant="h5">Schedule Metadata</Typography>
+        <div className="meta-actions">
+          <div className="auto-save-toggle">
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={autoSave}
+                  color="primary"
+                  onChange={handleAutoSaveToggle}
+                />
+              }
+              label="Auto-save changes"
+            />
+            <Tooltip title="When enabled, changes will be automatically saved after 2 seconds of inactivity">
+              <IconButton size="small">
+                <HelpOutlineIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          </div>
+          <Button
+            className="save-button"
+            color="primary"
+            disabled={!hasUnsavedChanges || !!versionError || !!yearError}
+            onClick={handleSave}
+            startIcon={<SaveIcon />}
+            variant="contained"
+          >
+            Save Changes
+          </Button>
+        </div>
       </div>
       <Typography className="meta-subtitle" variant="subtitle1">
         Add information about your schedule that will be included in exports
@@ -93,7 +198,7 @@ export const Meta = () => {
         )}
       </Typography>
 
-      <Grid container spacing={3}>
+      <Grid className="meta-content" container spacing={3}>
         <Grid item md={8} xs={12}>
           <Card className="meta-card">
             <CardContent>
@@ -118,10 +223,14 @@ export const Meta = () => {
                 <Grid item sm={6} xs={12}>
                   <TextField
                     className="meta-field"
+                    error={!!versionError}
                     fullWidth
+                    helperText={versionError}
                     label="Version"
                     onChange={(e) => {
-                      setVersion(e.target.value);
+                      const newValue = e.target.value;
+                      setVersion(newValue);
+                      validateVersion(newValue);
                     }}
                     placeholder="e.g. 1.0.0"
                     value={version}
@@ -131,10 +240,14 @@ export const Meta = () => {
                 <Grid item sm={6} xs={12}>
                   <TextField
                     className="meta-field"
+                    error={!!yearError}
                     fullWidth
+                    helperText={yearError}
                     label="Academic Year"
                     onChange={(e) => {
-                      setYear(e.target.value);
+                      const newValue = e.target.value;
+                      setYear(newValue);
+                      validateYear(newValue);
                     }}
                     placeholder="e.g. 2023-2024"
                     value={year}
@@ -162,7 +275,10 @@ export const Meta = () => {
                   })}
                 </Typography>
 
-                <Typography className="time-display" variant="h3">
+                <Typography
+                  className="time-display"
+                  variant="h3"
+                >
                   {currentTime.toLocaleTimeString('en-US', {
                     hour: '2-digit',
                     hour12: true,
@@ -183,6 +299,16 @@ export const Meta = () => {
       >
         <Alert onClose={handleCloseSnackbar} severity="success">
           Changes saved successfully!
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        autoHideDuration={5000}
+        onClose={handleCloseErrorSnackbar}
+        open={showError}
+      >
+        <Alert onClose={handleCloseErrorSnackbar} severity="error">
+          {errorMessage}
         </Alert>
       </Snackbar>
     </div>
