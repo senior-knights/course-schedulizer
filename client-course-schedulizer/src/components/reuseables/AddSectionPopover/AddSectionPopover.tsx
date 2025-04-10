@@ -256,7 +256,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
             initialValue={addFalseToDaysCheckboxList(values?.meeting?.days) as string[]}
             label="Days"
             options={Object.values(Day).filter((day) => {
-              return Object.values(Weekday).includes(day);
+              return Object.values(Weekday).includes(day as unknown as Weekday);
             })}
           />
           <GridItemRadioGroup label="Term" options={Object.values(Term)} />
@@ -270,7 +270,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
               <GridItemRadioGroup
                 label="Half Semester"
                 options={Object.values(SemesterLength).filter((h) => {
-                  return Object.values(Half).includes(h);
+                  return Object.values(Half).includes(h as unknown as Half);
                 })}
               />
             )}
@@ -278,7 +278,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
               <GridItemRadioGroup
                 label="Intensive Term"
                 options={Object.values(SemesterLength).filter((i) => {
-                  return Object.values(Intensive).includes(i);
+                  return Object.values(Intensive).includes(i as unknown as Intensive);
                 })}
               />
             )}
@@ -319,8 +319,8 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
         <Grid alignItems="flex-end" container justify="space-between">
           <Grid item>
             <Typography variant="caption">
-              <b>Wildcard Tip:</b> To create a Wildcard meeting put a <b>&quot;*&quot;</b> in the Prefix, Number, Section, Instructor, 
-              and Location fields. Also, put a <b>&quot;0&quot;</b> in the Faculty Hours and Student Hours fields. 
+              <b>Wildcard Tip:</b> To create a Wildcard meeting put a <b>&quot;*&quot;</b> in the Prefix, Number, Section, Instructor,
+              and Location fields. Also, put a <b>&quot;0&quot;</b> in the Faculty Hours and Student Hours fields.
               Finally, select the Start Time and Duration.
             </Typography>
           </Grid>

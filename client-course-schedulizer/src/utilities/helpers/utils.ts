@@ -1,7 +1,7 @@
 import { Children, ReactNode } from "react";
 
 /* Create an iterable from an enumeration */
-export const enumArray = <T>(e: T) => {
+export const enumArray = <T extends object>(e: T) => {
   return Object.keys(e).map((val) => {
     return e[val as keyof typeof e];
   });

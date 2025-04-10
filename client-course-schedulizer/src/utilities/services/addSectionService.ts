@@ -330,7 +330,7 @@ const createNewCourseFromInput = (data: SectionInput): Course => {
 
 export const addFalseToDaysCheckboxList = (days?: Day[]): CheckboxDays => {
   const weekdays = Object.values(Day).filter((day) => {
-    return Object.values(Weekday).includes(day);
+    return Object.values(Weekday).includes(day as unknown as Weekday);
   });
 
   if (!days) {
