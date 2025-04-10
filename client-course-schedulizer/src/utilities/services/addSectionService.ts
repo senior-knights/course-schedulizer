@@ -19,6 +19,7 @@ import {
   Term,
   updateIdentifyingCourseInfo,
   updateIdentifyingSectionInfo,
+  updateNonIdentifyingSectionInfo,
   Weekday,
 } from "utilities/interfaces";
 import { getLocationString } from "./scheduleService";
@@ -98,7 +99,7 @@ export const getSectionName = (course: Course, section: Section) => {
   return `${course.prefixes.length ? course.prefixes[0] : ""}-${course.number}-${section.letter}`;
 };
 
-// if isNonTeaching hasn't already been set, infer it from the 
+// if isNonTeaching hasn't already been set, infer it from the
 // section name (computed from prefix, course number, and section letter all being empty)
 export const isNonTeaching = (course: Course, section: Section) => {
   return section.isNonTeaching || getSectionName(course, section) === "--";
@@ -132,7 +133,7 @@ export const getSection = (
       section.term === term &&
       isEqual(section.instructors, instructors) &&
       section.instructionalMethod === instructionalMethod &&
-      section.deliveryMode === deliveryMode 
+      section.deliveryMode === deliveryMode
     );
   });
   return sections.length > 0 ? sections[0] : undefined;
@@ -341,6 +342,23 @@ export const addFalseToDaysCheckboxList = (days?: Day[]): CheckboxDays => {
   });
 };
 
+// Check if course identifying info has changed
+const coursesDiffer = (oldCourse: Course, newCourse: Course): boolean => {
+  return (
+    !isEqual(oldCourse.prefixes, newCourse.prefixes) ||
+    oldCourse.number !== newCourse.number ||
+    oldCourse.department !== newCourse.department
+  );
+};
+
+// Remove an empty course
+const removeEmptyCourse = (course: Course, schedule: Schedule) => {
+  const courseIndex = schedule.courses.indexOf(course);
+  if (course.sections.length === 0 && courseIndex !== -1) {
+    schedule.courses.splice(courseIndex, 1);
+  }
+};
+
 export const handleOldMeeting = (
   oldData: CourseSectionMeeting | undefined,
   newSection: Section,
@@ -349,48 +367,123 @@ export const handleOldMeeting = (
   schedule: Schedule,
 ) => {
   const oldMeeting = oldData?.meeting;
-  let oldSection = oldData?.section;
-  let oldCourse = oldData?.course;
-  const courseIndex = indexOf(schedule.courses, oldCourse);
-  const sectionIndex = indexOf(oldCourse?.sections, oldSection);
+  const oldSection = oldData?.section;
+  const oldCourse = oldData?.course;
+
+  // If the year, term, and semester length haven't changed...
+  if (oldSection &&
+    newSection.year === oldSection.year &&
+    newSection.term === oldSection.term &&
+    newSection.semesterLength === oldSection.semesterLength
+  ) {
+    // Update the new Section to match the date fields of the old Section
+    newSection.termStart = oldSection.termStart;
+    newSection.startDate = oldSection.startDate;
+    newSection.endDate = oldSection.endDate;
+  }
+
+  // Preserve critical fields that might be missing from the form
   if (oldSection) {
-    // If the year, term, and semester length haven't changed...
-    if (
-      String(newSection.year) === String(oldSection.year) &&
-      newSection.term === oldSection.term &&
-      newSection.semesterLength === oldSection.semesterLength
-    ) {
-      // Update the new Section to match the date fields of the old Section
-      newSection.termStart = oldSection.termStart;
-      newSection.startDate = oldSection.startDate;
-      newSection.endDate = oldSection.endDate;
+    // Preserve these fields if they're not in the new section
+    if (oldSection.instructionalMethod && !newSection.instructionalMethod) {
+      newSection.instructionalMethod = oldSection.instructionalMethod;
+    }
+    if (oldSection.year && !newSection.year) {
+      newSection.year = oldSection.year;
+    }
+    if (oldSection.anticipatedSize !== undefined && newSection.anticipatedSize === undefined) {
+      newSection.anticipatedSize = oldSection.anticipatedSize;
+    }
+    if (oldSection.day10Used !== undefined && newSection.day10Used === undefined) {
+      newSection.day10Used = oldSection.day10Used;
+    }
+    if (oldSection.maxStudentHours !== undefined && newSection.maxStudentHours === undefined) {
+      newSection.maxStudentHours = oldSection.maxStudentHours;
     }
   }
+
+  // Copy courseLevel from old course to new course
+  if (oldCourse && oldCourse.courseLevel && !newCourse.courseLevel) {
+    // Only copy if the course number hasn't changed or if we can't derive from the new number
+    if (oldCourse.number === newCourse.number || !newCourse.number || !newCourse.number[0].match(/\d/)) {
+      newCourse.courseLevel = oldCourse.courseLevel;
+    } else {
+      // Recalculate courseLevel based on first digit of new course number
+      const firstDigit = newCourse.number[0];
+      if (/\d/.test(firstDigit)) {
+        newCourse.courseLevel = `${firstDigit}00`;
+      }
+    }
+  } else if (newCourse.number && !newCourse.courseLevel) {
+    // Set courseLevel if not already set but we have a course number
+    const firstDigit = newCourse.number[0];
+    if (/\d/.test(firstDigit)) {
+      newCourse.courseLevel = `${firstDigit}00`;
+    }
+  }
+
   // If the user pressed 'update' rather than 'add'...
-  if (removeOldMeeting && oldData) {
-    if (oldCourse) {
+  if (removeOldMeeting && oldCourse && oldSection) {
+    const courseIndex = schedule.courses.indexOf(oldCourse);
+    const sectionIndex = oldCourse.sections.indexOf(oldSection);
+
+    // If the course or section is not found in the schedule, exit
+    if (courseIndex === -1 || sectionIndex === -1) {
+      return;
+    }
+
+    // If course info has changed, remove old section and possibly old course
+    if (coursesDiffer(oldCourse, newCourse)) {
+      oldCourse.sections.splice(sectionIndex, 1);
+      removeEmptyCourse(oldCourse, schedule);
+
+      // Recalculate courseLevel if course number changed
+      if (oldCourse.number !== newCourse.number && newCourse.number && /\d/.test(newCourse.number[0])) {
+        newCourse.courseLevel = `${newCourse.number[0]}00`;
+      } else if (oldCourse.courseLevel && !newCourse.courseLevel) {
+        newCourse.courseLevel = oldCourse.courseLevel;
+      }
+
+      // Create new course with updated info
+      schedule.courses.push({
+        ...newCourse,
+        sections: [newSection],
+      });
+    } else {
       // Update identifying Course fields which were changed
-      oldCourse = updateIdentifyingCourseInfo(oldCourse, newCourse);
-      schedule.courses[courseIndex] = oldCourse;
-    }
-    if (oldSection) {
-      // Update identifying Section fields which were changed
-      oldSection = updateIdentifyingSectionInfo(oldSection, newSection);
-      schedule.courses[courseIndex].sections[sectionIndex] = oldSection;
-    }
-    if (oldMeeting) {
-      // Remove the old version of the Meeting
-      removeMeetingFromSchedule(
-        oldData,
-        schedule,
-        oldMeeting,
-        oldSection,
-        oldCourse,
-        newSection.isNonTeaching,
-      );
+      const updatedCourse = updateIdentifyingCourseInfo(oldCourse, newCourse);
+
+      // Update both identifying and non-identifying fields of the section
+      const updatedSection = updateIdentifyingSectionInfo(oldSection, newSection);
+      updateNonIdentifyingSectionInfo(updatedSection, newSection);
+
+      // Additional protection for courseLevel which is a course property, not a section property
+      if (oldCourse.number !== updatedCourse.number && updatedCourse.number && /\d/.test(updatedCourse.number[0])) {
+        // If course number changed, recalculate courseLevel
+        updatedCourse.courseLevel = `${updatedCourse.number[0]}00`;
+      } else {
+        updatedCourse.courseLevel = oldCourse.courseLevel || newCourse.courseLevel;
+      }
+
+      schedule.courses[courseIndex] = updatedCourse;
+      updatedCourse.sections[sectionIndex] = updatedSection;
+
+      // Remove old meeting if present
+      if (oldMeeting && updatedSection.meetings) {
+        const meetingIndex = updatedSection.meetings.indexOf(oldMeeting);
+        if (meetingIndex >= 0) {
+          updatedSection.meetings.splice(meetingIndex, 1);
+        }
+        // If section has no meetings left, remove it and check if the course is empty
+        if (updatedSection.meetings.length === 0) {
+          updatedCourse.sections.splice(sectionIndex, 1);
+          removeEmptyCourse(updatedCourse, schedule);
+        }
+      }
     }
   }
 };
+
 
 export const removeMeetingFromSchedule = (
   data: CourseSectionMeeting | undefined,

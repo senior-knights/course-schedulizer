@@ -218,9 +218,11 @@ export const termStartCallback = (value: string, { section }: CaseCallbackParams
 //   section.used = integerDefaultZeroCase(value);
 // };
 
-// export const day10UsedCallback = (value: string, { section }: CaseCallbackParams) => {
-//   section.day10Used = integerDefaultZeroCase(value);
-// };
+export const day10UsedCallback = (value: string, { section }: CaseCallbackParams): void => {
+  if (value && value.trim() !== '') {
+    section.day10Used = integerDefaultZeroCase(value);
+  }
+};
 
 export const startDateCallback = (value: string, { section }: CaseCallbackParams) => {
   if (value.trim() !== "") {
@@ -415,4 +417,29 @@ export const durationCase = (value: string): number => {
 
 export const yearCase = (value: string): number | string | undefined => {
   return value && Number.isInteger(Number(value)) ? Number(value) : value;
+};
+
+export const courseLevelCallback = (value: string, data: CaseCallbackParams): void => {
+  if (value && value.trim() !== '') {
+    data.course.courseLevel = value.trim();
+  }
+};
+
+export const maxStudentHoursCallback = (value: string, { section }: CaseCallbackParams) => {
+  // Only set maxStudentHours if the value is not empty
+  if (value && value.trim() !== '') {
+    section.maxStudentHours = value.startsWith("$") ? Number(value.substr(1)) : Number(value);
+  }
+};
+
+export const buildingCallback = (value: string, params: CaseCallbackParams) => {
+  assignWithMeetings(value, params, (building, i, meetings) => {
+    meetings[i].location.building = building.trim();
+  });
+};
+
+export const roomNumberCallback = (value: string, params: CaseCallbackParams) => {
+  assignWithMeetings(value, params, (roomNumber, i, meetings) => {
+    meetings[i].location.roomNumber = roomNumber.trim();
+  });
 };

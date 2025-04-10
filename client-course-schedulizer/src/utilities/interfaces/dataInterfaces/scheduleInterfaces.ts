@@ -1,4 +1,3 @@
-/* eslint-disable typescript-sort-keys/string-enum */
 import { ConflictRow } from "utilities";
 import { Day, SemesterLength, Term } from ".";
 
@@ -11,7 +10,7 @@ export interface Location {
 export interface Meeting {
   // All days on which the given Meeting time and room is applicable
   days: Day[];
-  // In minutes 
+  // In minutes
   duration: number;
   isConflict?: boolean;
   isNonstandardTime?: boolean;
@@ -32,6 +31,7 @@ export type Prefix = string;
 // If new non-identifying fields are added to this interface, must update updateNonIdentifyingCourseInfo()
 // If new identifying fields are added to this interface, must update updateIdentifyingCourseInfo()
 export interface Course {
+  courseLevel?: string;
   department?: string;
   importRank: number;
   name: string;
@@ -66,7 +66,7 @@ export interface Section {
   anticipatedSize?: number;
   comments?: string;
   // Number of students enrolled in this section 10 days into the course
-  // day10Used?: number;
+  day10Used?: number;
   deliveryMode?: string;
   // Like 2/3/2020
   endDate?: string;
@@ -77,9 +77,10 @@ export interface Section {
   instructors: Instructor[];
   isNonTeaching?: boolean;
   letter: string;
+  maxStudentHours?: number;
   // localMax?: number;
-  // Multiple Meetings possible if time/room differs on different days
-  // Asynchronous classes should have an empty array of meeting times
+// Multiple Meetings possible if time/room differs on different days
+// Asynchronous classes should have an empty array of meeting times
   meetings: Meeting[];
   name?: string;
   semesterLength?: SemesterLength;
@@ -106,7 +107,7 @@ export const updateNonIdentifyingSectionInfo = (
 ): Section => {
   oldSection.anticipatedSize = newSection.anticipatedSize;
   oldSection.comments = newSection.comments;
-  // oldSection.day10Used = newSection.day10Used;
+  oldSection.day10Used = newSection.day10Used;
   oldSection.endDate = newSection.endDate;
   oldSection.facultyHours = newSection.facultyHours;
   // oldSection.globalMax = newSection.globalMax;
