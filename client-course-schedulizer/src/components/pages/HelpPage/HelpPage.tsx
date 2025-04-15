@@ -23,12 +23,6 @@ const Functionality = () => {
             </li>
             <li>Click &ldquo;Add Section&rdquo; to input a class.</li>
             <li>
-              In the &ldquo;Formatting&rdquo; section on this page (see below), you can read about
-              some recommended ways to format your inputs. Fill in all the values as appropriate for
-              the class. Once you&rsquo;ve created a class, your screen will change to show a
-              calendar view.
-            </li>
-            <li>
               To add another class, click the &ldquo;plus&rdquo; (+) symbol at the right side of the
               gray bar (this bar appears on the faculty schedule, room schedule, and department
               schedule pages).
