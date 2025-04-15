@@ -41,14 +41,26 @@ const Functionality = () => {
           will return to where you were before.
           <br />
           <br />
-          <strong>To edit an existing schedule</strong>, load a schedule CSV file by clicking:
+          <strong>To edit an existing schedule</strong>, load the schedule&rsquo;s file by clicking
+          either:
           <ul>
-            <li>The &ldquo;Import CSV&rdquo; button on the main page.</li>
+            <li>The &ldquo;Import Schedule&rdquo; button on the main startup page.</li>
             <li>
               The &ldquo;Hamburger menu&rdquo; (three lines in the upper left corner of the screen)
               and selecting &ldquo;Import New Schedule&rdquo;.
             </li>
           </ul>
+          Use the standard schedule editing features to make the required changes.
+          <br />
+          <br />
+          <strong>To save a schedule</strong>
+          <ol>
+            <li>Click on the &ldquo;Hamburger menu&rdquo; and select &ldquo;Export Excel&rdquo;</li>
+          </ol>
+          Exporting CSV is still an option, but we&rsquo;re moving to XLSX format. The exported
+          file will have three spreadsheet tabs, one with the standard &ldquo;Schedule&rdquo;
+          entries, one with &ldquo;Registrar Schedule&rdquo; formatted for the registrar, and one
+          &ldquo;Metadata&rdquo; with additional schedule information.
         </>
       }
       title="Help"
