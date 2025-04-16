@@ -9,7 +9,7 @@ export const ViewDemoButton = () => {
   const appContext = useAppContext();
 
   const demoUrl =
-    "?csv=https://kvlinden.github.io/data/full_schedule_2021-04-07_submitted.csv";
+    "?csv=https://kvlinden.github.io/data/full_schedule_2025.csv";
   const csvIndex = demoUrl.indexOf(getCSVStr);
 
   const onClick = useCallback(() => {
