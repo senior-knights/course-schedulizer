@@ -59,8 +59,11 @@ export const useImportRemoteFile = () => {
 };
 
 const clearSearchParams = () => {
+  // Clear URL query params in hash without reloading or navigating
   // eslint-disable-next-line no-restricted-globals
-  location.href = "";
+  const url = new URL(window.location.href);
+  const pathname = url.hash.split('?')[0];
+  window.history.replaceState({}, document.title, pathname);
 };
 
 /**
