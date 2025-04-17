@@ -8,6 +8,7 @@ interface TextSection {
 }
 
 /* Display a header with content. Used on About Page */
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const TextSection = ({ title, body }: TextSection) => {
   return (
     <Box mb={9} mt={3}>

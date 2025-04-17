@@ -15,7 +15,7 @@ export const ScheduleLeftTimeAxis = ({
     <div className="left-time-axis">
       {getHoursArr(min, max).map((time) => {
         return (
-          <div key={time} className="time-slot">
+          <div className="time-slot" key={time}>
             <span>{`${time}:00`}</span>
           </div>
         );

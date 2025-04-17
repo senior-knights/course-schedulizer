@@ -27,5 +27,6 @@ export const getTimes = (schedule: Schedule): string[] => {
     "15:30",
     "16:30",
     "18:30",
+    "19:00",
   ];
 };

@@ -1,11 +1,12 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-import FullCalendar from "01/../@fullcalendar/react";
-import { CalendarOptions } from "@fullcalendar/common";
+import React from "react";
+import FullCalendar from "@fullcalendar/react";
+import { CalendarOptions } from "@fullcalendar/core";
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
 import timeGridPlugin from "@fullcalendar/timegrid";
-import React from "react";
 import { INITIAL_DATE } from "utilities/constants";
 import "./Calendar.scss";
+
+// Schedulizer, calender view, basic settings
 
 export const Calendar = (props: CalendarOptions) => {
   return (

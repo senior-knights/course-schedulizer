@@ -5,6 +5,7 @@ import {
   DepartmentSchedule,
   FacultyLoads,
   FacultySchedule,
+  Meta,
   RoomsSchedule,
 } from "components/Tabs";
 import React, { ChangeEvent, useContext, useState } from "react";
@@ -50,6 +51,7 @@ export const Tabs = () => {
                 <Tab label="Dept Schedule" />
                 <Tab label="Teaching Loads" />
                 <Tab label="Conflicts" />
+                <Tab label="Meta" />
               </MUITabs>
               <span>{/* Empty */}</span>
             </Container>
@@ -67,6 +69,9 @@ export const Tabs = () => {
             </TabPanel>
             <TabPanel index={4} value={tabValue}>
               <Conflicts />
+            </TabPanel>
+            <TabPanel index={5} value={tabValue}>
+              <Meta />
             </TabPanel>
           </>
         ) : (

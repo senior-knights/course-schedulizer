@@ -1,7 +1,7 @@
 import { Grid } from "@material-ui/core";
 import { NewTabLink, Page } from "components/reuseables";
 import React from "react";
-import { team2020, team2021, team2022, teamAdvisors, TeamMember } from "utilities";
+import { team2020, team2021, team2022, team2023, team2024, teamAdvisors, TeamMember } from "utilities";
 import { TeamMemberProfile, TextSection } from ".";
 import "./AboutPage.scss";
 
@@ -11,6 +11,8 @@ export const AboutPage = () => {
   return (
     <Page>
       <AboutVision />
+      <AboutTeam2024 />
+      <AboutTeam2023 />
       <AboutTeam2022 />
       <AboutTeam2021 />
       <AboutTeam2020 />
@@ -45,9 +47,9 @@ const AboutVision = () => {
             <li>Faculty teaching loads cannot be “too high” or “too low”</li>
           </ul>
           These constraints make it extremely difficult for the department chair to create a
-          schedule without a tool to help them. We are building and adding on to a web application, named the
-          Course Schedulizer, that will allow department chairs to visualize and manipulate their
-          department course schedules. It will provide:
+          schedule without a tool to help them. We are building and adding on to a web application,
+          named the Course Schedulizer, that will allow department chairs to visualize and
+          manipulate their department course schedules. It will provide:
           <ul>
             <li>The ability to upload and export department schedules via CSV</li>
             <li>Integration with the spreadsheets provided and required by the Registrar</li>
@@ -59,22 +61,22 @@ const AboutVision = () => {
             <li>An optimized user interface with an efficient use of screen space</li>
             <li>An extensible interface to integrate with future systems (e.g. Workday)</li>
           </ul>
-          By offering these features and developing continuous improvements on the functionality previously implemented by
-          Professor Pruim and Professor VanderLinden, the Course Schedulizer will allow department
-          chairs to easily create their schedules.
+          By offering these features and developing continuous improvements on the functionality
+          previously implemented by Professor Pruim and Professor VanderLinden, the Course
+          Schedulizer will allow department chairs to easily create their schedules.
           <br />
           <br />
-          There is also a past Honors Project completed in year 2020 by Charles. It is a second project relating to constraint
-          problem satisfaction alongside the Course Schedulizer. By employing constraint
-          satisfaction techniques, Charles has developed the ability to upload a
-          list of classes, professors, rooms, and times to the Course Schedulizer web application
-          and have the system create a schedule with no conflicts.
+          There was also a component developed for an Honors Project completed in year 2020 by
+          Charles Kornoelje. It allowed users to upload a list of classes, professors, rooms, and
+          times into the Schedulizer and then employed constraint satisfaction techniques to create
+          a schedule with no conflicts. This component has been removed.
         </>
       }
       title="Vision"
     />
   );
 };
+
 const AboutTeam2020 = () => {
   return (
     <TextSection
@@ -120,6 +122,36 @@ const AboutTeam2022 = () => {
   );
 };
 
+const AboutTeam2023 = () => {
+  return (
+    <TextSection
+      body={
+        <Grid container direction="column" justify="flex-start" spacing={2}>
+          {team2023.map((member: TeamMember) => {
+            return <TeamMemberProfile key={member.name} member={member} />;
+          })}
+        </Grid>
+      }
+      title="Team of 2023"
+    />
+  );
+};
+
+const AboutTeam2024 = () => {
+  return (
+    <TextSection
+      body={
+        <Grid container direction="column" justify="flex-start" spacing={2}>
+          {team2024.map((member: TeamMember) => {
+            return <TeamMemberProfile key={member.name} member={member} />;
+          })}
+        </Grid>
+      }
+      title="Team of 2024"
+    />
+  );
+};
+
 const AboutTeamAdvisors = () => {
   return (
     <TextSection
@@ -140,20 +172,17 @@ const AboutCode = () => {
     <TextSection
       body={
         <>
-          This website is our code built and deployed. Feel free to play around with the site. Our
-          code repository is{" "}
+          <p></p>For details on the Schedulizer codebase and development process, see the{" "}
           <NewTabLink href="https://github.com/senior-knights/course-schedulizer">
-            hosted on GitHub
+            GitHub code repository
           </NewTabLink>
-          . We have two persistent branches: <code>production</code> and <code>develop</code>.{" "}
-          <code>production</code> is the working, stable build of the web application and{" "}
-          <code>develop</code> is the less-stable, bleeding-edge build of our Course Schedulizer
-          app. Please feel free to look around the code and interact with us on the discussion board
-          or by posting issues. The honors constraint satisfaction package from year 2020 is also{" "}
-          <NewTabLink href="https://github.com/charkour/csps">hosted on GitHub</NewTabLink>. The
-          Harmoniously project code is also{" "}
-          <NewTabLink href="https://github.com/charkour/harmoniously">hosted on GitHub</NewTabLink>.
-          For details on the development process, please view the respective ReadMe files on GitHub.
+          . <br />
+          <br />
+          The original release of the Schedulizer included{" "}
+          <NewTabLink href="https://github.com/charkour/harmoniously">Harmoniously</NewTabLink>, an
+          honors project that automatically generated schedules using{" "}
+          <NewTabLink href="https://github.com/charkour/csps">CSPS</NewTabLink>, a TypeScript port
+          of Russell &amp; Norvig&rsquo;s constraint satisfaction algorithm.
         </>
       }
       title="Code"
@@ -167,13 +196,33 @@ const AboutReport = () => {
       body={
         <ul>
           <li>
+            <NewTabLink href="https://docs.google.com/document/d/e/2PACX-1vS3Tn3OXVt5XVv9jBAjcJO81BWtXvZreZDOkvkH5WCU7oUyhlqe2EWZ4S51RJ9sqTfKC1SjiECRuNr5/pub">
+            2024 Project Proposal
+            </NewTabLink>{" "}
+            - 10.1.2024
+          </li>
+          <hr />
+          <li>
+            <NewTabLink href="https://docs.google.com/document/d/1l0ChWMDnPiDJkvFFctdpIZUheSkJ3shouFSYFIIsNW0/edit?usp=sharing">
+              Final Report
+            </NewTabLink>{" "}
+            - 4.30.2024
+          </li>
+          <li>
+            <NewTabLink href="https://docs.google.com/document/d/16FBgWv1JVa3SDyDcNtiC_EZ3NYhkU7Y5tBEmhjGQftM/edit?usp=sharing">
+              2023 Project Proposal
+            </NewTabLink>{" "}
+            - 10.01.2023
+          </li>
+          <hr />
+          <li>
             <NewTabLink href="https://docs.google.com/document/d/1MjXN3lbgYXInZyUk1V_sh4wVVs2ITd6rloYKjJW8W6c/edit?usp=sharing">
               2022 Project Proposal
             </NewTabLink>{" "}
             - 10.01.2022
           </li>
-          <hr/>
-	        <li>
+          <hr />
+          <li>
             <NewTabLink href="https://docs.google.com/document/d/e/2PACX-1vSL0Ezm-2XOCQWPv4R7J3MRZAn5PW46cayuKNxxElyVdl9W48ns2cRcd6xquoBc054_w2K_vsx2si7P/pub">
               Final Report
             </NewTabLink>{" "}
@@ -185,7 +234,7 @@ const AboutReport = () => {
             </NewTabLink>{" "}
             - 10.01.2021
           </li>
-          <hr/>
+          <hr />
           <li>
             <NewTabLink href="https://docs.google.com/document/d/e/2PACX-1vQcSDE6VMNl-wMHhECt3RbeA3WD-tiXersevVAMDXfgImq9HMFS5yQnLx8mZ4qZ4Q/pub">
               Final Report
@@ -221,20 +270,40 @@ const AboutResources = () => {
               Computing@Calvin Department Website
             </NewTabLink>
           </li>
-          <hr/>
+          <hr />
+          <li>
+            <NewTabLink href="https://docs.google.com/presentation/d/e/2PACX-1vSGiDKCClWDm4Oj35r8sMiOp24fvbtLBQunou5uy7psD6hsxWCqOq2y7KJtC0KF4A5Lp4ypqx2WCsfE/pub?start=false&loop=false&delayms=3000">
+              Status Report Slides
+            </NewTabLink>{" "}
+            - 12.10.2024
+          </li>
+          <hr />
+          <li>
+            <NewTabLink href="https://docs.google.com/presentation/d/e/2PACX-1vT2RDZd5XCKPz_ecGbYOfCiQvsGsQqXxdDd_kh251djFpP3tDQLzgKj0Ts-Vwy2tosev_MQoPxq_x40/pub?start=false&loop=false&delayms=3000">
+              Final Presentation Slides
+            </NewTabLink>{" "}
+            - 4.23.2024
+          </li>
+          <li>
+            <NewTabLink href="https://docs.google.com/presentation/d/e/2PACX-1vQZ2cpoTzUtnVa-s_YeGGv3FHHSpHdR0zAJXY6jwJL8zrHTa7-zGtWGIKkGzUglcTfykCA3uML3hsZu/pub?start=false&loop=false&delayms=3000">
+              Status Report Slides
+            </NewTabLink>{" "}
+            - 12.5.2023
+          </li>
+          <hr />
           <li>
             <NewTabLink href="https://docs.google.com/presentation/d/e/2PACX-1vSGBkk_3fRIeLrlMBCgLnHLxSdt4hOVz5QovjrUs3qXfVDnx12xO7hYLEuhQx4CtW_VOJ-tBIZaoHZ9/pub?start=false&loop=false&delayms=3000">
               Final Presentation Slides
-            </NewTabLink> -
-            4.19.2022
+            </NewTabLink>{" "}
+            - 4.19.2022
           </li>
           <li>
             <NewTabLink href="https://docs.google.com/presentation/d/e/2PACX-1vRRNLIukj6g61oBkb41JiwW0hZFUMOGzL_m-Um_Ha9vcksYJRzmd7oUlyEs0rqz5fqgFVmncarYzbMP/pub?start=false&loop=false&delayms=3000">
               Status Report Slides
-              </NewTabLink> -
-            12.07.2021
+            </NewTabLink>{" "}
+            - 12.07.2021
           </li>
-          <hr/>
+          <hr />
           <li>
             <NewTabLink href="https://youtu.be/ckn0oPxvlIE">Final Presentation Video</NewTabLink> -
             4.25.2021

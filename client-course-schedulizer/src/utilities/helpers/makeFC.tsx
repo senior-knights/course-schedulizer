@@ -23,7 +23,7 @@ export const createFC = <T extends ElementType = "div">(
   const subComponent = forwardRef(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ({ className, as: Tag = Component || "div", ...props }: any, ref) => {
-      return <Tag ref={ref} className={`${className}`} {...props} />;
+      return <Tag className={`${className}`} ref={ref} {...props} />;
     },
   );
   subComponent.defaultProps = defaultProps;

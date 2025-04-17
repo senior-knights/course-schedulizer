@@ -12,6 +12,7 @@ interface GridItemAutocomplete {
 }
 
 /* A text field to be used on forms */
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GridItemAutocomplete = (
   props: GridItemAutocomplete &
     Omit<AutocompleteProps<unknown, boolean, boolean, boolean>, "renderInput">,

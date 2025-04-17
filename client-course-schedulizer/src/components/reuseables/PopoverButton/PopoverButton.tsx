@@ -11,6 +11,7 @@ interface PopoverButton extends ButtonProps {
   popupId?: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PopoverButton = (props: PopoverButton) => {
   const { isIcon, popupId, buttonTitle, minWidth, children, ...buttonProps } = props;
   const popupState = usePopupState({
@@ -31,11 +32,11 @@ export const PopoverButton = (props: PopoverButton) => {
       )}
       <Popover
         {...bindPopover(popupState)}
+        PaperProps={{ style: { minWidth } }}
         anchorOrigin={{
           horizontal: "left",
           vertical: "bottom",
         }}
-        PaperProps={{ style: { minWidth } }}
         transformOrigin={{
           horizontal: "right",
           vertical: "top",

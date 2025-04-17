@@ -53,32 +53,64 @@ export const team2021: TeamMember[] = [
 
 export const team2022: TeamMember[] = [
   {
-    bio:
-      "Computer Science Student at Calvin University.",
+    bio: "Computer Science Student at Calvin University.",
     name: "John White",
     photo: "https://avatars.githubusercontent.com/u/90846531?v=4",
     website: "https://github.com/jmw-75",
   },
   {
-    bio:
-      "Computer Science Student at Calvin University.",
+    bio: "Computer Science Student at Calvin University.",
     name: "Samuel Haileselassie",
-    photo: "https://media-exp1.licdn.com/dms/image/C5603AQH8mr-DiG2BEw/profile-displayphoto-shrink_400_400/0/1634434581718?e=1671667200&v=beta&t=RyVTx8CAqQ8RmELiQN5PBXM7Bf2pQGSGu8uO40E7v4k",
+    photo: "https://avatars.githubusercontent.com/u/66380716?v=4",
     website: "https://github.com/samuelth47",
   },
   {
-    bio:
-      "Computer Science Student at Calvin University.",
+    bio: "Computer Science Student at Calvin University.",
     name: "Sharon Velpula",
     photo: "https://avatars.githubusercontent.com/u/90476681?v=4",
     website: "https://github.com/VelSharon",
   },
   {
-    bio:
-      "Computer Science Student at Calvin University.",
+    bio: "Computer Science Student at Calvin University.",
     name: "Fitsum Maru",
     photo: "https://avatars.githubusercontent.com/u/86684529?v=4",
     website: "https://github.com/FitsumMaru",
+  },
+];
+
+export const team2023: TeamMember[] = [
+  {
+    bio: "Computer Science Student at Calvin University.",
+    name: "ZeAi Sun",
+    photo: "https://avatars.githubusercontent.com/u/112643038?s=400&v=4",
+    website: "https://github.com/SophiaSun18",
+  },
+  {
+    bio: "Computer Science Student at Calvin University.",
+    name: "Faeren Madza",
+    photo: "https://avatars.githubusercontent.com/u/143450134?v=4",
+    website: "https://github.com/NycoCC1993",
+  },
+];
+
+export const team2024: TeamMember[] = [
+  {
+    bio: "Computer Science Student at Calvin University.",
+    name: "Noelle Haviland",
+    photo: "https://avatars.githubusercontent.com/u/112643038?v=4",
+    website: "https://github.com/neh8",
+  },
+  {
+    bio: "Computer Science Student at Calvin University.",
+    name: "Yuese Li",
+    photo: "https://avatars.githubusercontent.com/u/144585524?v=4",
+    website: "https://github.com/wahrheit319",
+  },
+  {
+    bio: "Computer Science Student at Calvin University.",
+    name: "Edom Maru",
+    photo: "https://avatars.githubusercontent.com/u/88850851?v=4",
+    website: "https://github.com/edomamaru",
   },
 ];
 

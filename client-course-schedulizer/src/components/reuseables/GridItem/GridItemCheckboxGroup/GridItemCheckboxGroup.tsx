@@ -19,6 +19,7 @@ interface GridItemCheckboxGroup {
   options: string[];
 }
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GridItemCheckboxGroup = ({
   label,
   name,
@@ -63,7 +64,7 @@ export const GridItemCheckboxGroup = ({
           <Grid container direction="column">
             {options.map((opt, i) => {
               return (
-                <Grid key={opt} item>
+                <Grid item key={opt}>
                   <FormControlLabel
                     control={
                       <Checkbox

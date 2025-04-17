@@ -20,7 +20,8 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
   });
 
   let csvStr =
-    "Department,Term,SubjectCode,CourseNum,SectionCode,CourseLevelCode,MinimumCredits,FacultyLoad,BuildingAndRoom,MeetingDays,MeetingTime,SectionStartDate,SectionEndDate,SemesterLength,Building,RoomNumber,MeetingStart,MeetingDurationMinutes,MeetingEnd,ShortTitle,Faculty,SectionStatus,InstructionalMethod,DeliveryMode,Group,Comments,LastEditTimestamp\n";
+    // "Department,Term,SubjectCode,CourseNum,SectionCode,CourseLevelCode,MinimumCredits,FacultyLoad,BuildingAndRoom,MeetingDays,MeetingTime,SectionStartDate,SectionEndDate,SemesterLength,Building,RoomNumber,MeetingStart,MeetingDurationMinutes,MeetingEnd,ShortTitle,Faculty,SectionStatus,InstructionalMethod,DeliveryMode,Group,Comments,LastEditTimestamp\n";
+    "AcademicPeriod,Course,CourseSection,SectionStatus,SemesterHours,Instructors,MeetingPatterns,StartDate,EndDate,Location1,InstructionalFormat,Comments,LastModified\n";
   schedule.courses.forEach((course) => {
     const termOrder = Object.values(Term);
     course.sections = course.sections.sort((a, b): number => {
@@ -42,6 +43,8 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
       // })};
 
       // Iterate through meetings to construct relevant strings
+      let courseName = course.prefixes + " " + course.number + " - " + course.name;
+      let courseSectionName = course.prefixes + " " + course.number + "-" + section.letter + " - " + course.name;
       let startMoment;
       let endMoment;
       let meetingTimeStr = "";
@@ -116,19 +119,33 @@ export const scheduleToFullCSVString = (schedule: Schedule): string => {
       // }-${section.letter}`;
       const courseLevelCodeStr = numericReg.test(course.number[0]) ? `${course.number[0]}00` : "";
 
+      let meetingPatterns = [];
+      const days = daysStr.split("\n");
+      const meetingStartTimes = meetingStartStr.split("\n");
+      const meetingEndTimes = meetingEndStr.split("\n");
+
+      for (let i = 0; i < days.length; i++) {
+        meetingPatterns.push(`${days[i]} | ${meetingStartTimes[i]} - ${meetingEndTimes[i]}`);
+      }
+
       // Construct a row in the output CSV
-      csvStr += `"${course.department ?? ""}",${termStr
-        },"${course.prefixes.join("\n")}",${course.number},${section.letter
-        },${courseLevelCodeStr
-        },${section.studentHours > -1 ? section.studentHours : ""}, ${section.facultyHours > -1 ? section.facultyHours : ""},"${buildingAndRoomStr
-        }","${daysStr}","${meetingTimeStr}",${section.startDate ?? ""},${section.endDate ?? ""},${section.semesterLength ?? ""},"${buildingStr
-        }","${roomNumberStr}","${meetingStartStr}","${meetingDurationMinutesStr
-        }","${meetingEndStr}","${ section.name ?? course.name 
-        }","${section.instructors.join("\n")}","${section.status ?? ""
-        }","${section.instructionalMethod ?? "" 
-        }","${section.deliveryMode ?? "" 
-        }","${section.group ?? "" 
-        }","${section.comments ?? ""}","${section.timestamp ?? ""}"\n`;
+      csvStr += `${termStr},${courseName},${courseSectionName},${section.status
+      },${section.studentHours > -1 ? section.studentHours : ""},"${section.instructors.join("\n")
+      }","${meetingPatterns.join("\n")}",${section.startDate ?? ""},${section.endDate ?? ""},"${buildingAndRoomStr
+      }","${section.instructionalMethod ?? "" }","${section.comments ?? ""}","${section.timestamp ?? ""}"\n`;
+
+      // csvStr += `"${course.department ?? ""}",${termStr
+      //   },"${course.prefixes.join("\n")}",${course.number},${section.letter
+      //   },${courseLevelCodeStr
+      //   },${section.studentHours > -1 ? section.studentHours : ""}, ${section.facultyHours > -1 ? section.facultyHours : ""},"${buildingAndRoomStr
+      //   }","${daysStr}","${meetingTimeStr}",${section.startDate ?? ""},${section.endDate ?? ""},${section.semesterLength ?? ""},"${buildingStr
+      //   }","${roomNumberStr}","${meetingStartStr}","${meetingDurationMinutesStr
+      //   }","${meetingEndStr}","${ section.name ?? course.name
+      //   }","${section.instructors.join("\n")}","${section.status ?? ""
+      //   }","${section.instructionalMethod ?? ""
+      //   }","${section.deliveryMode ?? ""
+      //   }","${section.group ?? ""
+      //   }","${section.comments ?? ""}","${section.timestamp ?? ""}"\n`;
     });
   });
   return csvStr;

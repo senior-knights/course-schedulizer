@@ -39,6 +39,9 @@ import {
 } from "utilities/interfaces";
 import "./AddSectionPopover.scss";
 
+// Schedulizer -> add section
+// Conflict message: after adding a section, click on it, and the conflict message will show up in the conflict box
+
 const SPACING = 2;
 
 const transformDataToTrueSectionInput = (data: SectionInput): SectionInput => {
@@ -199,25 +202,25 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
         </Grid>
         <Grid container spacing={SPACING}>
           <GridItemAutocomplete label="Instructor" multiple options={[...professors].sort()} />
-          <Grid item xs = {2}>
+          <Grid item xs={2}>
             <GridItemAutocomplete label="Prefix" multiple options={getPrefixes(schedule)} />
           </Grid>
-          <Grid item xs = {1}>
+          <Grid item xs={1}>
             <GridItemAutocomplete label="Number" options={getNumbers(schedule)} />
           </Grid>
-          <Grid item xs = {1}>
+          <Grid item xs={1}>
             <GridItemAutocomplete label="Section" options={getSectionLetters(schedule)} />
           </Grid>
           <GridItemAutocomplete label="Course Title" options={getCourseNames(schedule)} />
         </Grid>
         <Grid container spacing={SPACING}>
-          <Grid item xs = {2}>
+          <Grid item xs={2}>
             <GridItemTextField
               label="Start Time"
               textFieldProps={{ fullWidth: true, type: "time" }}
             />
           </Grid>
-          <Grid item xs = {2}>
+          <Grid item xs={2}>
             <GridItemTextField
               label="Duration"
               textFieldProps={{
@@ -227,20 +230,20 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
               }}
             />
           </Grid>
-          <Grid item xs = {2}>
+          <Grid item xs={2}>
             <GridItemAutocomplete label="Location" options={[...rooms].sort()} />
           </Grid>
-          <Grid item xs = {1}>
+          <Grid item xs={1}>
             <GridItemTextField label="Faculty Hours" />
           </Grid>
-          <Grid item xs = {1}>
+          <Grid item xs={1}>
             <GridItemTextField label="Student Hours" />
           </Grid>
           <GridItemAutocomplete
             label="Delivery Mode"
             options={getDeliveryModes(schedule)}
           />
-          <Grid item xs = {2}>
+          <Grid item xs={2}>
             <GridItemTextField label="Group" />
           </Grid>
         </Grid>
@@ -253,7 +256,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
             initialValue={addFalseToDaysCheckboxList(values?.meeting?.days) as string[]}
             label="Days"
             options={Object.values(Day).filter((day) => {
-              return Object.values(Weekday).includes(day);
+              return Object.values(Weekday).includes(day as unknown as Weekday);
             })}
           />
           <GridItemRadioGroup label="Term" options={Object.values(Term)} />
@@ -267,7 +270,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
               <GridItemRadioGroup
                 label="Half Semester"
                 options={Object.values(SemesterLength).filter((h) => {
-                  return Object.values(Half).includes(h);
+                  return Object.values(Half).includes(h as unknown as Half);
                 })}
               />
             )}
@@ -275,7 +278,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
               <GridItemRadioGroup
                 label="Intensive Term"
                 options={Object.values(SemesterLength).filter((i) => {
-                  return Object.values(Intensive).includes(i);
+                  return Object.values(Intensive).includes(i as unknown as Intensive);
                 })}
               />
             )}
@@ -316,8 +319,8 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
         <Grid alignItems="flex-end" container justify="space-between">
           <Grid item>
             <Typography variant="caption">
-              <b>Wildcard Tip:</b> To create a Wildcard meeting put a <b>&quot;*&quot;</b> in the Prefix, Number, Section, Instructor, 
-              and Location fields. Also, put a <b>&quot;0&quot;</b> in the Faculty Hours and Student Hours fields. 
+              <b>Wildcard Tip:</b> To create a Wildcard meeting put a <b>&quot;*&quot;</b> in the Prefix, Number, Section, Instructor,
+              and Location fields. Also, put a <b>&quot;0&quot;</b> in the Faculty Hours and Student Hours fields.
               Finally, select the Start Time and Duration.
             </Typography>
           </Grid>

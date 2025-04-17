@@ -19,6 +19,7 @@ import {
   Term,
   updateIdentifyingCourseInfo,
   updateIdentifyingSectionInfo,
+  updateNonIdentifyingSectionInfo,
   Weekday,
 } from "utilities/interfaces";
 import { getLocationString } from "./scheduleService";
@@ -29,19 +30,19 @@ type CheckboxDays = (Day | boolean)[];
 export interface SectionInput {
   anticipatedSize?: Section["anticipatedSize"];
   comments?: Section["comments"];
-  day10Used?: Section["day10Used"];
+  // day10Used?: Section["day10Used"];
   days: CheckboxDays;
   deliveryMode?: Section["deliveryMode"];
   department?: Course["department"];
   duration?: Meeting["duration"];
   facultyHours?: Section["facultyHours"];
-  globalMax?: Section["globalMax"];
+  // globalMax?: Section["globalMax"];
   group?: Section["group"];
   halfSemester?: Half;
   // instructionalMethod?: Section["instructionalMethod"];
   instructor: Instructor[];
   intensiveSemester?: Intensive;
-  localMax?: Section["localMax"];
+  // localMax?: Section["localMax"];
   location: string;
   name: Course["name"];
   number: Course["number"];
@@ -53,7 +54,7 @@ export interface SectionInput {
   status?: Section["status"];
   studentHours?: Section["studentHours"];
   term: Section["term"];
-  used?: Section["used"];
+  // used?: Section["used"];
   year: string; // Assume string till yearCase() decides
 }
 
@@ -98,7 +99,7 @@ export const getSectionName = (course: Course, section: Section) => {
   return `${course.prefixes.length ? course.prefixes[0] : ""}-${course.number}-${section.letter}`;
 };
 
-// if isNonTeaching hasn't already been set, infer it from the 
+// if isNonTeaching hasn't already been set, infer it from the
 // section name (computed from prefix, course number, and section letter all being empty)
 export const isNonTeaching = (course: Course, section: Section) => {
   return section.isNonTeaching || getSectionName(course, section) === "--";
@@ -132,7 +133,7 @@ export const getSection = (
       section.term === term &&
       isEqual(section.instructors, instructors) &&
       section.instructionalMethod === instructionalMethod &&
-      section.deliveryMode === deliveryMode 
+      section.deliveryMode === deliveryMode
     );
   });
   return sections.length > 0 ? sections[0] : undefined;
@@ -185,7 +186,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
   return {
     anticipatedSize: data?.section.anticipatedSize,
     comments: data?.section.comments?.trim() === "" ? undefined : data?.section.comments,
-    day10Used: data?.section.day10Used,
+    // day10Used: data?.section.day10Used,
     days,
     deliveryMode: data?.section.deliveryMode ?? "",  // TODO: should this be "In-person"?
     department: data?.course.department,
@@ -194,20 +195,20 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
       data?.section.facultyHours !== undefined && data.section.facultyHours > -1
         ? data.section.facultyHours
         : undefined,
-    globalMax: data?.section.globalMax,
+    // globalMax: data?.section.globalMax,
     group: data?.section.group ?? "",
     halfSemester: ((data?.section.semesterLength &&
-    convertFromSemesterLength(data?.section.semesterLength) === SemesterLengthOption.HalfSemester
+      convertFromSemesterLength(data?.section.semesterLength) === SemesterLengthOption.HalfSemester
       ? data?.section.semesterLength
       : SemesterLength.HalfFirst) as unknown) as Half,
     // instructionalMethod: data?.section.instructionalMethod ?? "",   // TODO: should this be "LEC"?
     instructor: data?.section.instructors ?? [],
     intensiveSemester: ((data?.section.semesterLength &&
-    convertFromSemesterLength(data?.section.semesterLength) ===
+      convertFromSemesterLength(data?.section.semesterLength) ===
       SemesterLengthOption.IntensiveSemester
       ? data?.section.semesterLength
       : SemesterLength.IntensiveA) as unknown) as Intensive,
-    localMax: data?.section.localMax,
+    // localMax: data?.section.localMax,
     location: locationValue,
     name: data?.section.name ?? data?.course.name ?? "",
     number: data?.course.number ?? "",
@@ -224,7 +225,7 @@ export const mapInternalTypesToInput = (data?: CourseSectionMeeting): SectionInp
         ? data.section.studentHours
         : undefined,
     term: defaultTerm || Term.Fall,
-    used: data?.section.used,
+    // used: data?.section.used,
     year: data?.section.year?.toString() ?? "",
   };
 };
@@ -241,16 +242,16 @@ const createNewSectionFromInput = (data: SectionInput): Section => {
   return {
     anticipatedSize: data.anticipatedSize,
     comments: data.comments,
-    day10Used: data.day10Used,
+    // day10Used: data.day10Used,
     deliveryMode: data.deliveryMode,
     endDate: "",
     facultyHours: Number(data.facultyHours),
-    globalMax: data.globalMax,
+    // globalMax: data.globalMax,
     group: data.group,
     // instructionalMethod: data.instructionalMethod,
     instructors: data.instructor,
     letter: data.section,
-    localMax: data.localMax,
+    // localMax: data.localMax,
     meetings: [
       {
         days: data.days as Day[],
@@ -269,7 +270,7 @@ const createNewSectionFromInput = (data: SectionInput): Section => {
     studentHours: Number(data.studentHours),
     term: data.term,
     termStart: "",
-    used: data.used,
+    // used: data.used,
     year: yearCase(data.year),
   };
 };
@@ -329,7 +330,7 @@ const createNewCourseFromInput = (data: SectionInput): Course => {
 
 export const addFalseToDaysCheckboxList = (days?: Day[]): CheckboxDays => {
   const weekdays = Object.values(Day).filter((day) => {
-    return Object.values(Weekday).includes(day);
+    return Object.values(Weekday).includes(day as unknown as Weekday);
   });
 
   if (!days) {
@@ -341,6 +342,23 @@ export const addFalseToDaysCheckboxList = (days?: Day[]): CheckboxDays => {
   });
 };
 
+// Check if course identifying info has changed
+const coursesDiffer = (oldCourse: Course, newCourse: Course): boolean => {
+  return (
+    !isEqual(oldCourse.prefixes, newCourse.prefixes) ||
+    oldCourse.number !== newCourse.number ||
+    oldCourse.department !== newCourse.department
+  );
+};
+
+// Remove an empty course
+const removeEmptyCourse = (course: Course, schedule: Schedule) => {
+  const courseIndex = schedule.courses.indexOf(course);
+  if (course.sections.length === 0 && courseIndex !== -1) {
+    schedule.courses.splice(courseIndex, 1);
+  }
+};
+
 export const handleOldMeeting = (
   oldData: CourseSectionMeeting | undefined,
   newSection: Section,
@@ -349,48 +367,123 @@ export const handleOldMeeting = (
   schedule: Schedule,
 ) => {
   const oldMeeting = oldData?.meeting;
-  let oldSection = oldData?.section;
-  let oldCourse = oldData?.course;
-  const courseIndex = indexOf(schedule.courses, oldCourse);
-  const sectionIndex = indexOf(oldCourse?.sections, oldSection);
+  const oldSection = oldData?.section;
+  const oldCourse = oldData?.course;
+
+  // If the year, term, and semester length haven't changed...
+  if (oldSection &&
+    newSection.year === oldSection.year &&
+    newSection.term === oldSection.term &&
+    newSection.semesterLength === oldSection.semesterLength
+  ) {
+    // Update the new Section to match the date fields of the old Section
+    newSection.termStart = oldSection.termStart;
+    newSection.startDate = oldSection.startDate;
+    newSection.endDate = oldSection.endDate;
+  }
+
+  // Preserve critical fields that might be missing from the form
   if (oldSection) {
-    // If the year, term, and semester length haven't changed...
-    if (
-      String(newSection.year) === String(oldSection.year) &&
-      newSection.term === oldSection.term &&
-      newSection.semesterLength === oldSection.semesterLength
-    ) {
-      // Update the new Section to match the date fields of the old Section
-      newSection.termStart = oldSection.termStart;
-      newSection.startDate = oldSection.startDate;
-      newSection.endDate = oldSection.endDate;
+    // Preserve these fields if they're not in the new section
+    if (oldSection.instructionalMethod && !newSection.instructionalMethod) {
+      newSection.instructionalMethod = oldSection.instructionalMethod;
+    }
+    if (oldSection.year && !newSection.year) {
+      newSection.year = oldSection.year;
+    }
+    if (oldSection.anticipatedSize !== undefined && newSection.anticipatedSize === undefined) {
+      newSection.anticipatedSize = oldSection.anticipatedSize;
+    }
+    if (oldSection.day10Used !== undefined && newSection.day10Used === undefined) {
+      newSection.day10Used = oldSection.day10Used;
+    }
+    if (oldSection.maxStudentHours !== undefined && newSection.maxStudentHours === undefined) {
+      newSection.maxStudentHours = oldSection.maxStudentHours;
     }
   }
+
+  // Copy courseLevel from old course to new course
+  if (oldCourse && oldCourse.courseLevel && !newCourse.courseLevel) {
+    // Only copy if the course number hasn't changed or if we can't derive from the new number
+    if (oldCourse.number === newCourse.number || !newCourse.number || !newCourse.number[0].match(/\d/)) {
+      newCourse.courseLevel = oldCourse.courseLevel;
+    } else {
+      // Recalculate courseLevel based on first digit of new course number
+      const firstDigit = newCourse.number[0];
+      if (/\d/.test(firstDigit)) {
+        newCourse.courseLevel = `${firstDigit}00`;
+      }
+    }
+  } else if (newCourse.number && !newCourse.courseLevel) {
+    // Set courseLevel if not already set but we have a course number
+    const firstDigit = newCourse.number[0];
+    if (/\d/.test(firstDigit)) {
+      newCourse.courseLevel = `${firstDigit}00`;
+    }
+  }
+
   // If the user pressed 'update' rather than 'add'...
-  if (removeOldMeeting && oldData) {
-    if (oldCourse) {
+  if (removeOldMeeting && oldCourse && oldSection) {
+    const courseIndex = schedule.courses.indexOf(oldCourse);
+    const sectionIndex = oldCourse.sections.indexOf(oldSection);
+
+    // If the course or section is not found in the schedule, exit
+    if (courseIndex === -1 || sectionIndex === -1) {
+      return;
+    }
+
+    // If course info has changed, remove old section and possibly old course
+    if (coursesDiffer(oldCourse, newCourse)) {
+      oldCourse.sections.splice(sectionIndex, 1);
+      removeEmptyCourse(oldCourse, schedule);
+
+      // Recalculate courseLevel if course number changed
+      if (oldCourse.number !== newCourse.number && newCourse.number && /\d/.test(newCourse.number[0])) {
+        newCourse.courseLevel = `${newCourse.number[0]}00`;
+      } else if (oldCourse.courseLevel && !newCourse.courseLevel) {
+        newCourse.courseLevel = oldCourse.courseLevel;
+      }
+
+      // Create new course with updated info
+      schedule.courses.push({
+        ...newCourse,
+        sections: [newSection],
+      });
+    } else {
       // Update identifying Course fields which were changed
-      oldCourse = updateIdentifyingCourseInfo(oldCourse, newCourse);
-      schedule.courses[courseIndex] = oldCourse;
-    }
-    if (oldSection) {
-      // Update identifying Section fields which were changed
-      oldSection = updateIdentifyingSectionInfo(oldSection, newSection);
-      schedule.courses[courseIndex].sections[sectionIndex] = oldSection;
-    }
-    if (oldMeeting) {
-      // Remove the old version of the Meeting
-      removeMeetingFromSchedule(
-        oldData,
-        schedule,
-        oldMeeting,
-        oldSection,
-        oldCourse,
-        newSection.isNonTeaching,
-      );
+      const updatedCourse = updateIdentifyingCourseInfo(oldCourse, newCourse);
+
+      // Update both identifying and non-identifying fields of the section
+      const updatedSection = updateIdentifyingSectionInfo(oldSection, newSection);
+      updateNonIdentifyingSectionInfo(updatedSection, newSection);
+
+      // Additional protection for courseLevel which is a course property, not a section property
+      if (oldCourse.number !== updatedCourse.number && updatedCourse.number && /\d/.test(updatedCourse.number[0])) {
+        // If course number changed, recalculate courseLevel
+        updatedCourse.courseLevel = `${updatedCourse.number[0]}00`;
+      } else {
+        updatedCourse.courseLevel = oldCourse.courseLevel || newCourse.courseLevel;
+      }
+
+      schedule.courses[courseIndex] = updatedCourse;
+      updatedCourse.sections[sectionIndex] = updatedSection;
+
+      // Remove old meeting if present
+      if (oldMeeting && updatedSection.meetings) {
+        const meetingIndex = updatedSection.meetings.indexOf(oldMeeting);
+        if (meetingIndex >= 0) {
+          updatedSection.meetings.splice(meetingIndex, 1);
+        }
+        // If section has no meetings left, remove it and check if the course is empty
+        if (updatedSection.meetings.length === 0) {
+          updatedCourse.sections.splice(sectionIndex, 1);
+          removeEmptyCourse(updatedCourse, schedule);
+        }
+      }
     }
   }
 };
+
 
 export const removeMeetingFromSchedule = (
   data: CourseSectionMeeting | undefined,

@@ -11,18 +11,24 @@ jobs:
       working-directory: ./client-course-schedulizer
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [20.x]
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: update-pnpm-version
+        run: |
+          pnpm install -g pnpm@latest
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install Packages
-        run: npm install
+        run: pnpm install
         working-directory: ${{env.working-directory}}
       - name: Build Page
-        run: npm run build
+        run: pnpm build
         working-directory: ${{env.working-directory}}
       - name: Remove gh-pages Cache
         run: rm -rf node_modules/gh-pages/.cache

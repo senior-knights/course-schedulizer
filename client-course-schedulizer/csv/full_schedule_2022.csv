@@ -1,0 +1,144 @@
+Department,Term,SubjectCode,CourseNum,SectionCode,CourseLevelCode,MinimumCredits,FacultyLoad,BuildingAndRoom,MeetingDays,MeetingTime,SectionStartDate,SectionEndDate,SemesterLength,Building,RoomNumber,MeetingStart,MeetingDurationMinutes,MeetingEnd,ShortTitle,Faculty,SectionStatus,InstructionalMethod,DeliveryMode,Comments,LastEditTimestamp
+"",FA,"",,,,0, 0.5,"","","",,,Full,"","","","","","","Victor T. Norman","","1 CS 396/398 project","","","2021-11-13T15:52:41-05:00"
+"",FA,"",,,,0, 0.5,"","","",,,Full,"","","","","","","Derek C Schuurman","","1 CS 396/398 project","","","2021-11-13T15:52:53-05:00"
+"",FA,"",,,,0, 0.5,"","","",,,Full,"","","","","","","Keith Vander Linden","","1 CS 396/398 project","","","2021-11-13T15:53:17-05:00"
+"",FA,"",,,,0, 0.5,"","","",,,Full,"","","","","","","Kenneth C Arnold","","1 CS 396/398 project","","","2021-11-13T15:53:33-05:00"
+"",FA,"",,,,0, 1,"","","",,,Full,"","","","","","","Harry Plantinga","","2 CS 396/398 projects","","","2022-06-09T14:12:25-04:00"
+"",FA,"",,,,0, 12,"","","",,,Full,"","","","","","","Harry Plantinga","","CCEL","","","2022-06-09T14:12:46-04:00"
+"",FA,"",,,,0, 7,"","","",,,Full,"","","","","","","Keith Vander Linden","","Chair","","","2022-06-10T14:59:34-04:00"
+"",FA,"",,,,0, 3,"","","",,,Full,"","","","","","","Derek C Schuurman","","CRF","","","2022-06-13T09:03:37-04:00"
+"",SP,"",,,,0, 6,"","","",,,Full,"","","","","","","Kenneth C Arnold","","CRF","","","2021-11-13T11:39:21-05:00"
+"",SP,"",,,,0, 3,"","","",,,Full,"","","","","","","Kenneth C Arnold","","Faith & Learning Fellows","","","2022-06-09T12:57:09-04:00"
+"Accounting",SP,"ACCT",545,A,500,3, 3,"","","",,,Full,"","","","","","Accounting Systems","Patrick Bailey","Active","LEC","","Taught for BUS/ACCT",""
+"Business",SP,"INFO",601,A,600,3, 3,"","","",,,Second,"","","","","","Data Wrangling","Keith Vander Linden","Active","LEC","","Taught for MBA",""
+"Business",SU,"INFO",602,A,600,3, 3,"","","",,,First,"","","","","","Predictive Analytics","Kenneth C Arnold","Active","LEC","","Taught for MBA",""
+"Business",SU,"INFO",603,A,600,3, 3,"","","",,,Second,"","","","","","Data Visualization","Patrick Bailey","Active","LEC","","Taught for MBA",""
+"Computer Science",FA,"CS",100,A,100,3, 3,"SB 372","TTH","11:00AM - 12:15PM",,,Full,"SB","372","11:00 AM","75","12:15 PM","Creating Interactive Web Media","David Meyer","Active","LEC","","","2022-03-03T16:30:46-05:00"
+"Computer Science",FA,"CS",104,A,100,2, 2,"SB 337
+NH 253","TH
+T","9:05AM - 10:20AM
+9:05AM - 10:20AM",,,Full,"SB
+NH","337
+253","9:05 AM
+9:05 AM","75
+75","10:20 AM
+10:20 AM","Applied Computing","Derek C Schuurman","Active","LEC","","","2021-11-13T14:23:49-05:00"
+"Computer Science",FA,"CS",104,B,100,2, 2,"SB 337
+NH 253","TH
+T","11:00AM - 12:15PM
+11:00AM - 12:15PM",,,Full,"SB
+NH","337
+253","11:00 AM
+11:00 AM","75
+75","12:15 PM
+12:15 PM","Applied Computing ","Derek C Schuurman","Active","LEC","","","2021-11-13T14:23:54-05:00"
+"Computer Science",FA,"CS",104,C,100,2, 2,"SB 337
+NH 253","TH
+T","12:30PM - 1:45PM
+12:30PM - 1:45PM",,,Full,"SB
+NH","337
+253","12:30 PM
+12:30 PM","75
+75","1:45 PM
+1:45 PM","Applied Computing","Derek C Schuurman","Active","LEC","","","2021-11-16T18:33:49-05:00"
+"Computer Science",FA,"CS",106,A,100,4, 3,"NH 253","MWF","1:00PM - 1:50PM",,,Full,"NH","253","1:00 PM","50","1:50 PM","Intro to Sci Comp & Modeling","Kenneth C Arnold","Active","LEC","","","2021-11-13T13:43:53-05:00"
+"Computer Science",FA,"CS",106L,A,100,0, 1,"SB 354","TH","1:00PM - 2:50PM",,,Full,"SB","354","1:00 PM","110","2:50 PM","Intro to Sci Comp & Model Lab","Kenneth C Arnold","Active","LAB","","","2021-11-13T13:53:14-05:00"
+"Computer Science",FA,"CS",108,A,100,4, 3,"NH 253","MWF","11:00AM - 11:50AM",,,Full,"NH","253","11:00 AM","50","11:50 AM","Intro to Computing","Derek C Schuurman","Active","LEC","","","2022-06-08T16:39:18-04:00"
+"Computer Science",SP,"CS",108,A,100,4, 3,"NH 253","MWF","8:30AM - 9:20AM",,,Full,"NH","253","8:30 AM","50","9:20 AM","Intro to Computing","Keith Vander Linden","Active","LEC","","","2022-03-23T14:37:17-04:00"
+"Computer Science",FA,"CS",108,B,100,4, 3,"NH 253","MWF","12:00PM - 12:50PM",,,Full,"NH","253","12:00 PM","50","12:50 PM","Intro to Computing","Derek C Schuurman","Active","LEC","","","2022-06-08T16:39:29-04:00"
+"Computer Science",SP,"CS",108,B,100,4, 3,"NH 253","MWF","9:30AM - 10:20AM",,,Full,"NH","253","9:30 AM","50","10:20 AM","Intro to Computing","Keith Vander Linden","Active","LEC","","","2022-06-08T16:38:30-04:00"
+"Computer Science",FA,"CS",108L,A,100,0, 1,"SB 354","TH","8:30AM - 10:20AM",,,Full,"SB","354","8:30 AM","110","10:20 AM","Intro to Computing Lab","Keith Vander Linden","Active","LAB","","","2022-06-10T12:19:23-04:00"
+"Computer Science",SP,"CS",108L,A,100,0, 1,"SB 354","TH","8:30AM - 10:20AM",,,Full,"SB","354","8:30 AM","110","10:20 AM","Intro to Computing Lab","Keith Vander Linden","Active","LAB","","","2022-06-10T12:18:48-04:00"
+"Computer Science",FA,"CS",108L,B,100,0, 1,"SB 354","TH","11:00AM - 12:50PM",,,Full,"SB","354","11:00 AM","110","12:50 PM","Intro to Computing Lab","Christopher Wieringa","Active","LAB","","","2022-04-20T09:27:38-04:00"
+"Computer Science",SP,"CS",108L,B,100,0, 1,"SB 354","TH","11:00AM - 12:50PM",,,Full,"SB","354","11:00 AM","110","12:50 PM","Intro to Computing Lab","Keith Vander Linden","","LAB","","","2022-11-19T13:53:50-05:00"
+"Computer Science",FA,"CS",112,A,100,4, 3,"SB 382","MWF","12:00PM - 12:50PM",,,Full,"SB","382","12:00 PM","50","12:50 PM","Intro to Data Structures","Victor T. Norman","Active","LEC","","","2022-03-03T17:54:59-05:00"
+"Computer Science",SP,"CS",112,A,100,4, 3,"NH 198","MWF","12:00PM - 12:50PM",,,Full,"NH","198","12:00 PM","50","12:50 PM","Intro to Data Structures","Victor T. Norman","","","","","2022-11-29T11:27:45-05:00"
+"Computer Science",FA,"CS",112,B,100,4, 3,"SB 382","MWF","1:00PM - 1:50PM",,,Full,"SB","382","1:00 PM","50","1:50 PM","Intro to Data Structures","Victor T. Norman","Active","LEC","","","2022-06-08T16:34:36-04:00"
+"Computer Science",SP,"CS",112,B,100,4, 3,"NH 198","MWF","1:00PM - 1:50PM",,,Full,"NH","198","1:00 PM","50","1:50 PM","Intro to Data Structures","Victor T. Norman","","","","","2022-11-29T11:27:55-05:00"
+"Computer Science",FA,"CS",112L,A,100,0, 1,"SB 354","T","11:00AM - 12:50PM",,,Full,"SB","354","11:00 AM","110","12:50 PM","Intro to Data Structures Lab","Christopher Wieringa","Active","LAB","","","2022-06-08T16:35:34-04:00"
+"Computer Science",SP,"CS",112L,A,100,0, 1,"SB 354","T","1:00PM - 2:50PM",,,Full,"SB","354","1:00 PM","110","2:50 PM","Intro to Data Structures Lab","Christopher Wieringa","Active","LAB","","","2022-06-08T16:36:04-04:00"
+"Computer Science",FA,"CS",112L,B,100,0, 1,"SB 354","T","1:00PM - 2:50PM",,,Full,"SB","354","1:00 PM","110","2:50 PM","Intro to Data Structures Lab","Christopher Wieringa","Active","LAB","","","2022-06-08T16:35:50-04:00"
+"Computer Science",SP,"CS",112L,B,100,0, 1,"SB 354","T","11:00AM - 12:50PM",,,Full,"SB","354","11:00 AM","110","12:50 PM","Intro to Data Structures Lab","Christopher Wieringa","Active","LAB","","","2022-06-08T16:36:16-04:00"
+"Computer Science",SP,"CS",112L,C,100,0, 1,"SB 354","T","8:30AM - 10:20AM",,,Full,"SB","354","8:30 AM","110","10:20 AM","Intro to Data Structures Lab","Christopher Wieringa","","In-person","","","2022-11-19T13:53:35-05:00"
+"Computer Science",FA,"CS",195,A,100,0, 0.5,"SB 010","T","3:00PM - 3:50PM",,,Full,"SB","010","3:00 PM","50","3:50 PM","Intro Computing Seminar","Harry Plantinga","Active","SEM","","","2022-06-08T16:37:57-04:00"
+"Computer Science",SP,"CS",195,A,100,0, 0.5,"SB 010","T","3:00PM - 3:50PM",,,Full,"SB","010","3:00 PM","50","3:50 PM","Intro Computing Seminar","Harry Plantinga","Active","SEM","","","2022-06-08T16:37:32-04:00"
+"Computer Science",FA,"CS",212,A,200,3, 3,"SB 382","MWF","8:30AM - 9:20AM",,,Full,"SB","382","8:30 AM","50","9:20 AM","Data Structures & Algorithms","Harry Plantinga","Active","LEC","","","2021-07-13T14:15:32-04:00"
+"Computer Science",FA,"CS",212,B,200,3, 3,"SB 382","MWF","9:30AM - 10:20AM",,,Full,"SB","382","9:30 AM","50","10:20 AM","Data Structures & Algorithms","Harry Plantinga","Active","LEC","","","2021-07-13T14:15:43-04:00"
+"Computer Science",SP,"CS",214,A,200,3, 3,"SB 382","MTH","6:30PM - 8:20PM",,,Full,"SB","382","6:30 PM","110","8:20 PM","Programming Lang Concepts","David Meyer","Active","LEC","","","2021-07-13T16:20:30-04:00"
+"Computer Science",SP,"CS",214,A,200,3, 3,"SB 382
+SB 354","MW
+F","2:00PM - 2:50PM
+2:00PM - 3:50PM",,,Full,"SB
+SB","382
+354","2:00 PM
+2:00 PM","50
+110","2:50 PM
+3:50 PM","Programming Lang Concepts","Cancelled","Active","LEC","","","2022-06-10T13:20:27-04:00"
+"Computer Science",SP,"CS",214,A-S,200,0, 0,"SB 354","MTH","6:30PM - 8:20PM",,,Full,"SB","354","6:30 PM","110","8:20 PM","Programming Lang Concepts","Shadow-Gold","Active","LEC","","","2022-06-09T16:53:27-04:00"
+"Computer Science",SP,"CS",214,B,200,3, 3,"SB 382
+SB 372","MW
+F","3:00PM - 3:50PM
+2:00PM - 3:50PM",,,Full,"SB
+SB","382
+372","3:00 PM
+2:00 PM","50
+110","3:50 PM
+3:50 PM","Programming Lang Concepts","Cancelled","Active","LEC","","","2022-06-10T13:20:27-04:00"
+"Computer Science",SP,"CS",214L,B,200,0, 0,"SB 372","MTH","6:30PM - 8:20PM",,,Full,"SB","372","6:30 PM","110","8:20 PM","Programming Lang Concepts","Shadow-Maroon","","In-person","","","2022-11-19T13:55:43-05:00"
+"Computer Science",SP,"CS",232,A,200,3, 3,"SB 382","T","6:30PM - 9:20PM",,,Full,"SB","382","6:30 PM","170","9:20 PM","Operating Systems and Networki","Victor T. Norman","Active","LEC","","","2022-06-10T12:07:28-04:00"
+"Computer Science",SP,"CS",232,A,200,3, 3,"SB 382","MWF","8:30AM - 9:20AM",,,Full,"SB","382","8:30 AM","50","9:20 AM","Operating Systems and Networki","Cancelled","Active","LEC","","","2022-06-10T13:24:44-04:00"
+"Computer Science",SP,"CS",232,B,200,3, 3,"SB 382","MWF","9:30AM - 10:20AM",,,Full,"SB","382","9:30 AM","50","10:20 AM","Operating Systems and Networki","Cancelled","Active","LEC","","","2022-06-10T12:05:30-04:00"
+"Computer Science",FA,"CS",262,A,200,3, 3,"SB 354
+SB 382","F
+MW","2:00PM - 3:50PM
+2:00PM - 2:50PM",,,Full,"SB
+SB","354
+382","2:00 PM
+2:00 PM","110
+50","3:50 PM
+2:50 PM","Software Engineering","Keith Vander Linden","Active","LEC","","","2021-07-13T14:16:19-04:00"
+"Computer Science",FA,"CS",262,B,200,3, 3,"SB 372
+SB 382","F
+MW","2:00PM - 3:50PM
+3:00PM - 3:50PM",,,Full,"SB
+SB","372
+382","2:00 PM
+3:00 PM","110
+50","3:50 PM
+3:50 PM","Software Engineering","Keith Vander Linden","Active","LEC","","","2021-07-13T14:16:34-04:00"
+"Computer Science",FA,"CS",295,A,200,0, 0.5,"SB 010","T","3:00PM - 3:50PM",,,Full,"SB","010","3:00 PM","50","3:50 PM","Computing Seminar","Harry Plantinga","Active","SEM","","","2022-06-08T16:38:07-04:00"
+"Computer Science",SP,"CS",295,A,200,0, 0.5,"SB 010","T","3:00PM - 3:50PM",,,Full,"SB","010","3:00 PM","50","3:50 PM","Computing Seminar","Harry Plantinga","Active","SEM","","","2022-06-08T16:37:42-04:00"
+"Computer Science",SP,"CS",326,A,300,3, 3,"NH 253","MWF","12:00PM - 12:50PM",,,Full,"NH","253","12:00 PM","50","12:50 PM","Embedded Systems and the Internet of Things ","Derek C Schuurman","Active","LEC","","","2021-11-13T14:56:53-05:00"
+"Computer Science",SP,"CS",326,A-S,300,0, 0,"SB 354","MWF","12:00PM - 12:50PM",,,Full,"SB","354","12:00 PM","50","12:50 PM","Embedded Systems and the Internet of Things ","Shadow-Gold","Active","LEC","","","2022-06-08T16:22:07-04:00"
+"Computer Science",FA,"CS",336,A,300,3, 3,"NH 064","MWF","9:30AM - 10:20AM",,,Full,"NH","064","9:30 AM","50","10:20 AM","Web Development","Victor T. Norman","Active","LEC","","Put this section on hold.
+We're moving CS 364 to the fall, which will catch a few students.","2022-03-03T16:43:21-05:00"
+"Computer Science",FA,"CS",336,A-S,300,0, 0,"SB 354","MWF","9:30AM - 10:20AM",,,Full,"SB","354","9:30 AM","50","10:20 AM","Web Development","Shadow-Gold","Active","LEC","","","2022-06-08T16:17:24-04:00"
+"Computer Science",FA,"CS",336,B,300,3, 3,"NH 064","MWF","11:00AM - 11:50AM",,,Full,"NH","064","11:00 AM","50","11:50 AM","Web Development","Victor T. Norman","Active","LEC","","Hold this one back.","2021-11-23T17:44:11-05:00"
+"Computer Science",FA,"CS",336,B-S,300,0, 0,"SB 354","MWF","11:00AM - 11:50AM",,,Full,"SB","354","11:00 AM","50","11:50 AM","Web Development","Shadow-Gold","Active","LEC","","","2022-06-08T16:20:50-04:00"
+"Computer Science",SP,"CS",342,A,300,3, 3,"NH 253","TTH","11:00AM - 12:15PM",,,Full,"NH","253","11:00 AM","75","12:15 PM","Database Management Systems","Patrick Bailey","Active","LEC","","","2022-10-19T09:47:24-04:00"
+"Computer Science",SP,"CS",342,A-S,300,0, 0,"SB 372","TTH","11:00AM - 12:15PM",,,Full,"SB","372","11:00 AM","75","12:15 PM","Database Management Systems","Shadow-Maroon","Active","LEC","","","2022-10-18T11:35:01-04:00"
+"Computer Science",SP,"CS",344,A,300,3, 3,"NH 253","MWF","11:00AM - 11:50AM",,,Full,"NH","253","11:00 AM","50","11:50 AM","Artificial Intelligence","Kenneth C Arnold","Active","LEC","","","2021-11-16T19:01:26-05:00"
+"Computer Science",SP,"CS",344,A-S,300,0, 0,"SB 354","MWF","11:00AM - 11:50AM",,,Full,"SB","354","11:00 AM","50","11:50 AM","Artificial Intelligence","Shadow-Gold","Active","LEC","","","2022-06-08T16:21:51-04:00"
+"Computer Science",FA,"CS",364,A,300,4, 4,"SB 354","MTH","6:30PM - 8:20PM",,,Full,"SB","354","6:30 PM","110","8:20 PM","Computer Security","Brian D Paige
+Adam Vedra","Active","LEC","","",""
+"Computer Science",FA,"CS",383,A,300,1, 0,"NH 253","T","6:30PM - 7:20PM",,,Full,"NH","253","6:30 PM","50","7:20 PM","Senior Internship in Computing","Keith Vander Linden","Active","INT","","","2022-06-10T15:05:26-04:00"
+"Computer Science",SP,"CS",383,A,300,1, 0,"NH 253","T","6:30PM - 7:20PM",,,Full,"NH","253","6:30 PM","50","7:20 PM","External Practicum","Keith Vander Linden","Active","INT","","","2022-06-10T15:05:39-04:00"
+"Computer Science",SP,"CS",384,A,300,3, 3,"SB 382","TTH","11:00AM - 12:15PM",,,Full,"SB","382","11:00 AM","75","12:15 PM","Perspectives on Computing","Derek C Schuurman","Active","LEC","","","2022-10-19T09:47:07-04:00"
+"Computer Science",SP,"CS",384,B,300,3, 3,"HH 334","TTH","12:30PM - 1:45PM",,,Full,"HH","334","12:30 PM","75","1:45 PM","Perspectives on Computing","Derek C Schuurman","Active","LEC","","","2022-04-15T10:13:01-04:00"
+"Computer Science",FA,"CS",396,A,300,2, 0.25,"SB 382","T","6:30PM - 7:20PM",,,Full,"SB","382","6:30 PM","50","7:20 PM","Senior Project in Computing I","Harry Plantinga","Active","LEC","","","2022-06-08T16:59:55-04:00"
+"Computer Science",SP,"CS",398,A,300,2, 0.25,"NH 253","T","6:30PM - 7:20PM",,,Full,"NH","253","6:30 PM","50","7:20 PM","Senior Project in Computing II","Harry Plantinga","Active","LEC","","","2022-06-10T12:09:32-04:00"
+"Computer Science",FA,"DATA",100,A,100,3, 3,"SB 372","TTH","9:05AM - 10:20AM",,,Full,"SB","372","9:05 AM","75","10:20 AM","Foundations of Data Science and Analytics","Staff","Active","LEC","","","2021-11-13T14:09:31-05:00"
+"Computer Science",SP,"DATA",100,A,100,3, 3,"SB 372","MWF","11:00AM - 11:50AM",,,Full,"SB","372","11:00 AM","50","11:50 AM","Productivity Software","Monica Groenenboom","Active","LEC","","","2022-07-21T14:45:38-04:00"
+"Computer Science",FA,"DATA",100,B,100,3, 3,"SB 372","TTH","12:30PM - 1:45PM",,,Full,"SB","372","12:30 PM","75","1:45 PM","Productivity Software","Brenda VanderLinden","Active","LEC","","","2021-07-14T18:52:51-04:00"
+"Computer Science",SP,"DATA",100,B,100,3, 3,"SB 372","TTH","12:30PM - 1:45PM",,,Full,"SB","372","12:30 PM","75","1:45 PM","Productivity Software","Brenda VanderLinden","Active","LEC","","","2021-07-14T19:23:13-04:00"
+"Computer Science",FA,"DATA",100,C,100,3, 3,"SB 372","TTH","2:00PM - 3:15PM",,,Full,"SB","372","2:00 PM","75","3:15 PM","Productivity Software","Brenda VanderLinden","Active","LEC","","","2021-11-13T14:05:51-05:00"
+"Computer Science",SP,"DATA",100,C,100,3, 3,"SB 372","TTH","2:00PM - 3:15PM",,,Full,"SB","372","2:00 PM","75","3:15 PM","Productivity Software","Brenda VanderLinden","Active","LEC","","","2021-11-20T14:07:13-05:00"
+"Computer Science",FA,"DATA",100,D,100,3, 3,"SB 372","TTH","6:30PM - 7:45PM",,,Full,"SB","372","6:30 PM","75","7:45 PM","Productivity Software","Jim Momeyer","Active","LEC","","","2021-07-14T18:51:27-04:00"
+"Computer Science",SP,"DATA",100,D,100,3, 3,"SB 372","TTH","6:30PM - 7:45PM",,,Full,"SB","372","6:30 PM","75","7:45 PM","Productivity Software","Jim Momeyer","Active","LEC","","","2021-07-14T19:24:49-04:00"
+"Computer Science",FA,"DATA",202,A,200,3, 3,"NH 253","MWF","8:30AM - 9:20AM",,,Full,"NH","253","8:30 AM","50","9:20 AM","Predictive Analytics","Kenneth C Arnold","Active","LEC","","","2022-03-23T14:33:29-04:00"
+"Computer Science",FA,"DATA",202,A-S,200,0, 0,"SB 372","MWF","8:30AM - 9:20AM",,,Full,"SB","372","8:30 AM","50","9:20 AM","","Shadow-Maroon","Active","LEC","","","2022-06-08T16:20:22-04:00"
+"Computer Science",FA,"DATA",202,B,200,3, 3,"NH 253","MWF","9:30AM - 10:20AM",,,Full,"NH","253","9:30 AM","50","10:20 AM","Predictive Analytics","Kenneth C Arnold","Active","LEC","","","2021-11-16T18:05:03-05:00"
+"Computer Science",FA,"DATA",202,B-S,200,0, 0,"SB 372","MWF","9:30AM - 10:20AM",,,Full,"SB","372","9:30 AM","50","10:20 AM","","Shadow-Maroon","Active","LEC","","","2022-06-08T16:20:38-04:00"
+"Computer Science",FA,"DATA",396,A,300,2, 0,"SB 382","T","6:30PM - 7:20PM",,,Full,"SB","382","6:30 PM","50","7:20 PM","Senior Project in Data Science","Harry Plantinga","Active","LEC","","","2022-06-08T17:00:48-04:00"
+"Computer Science",SP,"DATA",398,A,300,2, 0,"NH 253","T","6:30PM - 7:20PM",,,Full,"NH","253","6:30 PM","50","7:20 PM","Senior Project in Data Science II","Harry Plantinga","Active","LEC","","","2022-06-10T12:09:52-04:00"
+"Geography",SP,"GEO",566,A,500,5, 5,"","","",,,Full,"","","","","","Spatial Programming and Data Management ","Patrick Bailey","Active","LEC","","","2022-06-10T13:39:01-04:00"

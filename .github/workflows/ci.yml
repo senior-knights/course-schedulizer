@@ -13,18 +13,21 @@ jobs:
     env:
       working-directory: ./client-course-schedulizer
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
         with:
-          node-version: '14'
-      - name: update-npm-version
+          version: 8
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      - name: update-pnpm-version
         run: |
-          npm install -g npm@latest
-      - name: Install npm dependencies
+          pnpm install -g pnpm@latest
+      - name: Install pnpm dependencies
         run: |
-          npm ci
+          pnpm install
         working-directory: ${{env.working-directory}}
       - name: Run tests
         run: |
-          npm test
+          pnpm test
         working-directory: ${{env.working-directory}}

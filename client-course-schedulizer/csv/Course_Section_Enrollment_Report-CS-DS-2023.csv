@@ -1,0 +1,100 @@
+﻿Academic Period,Course,Course Section,Section Status,Semester Hours,Instructors,Meeting Patterns,Current Section Capacity,Enrollment Count,Waitlist Count,COURSE Capacity,Start Date,End Date,Location 1,Location 1 Capacity,Location 2,Location 2 Capacity,Instructional Format
+2023 Fall,CS 100 - Creating Interactive Web Media,CS 100-A - Creating Interactive Web Media,Open,4,David Meyer,TTH | 10:20 AM - 12:00 PM,30,26,0,30,2023/8/28,2023/12/16,Science Building 372 - PC Classroom,33,,0,Lecture
+2023 Fall,CS 104 - Applied Computing,CS 104-A - Applied Computing,Open,1,Fernando Pasquini Santos,MWF | 2:45 PM - 3:50 PM,60,48,0,30,2023/8/28,2023/10/21,North Hall 064 - Classroom,46,,0,Lecture
+2023 Fall,CS 104 - Applied Computing,CS 104-B - Applied Computing,Waitlist,1,Fernando Pasquini Santos,MWF | 2:45 PM - 3:50 PM,34,34,0,30,2023/10/23,2023/12/16,North Hall 064 - Classroom,46,,0,Lecture
+2023 Fall,CS 104L - Applied Computing Lab,CS 104L-A - Applied Computing Lab,Open,1,Fernando Pasquini Santos,T | 2:10 PM - 3:50 PM | 08/28/2023 - 10/21/2023,30,25,0,24,2023/8/28,2023/10/21,Science Building 354 - Unix Lab,34,,0,Laboratory
+2023 Fall,CS 104L - Applied Computing Lab,CS 104L-B - Applied Computing Lab,Waitlist,1,Fernando Pasquini Santos,T | 2:10 PM - 3:50 PM | 10/23/2023 - 12/16/2023,34,34,0,24,2023/10/23,2023/12/16,Science Building 354 - Unix Lab,34,,0,Laboratory
+2023 Fall,CS 104L - Applied Computing Lab,CS 104L-C - Applied Computing Lab,Open,1,Fernando Pasquini Santos,TH | 2:10 PM - 3:50 PM | 08/28/2023 - 10/21/2023,30,23,0,24,2023/8/28,2023/10/21,Science Building 354 - Unix Lab,34,,0,Laboratory
+2023 Fall,CS 106 - Introduction to Scientific Computation And Modeling,CS 106-A - Introduction to Scientific Computation And Modeling,Open,3,Ken Arnold,MWF | 1:30 PM - 2:35 PM,35,27,0,35,2023/8/28,2023/12/16,North Hall 253 - Classroom,35,,0,Lecture
+2023 Fall,CS 106L - Introduction to Scientific Computation And Modeling Lab,CS 106L-A - Introduction to Scientific Computation And Modeling Lab,Open,1,Chris Wieringa,TH | 12:15 PM - 1:55 PM | 08/28/2023 - 12/16/2023,35,27,0,35,2023/8/28,2023/12/16,Science Building 354 - Unix Lab,34,,0,Laboratory
+2023 Fall,CS 108 - Introduction to Computing,CS 108-A - Introduction to Computing,Waitlist,3,Rocky Chang （張蛟川）,MWF | 11:00 AM - 12:05 PM,30,31,0,30,2023/8/28,2023/12/16,North Hall 253 - Classroom,35,,0,Lecture
+2024 Spring,CS 108 - Introduction to Computing,CS 108-A - Introduction to Computing,Open,3,Fernando Pasquini Santos,MWF | 8:00 AM - 9:05 AM,26,22,0,30,2024/1/16,2024/5/4,North Hall 253 - Classroom,35,,0,Lecture
+2023 Fall,CS 108 - Introduction to Computing,CS 108-B - Introduction to Computing,Open,3,Rocky Chang （張蛟川）,MWF | 12:15 PM - 1:20 PM,30,22,1,30,2023/8/28,2023/12/16,North Hall 253 - Classroom,35,,0,Lecture
+2024 Spring,CS 108 - Introduction to Computing,CS 108-B - Introduction to Computing,Open,3,Rocky Chang （張蛟川）,MWF | 9:15 AM - 10:20 AM,26,20,0,30,2024/1/16,2024/5/4,North Hall 253 - Classroom,35,,0,Lecture
+2023 Fall,CS 108L - Intro to Computing Lab,CS 108L-A - Intro to Computing Lab,Open,1,Rocky Chang （張蛟川）,TH | 8:00 AM - 9:40 AM | 08/28/2023 - 12/16/2023,30,28,0,30,2023/8/28,2023/12/16,Science Building 354 - Unix Lab,34,,0,Laboratory
+2024 Spring,CS 108L - Intro to Computing Lab,CS 108L-A - Intro to Computing Lab,Open,1,Fernando Pasquini Santos,TH | 8:00 AM - 9:40 AM | 01/16/2024 - 05/04/2024,26,23,0,30,2024/1/16,2024/5/4,Science Building 354 - Unix Lab,34,,0,Laboratory
+2023 Fall,CS 108L - Intro to Computing Lab,CS 108L-B - Intro to Computing Lab,Open,1,Rocky Chang （張蛟川）,TH | 10:20 AM - 12:00 PM | 08/28/2023 - 12/16/2023,30,25,0,30,2023/8/28,2023/12/16,Science Building 354 - Unix Lab,34,,0,Laboratory
+2024 Spring,CS 108L - Intro to Computing Lab,CS 108L-B - Intro to Computing Lab,Open,1,Rocky Chang （張蛟川）,TH | 10:20 AM - 12:00 PM | 01/16/2024 - 05/04/2024,26,18,0,30,2024/1/16,2024/5/4,Science Building 354 - Unix Lab,34,,0,Laboratory
+2023 Fall,CS 112 - Introduction to Data Structures,CS 112-A - Introduction to Data Structures,Open,3,Victor Norman,MWF | 11:00 AM - 12:05 PM,30,15,0,30,2023/8/28,2023/12/16,Science Building 382 - Classroom,30,,0,Lecture
+2024 Spring,CS 112 - Introduction to Data Structures,CS 112-A - Introduction to Data Structures,Open,3,Victor Norman,MWF | 11:00 AM - 12:05 PM,35,34,0,30,2024/1/16,2024/5/4,North Hall 064 - Classroom,46,,0,Lecture
+2023 Fall,CS 112 - Introduction to Data Structures,CS 112-B - Introduction to Data Structures,Open,3,Victor Norman,MWF | 12:15 PM - 1:20 PM,30,21,0,30,2023/8/28,2023/12/16,Science Building 382 - Classroom,30,,0,Lecture
+2024 Spring,CS 112 - Introduction to Data Structures,CS 112-B - Introduction to Data Structures,Open,3,Victor Norman,MWF | 12:15 PM - 1:20 PM,35,17,0,30,2024/1/16,2024/5/4,Science Building 343,60,,0,Lecture
+2023 Fall,CS 112L - Intro to Data Structures Lab,CS 112L-A - Intro to Data Structures Lab,Open,1,Chris Wieringa,T | 8:00 AM - 9:40 AM | 08/28/2023 - 12/16/2023,30,19,0,30,2023/8/28,2023/12/16,Science Building 354 - Unix Lab,34,,0,Laboratory
+2024 Spring,CS 112L - Intro to Data Structures Lab,CS 112L-A - Intro to Data Structures Lab,Open,1,Chris Wieringa,T | 8:00 AM - 9:40 AM | 01/16/2024 - 05/04/2024,33,25,0,30,2024/1/16,2024/5/4,Science Building 354 - Unix Lab,34,,0,Laboratory
+2023 Fall,CS 112L - Intro to Data Structures Lab,CS 112L-B - Intro to Data Structures Lab,Open,1,Chris Wieringa,T | 10:20 AM - 12:00 PM | 08/28/2023 - 12/16/2023,30,17,0,30,2023/8/28,2023/12/16,Science Building 354 - Unix Lab,34,,0,Laboratory
+2024 Spring,CS 112L - Intro to Data Structures Lab,CS 112L-B - Intro to Data Structures Lab,Open,1,Chris Wieringa,T | 10:20 AM - 12:00 PM | 01/16/2024 - 05/04/2024,33,26,0,30,2024/1/16,2024/5/4,Science Building 354 - Unix Lab,34,,0,Laboratory
+2023 Fall,CS 195 - Introductory Computing Seminar,CS 195-A - Introductory Computing Seminar,Waitlist,0,Harry Plantinga,T | 3:05 PM - 3:55 PM | 08/28/2023 - 12/16/2023,90,90,1,90,2023/8/28,2023/12/16,Science Building 010 - Lecture Hall,182,,0,Seminar
+2024 Spring,CS 195 - Introductory Computing Seminar,CS 195-A - Introductory Computing Seminar,Open,0,Harry Plantinga,T | 3:05 PM - 3:55 PM | 01/16/2024 - 05/04/2024,90,72,0,90,2024/1/16,2024/5/4,Science Building 010 - Lecture Hall,182,,0,Seminar
+2023 Fall,CS 212 - Data Structures and Algorithms,CS 212-A - Data Structures and Algorithms,Open,4,Harry Plantinga,MWF | 8:00 AM - 9:05 AM,42,40,0,30,2023/8/28,2023/12/16,North Hall 064 - Classroom,46,,0,Lecture
+2023 Fall,CS 212 - Data Structures and Algorithms,CS 212-B - Data Structures and Algorithms,Open,4,Harry Plantinga,MWF | 9:15 AM - 10:20 AM,42,40,1,30,2023/8/28,2023/12/16,North Hall 064 - Classroom,46,,0,Lecture
+2024 Spring,CS 214 - Programming Language Concepts,CS 214-A - Programming Language Concepts,Waitlist,4,David Meyer,"F | 2:45 PM - 5:05 PM | 01/16/2024 - 05/04/2024
+
+MW | 2:45 PM - 3:50 PM | 01/16/2024 - 05/04/2024",41,39,0,30,2024/1/16,2024/5/4,Science Building 343,60,Science Building 372 - PC Classroom,33,Lecture
+2024 Spring,CS 214 - Programming Language Concepts,CS 214-B - Programming Language Concepts,Open,4,David Meyer,"F | 2:45 PM - 5:05 PM | 01/16/2024 - 05/04/2024
+
+MW | 4:00 PM - 5:05 PM | 01/16/2024 - 05/04/2024",35,22,0,30,2024/1/16,2024/5/4,Science Building 343,60,Science Building 354 - Unix Lab,34,Lecture
+2024 Spring,CS 232 - Operating Systems and Networking,CS 232-A - Operating Systems and Networking,Open,4,Victor Norman,MWF | 8:00 AM - 9:05 AM,35,33,0,30,2024/1/16,2024/5/4,Hiemenga Hall 336 - Classroom,36,,0,Lecture
+2024 Spring,CS 232 - Operating Systems and Networking,CS 232-B - Operating Systems and Networking,Open,4,Victor Norman,MWF | 9:15 AM - 10:20 AM,35,32,0,30,2024/1/16,2024/5/4,Hiemenga Hall 336 - Classroom,36,,0,Lecture
+2023 Fall,CS 262 - Software Engineering,CS 262-A - Software Engineering,Open,4,Keith Vander Linden,"F | 1:30 PM - 3:50 PM | 08/28/2023 - 12/16/2023
+
+MWF | 1:30 PM - 2:35 PM | 08/28/2023 - 12/16/2023",26,25,0,30,2023/8/28,2023/12/16,Science Building 354 - Unix Lab,34,Science Building 382 - Classroom,30,Lecture
+2023 Fall,CS 262 - Software Engineering,CS 262-B - Software Engineering,Open,4,Keith Vander Linden,"F | 1:30 PM - 3:50 PM | 08/28/2023 - 12/16/2023
+
+MWF | 2:45 PM - 3:50 PM | 08/28/2023 - 12/16/2023",26,13,0,30,2023/8/28,2023/12/16,Science Building 372 - PC Classroom,33,Science Building 382 - Classroom,30,Lecture
+2023 Fall,CS 295 - Computing Seminar,CS 295-A - Computing Seminar,Open,0,Harry Plantinga,T | 3:05 PM - 3:55 PM | 08/28/2023 - 12/16/2023,60,49,0,60,2023/8/28,2023/12/16,Science Building 010 - Lecture Hall,182,,0,Seminar
+2024 Spring,CS 295 - Computing Seminar,CS 295-A - Computing Seminar,Open,0,Harry Plantinga,T | 3:05 PM - 3:55 PM | 01/16/2024 - 05/04/2024,90,55,0,60,2024/1/16,2024/5/4,Science Building 382 - Classroom,30,,0,Seminar
+2023 Fall,CS 332 - Advanced Computer Networks,CS 332-A - Advanced Computer Networks,Open,2,Victor Norman,MWF | 9:15 AM - 10:20 AM,30,12,0,30,2023/8/28,2023/10/21,Science Building 354 - Unix Lab,34,Science Building 382 - Classroom,30,Lecture
+2024 Spring,CS 338 - System Administration: Infrastructure,CS 338-A - System Administration: Infrastructure,Open,2,Chris Wieringa,MWF | 8:00 AM - 9:05 AM,30,16,0,30,2024/1/15,2024/3/9,Science Building 354 - Unix Lab,34,Science Building 382 - Classroom,30,Lecture
+2024 Spring,CS 339 - System Administration: Cloud Services,CS 339-A - System Administration: Cloud Services,Open,2,Chris Wieringa,MWF | 8:00 AM - 9:05 AM,30,20,0,30,2024/3/11,2024/5/4,Science Building 354 - Unix Lab,34,Science Building 382 - Classroom,30,Lecture
+2024 Spring,CS 354 - Database Management Systems,CS 354-A - Database Management Systems,Open,2,Patrick Bailey,TTH | 8:00 AM - 9:40 AM,30,29,0,30,2024/3/11,2024/5/4,Science Building 382 - Classroom,30,,0,Lecture
+2023 Fall,CS 364 - Computer Security,CS 364-A - Computer Security,Open,4,"Adam Vedra
+
+Brian Paige",MTH | 6:30 PM - 8:10 PM,30,19,0,30,2023/8/28,2023/12/16,Science Building 354 - Unix Lab,34,,0,Lecture
+2024 Spring,CS 372 - Computer Graphics,CS 372-A - Computer Graphics,Open,2,Harry Plantinga,MWF | 11:00 AM - 12:05 PM,30,18,0,30,2024/1/15,2024/3/9,North Hall 253 - Classroom,35,Science Building 354 - Unix Lab,34,Lecture
+2023 Fall,CS 374 - High Performance Computing,CS 374-A - High Performance Computing,Open,2,Joel Adams,MWF | 9:15 AM - 10:20 AM,30,23,0,30,2023/10/23,2023/12/16,Science Building 354 - Unix Lab,34,Science Building 382 - Classroom,30,Lecture
+2024 Spring,CS 375 - Artificial Intelligence,CS 375-A - Artificial Intelligence,Waitlist,2,Ken Arnold,MWF | 9:15 AM - 10:20 AM,30,35,0,30,2024/1/15,2024/3/9,Science Building 354 - Unix Lab,34,Science Building 382 - Classroom,30,Lecture
+2024 Spring,CS 375 - Artificial Intelligence,CS 375-B - Artificial Intelligence,Open,2,Ken Arnold,MWF | 11:00 AM - 12:05 PM,30,13,0,30,2024/1/16,2024/3/9,Science Building 382 - Classroom,30,,0,Lecture
+2024 Spring,CS 376 - Machine Learning,CS 376-A - Machine Learning,Waitlist,2,Ken Arnold,MWF | 9:15 AM - 10:20 AM,30,30,0,30,2024/3/11,2024/5/4,Science Building 354 - Unix Lab,34,Science Building 382 - Classroom,30,Lecture
+2024 Spring,CS 376 - Machine Learning,CS 376-B - Machine Learning,Open,2,Ken Arnold,MWF | 11:00 AM - 12:05 PM,30,14,0,30,2024/3/11,2024/5/4,Science Building 382 - Classroom,30,,0,Lecture
+2024 Spring,CS 383 - External Practicum,CS 383-A - External Practicum,Closed,1,"Keith Vander Linden
+
+Meredith Segur",T | 6:30 PM - 7:20 PM | 01/16/2024 - 05/04/2024,0,3,0,0,2024/1/16,2024/5/4,North Hall 253 - Classroom,35,,0,Internship
+2023 Fall,CS 383 - External Practicum,CS 383-A - External Practicum,Waitlist,1,"Keith Vander Linden
+
+Meredith Segur",T | 6:30 PM - 7:20 PM | 08/28/2023 - 12/16/2023,0,3,0,0,2023/8/28,2023/12/16,North Hall 253 - Classroom,35,,0,Internship
+2024 Spring,CS 384 - Perspectives on Computing,CS 384-A - Perspectives on Computing,Open,4,Derek Schuurman,TTH | 10:20 AM - 12:00 PM,20,19,0,20,2024/1/16,2024/5/4,Hiemenga Hall 336 - Classroom,36,,0,Lecture
+2024 Spring,CS 384 - Perspectives on Computing,CS 384-B - Perspectives on Computing,Open,4,Derek Schuurman,TTH | 12:15 PM - 1:55 PM,20,18,0,20,2024/1/16,2024/5/4,Hiemenga Hall 336 - Classroom,36,,0,Lecture
+2023 Fall,CS 390 - Independent Study,CS 390-A - Advanced React Apps,Closed,4,Victor Norman,,1,2,0,1,2023/8/28,2023/12/16,,0,,0,Independent Study
+2023 Fall,CS 396 - Senior Project in Computing,CS 396-A - Senior Project in Computing,Open,2,Keith Vander Linden,T | 6:30 PM - 8:10 PM,30,21,0,30,2023/8/28,2023/12/16,Science Building 382 - Classroom,30,,0,Lecture
+2024 Spring,CS 398 - Senior Project in Computing II,CS 398-A - Senior Project in Computing II,Open,2,Keith Vander Linden,T | 6:30 PM - 7:20 PM | 01/16/2024 - 05/04/2024,30,26,0,30,2024/1/16,2024/5/4,Science Building 382 - Classroom,30,,0,Lecture
+2023 Fall,CS 398 - Senior Project in Computing II,CS 398-A - Senior Project in Computing II,Closed,2,Keith Vander Linden,,0,1,0,30,2023/8/28,2023/12/16,,0,,0,Lecture
+2024 Spring,DATA 102 - Foundations of Data Science and Analytics,DATA 102-A - Foundations of Data Science and Analytics,Waitlist,2,Monica Groenenboom,MWF | 9:15 AM - 10:20 AM,28,28,0,32,2024/1/16,2024/3/9,Hiemenga Hall 320 - Classroom,28,Science Building 372 - PC Classroom,33,Lecture
+2023 Fall,DATA 102 - Foundations of Data Science and Analytics,DATA 102-B - Foundations of Data Science and Analytics,Waitlist,2,Brenda VanderLinden,TTH | 12:15 PM - 1:55 PM,30,30,2,32,2023/8/28,2023/10/21,Science Building 372 - PC Classroom,33,,0,Lecture
+2024 Spring,DATA 102 - Foundations of Data Science and Analytics,DATA 102-B - Foundations of Data Science and Analytics,Waitlist,2,Brenda VanderLinden,TTH | 12:15 PM - 1:55 PM,28,29,0,32,2024/1/16,2024/3/9,Science Building 372 - PC Classroom,33,,0,Lecture
+2023 Fall,DATA 102 - Foundations of Data Science and Analytics,DATA 102-C - Foundations of Data Science and Analytics,Waitlist,2,Brenda VanderLinden,TTH | 2:10 PM - 3:50 PM,30,31,0,32,2023/8/28,2023/10/21,Science Building 372 - PC Classroom,33,,0,Lecture
+2024 Spring,DATA 102 - Foundations of Data Science and Analytics,DATA 102-C - Foundations of Data Science and Analytics,Waitlist,2,Brenda VanderLinden,TTH | 2:10 PM - 3:50 PM,28,28,0,32,2024/1/16,2024/3/9,Science Building 372 - PC Classroom,33,,0,Lecture
+2023 Fall,DATA 102 - Foundations of Data Science and Analytics,DATA 102-D - Foundations of Data Science and Analytics,Waitlist,2,Jim Momeyer,TTH | 6:30 PM - 8:10 PM,30,27,0,32,2023/8/28,2023/10/21,Science Building 372 - PC Classroom,33,,0,Lecture
+2024 Spring,DATA 102 - Foundations of Data Science and Analytics,DATA 102-D - Foundations of Data Science and Analytics,Waitlist,2,Jim Momeyer,TTH | 6:30 PM - 8:10 PM,28,28,0,32,2024/1/16,2024/3/9,Science Building 372 - PC Classroom,33,,0,Lecture
+2024 Spring,DATA 103 - Exploratory Data Science and Analytics,DATA 103-A - Exploratory Data Science and Analytics,Waitlist,2,Monica Groenenboom,MWF | 9:15 AM - 10:20 AM,26,26,0,26,2024/3/11,2024/5/4,Hiemenga Hall 320 - Classroom,28,Science Building 372 - PC Classroom,33,Lecture
+2023 Fall,DATA 103 - Exploratory Data Science and Analytics,DATA 103-B - Exploratory Data Science and Analytics,Waitlist,2,Brenda VanderLinden,TTH | 12:15 PM - 1:55 PM,26,26,0,26,2023/10/23,2023/12/16,Science Building 372 - PC Classroom,33,,0,Lecture
+2024 Spring,DATA 103 - Exploratory Data Science and Analytics,DATA 103-B - Exploratory Data Science and Analytics,Waitlist,2,Brenda VanderLinden,TTH | 12:15 PM - 1:55 PM,26,26,1,26,2024/3/11,2024/5/4,Science Building 372 - PC Classroom,33,,0,Lecture
+2023 Fall,DATA 103 - Exploratory Data Science and Analytics,DATA 103-C - Exploratory Data Science and Analytics,Open,2,Brenda VanderLinden,TTH | 2:10 PM - 3:50 PM,26,23,0,26,2023/10/23,2023/12/16,Science Building 372 - PC Classroom,33,,0,Lecture
+2024 Spring,DATA 103 - Exploratory Data Science and Analytics,DATA 103-C - Exploratory Data Science and Analytics,Waitlist,2,Brenda VanderLinden,TTH | 2:10 PM - 3:50 PM,26,26,0,26,2024/3/11,2024/5/4,Science Building 372 - PC Classroom,33,,0,Lecture
+2023 Fall,DATA 103 - Exploratory Data Science and Analytics,DATA 103-D - Exploratory Data Science and Analytics,Open,2,Jim Momeyer,TTH | 6:30 PM - 8:10 PM,26,22,0,26,2023/10/23,2023/12/16,Science Building 372 - PC Classroom,33,,0,Lecture
+2024 Spring,DATA 103 - Exploratory Data Science and Analytics,DATA 103-D - Exploratory Data Science and Analytics,Open,2,Jim Momeyer,TTH | 6:30 PM - 8:10 PM,26,21,0,26,2024/3/11,2024/5/4,Science Building 372 - PC Classroom,33,,0,Lecture
+2023 Fall,DATA 202 - Predictive Analytics,DATA 202-A - Predictive Analytics,Open,4,Ken Arnold,MWF | 8:00 AM - 9:05 AM,26,17,0,32,2023/8/28,2023/12/16,North Hall 253 - Classroom,35,Science Building 372 - PC Classroom,33,Lecture
+2023 Fall,DATA 202 - Predictive Analytics,DATA 202-B - Predictive Analytics,Waitlist,4,Fernando Pasquini Santos,MWF | 9:15 AM - 10:20 AM,26,25,0,32,2023/8/28,2023/12/16,North Hall 253 - Classroom,35,Science Building 372 - PC Classroom,33,Lecture
+2024 Spring,DATA 304 - Visualizing Data and Models,DATA 304-A - Visualizing Data and Models,Open,2,Randall Pruim,MWF | 2:45 PM - 3:50 PM,25,14,0,25,2024/1/16,2024/3/9,North Hall 261 - Classroom,20,,0,Lecture
+2023 Fall,DATA 383 - External Practicum,DATA 383-A - External Practicum,Open,1,"Keith Vander Linden
+
+Meredith Segur",,30,2,0,30,2023/8/28,2023/12/16,,0,,0,Internship
+2024 Spring,DATA 383 - External Practicum,DATA 383-A - External Practicum,Closed,1,"Keith Vander Linden
+
+Meredith Segur",,1,1,0,30,2024/1/16,2024/5/4,,0,,0,Internship
+2023 Fall,DATA 396 - Senior Project in Data Science,DATA 396-A - Senior Project in Data Science,Open,2,Keith Vander Linden,,24,4,0,24,2023/8/28,2023/12/16,Science Building 382 - Classroom,30,,0,Lecture
+2024 Spring,DATA 398 - Senior Project in Data Science II,DATA 398-A - Senior Project in Data Science II,Open,2,Keith Vander Linden,T | 6:30 PM - 7:20 PM | 01/16/2024 - 05/04/2024,24,4,0,24,2024/1/16,2024/5/4,Science Building 382 - Classroom,30,,0,Lecture
+2024 Spring,DATA 510 - Ethics for Data Science,DATA 510-A - Ethics for Data Science,Preliminary,2,,,24,0,0,24,2024/1/20,2024/5/4,,0,,0,Lecture
+2023 Fall,DATA 545 - Applied Regression,DATA 545-OL1 - Applied Regression,Open,4,Stacy DeRuiter,,24,3,0,24,2023/8/28,2023/12/16,Online - Asynchronous,200,,0,Lecture
+2023 Fall 1,DATA 555 - Matrix Algebra for Data Science,DATA 555-OL1 - Matrix Algebra for Data Science,Open,2,Randall Pruim,,24,2,0,24,2023/8/28,2023/10/21,Online - Asynchronous,200,,0,Lecture
+2024 Spring,DATA 562 - Systems Engineering for Data Science,DATA 562-OL1 - Systems Engineering for Data Science,Open,4,Keith Vander Linden,,24,2,0,24,2024/1/15,2024/5/4,Online - Asynchronous,200,,0,Lecture
+2023 Fall 2,DATA 642 - Optimization,DATA 642-OL1 - Optimization,Open,2,Chris Moseley,,24,2,0,24,2023/10/23,2023/12/16,Online - Asynchronous,200,,0,Lecture

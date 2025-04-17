@@ -1,4 +1,3 @@
-import { loadLocal } from "utilities/hooks/useLocal";
 import { HarmonyClass } from "utilities/services";
 import { Schedule, SemesterLength, Term } from "./dataInterfaces";
 
@@ -15,11 +14,12 @@ export enum SchedulizerTab {
   Room,
   Loads,
   Conflicts,
+  Meta,
 }
 
 // structure for the global app state
 export interface AppState {
-  classes: HarmonyClass[];
+  classes: HarmonyClass[]; //Removing HarmonyClass causes errors in HarmonyPage/Harmony/HarmonyStepper/HarmonyStepperImportData.tsx
   colorBy: ColorBy;
   constraints: {};
   departments: string[];
@@ -38,7 +38,7 @@ export interface AppState {
 // Defaults for the app state when it launches, will try to load
 //  previous appState to launch app from.
 //  If no previous state saved, will default to the object below.
-export const initialAppState: AppState = loadLocal("appState") || {
+export const initialAppState: AppState = {
   classes: [],
   colorBy: 0,
   constraints: {},
@@ -66,7 +66,7 @@ if (!initialAppState.professors) {
   initialAppState.departments = [];
 }
 if (!initialAppState.rooms) {
-  initialAppState.departments = []; 
+  initialAppState.departments = [];
 }
 
 // structure of actions that can be sent to app dispatch
