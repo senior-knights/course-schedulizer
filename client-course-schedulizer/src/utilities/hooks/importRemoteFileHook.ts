@@ -79,12 +79,12 @@ export const useImportRemoteFile = () => {
 /**
  * Removes URL parameters from the URL bar without a refresh
  */
-export const clearSearchParams = () => {
-  // Remove GET parameters from URL without refreshing the page
+const clearSearchParams = () => {
+  // Clear URL query params in hash without reloading or navigating
   // eslint-disable-next-line no-restricted-globals
-  const url = new URL(location.href);
-  url.search = "";
-  window.history.replaceState({}, document.title, url.toString());
+  const url = new URL(window.location.href);
+  const pathname = url.hash.split('?')[0];
+  window.history.replaceState({}, document.title, pathname);
 };
 
 /**
