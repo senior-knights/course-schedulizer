@@ -1,6 +1,6 @@
 import { cloneDeep, forEach } from "lodash";
 import moment from "moment";
-// Case is no longer exported in runtypes 7.0.4
+//import { Case } from "runtypes";
 import { emptyMeeting } from "utilities/constants";
 import { Course, Day, Meeting, Section, SemesterLength, Term } from "utilities/interfaces";
 
