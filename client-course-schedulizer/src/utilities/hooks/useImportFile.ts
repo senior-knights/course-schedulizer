@@ -1,6 +1,5 @@
-import { forEach, isEqual } from "lodash";
 import { ChangeEvent, useContext } from "react";
-import { csvStringToSchedule, insertSectionCourse, Schedule } from "utilities";
+import { csvStringToSchedule, Schedule } from "utilities";
 import { AppContext } from "utilities/contexts";
 import { read, utils } from "xlsx";
 
@@ -15,7 +14,6 @@ import { read, utils } from "xlsx";
  */
 export const useImportFile = (isAdditiveImport: boolean) => {
   const {
-    appState: { schedule },
     appDispatch,
     setIsCSVLoading,
   } = useContext(AppContext);
@@ -29,6 +27,7 @@ export const useImportFile = (isAdditiveImport: boolean) => {
     const file: File | null = e.target.files && e.target.files[0];
     const fileNameTokens = file?.name.split(".") || [];
     const fileType = fileNameTokens[fileNameTokens.length - 1];
+    const fileName = file?.name || "";
     const reader = new FileReader();
     let scheduleJSON: Schedule;
 
@@ -52,8 +51,24 @@ export const useImportFile = (isAdditiveImport: boolean) => {
 
     reader.onloadend = async () => {
       let scheduleString: string;
+      let metadataFound = false;
+
+      // Clear existing metadata when importing a new file (not for additive imports)
+      if (!isAdditiveImport) {
+        clearMetadata();
+      }
+
       if (fileType === "xlsx") {
-        scheduleString = getCSVFromXLSXData(reader.result as ArrayBufferLike);
+        // For XLSX files, first check if there's a metadata sheet
+        const workbook = read(reader.result as ArrayBufferLike, { type: "array" });
+
+        // Extract metadata if available in the file
+        metadataFound = extractMetadataFromWorkbook(workbook);
+
+        // Get CSV data from the first sheet
+        const worksheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[worksheetName];
+        scheduleString = utils.sheet_to_csv(worksheet);
       } else if (fileType === "csv") {
         scheduleString = String(reader.result);
       } else {
@@ -71,9 +86,32 @@ export const useImportFile = (isAdditiveImport: boolean) => {
       }
       scheduleJSON = csvStringToSchedule(scheduleString);
 
+      // Set the schedule name to the file name
+      if (fileName) {
+        scheduleJSON.name = fileName;
+      }
+
       !isAdditiveImport && appDispatch({ payload: { fileUrl: "" }, type: "setFileUrl" });
-      await updateScheduleInContext(schedule, scheduleJSON, appDispatch, isAdditiveImport);
-      setIsCSVLoading(false);
+
+      if (fileType === "json") {
+        // Already handled constraints
+        setIsCSVLoading(false);
+      } else if (isAdditiveImport) {
+        // Use the new addSchedule action for adding a new schedule
+        await appDispatch({ payload: { schedule: scheduleJSON }, type: "addSchedule" });
+        setIsCSVLoading(false);
+      } else {
+        // Replace the current schedules with a new one
+        await appDispatch({
+          payload: {
+            activeScheduleIds: [0],
+            schedule: scheduleJSON,
+            schedules: [scheduleJSON],
+          },
+          type: "setScheduleData",
+        });
+        setIsCSVLoading(false);
+      }
     };
   };
 
@@ -81,62 +119,76 @@ export const useImportFile = (isAdditiveImport: boolean) => {
 };
 
 /**
- * Update the Schedule information in the context
- * @param currentSchedule
- * @param newSchedule
- * @param appDispatch
- * @param isAdditiveImport
- *
- * Ref: https://stackoverflow.com/a/57214316/9931154
+ * Clears all metadata from localStorage
  */
-export const updateScheduleInContext = async (
-  // Note these are the parameters, just on different lines
-  currentSchedule: Schedule,
-  newSchedule: Schedule,
-  appDispatch: AppContext["appDispatch"],
-  isAdditiveImport = false,
-  //
-) => {
-  if (!isEqual(currentSchedule, newSchedule)) {
-    // Changing the new schedule to have higher importRank
-    forEach(newSchedule.courses, (course) => {
-      course.importRank = currentSchedule.numDistinctSchedules;
-    });
-    let newScheduleData: Schedule;
-    if (isAdditiveImport) {
-      newScheduleData = combineSchedules(currentSchedule, newSchedule);
-    } else {
-      newScheduleData = newSchedule;
-    }
-    newScheduleData.numDistinctSchedules = currentSchedule.numDistinctSchedules + 1;
-    await appDispatch({ payload: { schedule: newScheduleData }, type: "setScheduleData" });
-  }
+const clearMetadata = (): void => {
+  localStorage.removeItem("schedulizerNotes");
+  localStorage.removeItem("schedulizerVersion");
+  localStorage.removeItem("schedulizerYear");
 };
 
 /**
- * Convert XLSX Data to CSV
+ * Extracts metadata from an XLSX workbook and updates localStorage
+ * @param workbook XLSX workbook object
+ * @returns boolean indicating if any metadata was found
+ */
+const extractMetadataFromWorkbook = (workbook: any): boolean => {
+  // Look for a metadata sheet (case insensitive)
+  const metadataSheetName = workbook.SheetNames.find((name: string) => {
+    return name.toLowerCase() === "metadata";
+  });
+
+  if (metadataSheetName) {
+    try {
+      const metadataSheet = workbook.Sheets[metadataSheetName];
+      const metadataArray = utils.sheet_to_json(metadataSheet);
+
+      let foundMetadata = false;
+
+      // Process metadata
+      metadataArray.forEach((item: any) => {
+        if (item.Label && item.Value) {
+          foundMetadata = true;
+          switch (item.Label) {
+            case "Academic Year":
+              localStorage.setItem("schedulizerYear", item.Value.toString());
+              break;
+            case "Version":
+              localStorage.setItem("schedulizerVersion", item.Value.toString());
+              break;
+            case "Notes":
+              localStorage.setItem("schedulizerNotes", item.Value.toString());
+              break;
+          }
+        }
+      });
+
+      return foundMetadata;
+    } catch (error) {
+      console.error("Error parsing metadata sheet:", error);
+      return false;
+    }
+  }
+
+  return false;
+};
+
+/**
+ * Converts XLSX data to CSV string.
  *
- * @param  {ArrayBufferLike} xlsxData
+ * @param  {ArrayBufferLike} data
  * @returns string
  */
-export const getCSVFromXLSXData = (xlsxData: ArrayBufferLike): string => {
-  const data = new Uint8Array(xlsxData);
-  const workBook = read(data, { type: "array" });
-  const firstSheet = workBook.Sheets[workBook.SheetNames[0]];
-  return utils.sheet_to_csv(firstSheet);
-};
+export const getCSVFromXLSXData = (data: ArrayBufferLike): string => {
+  const workbook = read(data, { type: "array" });
 
-/**
- * Combine two schedule courses together.
- *
- * @param  {Schedule} currentSchedule
- * @param  {Schedule} newSchedule
- */
-const combineSchedules = (currentSchedule: Schedule, newSchedule: Schedule) => {
-  newSchedule.courses.forEach((newCourse) => {
-    newCourse.sections.forEach((newSection) => {
-      currentSchedule = insertSectionCourse(currentSchedule, newSection, newCourse);
-    });
-  });
-  return currentSchedule;
+  // Clear existing metadata before checking for new metadata
+  clearMetadata();
+
+  // Extract metadata when loading remote XLSX files
+  extractMetadataFromWorkbook(workbook);
+
+  const worksheetName = workbook.SheetNames[0];
+  const worksheet = workbook.Sheets[worksheetName];
+  return utils.sheet_to_csv(worksheet);
 };

@@ -1,0 +1,384 @@
+@import "../../../styles/constants.scss";
+
+// Old button styles now handled by makeStyles - keeping this commented for reference
+// .compare-button {
+//   display: flex;
+//   align-items: center;
+//   border-radius: 20px;
+//   padding: 5px 12px;
+//   background-color: #f5f5f5;
+//   transition: background-color 0.2s;
+//
+//   &:hover {
+//     background-color: #e0e0e0;
+//   }
+//
+//   .compare-label {
+//     margin-left: 8px;
+//     font-size: 14px;
+//     font-weight: 500;
+//     white-space: nowrap;
+//   }
+// }
+
+.schedule-comparer-form {
+  width: 100%;
+}
+
+.schedule-selector-section {
+  height: 100%;
+  position: relative;
+
+  .swap-button {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    margin-top: -12px;
+    background-color: #f5f5f5;
+    z-index: 1;
+
+    &:hover {
+      background-color: #e0e0e0;
+    }
+  }
+}
+
+.column-category {
+  margin-bottom: $spacing;
+
+  .MuiFormControlLabel-root {
+    margin-left: 0;
+    margin-bottom: $spacing / 2;
+    background-color: rgba(0, 0, 0, 0.02);
+    border-radius: 4px;
+    width: 100%;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+  }
+}
+
+.column-categories-container {
+  max-height: 360px;
+  overflow-y: auto;
+  padding-right: $spacing / 2;
+}
+
+.column-checkboxes-container {
+  .MuiFormControlLabel-root {
+    margin: 0;
+    padding: $spacing / 6;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+
+    .MuiFormControlLabel-label {
+      font-size: 0.875rem;
+      line-height: 1.2;
+    }
+
+    .MuiCheckbox-root {
+      padding: 4px;
+    }
+  }
+
+  .MuiTypography-subtitle1 {
+    color: #3f51b5;
+    font-weight: 500;
+    font-size: 1rem;
+  }
+
+  .MuiDivider-root {
+    margin-bottom: $spacing / 2;
+    height: 2px;
+    background-color: #e0e0e0;
+  }
+
+  .MuiGrid-container {
+    padding-bottom: $spacing;
+  }
+
+  .MuiFormControlLabel-root {
+    margin-left: -8px;
+  }
+}
+
+.preview-container {
+  margin-top: $spacing * 2;
+}
+
+.stats-container {
+  .preview-stat {
+    margin-right: 8px;
+    margin-bottom: 4px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.preview-stat {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.7rem !important;
+
+  &.preview-added {
+    background-color: rgba(76, 175, 80, 0.12);
+    color: #2e7d32;
+  }
+
+  &.preview-removed {
+    background-color: rgba(244, 67, 54, 0.12);
+    color: #d32f2f;
+  }
+
+  &.preview-modified {
+    background-color: rgba(255, 152, 0, 0.12);
+    color: #ed6c02;
+  }
+
+  &.preview-unchanged {
+    background-color: rgba(33, 150, 243, 0.12);
+    color: #0288d1;
+  }
+}
+
+.preview-results {
+  max-height: 350px;
+  overflow-y: auto;
+  padding: $spacing;
+  margin-top: $spacing / 2;
+}
+
+.preview-item {
+  border-left: 3px solid #ccc;
+  border-radius: 0 4px 4px 0;
+
+  &.preview-added {
+    border-left-color: #4caf50;
+    background-color: rgba(76, 175, 80, 0.08);
+  }
+
+  &.preview-removed {
+    border-left-color: #f44336;
+    background-color: rgba(244, 67, 54, 0.08);
+  }
+
+  &.preview-modified {
+    border-left-color: #ff9800;
+    background-color: rgba(255, 152, 0, 0.08);
+  }
+
+  &.preview-unchanged {
+    border-left-color: #2196f3;
+    background-color: rgba(33, 150, 243, 0.08);
+  }
+
+  .status-badge {
+    margin-left: $spacing / 2;
+    padding: 2px $spacing / 2;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: 600;
+
+    .preview-added & {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    .preview-removed & {
+      background-color: #f44336;
+      color: white;
+    }
+
+    .preview-modified & {
+      background-color: #ff9800;
+      color: white;
+    }
+
+    .preview-unchanged & {
+      background-color: #2196f3;
+      color: white;
+    }
+  }
+
+  .differences {
+    margin-top: $spacing / 3;
+    padding-left: $spacing / 2;
+    color: rgba(0, 0, 0, 0.6);
+  }
+}
+
+// New styles for the enhanced UI
+.status-chip {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  &.status-added {
+    background-color: #4caf50;
+    color: white;
+  }
+
+  &.status-removed {
+    background-color: #f44336;
+    color: white;
+  }
+
+  &.status-modified {
+    background-color: #ff9800;
+    color: white;
+  }
+
+  &.status-unchanged {
+    background-color: #2196f3;
+    color: white;
+  }
+}
+
+.preview-container {
+  .MuiTabs-root {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    margin-bottom: $spacing;
+  }
+
+  .MuiTab-root {
+    min-width: 120px;
+    font-size: 0.85rem;
+  }
+}
+
+.summary-tab {
+  .summary-item {
+    padding: $spacing / 2 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .modified-text strong {
+    color: #ff9800;
+  }
+
+  .removed-text strong {
+    color: #f44336;
+  }
+
+  .added-text strong {
+    color: #4caf50;
+  }
+
+  .unchanged-text strong {
+    color: #2196f3;
+  }
+}
+
+.compare-dialog {
+  .MuiDialogTitle-root {
+    padding: $spacing * 1.5 $spacing * 2;
+  }
+
+  .MuiDialogContent-root {
+    padding: $spacing * 2;
+  }
+
+  .MuiFormControl-root {
+    margin-bottom: $spacing / 2;
+  }
+
+  .MuiSelect-root {
+    font-size: 0.875rem;
+  }
+
+  .MuiFormLabel-root {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .MuiDialogActions-root {
+    padding: $spacing * 1.5;
+    justify-content: flex-end;
+  }
+
+  .MuiTabs-root {
+    margin-top: $spacing;
+  }
+
+  .MuiTab-root {
+    min-width: 120px;
+    font-size: 0.8rem;
+  }
+
+  .no-results {
+    margin: $spacing * 2 0;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.54);
+  }
+
+  .column-checkboxes-container {
+    .MuiDivider-root {
+      margin-bottom: $spacing / 2;
+    }
+
+    .MuiTypography-subtitle1 {
+      font-size: 1rem;
+      letter-spacing: 0.01em;
+    }
+
+    .MuiGrid-container {
+      padding-bottom: $spacing;
+    }
+
+    .MuiFormControlLabel-root {
+      margin-left: -8px;
+    }
+  }
+
+  .MuiDivider-root {
+    height: 2px;
+    background-color: #e0e0e0;
+  }
+}
+
+// Optimizations for smaller screens
+@media (max-width: 960px) {
+  .column-checkboxes {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .schedule-selector-section {
+    .swap-button {
+      top: auto;
+      bottom: -15px;
+      right: 50%;
+      margin-right: -15px;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .column-checkboxes {
+    grid-template-columns: 1fr;
+  }
+
+  .schedule-comparer-form {
+    flex-direction: column;
+  }
+
+  .MuiDialogContent-root {
+    padding: $spacing;
+  }
+}

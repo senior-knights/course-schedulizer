@@ -1,9 +1,16 @@
 import { useContext } from "react";
-import { csvStringToSchedule, getCSVFromXLSXData, updateScheduleInContext } from "utilities";
+import { csvStringToSchedule, getCSVFromXLSXData } from "utilities";
 import { AppContext } from "utilities/contexts";
 
 export const getCSVStr = "?csv=";
 const getXLSXStr = "?xlsx=";
+
+// Helper function to clear metadata
+const clearMetadata = (): void => {
+  localStorage.removeItem("schedulizerNotes");
+  localStorage.removeItem("schedulizerVersion");
+  localStorage.removeItem("schedulizerYear");
+};
 
 export const useImportRemoteFile = () => {
   const appContext = useContext(AppContext);
@@ -41,10 +48,21 @@ export const useImportRemoteFile = () => {
           .then(async (result) => {
             appDispatch({ payload: { fileUrl: xlsxUrl }, type: "setFileUrl" });
             if (result) {
+              // Clear metadata before importing
+              clearMetadata();
+
               const newSchedule = csvStringToSchedule(
                 getCSVFromXLSXData(result as ArrayBufferLike),
               );
-              await updateScheduleInContext(schedule, newSchedule, appDispatch);
+              // Use the new schedule system
+              await appDispatch({
+                payload: {
+                  activeScheduleIds: [0],
+                  schedule: newSchedule,
+                  schedules: [newSchedule],
+                },
+                type: "setScheduleData",
+              });
             }
             clearSearchParams();
             setIsCSVLoading(false);
@@ -55,12 +73,18 @@ export const useImportRemoteFile = () => {
     }
   };
 
-  return { importRemoteFile };
+  return importRemoteFile;
 };
 
+/**
+ * Removes URL parameters from the URL bar without a refresh
+ */
 const clearSearchParams = () => {
+  // Clear URL query params in hash without reloading or navigating
   // eslint-disable-next-line no-restricted-globals
-  location.href = "";
+  const url = new URL(window.location.href);
+  const pathname = url.hash.split('?')[0];
+  window.history.replaceState({}, document.title, pathname);
 };
 
 /**
@@ -90,8 +114,25 @@ export const loadRemoteCSV = (url: string, csvIndex: number, appContext: AppCont
       .then(async (result) => {
         appDispatch({ payload: { fileUrl: csvUrl }, type: "setFileUrl" });
         if (result) {
+          // Clear metadata before importing a new CSV file
+          clearMetadata();
+
           const newSchedule = csvStringToSchedule(result);
-          await updateScheduleInContext(schedule, newSchedule, appDispatch);
+
+          // Try to extract filename from URL
+          const urlParts = csvUrl.split('/');
+          const fileName = urlParts[urlParts.length - 1] || csvUrl;
+          newSchedule.name = fileName;
+
+          // Use the new schedule system
+          await appDispatch({
+            payload: {
+              activeScheduleIds: [0],
+              schedule: newSchedule,
+              schedules: [newSchedule],
+            },
+            type: "setScheduleData",
+          });
         }
         clearSearchParams();
         setIsCSVLoading(false);

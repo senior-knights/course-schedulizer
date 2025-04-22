@@ -13,6 +13,7 @@ import {
   Section,
   Term,
 } from "utilities/interfaces";
+import { combineActiveSchedules } from "utilities/reducers/appReducer";
 import {
   createEventClassName,
   handleOldMeeting,
@@ -36,7 +37,7 @@ interface AddToScheduleParams {
 
 export const useAddSectionToSchedule = () => {
   const {
-    appState: { schedule, selectedTerm, schedulizerTab },
+    appState: { schedule, selectedTerm, schedulizerTab, schedules, activeScheduleIds },
     appDispatch,
     setIsCSVLoading,
   } = useContext(AppContext);
@@ -86,11 +87,82 @@ export const useAddSectionToSchedule = () => {
   }: AddToScheduleParams) => {
     newSection.timestamp = moment().format();
     newSection.meetings.forEach((meeting) => {
-      meeting.isNonstandardTime = ! isStandardTime(meeting)
-    })
-    handleOldMeeting(oldData, newSection, newCourse, removeOldMeeting, schedule);
-    insertSectionCourse(schedule, newSection, newCourse);
-    appDispatch({ payload: { schedule }, type: "setScheduleData" });
+      meeting.isNonstandardTime = !isStandardTime(meeting)
+    });
+
+    // Create a copy of the schedules array
+    const updatedSchedules = [...schedules];
+
+    // IMPORTANT: Only target active schedules, regardless of which schedules contain the section
+    // This ensures we only modify visible schedules
+    let targetScheduleIds: number[] = [...activeScheduleIds];
+
+    // Only update the target schedules
+    targetScheduleIds.forEach(scheduleId => {
+      if (scheduleId >= 0 && scheduleId < updatedSchedules.length) {
+        // Create a deep copy of the current schedule to modify independently
+        const scheduleCopy = JSON.parse(JSON.stringify(updatedSchedules[scheduleId]));
+
+        // Create independent copies of the section and course for each schedule
+        const sectionCopy = JSON.parse(JSON.stringify(newSection));
+        const courseCopy = JSON.parse(JSON.stringify(newCourse));
+
+        if (removeOldMeeting && oldData) {
+          // For updates, explicitly remove the old section first to ensure it's gone
+          // Find and remove the old section in this specific schedule copy
+          const oldCourse = oldData.course;
+          const oldSection = oldData.section;
+
+          if (oldCourse && oldSection) {
+            const courseIndex = scheduleCopy.courses.findIndex((c: Course) => {
+              return c.prefixes[0] === oldCourse.prefixes[0] && c.number === oldCourse.number;
+            });
+
+            if (courseIndex !== -1) {
+              const sectionIndex = scheduleCopy.courses[courseIndex].sections.findIndex((s: Section) => {
+                return s.letter === oldSection.letter &&
+                  JSON.stringify(s.term) === JSON.stringify(oldSection.term) &&
+                  s.instructors.length === oldSection.instructors.length &&
+                  s.instructors.every((i: string) => {
+                    return oldSection.instructors.includes(i);
+                  });
+              });
+
+              if (sectionIndex !== -1) {
+                // Remove the old section entirely
+                scheduleCopy.courses[courseIndex].sections.splice(sectionIndex, 1);
+
+                // If no sections left, remove the course too
+                if (scheduleCopy.courses[courseIndex].sections.length === 0) {
+                  scheduleCopy.courses.splice(courseIndex, 1);
+                }
+              }
+            }
+          }
+        }
+
+        // Apply updates to this specific schedule copy
+        handleOldMeeting(oldData, sectionCopy, courseCopy, removeOldMeeting, scheduleCopy);
+        insertSectionCourse(scheduleCopy, sectionCopy, courseCopy, oldData, removeOldMeeting);
+
+        // Preserve the schedule name when updating
+        const scheduleName = updatedSchedules[scheduleId].name;
+        updatedSchedules[scheduleId] = { ...scheduleCopy, name: scheduleName };
+      }
+    });
+
+    // Generate the combined display schedule from the updated schedules
+    const displaySchedule = combineActiveSchedules(updatedSchedules, activeScheduleIds);
+
+    // Dispatch with all schedule state preserved
+    appDispatch({
+      payload: {
+        activeScheduleIds,
+        schedule: displaySchedule,
+        schedules: updatedSchedules,
+      },
+      type: "setScheduleData",
+    });
   };
 
   return { addNonTeachingLoadToSchedule, addSectionToSchedule };

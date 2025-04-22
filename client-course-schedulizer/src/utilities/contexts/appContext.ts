@@ -36,6 +36,7 @@ enum Term {
 export const AppContext = createContext<AppContext>({
   appDispatch: voidFn,
   appState: {
+    activeScheduleIds: [],
     classes: [],
     colorBy: 0,
     constraints: {},
@@ -44,6 +45,7 @@ export const AppContext = createContext<AppContext>({
     professors: [],
     rooms: [],
     schedule: { courses: [], numDistinctSchedules: 0 },
+    schedules: [],
     schedulizerTab: 0,
     selectedSemesterPart: SemesterLength.Full,
     selectedTerm: Term.Fall,

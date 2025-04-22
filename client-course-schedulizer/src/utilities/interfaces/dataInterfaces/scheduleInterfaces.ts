@@ -139,6 +139,7 @@ export const updateIdentifyingSectionInfo = (oldSection: Section, newSection: Se
 export interface Schedule {
   conflicts?: ConflictRow[] | undefined;
   courses: Course[];
+  name?: string; // Optional name to store imported filename
   numDistinctSchedules: number;
 }
 

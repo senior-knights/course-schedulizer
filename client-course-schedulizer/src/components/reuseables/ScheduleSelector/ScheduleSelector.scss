@@ -1,0 +1,97 @@
+@import "../../../styles/constants.scss";
+
+.schedule-selector-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.toggle-button {
+  display: flex;
+  align-items: center;
+  border-radius: 20px;
+  padding: 5px 12px;
+  background-color: #f5f5f5;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+
+  .toggle-label {
+    margin-left: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+
+    .schedule-counter {
+      opacity: 0.7;
+      font-size: 12px;
+    }
+  }
+}
+
+// Customize the Material UI Menu
+.schedules-menu {
+  .MuiPaper-root {
+    max-height: 400px;
+    overflow-y: auto;
+    width: 350px;
+    max-width: 90vw;
+    padding: $spacing 0;
+
+    // Scrollbar styling
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: #a8a8a8;
+    }
+  }
+}
+
+.schedule-selector-title {
+  padding: 0 $spacing * 2 $spacing * 1.5;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.7);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: $spacing;
+}
+
+.schedules-chip-container {
+  max-height: 300px;
+  padding: $spacing $spacing * 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+
+  .active-schedule {
+    color: white;
+    font-weight: 500;
+    margin: 4px;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  .inactive-schedule {
+    border: 1px solid rgba(0, 0, 0, 0.23);
+    margin: 4px;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.08) !important;
+    }
+  }
+}

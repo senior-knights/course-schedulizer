@@ -1,7 +1,8 @@
-import { cloneDeep, isEqual } from "lodash";
+import { cloneDeep, isEqual, map, some } from "lodash";
 import papa from "papaparse";
 import {
   Course,
+  CourseSectionMeeting,
   emptyCourse,
   emptySection,
   isStandardTime,
@@ -189,14 +190,20 @@ export const csvStringToSchedule = (csvString: string): Schedule => {
 
       // Insert the Section to the Schedule, either as a new Course or to an existing Course
       section.meetings = meetings;
-      insertSectionCourse(schedule, section, course);
+      insertSectionCourse(schedule, section, course, undefined, false);
     }
   });
   return schedule;
 };
 
 // Insert the Section to the Schedule, either as a new Course or to an existing Course
-export const insertSectionCourse = (schedule: Schedule, section: Section, course: Course) => {
+export const insertSectionCourse = (
+  schedule: Schedule,
+  section: Section,
+  course: Course,
+  oldData?: CourseSectionMeeting,
+  removeOldMeeting?: boolean,
+) => {
   const { meetings } = section;
 
   // Check if any meetings are empty, and should be removed
@@ -247,25 +254,31 @@ export const insertSectionCourse = (schedule: Schedule, section: Section, course
         existingSectionIndex
       ] = updateNonIdentifyingSectionInfo(existingSection, section);
 
-      // Only add meetings which don't already exist
-      newMeetings.forEach((newMeeting) => {
-        let meetingExists = false;
-        schedule.courses[existingCourseIndex].sections[existingSectionIndex].meetings.forEach(
-          (oldMeeting) => {
-            // Short-circuit if duplicate is found
-            if (!meetingExists && isEqual(newMeeting, oldMeeting)) {
-              meetingExists = true;
-            }
-          },
-        );
-        if (!meetingExists) {
-          schedule.courses[existingCourseIndex].sections[
-            existingSectionIndex
-          ].meetings = schedule.courses[existingCourseIndex].sections[
-            existingSectionIndex
-          ].meetings.concat(newMeeting);
-        }
-      });
+      // Replace existing meetings with the new ones instead of appending
+      if (oldData && removeOldMeeting) {
+        // If this is an update operation, replace all meetings
+        schedule.courses[existingCourseIndex].sections[existingSectionIndex].meetings = newMeetings;
+      } else {
+        // Only add meetings which don't already exist
+        newMeetings.forEach((newMeeting) => {
+          let meetingExists = false;
+          schedule.courses[existingCourseIndex].sections[existingSectionIndex].meetings.forEach(
+            (oldMeeting) => {
+              // Short-circuit if duplicate is found
+              if (!meetingExists && isEqual(newMeeting, oldMeeting)) {
+                meetingExists = true;
+              }
+            },
+          );
+          if (!meetingExists) {
+            schedule.courses[existingCourseIndex].sections[
+              existingSectionIndex
+            ].meetings = schedule.courses[existingCourseIndex].sections[
+              existingSectionIndex
+            ].meetings.concat(newMeeting);
+          }
+        });
+      }
     }
     // Otherwise, add the new section to the existing course
     else {
