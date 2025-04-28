@@ -196,8 +196,14 @@ const AboutReport = () => {
       body={
         <ul>
           <li>
+            <NewTabLink href="https://calvincollege-my.sharepoint.com/:w:/g/personal/eam43_calvin_edu/EdiWjkO979tEggEuDAll8GsBKW7iTIgMcMRmjVwpDXYFCA?e=oZrgyb">
+              Final Report
+            </NewTabLink>{" "}
+            - 4.26.2025
+          </li>
+          <li>
             <NewTabLink href="https://docs.google.com/document/d/e/2PACX-1vS3Tn3OXVt5XVv9jBAjcJO81BWtXvZreZDOkvkH5WCU7oUyhlqe2EWZ4S51RJ9sqTfKC1SjiECRuNr5/pub">
-            2024 Project Proposal
+              2024 Project Proposal
             </NewTabLink>{" "}
             - 10.1.2024
           </li>
@@ -271,6 +277,12 @@ const AboutResources = () => {
             </NewTabLink>
           </li>
           <hr />
+          <li>
+            <NewTabLink href="https://docs.google.com/presentation/d/1ZzCyTobI533V0KfaB8nex7Vd54I91799uaEgDQAA7Vw/edit?usp=sharingA">
+              Final Presentation Slides
+            </NewTabLink>{" "}
+            - 4.26.2025
+          </li>
           <li>
             <NewTabLink href="https://docs.google.com/presentation/d/e/2PACX-1vSGiDKCClWDm4Oj35r8sMiOp24fvbtLBQunou5uy7psD6hsxWCqOq2y7KJtC0KF4A5Lp4ypqx2WCsfE/pub?start=false&loop=false&delayms=3000">
               Status Report Slides
