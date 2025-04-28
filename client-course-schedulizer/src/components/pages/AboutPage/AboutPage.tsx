@@ -201,7 +201,6 @@ const AboutReport = () => {
             </NewTabLink>{" "}
             - 4.26.2025
           </li>
-          <hr />
           <li>
             <NewTabLink href="https://docs.google.com/document/d/e/2PACX-1vS3Tn3OXVt5XVv9jBAjcJO81BWtXvZreZDOkvkH5WCU7oUyhlqe2EWZ4S51RJ9sqTfKC1SjiECRuNr5/pub">
               2024 Project Proposal
