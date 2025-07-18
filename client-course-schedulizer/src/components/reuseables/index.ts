@@ -13,5 +13,4 @@ export * from "./Page";
 export * from "./PopoverButton";
 export * from "./Schedule";
 export * from "./ScheduleComparer";
-export * from "./ViewDemoButton";
 export * from "./ScheduleSelector";
