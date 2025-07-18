@@ -3,7 +3,6 @@ import { join } from "path";
 import { Course, Day, Schedule, Section, SemesterLength, Term } from "../interfaces/dataInterfaces";
 import { csvStringToSchedule } from "./readCSV";
 import { scheduleToFullCSVString } from "./writeFullCSV";
-import { scheduleToCSVString } from "./writeLoadsCSV";
 
 let schedule: Schedule;
 let basicCourse: Course;
@@ -22,17 +21,13 @@ let expectedOutputCSV: string;
 beforeAll(async () => {
   // File read from https://stackoverflow.com/questions/32705219/nodejs-accessing-file-with-relative-path
   const fullCSVString: string = readFileSync(
-    join(__dirname, "..", "..", "..", "csv", "Course_Section_Enrollment_Report-CS-DS-2023.csv"),
+    join(__dirname, "..", "..", "..", "csv", "workday-CS2023.csv"),
     "utf8",
   );
   expectedFullOutputCSV = readFileSync(
-    join(__dirname, "..", "..", "..", "csv", "Course_Section_Enrollment_Report-CS-DS-2023_Output.csv"),
+    join(__dirname, "..", "..", "..", "csv", "workday-CS2023_Output.csv"),
     "utf8",
   );
-  // expectedOutputCSV = readFileSync(
-  //   join(__dirname, "..", "..", "..", "csv", "math-schedule-export.csv"),
-  //   "utf8",
-  // );
   schedule = csvStringToSchedule(fullCSVString);
   [basicCourse] = schedule.courses;
   [basicSection] = basicCourse.sections;
