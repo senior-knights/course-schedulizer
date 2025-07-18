@@ -9,23 +9,16 @@ let basicCourse: Course;
 let basicSection: Section;
 let noMeetingSection: Section;
 let multipleInstructorSection: Section;
-let interimSection: Section;
 let firstHalfSection: Section;
 let fullOutputCSV: string;
-let outputCSV: string;
 let intermediateSchedule: Schedule;
 let secondFullOutputCSV: string;
 let expectedFullOutputCSV: string;
-let expectedOutputCSV: string;
 
 beforeAll(async () => {
   // File read from https://stackoverflow.com/questions/32705219/nodejs-accessing-file-with-relative-path
   const fullCSVString: string = readFileSync(
-    join(__dirname, "..", "..", "..", "csv", "workday-CS2023.csv"),
-    "utf8",
-  );
-  expectedFullOutputCSV = readFileSync(
-    join(__dirname, "..", "..", "..", "csv", "workday-CS2023_Output.csv"),
+    join(__dirname, "..", "..", "..", "csv", "workday-CS2023-readtest.csv"),
     "utf8",
   );
   schedule = csvStringToSchedule(fullCSVString);
@@ -33,7 +26,6 @@ beforeAll(async () => {
   [basicSection] = basicCourse.sections;
   [noMeetingSection] = schedule.courses[40].sections;
   [multipleInstructorSection] = schedule.courses[19].sections;
-  // [interimSection] = schedule.courses[3].sections;
   [firstHalfSection] = schedule.courses[1].sections;
   fullOutputCSV = scheduleToFullCSVString(schedule);
   intermediateSchedule = csvStringToSchedule(fullOutputCSV);
@@ -95,18 +87,6 @@ describe("parses basic section", () => {
     expect(basicSection.studentHours).toEqual(4);
   });
 
-  // it("parses used", () => {
-  //   expect(basicSection.used).toEqual(32);
-  // });
-
-  // it("parses day 10 used", () => {
-  //   expect(basicSection.day10Used).toEqual(undefined);
-  // });
-
-  // it("parses term start", () => {
-  //   expect(basicSection.termStart).toEqual("8/28/2023");
-  // });
-
   it("parses start date", () => {
     expect(basicSection.startDate).toEqual("2023/8/28");
   });
@@ -123,14 +103,6 @@ describe("parses basic section", () => {
     expect(basicSection.instructionalMethod).toEqual("Lecture");
   });
 
-  // it("parses global max", () => {
-  //   expect(basicSection.globalMax).toEqual(32);
-  // });
-
-  // it("parses local max", () => {
-  //   expect(basicSection.localMax).toEqual(32);
-  // });
-
   it("parses letter", () => {
     expect(basicSection.letter).toEqual("A ");
   });
@@ -138,10 +110,6 @@ describe("parses basic section", () => {
   it("parses term", () => {
     expect(basicSection.term).toEqual(Term.Fall);
   });
-
-  // it("parses year", () => {
-  //   expect(basicSection.year).toEqual(2023);
-  // });
 
   it("parses instructors", () => {
     expect(basicSection.instructors.length).toEqual(1);
@@ -180,34 +148,6 @@ it("parses multiple instructors", () => {
   expect(multipleInstructorSection.instructors[2]).toEqual("Brian Paige");
 });
 
-// Check the information of a interim section.
-// CURRENTLY NOT IN USE BECAUSE WE DON'T HAVE INTERIM COURSE.
-// describe("parses interim section", () => {
-//   it("parses term", () => {
-//     expect(interimSection.term).toEqual(Term.Interim);
-//   });
-
-//   it("parses days", () => {
-//     expect(interimSection.meetings[0].days.length).toEqual(5);
-//     expect(interimSection.meetings[0].days).toEqual([
-//       Day.Monday,
-//       Day.Tuesday,
-//       Day.Wednesday,
-//       Day.Thursday,
-//       Day.Friday,
-//     ]);
-//   });
-
-//   it("parses time", () => {
-//     expect(interimSection.meetings[0].startTime).toEqual("8:30 AM");
-//     expect(interimSection.meetings[0].duration).toEqual(510);
-//   });
-
-//   it("parses semester length", () => {
-//     expect(interimSection.semesterLength).toEqual(SemesterLength.IntensiveA);
-//   });
-// });
-
 it("handles sections with no meeting time", () => {
   expect(noMeetingSection.meetings.length).toEqual(0);
 });
@@ -215,23 +155,3 @@ it("handles sections with no meeting time", () => {
 it("parses first half semester length", () => {
   expect(firstHalfSection.semesterLength).toEqual(SemesterLength.HalfFirst);
 });
-
-// TODO: fix this test to work with the added sorting feature
-// it("exports the proper csv", () => {
-//   expect(outputCSV).toEqual(expectedOutputCSV);
-// });
-
-// TODO: fix this test to work with the added sorting feature
-// it("exports the proper full csv", () => {
-//   expect(fullOutputCSV).toEqual(expectedFullOutputCSV);
-// });
-
-// TODO: fix this test to work with the added sorting feature
-// it("reimports the full export with same structure", () => {
-//   expect(intermediateSchedule).toEqual(schedule);
-// });
-
-// TODO: fix this test to work with the added sorting feature
-// it("preserves information on second full export", () => {
-//   expect(secondFullOutputCSV).toEqual(expectedFullOutputCSV);
-// });
