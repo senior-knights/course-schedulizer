@@ -18,7 +18,7 @@ let expectedFullOutputCSV: string;
 beforeAll(async () => {
   // File read from https://stackoverflow.com/questions/32705219/nodejs-accessing-file-with-relative-path
   const fullCSVString: string = readFileSync(
-    join(__dirname, "..", "..", "..", "csv", "reports-CS2023-readtest.csv"),
+    join(__dirname, "..", "..", "..", "data", "reports-CS2023-readtest.csv"),
     "utf8",
   );
   schedule = csvStringToSchedule(fullCSVString);
