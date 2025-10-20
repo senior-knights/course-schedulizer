@@ -1,4 +1,5 @@
 import { filter, forEach, sumBy } from "lodash";
+import { to } from "react-spring";
 import {
   CourseSectionMeeting,
   emptyMeeting,
@@ -15,6 +16,12 @@ type sectionKeys =
   | "springCourseSections"
   | "summerCourseSections"
   | "otherDuties";
+
+//define a new type returned by createTable function
+export type FacultyTableData = {
+    facultyRows: FacultyRow[];
+    totalRow: FacultyRow;
+}
 
 // Define a regex for the faculty load hours specifications added to the
 // Teaching Load tab's course/duty strings. See the test cases.
@@ -62,7 +69,7 @@ const updateRow = ({ newRow, prevRow, section, sectionName, termName }: UpdateRo
   }
 };
 
-export const createTable = (schedule: Schedule): FacultyRow[] => {
+export const createTable = (schedule: Schedule): FacultyTableData => { //changed facultyRows to FacultyTableData becuase we need to separate the total row
   const newTableData: FacultyRow[] = [];
   forEach(schedule.courses, (course) => {
     forEach(course.sections, (section) => {
@@ -124,17 +131,22 @@ export const createTable = (schedule: Schedule): FacultyRow[] => {
       };
     })
     .sort((a, b) => {
-      return b.totalHours - a.totalHours;
+      return b.totalHours - a.totalHours; // sort by total hours descending but only for faculty rows
     });
-  sortedTableData.push({
+
+  // sortedTableData.push({ // no longer need to push total row to the faculty rows
+  const totalRow: FacultyRow = { // return total row separately
     faculty: "Total",
     fallHours: sumBy(sortedTableData, "fallHours"),
     otherHours: sumBy(sortedTableData, "otherHours"),
     springHours: sumBy(sortedTableData, "springHours"),
     summerHours: sumBy(sortedTableData, "summerHours"),
     totalHours: sumBy(sortedTableData, "totalHours"),
-  });
-  return sortedTableData;
+  };
+  return {
+    facultyRows: sortedTableData,
+    totalRow: totalRow,
+  };
 };
 
 export const findSection = (
@@ -227,9 +239,9 @@ export const getCourseSectionMeetingFromConflictCell = (
 ): CSMIterableKeyMap => {
   // Remove the load hours spec from the string before splitting on comma.
   const sectionStrList = cellValue.split(loadHoursRegEx).join("").split(", ");
-  
+
   const courseSectionMeeting = findSection(schedule, sectionStrList[startSection-1], cellTerm);
-   
+
   return {
     csm: courseSectionMeeting,
     iterable: sectionStrList,

@@ -28,9 +28,21 @@ export const FacultyLoads = () => {
     appState: { schedule },
   } = useContext(AppContext);
 
-  const data = useMemo<FacultyRow[]>(() => {
-    return createTable(schedule);
+  // const data = useMemo<FacultyRow[]>(() => {
+  //   return createTable(schedule);
+  // }, [schedule]);
+
+
+  // change useMemo to destructure the new data structure
+  const { facultyRows, totalRow } = useMemo(() => {
+      // reminder: createTable returns { facultyRows: FacultyRow[], totalRow: FacultyRow }
+      return createTable(schedule); // only recompute when schedule changes saving performance
   }, [schedule]);
+
+  // set useTable data to only include faculty rows
+  const data = facultyRows; // only faculty rows will be sorted by react-table
+
+
 
   const updateSectionModalRef = useRef<UpdateModalPaginationRef>(null);
   const updateNonTeachingLoadModalRef = useRef<UpdateModalPaginationRef>(null);
@@ -67,15 +79,18 @@ export const FacultyLoads = () => {
     ];
   }, []);
 
-  // Sort by faculty name by default
-  data.sort((a, b): number => {
-    if (a.faculty < b.faculty) {
-      return -1;
-    }
-    return 1;
-  });
+  // no longer need to sort data manually
 
-  const tableInstance = useTable({ columns, data }, useSortBy);
+  // Sort by faculty name by default
+  // data.sort((a, b): number => {
+  //   if (a.faculty < b.faculty) {
+  //     return -1;
+  //   }
+  //   return 1;
+  // });
+
+  // default sort faculty members by total hours descending
+  const tableInstance = useTable({ columns, data, initialState: { sortBy: [{ desc: true, id: "totalHours" }] } }, useSortBy);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
 
@@ -168,6 +183,28 @@ export const FacultyLoads = () => {
                 );
               })
             }
+            {/* ----------------------------------------------------- */}
+            {/* Manually render the Total Row: It is NOT affected by useTable sorting */}
+            <TableRow className="total-row-class" id="total-row">
+              {
+                // Iterate over the columns definition and render each cell in the Total row
+                columns.map((column) => {
+                    // Ensure the accessor exists and is a key of FacultyRow
+                    const accessor = column.accessor as keyof FacultyRow;
+                    // Get the corresponding value from the totalRow object
+                    const cellValue = totalRow[accessor];
+
+                    return (
+                        // Each cell in the Total row
+                        <TableCell key={`total-${accessor}`}>
+                            {/* Render the calculated value for the Total row */}
+                            {cellValue}
+                        </TableCell>
+                    );
+                })
+              }
+            </TableRow>
+            {/* ----------------------------------------------------- */}
           </TableBody>
         </Table>
       </TableContainer>
