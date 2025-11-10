@@ -90,12 +90,20 @@ export const useAddSectionToSchedule = () => {
       meeting.isNonstandardTime = !isStandardTime(meeting)
     });
 
-    // Create a copy of the schedules array
+    // Create a copy of the schedules array. If there are no schedules yet,
+    // initialize with the current display `schedule` so there is a target to update.
     const updatedSchedules = [...schedules];
+    if (updatedSchedules.length === 0) {
+      updatedSchedules.push(JSON.parse(JSON.stringify(schedule || { courses: [], numDistinctSchedules: 0 })));
+    }
 
     // IMPORTANT: Only target active schedules, regardless of which schedules contain the section
     // This ensures we only modify visible schedules
     let targetScheduleIds: number[] = [...activeScheduleIds];
+    // If no active schedule ids exist (fresh app), default to the first schedule
+    if (!targetScheduleIds || targetScheduleIds.length === 0) {
+      targetScheduleIds = [0];
+    }
 
     // Only update the target schedules
     targetScheduleIds.forEach(scheduleId => {
@@ -152,12 +160,12 @@ export const useAddSectionToSchedule = () => {
     });
 
     // Generate the combined display schedule from the updated schedules
-    const displaySchedule = combineActiveSchedules(updatedSchedules, activeScheduleIds);
+    const displaySchedule = combineActiveSchedules(updatedSchedules, targetScheduleIds);
 
     // Dispatch with all schedule state preserved
     appDispatch({
       payload: {
-        activeScheduleIds,
+        activeScheduleIds: targetScheduleIds,
         schedule: displaySchedule,
         schedules: updatedSchedules,
       },
