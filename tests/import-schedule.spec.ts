@@ -1,0 +1,56 @@
+// This file is used to test importing a full schedule and performing add, edit, and delete operations.
+import { test, expect } from '@playwright/test';
+import path from 'path';
+
+const filePath = path.resolve(__dirname, '../client-course-schedulizer/csv/full_schedule_2025.csv');
+
+test('test', async ({ page }) => {
+  await page.goto('http://localhost:3000/#/');
+  await page.getByRole('button', { name: 'Import Schedule' }).click();
+  await page.setInputFiles('input[type="file"]', filePath);
+  await page.getByRole('button', { name: 'Level' }).click();
+  await page.getByRole('option', { name: 'Room' }).click();
+  await page.getByRole('button', { name: 'Room' }).click();
+  await page.getByRole('option', { name: 'Instructor' }).click();
+  await page.getByRole('button', { name: 'Instructor' }).click();
+  await page.getByRole('option', { name: 'Prefix' }).click();
+  await page.getByRole('button', { name: 'Prefix' }).click();
+  await page.getByRole('option', { name: 'Group' }).click();
+  await page.getByRole('button', { name: 'Full' }).click();
+  await page.getByRole('option', { name: 'First Half' }).click();
+  await page.getByRole('button').nth(5).click();
+  await page.locator('input[name="department"]').click();
+  await page.locator('input[name="department"]').fill('cs');
+  await page.getByRole('textbox', { name: 'Instructor' }).click();
+  await page.getByRole('option', { name: 'Adam Vedra' }).click();
+  await page.getByRole('textbox', { name: 'Prefix' }).click();
+  await page.getByRole('option', { name: 'CS' }).click();
+  await page.getByRole('textbox', { name: 'Number' }).click();
+  await page.getByRole('textbox', { name: 'Number' }).fill('90');
+  await page.getByRole('textbox', { name: 'Section' }).click();
+  await page.getByRole('option', { name: 'A', exact: true }).click();
+  await page.getByRole('textbox', { name: 'Course Title' }).click();
+  await page.getByRole('textbox', { name: 'Course Title' }).fill('Intro');
+  await page.locator('input[name="duration"]').click();
+  await page.locator('input[name="duration"]').fill('65');
+  await page.getByRole('checkbox', { name: 'M' }).check();
+  await page.getByRole('checkbox', { name: 'W' }).check();
+  await page.getByRole('checkbox', { name: 'F' }).check();
+  await page.getByRole('textbox', { name: 'Location' }).click();
+  await page.getByRole('textbox', { name: 'Location' }).fill('HH112');
+  await page.locator('input[name="facultyHours"]').click();
+  await page.locator('input[name="facultyHours"]').fill('4');
+  await page.locator('input[name="studentHours"]').click();
+  await page.locator('input[name="studentHours"]').fill('4');
+  await page.getByRole('textbox', { name: 'Delivery Mode' }).click();
+  await page.getByRole('option', { name: 'In-Person' }).click();
+  await page.getByRole('button', { name: 'Add Section' }).click();
+  await page.locator('a').filter({ hasText: ':00 - 9:05CS-90-A' }).first().click();
+  await page.locator('div').filter({ hasText: 'Start TimeStart Time' }).nth(3).click();
+  await page.locator('input[name="startTime"]').press('ArrowRight');
+  await page.locator('input[name="startTime"]').fill('09:00');
+  await page.getByRole('button', { name: 'Update Section' }).click();
+  await page.locator('a').filter({ hasText: ':00 - 10:05CS-90-A' }).first().click();
+  await page.getByRole('button', { name: 'Delete Section' }).click();
+  await page.getByRole('tab', { name: 'Room Schedule' }).click();
+});

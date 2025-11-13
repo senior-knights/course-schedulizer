@@ -1,0 +1,22 @@
+{
+  "name": "course-schedulizer",
+  "version": "1.0.0",
+  "description": "<p align=\"center\"><img src=\"./CourseSchedulizerMediaFinal.png\" alt=\"Course Schedulizer\" title=\"Course Schedulizer\"/></p>",
+  "main": ".prettierrc.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/senior-knights/course-schedulizer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/senior-knights/course-schedulizer/issues"
+  },
+  "homepage": "https://github.com/senior-knights/course-schedulizer#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^24.10.0"
+  }
+}
