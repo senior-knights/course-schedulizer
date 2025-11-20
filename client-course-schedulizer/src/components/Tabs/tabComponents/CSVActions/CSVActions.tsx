@@ -39,9 +39,9 @@ export const CSVActions = () => {
         <ImportInputWrapper isAdditiveImport>
           <MenuItem button>IMPORT CONSTRAINTS</MenuItem>
         </ImportInputWrapper>
-        <MenuItem button onClick={onFullExportClick}>
+        {/* <MenuItem button onClick={onFullExportClick}>
           EXPORT CSV
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem button onClick={onExportExcelClick}>
           EXPORT EXCEL
         </MenuItem>
