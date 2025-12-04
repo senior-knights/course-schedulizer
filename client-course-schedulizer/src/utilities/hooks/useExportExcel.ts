@@ -68,11 +68,15 @@ export const useExportExcel = () => {
             : "",
           StartTime:
             section.meetings && section.meetings.length > 0
-              ? formatTime(section.meetings[0].startTime)
+              ? section.meetings
+                .map((m: any) => { return formatTime(m.startTime) })
+                .join("\n")
               : "",
           MeetingDuration:
             section.meetings && section.meetings.length > 0
-              ? section.meetings[0].duration ?? ""
+              ? section.meetings
+                .map((m: any) => { return m.duration ?? "" })
+                .join("\n")
               : "",
           Classroom: section.meetings
             ? section.meetings
@@ -83,7 +87,7 @@ export const useExportExcel = () => {
                   const roomNumber = m.location.roomNumber.toString().replace(/^0+/, "");
                   return `${building} ${roomNumber}`;
                 })
-                .join(", ")
+                .join("\n")
             : "",
           ShortTitle: course.name ?? "",
           InstructionalMethod: section.instructionalMethod ?? "",
