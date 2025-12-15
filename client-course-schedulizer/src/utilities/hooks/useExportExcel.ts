@@ -68,11 +68,15 @@ export const useExportExcel = () => {
             : "",
           StartTime:
             section.meetings && section.meetings.length > 0
-              ? formatTime(section.meetings[0].startTime)
+              ? section.meetings
+                .map((m: any) => { return formatTime(m.startTime) })
+                .join("\n")
               : "",
           MeetingDuration:
             section.meetings && section.meetings.length > 0
-              ? section.meetings[0].duration ?? ""
+              ? section.meetings
+                .map((m: any) => { return m.duration ?? "" })
+                .join("\n")
               : "",
           Classroom: section.meetings
             ? section.meetings
@@ -83,7 +87,7 @@ export const useExportExcel = () => {
                   const roomNumber = m.location.roomNumber.toString().replace(/^0+/, "");
                   return `${building} ${roomNumber}`;
                 })
-                .join(", ")
+                .join("\n")
             : "",
           ShortTitle: course.name ?? "",
           InstructionalMethod: section.instructionalMethod ?? "",
@@ -130,12 +134,12 @@ export const useExportExcel = () => {
     const exportData2: any[] = [];
     schedule.courses.forEach((course: any) => {
       course.sections.forEach((section: any) => {
-        // Calculate MeetingTime from start time and duration
-        const meetingTime =
-          section.meetings && section.meetings.length > 0
-            ? (() => {
-                const start = section.meetings[0].startTime;
-                const duration = section.meetings[0].duration;
+        // Calculate MeetingTime from start time and duration for all meetings
+        const meetingTime = section.meetings && section.meetings.length > 0
+          ? section.meetings
+              .map((m: any) => {
+                const start = m.startTime;
+                const duration = m.duration;
                 if (start && duration) {
                   const formattedStart = formatTime(start);
                   const formattedEnd = moment(start, "h:mm A")
@@ -144,8 +148,9 @@ export const useExportExcel = () => {
                   return `${formattedStart} - ${formattedEnd}`;
                 }
                 return "";
-              })()
-            : "";
+              })
+              .join("\n")
+          : "";
         // Combine Term and SemesterPart to form TermAndPart
         const termAndPart = section.term
           ? section.semesterLength
@@ -181,13 +186,15 @@ export const useExportExcel = () => {
                   const roomNumber = m.location.roomNumber.toString().replace(/^0+/, "");
                   return `${building} ${roomNumber}`;
                 })
-                .join(", ")
+                .join("\n")
             : "",
           TermPart: section.semesterLength ?? "",
           TermAndPart: termAndPart,
           Duration:
             section.meetings && section.meetings.length > 0
-              ? section.meetings[0].duration ?? ""
+              ? section.meetings
+                .map((m: any) => { return m.duration ?? "" })
+                .join("\n")
               : "",
           ShortTitle: course.name ?? "",
           Faculty: Array.isArray(section.instructors)
