@@ -1,0 +1,43 @@
+Department,Term,SubjectCode,CourseNum,SectionCode,CourseLevelCode,MinimumCredits,FacultyLoad,BuildingAndRoom,MeetingDays,MeetingTime,SectionStartDate,SectionEndDate,SemesterLength,Building,RoomNumber,MeetingStart,MeetingDurationMinutes,MeetingEnd,ShortTitle,Faculty,SectionStatus,InstructionalMethod,DeliveryMode,Group,Comments,LastEditTimestamp
+Computer Science,FA,CS,104,A,100,1,2,SB 372,MWF,12:15PM - 1:20PM,,,First,SB,372,12:15 PM,65,1:20 PM,Applied Computing,Keith VanderLinden,,,,,,2024-11-12T09:21:04-05:00
+Computer Science,FA,CS,104,B,100,1,2,SB 372,MWF,12:15PM - 1:20PM,,,Second,SB,372,12:15 PM,65,1:20 PM,Applied Computing,Keith VanderLinden,,,,,,2024-11-27T13:24:37-05:00
+Computer Science,SP,CS,214,A,200,4,4,"SB 372
+SB 354","MW
+F","2:45PM - 3:50PM
+2:45PM - 5:05PM",,,Full,"SB
+SB","372
+354","2:45 PM
+2:45 PM","65
+140","3:50 PM
+5:05 PM",Programming Lang Concepts,Eric Araujo,,,,,,2022-06-10T13:20:27-04:00
+Computer Science,SP,CS,214,B,200,4,4,"SB 372
+SB 372","F
+MW","2:45PM - 5:05PM
+4:00PM - 5:05PM",,,Full,"SB
+SB","372
+372","2:45 PM
+4:00 PM","140
+65","5:05 PM
+5:05 PM",Programming Lang Concepts,David Meyer,,,,,,2022-06-10T13:20:27-04:00
+Computer Science,FA,CS,262,A,200,4,4,"SB 354
+SC 120","F
+MW","1:30PM - 3:50PM
+1:30PM - 2:35PM",,,Full,"SB
+SC","354
+120","1:30 PM
+1:30 PM","140
+65","3:50 PM
+2:35 PM",Software Engineering,Keith VanderLinden,,,,,,2021-07-13T14:16:19-04:00
+Computer Science,FA,CS,262,B,200,4,4,"SC 120
+SB 337","MW
+F","2:45PM - 3:50PM
+1:30PM - 3:50PM",,,Full,"SC
+SB","120
+337","2:45 PM
+1:30 PM","65
+140","3:50 PM
+3:50 PM",Software Engineering,Victor T. Norman,,,,,,2021-07-13T14:16:34-04:00
+Computer Science,FA,CS,300,A,300,2,2,SB 382,MWF,11:00AM - 12:05PM,,,First,SB,382,11:00 AM,65,12:05 PM,Applied Machine Learning,Kenneth C Arnold,,,,,,2025-02-04T14:44:51-05:00
+Computer Science,SP,CS,300,A,300,4,4,SB 382,MWF,12:15PM - 1:20PM,,,Full,SB,382,12:15 PM,65,1:20 PM,Network Security,Rocky Chang,,,,,,2025-02-04T14:47:22-05:00
+Computer Science,FA,CS,104L,A,100,1,0.5,SB 372,T,12:15PM - 1:55PM,,,First,SB,372,12:15 PM,100,1:55 PM,Applied Computing,Christopher Wieringa,,,,,,2024-11-11T18:57:58-05:00
+Computer Science,FA,CS,104L,C,100,1,0.5,SB 372,T,12:15PM - 1:55PM,,,Second,SB,372,12:15 PM,100,1:55 PM,Applied Computing,Christopher Wieringa,,,,,,2024-11-11T18:59:34-05:00
