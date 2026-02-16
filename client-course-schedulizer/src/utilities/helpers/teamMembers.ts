@@ -114,6 +114,28 @@ export const team2024: TeamMember[] = [
   },
 ];
 
+
+export const team2025: TeamMember[] = [
+  {
+    bio: "Computer Science Student at Calvin University.",
+    name: "Minji Hur",
+    photo: "https://avatars.githubusercontent.com/u/198796756?v=4",
+    website: "https://github.com/MinjiH67",
+  },
+  {
+    bio: "Computer Science Student at Calvin University.",
+    name: "Lujia Li",
+    photo: "https://avatars.githubusercontent.com/u/122374470?v=4",
+    website: "https://github.com/Sylviali4",
+  },
+  {
+    bio: "Computer Science Student at Calvin University.",
+    name: "Eunhyuk (Kai) Doo",
+    photo: "https://media.licdn.com/dms/image/v2/D4E35AQH4bqMXOcnGWQ/profile-framedphoto-shrink_800_800/profile-framedphoto-shrink_800_800/0/1733945143277?e=1771808400&v=beta&t=VRr6f1YEwtglefgMUpdkkxZ7Xjfmd8hicjs0VrBM8Eo",
+    website: "https://github.com/ralphboba",
+  },
+];
+
 export const teamAdvisors: TeamMember[] = [
   {
     bio:
