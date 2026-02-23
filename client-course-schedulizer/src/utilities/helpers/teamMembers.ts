@@ -97,7 +97,7 @@ export const team2024: TeamMember[] = [
   {
     bio: "Computer Science Student at Calvin University.",
     name: "Noelle Haviland",
-    photo: "https://avatars.githubusercontent.com/u/112643038?v=4",
+    photo: "https://avatars.githubusercontent.com/u/112331205?v=4",
     website: "https://github.com/neh8",
   },
   {
