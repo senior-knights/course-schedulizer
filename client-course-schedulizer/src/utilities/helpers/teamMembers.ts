@@ -13,7 +13,7 @@ export const team2020: TeamMember[] = [
     name: "Jonathan Ellis",
     photo:
       "https://avatars3.githubusercontent.com/u/49655167?s=460&u=b81f525db7da58b19bc28588282b366cd8b748ab&v=4",
-    website: "https://github.com/Jonri2",
+    website: "https://github.com/Jdellis818",
   },
   {
     bio:
@@ -131,7 +131,7 @@ export const team2025: TeamMember[] = [
   {
     bio: "Computer Science Student at Calvin University.",
     name: "Eunhyuk (Kai) Doo",
-    photo: "https://media.licdn.com/dms/image/v2/D4E35AQH4bqMXOcnGWQ/profile-framedphoto-shrink_800_800/profile-framedphoto-shrink_800_800/0/1733945143277?e=1771808400&v=beta&t=VRr6f1YEwtglefgMUpdkkxZ7Xjfmd8hicjs0VrBM8Eo",
+    photo: "https://media.licdn.com/dms/image/v2/D4E35AQH4bqMXOcnGWQ/profile-framedphoto-shrink_400_400/profile-framedphoto-shrink_400_400/0/1733945143277?e=1772766000&v=beta&t=dXmRzRtSVpsbA-XuFcZ3KfmCsikuYsaCRe5z8895G5U",
     website: "https://github.com/ralphboba",
   },
 ];

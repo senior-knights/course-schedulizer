@@ -12,16 +12,22 @@ type ResourceItem = {
 };
 
 type TeamYearSection = {
-  academicYearLabel: string; 
-  resourcesAndReports: ResourceItem[]; 
-  team?: TeamMember[]; 
+  academicYearLabel: string;
+  resourcesAndReports: ResourceItem[];
+  team?: TeamMember[];
 };
 
 export const AboutPage = () => {
   const teamSections: TeamYearSection[] = [
     {
       academicYearLabel: "2025–26",
-      resourcesAndReports: [],
+      resourcesAndReports: [
+        {
+          date: "2.26.2026",
+          href: "https://docs.google.com/document/d/1ZSYfABqfUSxhqqfZH9b_0fu2XrqBe46lxKp5XGHGvY8/edit?usp=sharing",
+          label: "Schedulizer Project Report ",
+        },
+      ],
       team: team2025,
     },
     {
@@ -141,12 +147,6 @@ export const AboutPage = () => {
           href: "https://docs.google.com/document/d/e/2PACX-1vQTy2A83LmPKrZhQ5_LCN6a3ow4UHxknIq4OjgimPU-Brfyl6fAhb9aQmxjNvg5tA/pub",
           label: "Original Proposal",
         },
-      ],
-      team: team2020,
-    },
-    {
-      academicYearLabel: "2019–20",
-      resourcesAndReports: [
         {
           date: "12.01.2020",
           href: "https://web.microsoftstream.com/video/cee6b774-a010-4220-a0d8-c6a6c5240d84?st=2456",
@@ -244,7 +244,9 @@ const AboutTeams = ({ sections }: { sections: TeamYearSection[] }) => {
       body={
         <div>
           {visibleSections.map((section) => {
-            return <TeamAcademicYearBlock key={section.academicYearLabel} section={section} />;
+            return (
+              <TeamAcademicYearBlock key={section.academicYearLabel} section={section} />
+            );
           })}
         </div>
       }
@@ -258,23 +260,38 @@ const TeamAcademicYearBlock = ({ section }: { section: TeamYearSection }) => {
 
   return (
     <div className="about-team-year-block">
-      <h2 className="about-team-year-title"> {academicYearLabel}</h2>
+      <h2 className="about-team-year-title">Team of {academicYearLabel}</h2>
 
-      <Grid container direction="column" justify="flex-start" spacing={2}>
+      <Grid
+        className="about-team-grid"
+        container
+        direction="row"
+        justify="flex-start"
+        spacing={2}
+      >
         {(team || []).map((member: TeamMember) => {
-          return <TeamMemberProfile key={member.name} member={member} />;
+          return (
+            <Grid item key={member.name} sm={3} xs={6}>
+              <TeamMemberProfile member={member} />
+            </Grid>
+          );
         })}
       </Grid>
 
       {resourcesAndReports.length > 0 ? (
         <div className="about-team-year-links">
           <h4 className="about-team-year-subtitle">Resources &amp; Reports</h4>
-          <ul>
+          <ul className="about-resource-list">
             {resourcesAndReports.map((item) => {
               return (
-                <li key={`${academicYearLabel}-${item.label}-${item.href}`}>
+                <li
+                  className="about-resource-item"
+                  key={`${academicYearLabel}-${item.label}-${item.href}`}
+                >
                   <NewTabLink href={item.href}>{item.label}</NewTabLink>
-                  {item.date ? <> - {item.date}</> : null}
+                  {item.date ? (
+                    <span className="about-resource-date"> — {item.date}</span>
+                  ) : null}
                 </li>
               );
             })}
@@ -293,9 +310,19 @@ const AboutAdvisors = () => {
   return (
     <TextSection
       body={
-        <Grid container direction="column" justify="flex-start" spacing={2}>
+        <Grid
+          className="about-team-grid"
+          container
+          direction="row"
+          justify="flex-start"
+          spacing={2}
+        >
           {teamAdvisors.map((member: TeamMember) => {
-            return <TeamMemberProfile key={member.name} member={member} />;
+            return (
+              <Grid item key={member.name} sm={3} xs={6}>
+                <TeamMemberProfile member={member} />
+              </Grid>
+            );
           })}
         </Grid>
       }
