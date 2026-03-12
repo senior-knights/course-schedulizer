@@ -13,7 +13,7 @@ export const team2020: TeamMember[] = [
     name: "Jonathan Ellis",
     photo:
       "https://avatars3.githubusercontent.com/u/49655167?s=460&u=b81f525db7da58b19bc28588282b366cd8b748ab&v=4",
-    website: "https://github.com/Jonri2",
+    website: "https://github.com/Jdellis818",
   },
   {
     bio:
@@ -97,7 +97,7 @@ export const team2024: TeamMember[] = [
   {
     bio: "Computer Science Student at Calvin University.",
     name: "Noelle Haviland",
-    photo: "https://avatars.githubusercontent.com/u/112643038?v=4",
+    photo: "https://avatars.githubusercontent.com/u/112331205?v=4",
     website: "https://github.com/neh8",
   },
   {
@@ -111,6 +111,28 @@ export const team2024: TeamMember[] = [
     name: "Edom Maru",
     photo: "https://avatars.githubusercontent.com/u/88850851?v=4",
     website: "https://github.com/edomamaru",
+  },
+];
+
+
+export const team2025: TeamMember[] = [
+  {
+    bio: "Computer Science Student at Calvin University.",
+    name: "Minji Hur",
+    photo: "https://avatars.githubusercontent.com/u/198796756?v=4",
+    website: "https://github.com/MinjiH67",
+  },
+  {
+    bio: "Computer Science Student at Calvin University.",
+    name: "Lujia Li",
+    photo: "https://avatars.githubusercontent.com/u/122374470?v=4",
+    website: "https://github.com/Sylviali4",
+  },
+  {
+    bio: "Computer Science Student at Calvin University.",
+    name: "Eunhyuk (Kai) Doo",
+    photo: "https://media.licdn.com/dms/image/v2/D4E35AQH4bqMXOcnGWQ/profile-framedphoto-shrink_400_400/profile-framedphoto-shrink_400_400/0/1733945143277?e=1772766000&v=beta&t=dXmRzRtSVpsbA-XuFcZ3KfmCsikuYsaCRe5z8895G5U",
+    website: "https://github.com/ralphboba",
   },
 ];
 
