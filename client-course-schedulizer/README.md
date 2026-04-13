@@ -53,7 +53,8 @@ Edits you make to the code will automatically update the website in your browser
 
 GitHub is configured to require on review by a team member for all merges into the `develop` branch. When the merge is approved:
 
-1. The continuous integration (CI) workflow specified in [`../.github/workflows/ci.yml`](../.github/workflows/ci.yml) will automatically run the tests. The tests are specified in `src/**/*.test.*` files and run using [Jest](https://jestjs.io/).
+1. The continuous integration (CI) workflow specified in [`../.github/workflows/ci.yml`](../.github/workflows/ci.yml) will automatically run the tests. The tests are specified in `src/utilities/helpers/*.spec.ts` + `src/utilities/services/*.spec.ts` + `src/test/*` files and run using [Jest](https://jestjs.io/) and react testing library.
+1. The project currently uses multiple testing frameworks during a transition toward a react testing library. New validation tests have been added to verify data consistency between imported and exported Excel schedules. 
 1. If the tests pass, the CI workflow will automatically merge your PR into the `develop` branch.
 1. When it detects new code in the `develop` branch, [Netlify](https://www.netlify.com/) will automatically deploy the new version of the `develop` branch to the development server. See the:
    - Development server dashboard at: [https://app.netlify.com/sites/sharp-babbage-a45ee2](https://app.netlify.com/sites/sharp-babbage-a45ee2)
