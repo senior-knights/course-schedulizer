@@ -6,7 +6,7 @@ import {
   FormHelperText,
   FormLabel,
   Grid,
-} from "@material-ui/core";
+} from "@mui/material";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useInput } from "utilities";
@@ -57,14 +57,14 @@ export const GridItemCheckboxGroup = ({
   };
 
   return (
-    <Grid item xs>
+    <Grid size="grow">
       <FormControl component="fieldset" error={!!errorMessage}>
         <FormLabel component="legend">{label}</FormLabel>
         <FormGroup>
           <Grid container direction="column">
             {options.map((opt, i) => {
               return (
-                <Grid item key={opt}>
+                <Grid key={opt}>
                   <FormControlLabel
                     control={
                       <Checkbox

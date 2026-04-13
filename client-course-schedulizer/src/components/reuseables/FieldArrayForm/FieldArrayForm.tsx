@@ -1,4 +1,4 @@
-import { Card, CardContent, TextFieldProps } from "@material-ui/core";
+import { Card, CardContent, TextFieldProps } from "@mui/material";
 import startCase from "lodash/startCase";
 import toLower from "lodash/toLower";
 import React, { useCallback, useEffect } from "react";

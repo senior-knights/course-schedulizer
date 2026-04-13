@@ -1,4 +1,4 @@
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 import { NewTabLink, Page } from "components/reuseables";
 import React from "react";
 import { team2020, team2021, team2022, team2023, team2024, teamAdvisors, TeamMember } from "utilities";
@@ -81,7 +81,7 @@ const AboutTeam2020 = () => {
   return (
     <TextSection
       body={
-        <Grid container direction="column" justify="flex-start" spacing={2}>
+        <Grid container direction="column" justifyContent="flex-start" spacing={2}>
           {team2020.map((member: TeamMember) => {
             return <TeamMemberProfile key={member.name} member={member} />;
           })}
@@ -96,7 +96,7 @@ const AboutTeam2021 = () => {
   return (
     <TextSection
       body={
-        <Grid container direction="column" justify="flex-start" spacing={2}>
+        <Grid container direction="column" justifyContent="flex-start" spacing={2}>
           {team2021.map((member: TeamMember) => {
             return <TeamMemberProfile key={member.name} member={member} />;
           })}
@@ -111,7 +111,7 @@ const AboutTeam2022 = () => {
   return (
     <TextSection
       body={
-        <Grid container direction="column" justify="flex-start" spacing={2}>
+        <Grid container direction="column" justifyContent="flex-start" spacing={2}>
           {team2022.map((member: TeamMember) => {
             return <TeamMemberProfile key={member.name} member={member} />;
           })}
@@ -126,7 +126,7 @@ const AboutTeam2023 = () => {
   return (
     <TextSection
       body={
-        <Grid container direction="column" justify="flex-start" spacing={2}>
+        <Grid container direction="column" justifyContent="flex-start" spacing={2}>
           {team2023.map((member: TeamMember) => {
             return <TeamMemberProfile key={member.name} member={member} />;
           })}
@@ -141,7 +141,7 @@ const AboutTeam2024 = () => {
   return (
     <TextSection
       body={
-        <Grid container direction="column" justify="flex-start" spacing={2}>
+        <Grid container direction="column" justifyContent="flex-start" spacing={2}>
           {team2024.map((member: TeamMember) => {
             return <TeamMemberProfile key={member.name} member={member} />;
           })}
@@ -156,7 +156,7 @@ const AboutTeamAdvisors = () => {
   return (
     <TextSection
       body={
-        <Grid container direction="column" justify="flex-start" spacing={2}>
+        <Grid container direction="column" justifyContent="flex-start" spacing={2}>
           {teamAdvisors.map((member: TeamMember) => {
             return <TeamMemberProfile key={member.name} member={member} />;
           })}

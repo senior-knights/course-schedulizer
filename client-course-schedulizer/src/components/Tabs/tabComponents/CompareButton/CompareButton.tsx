@@ -1,5 +1,5 @@
-import { IconButton, Tooltip, Typography } from "@material-ui/core";
-import CompareIcon from "@material-ui/icons/Compare";
+import { IconButton, Tooltip, Typography } from "@mui/material";
+import CompareIcon from "@mui/icons-material/Compare";
 import React from "react";
 import { ScheduleComparer } from "../../../reuseables/ScheduleComparer/ScheduleComparer";
 import "./CompareButton.scss";

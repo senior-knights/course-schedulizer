@@ -6,8 +6,8 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
-} from "@material-ui/core";
+  TableRow, 
+} from "@mui/material";
 import { UpdateNonTeachingLoadModalPagination, UpdateSectionModalPagination } from "components";
 import React, { useContext, useMemo, useRef } from "react";
 import { Cell, Column, useSortBy, useTable } from "react-table";

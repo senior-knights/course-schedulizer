@@ -6,11 +6,29 @@ import { reducer } from "utilities";
 import { useLocal } from "utilities/hooks/useLocal";
 import { AppContext } from "utilities/contexts";
 import { initialAppState } from "utilities/interfaces";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "./App.scss";
 
 /* Custom theme to ensure consistent UI elements */
-const theme = createMuiTheme({
+const theme = createTheme({
+  components: {
+    MuiCheckbox: {
+      defaultProps: {
+        color: "primary",
+      },
+    },
+    MuiRadio: {
+      defaultProps: {
+        color: "primary",
+      },
+    },
+    MuiSwitch: {
+      defaultProps: {
+        color: "primary",
+      },
+    },
+  },
+
   palette: {
     primary: {
       main: "#3f51b5",
@@ -18,18 +36,7 @@ const theme = createMuiTheme({
     secondary: {
       main: "#f50057",
     },
-  },
-  props: {
-    MuiCheckbox: {
-      color: "primary",
-    },
-    MuiRadio: {
-      color: "primary",
-    },
-    MuiSwitch: {
-      color: "primary",
-    },
-  },
+  }, 
 });
 
 /* App with a HashRouter.
