@@ -131,7 +131,7 @@ export const team2025: TeamMember[] = [
   {
     bio: "Computer Science Student at Calvin University.",
     name: "Eunhyuk (Kai) Doo",
-    photo: "https://media.licdn.com/dms/image/v2/D4E35AQH4bqMXOcnGWQ/profile-framedphoto-shrink_400_400/profile-framedphoto-shrink_400_400/0/1733945143277?e=1772766000&v=beta&t=dXmRzRtSVpsbA-XuFcZ3KfmCsikuYsaCRe5z8895G5U",
+    photo: "https://avatars.githubusercontent.com/u/180291851?v=4",
     website: "https://github.com/ralphboba",
   },
 ];
