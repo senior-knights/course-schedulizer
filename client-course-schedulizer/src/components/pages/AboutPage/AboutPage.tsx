@@ -1,25 +1,188 @@
 import { Grid } from "@material-ui/core";
-import { NewTabLink, Page } from "components/reuseables";
 import React from "react";
-import { team2020, team2021, team2022, team2023, team2024, teamAdvisors, TeamMember } from "utilities";
+import { NewTabLink, Page } from "components/reuseables";
+import { team2020, team2021, team2022, team2023, team2024, team2025, teamAdvisors, TeamMember} from "utilities";
 import { TeamMemberProfile, TextSection } from ".";
 import "./AboutPage.scss";
 
-/* A page with information about the project
-  with references */
+type ResourceItem = {
+  date?: string;
+  href: string;
+  label: string;
+};
+
+type TeamYearSection = {
+  academicYearLabel: string;
+  resourcesAndReports: ResourceItem[];
+  team?: TeamMember[];
+};
+
 export const AboutPage = () => {
+  const teamSections: TeamYearSection[] = [
+    {
+      academicYearLabel: "2025–26",
+      resourcesAndReports: [
+        {
+          date: "2.26.2026",
+          href: "https://docs.google.com/document/d/1ZSYfABqfUSxhqqfZH9b_0fu2XrqBe46lxKp5XGHGvY8/edit?usp=sharing",
+          label: "Schedulizer Project Report ",
+        },
+        {
+          date: "4.13.2026",
+          href: "https://docs.google.com/presentation/d/1brMKI0mE3RnfzQWubYN0VOFEqjjvhLvagRhhpFNvEhg/edit?usp=sharing",
+          label: "Schedulizer Project Final Presentation Slides",
+        },
+        {
+          date: "4.13.2026",
+          href: "https://docs.google.com/document/d/1ZSYfABqfUSxhqqfZH9b_0fu2XrqBe46lxKp5XGHGvY8/edit?usp=sharing",
+          label: "Schedulizer Project Final Report",
+        },
+      ],
+      team: team2025,
+    },
+    {
+      academicYearLabel: "2024–25",
+      resourcesAndReports: [
+        {
+          date: "4.26.2025",
+          href: "https://calvincollege-my.sharepoint.com/:w:/g/personal/eam43_calvin_edu/EdiWjkO979tEggEuDAll8GsBKW7iTIgMcMRmjVwpDXYFCA?e=oZrgyb",
+          label: "Final Report",
+        },
+        {
+          date: "4.26.2025",
+          href: "https://docs.google.com/presentation/d/1ZzCyTobI533V0KfaB8nex7Vd54I91799uaEgDQAA7Vw/edit?usp=sharingA",
+          label: "Final Presentation Slides",
+        },
+        {
+          date: "12.10.2024",
+          href: "https://docs.google.com/presentation/d/e/2PACX-1vSGiDKCClWDm4Oj35r8sMiOp24fvbtLBQunou5uy7psD6hsxWCqOq2y7KJtC0KF4A5Lp4ypqx2WCsfE/pub?start=false&loop=false&delayms=3000",
+          label: "Status Report Slides",
+        },
+        {
+          date: "10.1.2024",
+          href: "https://docs.google.com/document/d/e/2PACX-1vS3Tn3OXVt5XVv9jBAjcJO81BWtXvZreZDOkvkH5WCU7oUyhlqe2EWZ4S51RJ9sqTfKC1SjiECRuNr5/pub",
+          label: "2024 Project Proposal",
+        },
+      ],
+      team: team2024,
+    },
+    {
+      academicYearLabel: "2023–24",
+      resourcesAndReports: [
+        {
+          date: "4.30.2024",
+          href: "https://docs.google.com/document/d/1l0ChWMDnPiDJkvFFctdpIZUheSkJ3shouFSYFIIsNW0/edit?usp=sharing",
+          label: "Final Report",
+        },
+        {
+          date: "4.23.2024",
+          href: "https://docs.google.com/presentation/d/e/2PACX-1vT2RDZd5XCKPz_ecGbYOfCiQvsGsQqXxdDd_kh251djFpP3tDQLzgKj0Ts-Vwy2tosev_MQoPxq_x40/pub?start=false&loop=false&delayms=3000",
+          label: "Final Presentation Slides",
+        },
+        {
+          date: "12.5.2023",
+          href: "https://docs.google.com/presentation/d/e/2PACX-1vQZ2cpoTzUtnVa-s_YeGGv3FHHSpHdR0zAJXY6jwJL8zrHTa7-zGtWGIKkGzUglcTfykCA3uML3hsZu/pub?start=false&loop=false&delayms=3000",
+          label: "Status Report Slides",
+        },
+        {
+          date: "10.01.2023",
+          href: "https://docs.google.com/document/d/16FBgWv1JVa3SDyDcNtiC_EZ3NYhkU7Y5tBEmhjGQftM/edit?usp=sharing",
+          label: "2023 Project Proposal",
+        },
+      ],
+      team: team2023,
+    },
+    {
+      academicYearLabel: "2022–23",
+      resourcesAndReports: [
+        {
+          date: "10.01.2022",
+          href: "https://docs.google.com/document/d/1MjXN3lbgYXInZyUk1V_sh4wVVs2ITd6rloYKjJW8W6c/edit?usp=sharing",
+          label: "2022 Project Proposal",
+        },
+      ],
+      team: team2022,
+    },
+    {
+      academicYearLabel: "2021–22",
+      resourcesAndReports: [
+        {
+          date: "4.26.2022",
+          href: "https://docs.google.com/document/d/e/2PACX-1vSL0Ezm-2XOCQWPv4R7J3MRZAn5PW46cayuKNxxElyVdl9W48ns2cRcd6xquoBc054_w2K_vsx2si7P/pub",
+          label: "Final Report",
+        },
+        {
+          date: "4.19.2022",
+          href: "https://docs.google.com/presentation/d/e/2PACX-1vSGBkk_3fRIeLrlMBCgLnHLxSdt4hOVz5QovjrUs3qXfVDnx12xO7hYLEuhQx4CtW_VOJ-tBIZaoHZ9/pub?start=false&loop=false&delayms=3000",
+          label: "Final Presentation Slides",
+        },
+        {
+          date: "12.07.2021",
+          href: "https://docs.google.com/presentation/d/e/2PACX-1vRRNLIukj6g61oBkb41JiwW0hZFUMOGzL_m-Um_Ha9vcksYJRzmd7oUlyEs0rqz5fqgFVmncarYzbMP/pub?start=false&loop=false&delayms=3000",
+          label: "Status Report Slides",
+        },
+        {
+          date: "10.01.2021",
+          href: "https://docs.google.com/document/d/e/2PACX-1vTBrCpNg8RfpGYG5-c4ZDzpADTPWUyfRhuUzgXTH19LPGs2ZPTZ5OjixdFz_zhYkPzdBkxCjWd46Klc/pub",
+          label: "Project Proposal",
+        },
+      ],
+      team: team2021,
+    },
+    {
+      academicYearLabel: "2020–21",
+      resourcesAndReports: [
+        {
+          date: "5.13.2021",
+          href: "https://docs.google.com/document/d/e/2PACX-1vQcSDE6VMNl-wMHhECt3RbeA3WD-tiXersevVAMDXfgImq9HMFS5yQnLx8mZ4qZ4Q/pub",
+          label: "Final Report",
+        },
+        {
+          date: "4.25.2021",
+          href: "https://youtu.be/ckn0oPxvlIE",
+          label: "Final Presentation Video",
+        },
+        {
+          date: "4.25.2021",
+          href: "https://docs.google.com/presentation/d/e/2PACX-1vRcyM-65kiLgceLaU7mQjnuzqPHKMt-nWT_msYcXeXbLeoe13awn2gSudzlC_5ghpyQlLVPzywJzywj/pub?start=false&loop=false&delayms=3000",
+          label: "Final Presentation Slides",
+        },
+        {
+          date: "12.15.2020",
+          href: "https://docs.google.com/document/d/e/2PACX-1vQPQ1Qhu0jCVThVbNsUFxV8fB56fHgVf4Dnhfkf6EU_7627iMVuSHntW8VxF0j0Aw/pub",
+          label: "Updated Status Report",
+        },
+        {
+          date: "10.15.2020",
+          href: "https://docs.google.com/document/d/e/2PACX-1vQTy2A83LmPKrZhQ5_LCN6a3ow4UHxknIq4OjgimPU-Brfyl6fAhb9aQmxjNvg5tA/pub",
+          label: "Original Proposal",
+        },
+        {
+          date: "12.01.2020",
+          href: "https://web.microsoftstream.com/video/cee6b774-a010-4220-a0d8-c6a6c5240d84?st=2456",
+          label: "Status Report Video",
+        },
+        {
+          date: "12.01.2020",
+          href: "https://docs.google.com/document/d/e/2PACX-1vS8sc8-Vs1qkfyGpelPXsuwvSQif3IFlnsZNoak3P7DbBmSYxWDgXL2ig-OJk8VJVHny2lCUZxCyCfJ/pub",
+          label: "Honors Status Report",
+        },
+        {
+          date: "12.01.2020",
+          href: "https://docs.google.com/presentation/d/e/2PACX-1vQrjMY5c-gnlvX5AAD1zIqRY0P5BLppQFT5y-3fxeR0TzuEvzUpDADYUGY_3J4TBe1PL3sq9rEqUdRA/pub?start=false&loop=false&delayms=3000",
+          label: "Status Report Slides",
+        },
+      ],
+      team: team2020,
+    },
+  ];
+
   return (
     <Page>
       <AboutVision />
-      <AboutTeam2024 />
-      <AboutTeam2023 />
-      <AboutTeam2022 />
-      <AboutTeam2021 />
-      <AboutTeam2020 />
-      <AboutTeamAdvisors />
+      <AboutTeams sections={teamSections} />
+      <AboutAdvisors />
       <AboutCode />
-      <AboutReport />
-      <AboutResources />
     </Page>
   );
 };
@@ -77,92 +240,103 @@ const AboutVision = () => {
   );
 };
 
-const AboutTeam2020 = () => {
+const AboutTeams = ({ sections }: { sections: TeamYearSection[] }) => {
+  const visibleSections = sections.filter((s) => {
+    return (s.team?.length ?? 0) > 0;
+  });
+
+  if (visibleSections.length === 0) {
+    return null;
+  }
+
   return (
     <TextSection
       body={
-        <Grid container direction="column" justify="flex-start" spacing={2}>
-          {team2020.map((member: TeamMember) => {
-            return <TeamMemberProfile key={member.name} member={member} />;
+        <div>
+          {visibleSections.map((section) => {
+            return (
+              <TeamAcademicYearBlock key={section.academicYearLabel} section={section} />
+            );
           })}
-        </Grid>
+        </div>
       }
-      title="Team of 2020"
+      title="Teams"
     />
   );
 };
 
-const AboutTeam2021 = () => {
+const TeamAcademicYearBlock = ({ section }: { section: TeamYearSection }) => {
+  const { academicYearLabel, resourcesAndReports, team } = section;
+
   return (
-    <TextSection
-      body={
-        <Grid container direction="column" justify="flex-start" spacing={2}>
-          {team2021.map((member: TeamMember) => {
-            return <TeamMemberProfile key={member.name} member={member} />;
-          })}
-        </Grid>
-      }
-      title="Team of 2021"
-    />
+    <div className="about-team-year-block">
+      <h2 className="about-team-year-title">Team of {academicYearLabel}</h2>
+
+      <Grid
+        className="about-team-grid"
+        container
+        direction="row"
+        justify="flex-start"
+        spacing={2}
+      >
+        {(team || []).map((member: TeamMember) => {
+          return (
+            <Grid item key={member.name} sm={3} xs={6}>
+              <TeamMemberProfile member={member} />
+            </Grid>
+          );
+        })}
+      </Grid>
+
+      {resourcesAndReports.length > 0 ? (
+        <div className="about-team-year-links">
+          <h4 className="about-team-year-subtitle">Resources &amp; Reports</h4>
+          <ul className="about-resource-list">
+            {resourcesAndReports.map((item) => {
+              return (
+                <li
+                  className="about-resource-item"
+                  key={`${academicYearLabel}-${item.label}-${item.href}`}
+                >
+                  <NewTabLink href={item.href}>{item.label}</NewTabLink>
+                  {item.date ? (
+                    <span className="about-resource-date"> — {item.date}</span>
+                  ) : null}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ) : null}
+    </div>
   );
 };
 
-const AboutTeam2022 = () => {
-  return (
-    <TextSection
-      body={
-        <Grid container direction="column" justify="flex-start" spacing={2}>
-          {team2022.map((member: TeamMember) => {
-            return <TeamMemberProfile key={member.name} member={member} />;
-          })}
-        </Grid>
-      }
-      title="Team of 2022"
-    />
-  );
-};
+const AboutAdvisors = () => {
+  if (!teamAdvisors || teamAdvisors.length === 0) {
+    return null;
+  }
 
-const AboutTeam2023 = () => {
   return (
     <TextSection
       body={
-        <Grid container direction="column" justify="flex-start" spacing={2}>
-          {team2023.map((member: TeamMember) => {
-            return <TeamMemberProfile key={member.name} member={member} />;
-          })}
-        </Grid>
-      }
-      title="Team of 2023"
-    />
-  );
-};
-
-const AboutTeam2024 = () => {
-  return (
-    <TextSection
-      body={
-        <Grid container direction="column" justify="flex-start" spacing={2}>
-          {team2024.map((member: TeamMember) => {
-            return <TeamMemberProfile key={member.name} member={member} />;
-          })}
-        </Grid>
-      }
-      title="Team of 2024"
-    />
-  );
-};
-
-const AboutTeamAdvisors = () => {
-  return (
-    <TextSection
-      body={
-        <Grid container direction="column" justify="flex-start" spacing={2}>
+        <Grid
+          className="about-team-grid"
+          container
+          direction="row"
+          justify="flex-start"
+          spacing={2}
+        >
           {teamAdvisors.map((member: TeamMember) => {
-            return <TeamMemberProfile key={member.name} member={member} />;
+            return (
+              <Grid item key={member.name} sm={3} xs={6}>
+                <TeamMemberProfile member={member} />
+              </Grid>
+            );
           })}
         </Grid>
       }
-      title="Team Advisors"
+      title="Advisors"
     />
   );
 };
@@ -172,7 +346,7 @@ const AboutCode = () => {
     <TextSection
       body={
         <>
-          <p></p>For details on the Schedulizer codebase and development process, see the{" "}
+          For details on the Schedulizer codebase and development process, see the{" "}
           <NewTabLink href="https://github.com/senior-knights/course-schedulizer">
             GitHub code repository
           </NewTabLink>
@@ -186,167 +360,6 @@ const AboutCode = () => {
         </>
       }
       title="Code"
-    />
-  );
-};
-
-const AboutReport = () => {
-  return (
-    <TextSection
-      body={
-        <ul>
-          <li>
-            <NewTabLink href="https://calvincollege-my.sharepoint.com/:w:/g/personal/eam43_calvin_edu/EdiWjkO979tEggEuDAll8GsBKW7iTIgMcMRmjVwpDXYFCA?e=oZrgyb">
-              Final Report
-            </NewTabLink>{" "}
-            - 4.26.2025
-          </li>
-          <li>
-            <NewTabLink href="https://docs.google.com/document/d/e/2PACX-1vS3Tn3OXVt5XVv9jBAjcJO81BWtXvZreZDOkvkH5WCU7oUyhlqe2EWZ4S51RJ9sqTfKC1SjiECRuNr5/pub">
-              2024 Project Proposal
-            </NewTabLink>{" "}
-            - 10.1.2024
-          </li>
-          <hr />
-          <li>
-            <NewTabLink href="https://docs.google.com/document/d/1l0ChWMDnPiDJkvFFctdpIZUheSkJ3shouFSYFIIsNW0/edit?usp=sharing">
-              Final Report
-            </NewTabLink>{" "}
-            - 4.30.2024
-          </li>
-          <li>
-            <NewTabLink href="https://docs.google.com/document/d/16FBgWv1JVa3SDyDcNtiC_EZ3NYhkU7Y5tBEmhjGQftM/edit?usp=sharing">
-              2023 Project Proposal
-            </NewTabLink>{" "}
-            - 10.01.2023
-          </li>
-          <hr />
-          <li>
-            <NewTabLink href="https://docs.google.com/document/d/1MjXN3lbgYXInZyUk1V_sh4wVVs2ITd6rloYKjJW8W6c/edit?usp=sharing">
-              2022 Project Proposal
-            </NewTabLink>{" "}
-            - 10.01.2022
-          </li>
-          <hr />
-          <li>
-            <NewTabLink href="https://docs.google.com/document/d/e/2PACX-1vSL0Ezm-2XOCQWPv4R7J3MRZAn5PW46cayuKNxxElyVdl9W48ns2cRcd6xquoBc054_w2K_vsx2si7P/pub">
-              Final Report
-            </NewTabLink>{" "}
-            - 4.26.2022
-          </li>
-          <li>
-            <NewTabLink href="https://docs.google.com/document/d/e/2PACX-1vTBrCpNg8RfpGYG5-c4ZDzpADTPWUyfRhuUzgXTH19LPGs2ZPTZ5OjixdFz_zhYkPzdBkxCjWd46Klc/pub">
-              Project Proposal
-            </NewTabLink>{" "}
-            - 10.01.2021
-          </li>
-          <hr />
-          <li>
-            <NewTabLink href="https://docs.google.com/document/d/e/2PACX-1vQcSDE6VMNl-wMHhECt3RbeA3WD-tiXersevVAMDXfgImq9HMFS5yQnLx8mZ4qZ4Q/pub">
-              Final Report
-            </NewTabLink>{" "}
-            - 5.13.2021
-          </li>
-          <li>
-            <NewTabLink href="https://docs.google.com/document/d/e/2PACX-1vQPQ1Qhu0jCVThVbNsUFxV8fB56fHgVf4Dnhfkf6EU_7627iMVuSHntW8VxF0j0Aw/pub">
-              Updated Status Report
-            </NewTabLink>{" "}
-            - 12.15.2020
-          </li>
-          <li>
-            <NewTabLink href="https://docs.google.com/document/d/e/2PACX-1vQTy2A83LmPKrZhQ5_LCN6a3ow4UHxknIq4OjgimPU-Brfyl6fAhb9aQmxjNvg5tA/pub">
-              Original Proposal
-            </NewTabLink>{" "}
-            - 10.15.2020
-          </li>
-        </ul>
-      }
-      title="Report"
-    />
-  );
-};
-
-const AboutResources = () => {
-  return (
-    <TextSection
-      body={
-        <ul>
-          <li>
-            <NewTabLink href="https://computing.calvin.edu/">
-              Computing@Calvin Department Website
-            </NewTabLink>
-          </li>
-          <hr />
-          <li>
-            <NewTabLink href="https://docs.google.com/presentation/d/1ZzCyTobI533V0KfaB8nex7Vd54I91799uaEgDQAA7Vw/edit?usp=sharingA">
-              Final Presentation Slides
-            </NewTabLink>{" "}
-            - 4.26.2025
-          </li>
-          <li>
-            <NewTabLink href="https://docs.google.com/presentation/d/e/2PACX-1vSGiDKCClWDm4Oj35r8sMiOp24fvbtLBQunou5uy7psD6hsxWCqOq2y7KJtC0KF4A5Lp4ypqx2WCsfE/pub?start=false&loop=false&delayms=3000">
-              Status Report Slides
-            </NewTabLink>{" "}
-            - 12.10.2024
-          </li>
-          <hr />
-          <li>
-            <NewTabLink href="https://docs.google.com/presentation/d/e/2PACX-1vT2RDZd5XCKPz_ecGbYOfCiQvsGsQqXxdDd_kh251djFpP3tDQLzgKj0Ts-Vwy2tosev_MQoPxq_x40/pub?start=false&loop=false&delayms=3000">
-              Final Presentation Slides
-            </NewTabLink>{" "}
-            - 4.23.2024
-          </li>
-          <li>
-            <NewTabLink href="https://docs.google.com/presentation/d/e/2PACX-1vQZ2cpoTzUtnVa-s_YeGGv3FHHSpHdR0zAJXY6jwJL8zrHTa7-zGtWGIKkGzUglcTfykCA3uML3hsZu/pub?start=false&loop=false&delayms=3000">
-              Status Report Slides
-            </NewTabLink>{" "}
-            - 12.5.2023
-          </li>
-          <hr />
-          <li>
-            <NewTabLink href="https://docs.google.com/presentation/d/e/2PACX-1vSGBkk_3fRIeLrlMBCgLnHLxSdt4hOVz5QovjrUs3qXfVDnx12xO7hYLEuhQx4CtW_VOJ-tBIZaoHZ9/pub?start=false&loop=false&delayms=3000">
-              Final Presentation Slides
-            </NewTabLink>{" "}
-            - 4.19.2022
-          </li>
-          <li>
-            <NewTabLink href="https://docs.google.com/presentation/d/e/2PACX-1vRRNLIukj6g61oBkb41JiwW0hZFUMOGzL_m-Um_Ha9vcksYJRzmd7oUlyEs0rqz5fqgFVmncarYzbMP/pub?start=false&loop=false&delayms=3000">
-              Status Report Slides
-            </NewTabLink>{" "}
-            - 12.07.2021
-          </li>
-          <hr />
-          <li>
-            <NewTabLink href="https://youtu.be/ckn0oPxvlIE">Final Presentation Video</NewTabLink> -
-            4.25.2021
-          </li>
-          <li>
-            <NewTabLink href="https://docs.google.com/presentation/d/e/2PACX-1vRcyM-65kiLgceLaU7mQjnuzqPHKMt-nWT_msYcXeXbLeoe13awn2gSudzlC_5ghpyQlLVPzywJzywj/pub?start=false&loop=false&delayms=3000">
-              Final Presentation Slides
-            </NewTabLink>{" "}
-            - 4.25.2021
-          </li>
-          <li>
-            <NewTabLink href="https://web.microsoftstream.com/video/cee6b774-a010-4220-a0d8-c6a6c5240d84?st=2456">
-              Status Report Video
-            </NewTabLink>{" "}
-            - 12.01.2020
-          </li>
-          <li>
-            <NewTabLink href="https://docs.google.com/document/d/e/2PACX-1vS8sc8-Vs1qkfyGpelPXsuwvSQif3IFlnsZNoak3P7DbBmSYxWDgXL2ig-OJk8VJVHny2lCUZxCyCfJ/pub">
-              Honors Status Report
-            </NewTabLink>{" "}
-            - 12.01.2020
-          </li>
-          <li>
-            <NewTabLink href="https://docs.google.com/presentation/d/e/2PACX-1vQrjMY5c-gnlvX5AAD1zIqRY0P5BLppQFT5y-3fxeR0TzuEvzUpDADYUGY_3J4TBe1PL3sq9rEqUdRA/pub?start=false&loop=false&delayms=3000">
-              Status Report Slides
-            </NewTabLink>{" "}
-            - 12.01.2020
-          </li>
-        </ul>
-      }
-      title="Resources"
     />
   );
 };
