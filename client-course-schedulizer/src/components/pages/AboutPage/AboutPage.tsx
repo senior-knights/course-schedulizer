@@ -1,4 +1,4 @@
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 import React from "react";
 import { NewTabLink, Page } from "components/reuseables";
 import { team2020, team2021, team2022, team2023, team2024, team2025, teamAdvisors, TeamMember} from "utilities";
@@ -271,12 +271,12 @@ const TeamAcademicYearBlock = ({ section }: { section: TeamYearSection }) => {
         className="about-team-grid"
         container
         direction="row"
-        justify="flex-start"
+        justifyContent="flex-start"
         spacing={2}
       >
         {(team || []).map((member: TeamMember) => {
           return (
-            <Grid item key={member.name} sm={3} xs={6}>
+            <Grid key={member.name} size={{ sm: 3, xs: 6 }}>
               <TeamMemberProfile member={member} />
             </Grid>
           );
@@ -319,12 +319,12 @@ const AboutAdvisors = () => {
           className="about-team-grid"
           container
           direction="row"
-          justify="flex-start"
+          justifyContent="flex-start"
           spacing={2}
         >
           {teamAdvisors.map((member: TeamMember) => {
             return (
-              <Grid item key={member.name} sm={3} xs={6}>
+              <Grid key={member.name} size={{ sm: 3, xs: 6 }}>
                 <TeamMemberProfile member={member} />
               </Grid>
             );
