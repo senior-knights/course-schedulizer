@@ -180,7 +180,9 @@ export const ScheduleSelector: React.FC = () => {
                 isActive={isActive}
                 key={`schedule-${index}`}
                 label={scheduleName} 
-                onClick={(event) => { handleToggleSchedule(index, event);}}
+                onClick={(event: React.MouseEvent<HTMLElement>) => {
+                  handleToggleSchedule(index, event);
+                }}
                 sx={{
                   backgroundColor: isActive ? getChipColor(index) : undefined,
                 }}

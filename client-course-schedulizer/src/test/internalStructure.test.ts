@@ -93,7 +93,7 @@ describe("Internal data structure comparison", () => {
     expect(exportedCS262?.sections[0].meetings[1].days).toEqual(importedCS262?.sections[0].meetings[1].days);
     expect(exportedCS262?.sections[0].meetings[1].duration).toBe(importedCS262?.sections[0].meetings[1].duration);
     expect(exportedCS262?.sections[0].meetings[1].location.roomNumber).toBe(importedCS262?.sections[0].meetings[1].location.roomNumber);
-  
+  });
 
     // Check if the exportedSchedule and importedSchedule are the same - this does not pass because there is no deliveryMode defined in the exportedSchedule
     // expect(exportedSchedule).toEqual(importedSchedule);
@@ -103,9 +103,41 @@ describe("Internal data structure comparison", () => {
     // TODO: Best practices for scripts (github actions)
     // TODO: pnpm test -- update the line talk about the directory and which framework I used
 
+
+
+    // TEST to see if CS 384 (Row 5) is the same in both sheets
+
+    it("Compare every single column in row 5 between imported and exported XLSX (A through T", () => {
+      const filePath = path.join(
+        __dirname,"..", "..", "csv", "Schedulizer_Course_Sections_Test.xlsx"
+      );
     
-
-
-  });
+      const originalWorkbook = XLSX.readFile(filePath);
+      const originalSheet = originalWorkbook.Sheets[originalWorkbook.SheetNames[0]];
+      const exportedSheet = exportedWorkbook.Sheets[exportedWorkbook.SheetNames[0]];
+    
+      expect(originalSheet).toBeDefined();
+      expect(exportedSheet).toBeDefined();
+    
+      const normalizeCell = (sheet: XLSX.WorkSheet, address: string): string => {
+        const cell = sheet[address];
+        if (!cell) return "";
+        const formatted = XLSX.utils.format_cell(cell);
+        return formatted == null ? "" : String(formatted).trim();
+      };
+    
+      const row = 5;
+      const columns = [
+        "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
+        "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T"
+      ];
+    
+      columns.forEach((col) => {
+        const originalValue = normalizeCell(originalSheet, `${col}${row}`);
+        const exportedValue = normalizeCell(exportedSheet, `${col}${row}`);
+    
+        expect(exportedValue).toBe(originalValue);
+      });
+    });
 
 });
