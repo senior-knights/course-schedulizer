@@ -1,5 +1,5 @@
 import { Footer, Header } from "components";
-import { AboutPage, HelpPage, SchedulizerPage } from "components/pages";
+import { AboutPage, CompareResultsPage, CompareSettingsPage, HelpPage, SchedulizerPage } from "components/pages";
 import React, { useReducer, useState } from "react";
 import { HashRouter, Route, Switch } from "react-router-dom";
 import { reducer } from "utilities";
@@ -60,6 +60,12 @@ export const App = () => {
                 </Route>
                 <Route path="/help">
                   <HelpPage />
+                </Route>
+                <Route path="/compare-settings">
+                  <CompareSettingsPage />
+                </Route>
+                <Route path="/compare-results">
+                  <CompareResultsPage />
                 </Route>
                 {/* <Route path="/harmony">
                   <HarmonyPage />

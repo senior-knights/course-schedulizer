@@ -1,3 +1,5 @@
+// This is old code for the ScheduleComparer component, which allows users to compare two schedules and export the differences. It includes a dialog with options to select schedules, choose which columns to compare, preview the differences, and export the results to Excel. The component uses Material-UI for styling and layout, and it relies on utility functions for comparing schedules and exporting data.
+
 import {
   Box,
   Button,
