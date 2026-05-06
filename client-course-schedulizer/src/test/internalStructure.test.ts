@@ -101,6 +101,7 @@ describe("Internal data structure comparison", () => {
     // TODO: Check the exact values in each cell 
     // TODO: Checks between the two excel sheets (Check to see which line is not working)
     // TODO: Best practices for scripts (github actions)
+    // TODO: pnpm test -- update the line talk about the directory and which framework I used
 
 
 

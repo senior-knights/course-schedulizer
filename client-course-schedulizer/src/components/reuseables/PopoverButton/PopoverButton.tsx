@@ -1,5 +1,5 @@
-import { Button, ButtonProps, IconButton, Popover } from "@material-ui/core";
-import { Add } from "@material-ui/icons";
+import { Button, ButtonProps, IconButton, Popover } from "@mui/material";
+import { Add } from "@mui/icons-material";
 import { bindPopover, bindTrigger, usePopupState } from "material-ui-popup-state/hooks";
 import React from "react";
 import "./PopoverButton.scss";

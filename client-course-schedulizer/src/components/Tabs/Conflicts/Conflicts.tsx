@@ -7,7 +7,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from "@material-ui/core";
+} from "@mui/material";
 import { UpdateSectionModalPagination } from "components";
 import React, { useContext, useMemo, useRef } from "react";
 import { Cell, Column, useSortBy, useTable } from "react-table";

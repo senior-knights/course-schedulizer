@@ -5,7 +5,7 @@ import {
   Grid,
   Radio,
   RadioGroup,
-} from "@material-ui/core";
+} from "@mui/material";
 import { camelCase } from "lodash";
 import React, { ChangeEvent } from "react";
 import { Controller, useFormContext } from "react-hook-form";
@@ -32,7 +32,7 @@ export const GridItemRadioGroup = ({
   const { control } = useFormContext();
 
   return (
-    <Grid item xs>
+    <Grid size="grow">
       <FormControl component="fieldset">
         <FormLabel component="legend">{label}</FormLabel>
         <Controller

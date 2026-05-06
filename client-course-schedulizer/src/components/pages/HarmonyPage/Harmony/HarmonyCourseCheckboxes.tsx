@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, Grid } from "@material-ui/core";
+import { Box, Button, Card, CardContent, Grid } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   HarmonyAssignmentsState,
@@ -41,7 +41,7 @@ export const HarmonyCourseCheckboxes = ({ course }: HarmonyCourseCheckboxesProps
       <Card variant="outlined">
         <CardContent>
           <h2>{course}</h2>
-          <Grid container justify="space-around">
+          <Grid container justifyContent="space-around">
             <HarmonyCheckboxList
               course={course}
               customLabel={(profObj: SingularAccessors["professor"]) => {
