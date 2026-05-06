@@ -1,4 +1,4 @@
-import { Grid, StandardTextFieldProps, TextField } from "@material-ui/core";
+import { Grid, StandardTextFieldProps, TextField } from "@mui/material";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { useInput } from "utilities";
@@ -18,8 +18,8 @@ export const GridItemTextField = ({ label, textFieldProps, value, name }: GridIt
   const { name: nameFallback, errorMessage } = useInput(label, errors);
 
   return (
-    <Grid container direction="column" item xs>
-      <Grid item xs>
+    <Grid container direction="column" size="grow">
+      <Grid size="grow">
         <TextField
           defaultValue={value}
           fullWidth

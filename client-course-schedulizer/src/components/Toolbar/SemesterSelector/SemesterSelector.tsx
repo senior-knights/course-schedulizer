@@ -1,5 +1,5 @@
-import { IconButton, Typography } from "@material-ui/core";
-import { ChevronLeft, ChevronRight } from "@material-ui/icons";
+import { IconButton, Typography } from "@mui/material";
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import React, { useContext } from "react";
 import { enumArray, Term } from "utilities";
 import { AppContext, ScheduleContext } from "utilities/contexts";

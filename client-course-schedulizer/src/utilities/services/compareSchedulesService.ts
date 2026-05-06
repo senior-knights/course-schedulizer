@@ -370,7 +370,7 @@ const findExactMatchIndex = (compRow: FlattenedRow, refGroup: FlattenedRow[]): n
 /**
  * Flattens a schedule into an array of rows for easier comparison
  */
-const flattenSchedule = (schedule: Schedule): FlattenedRow[] => {
+export const flattenSchedule = (schedule: Schedule): FlattenedRow[] => {
   const rows: FlattenedRow[] = [];
 
   schedule.courses.forEach((course) => {

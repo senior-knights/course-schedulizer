@@ -1,4 +1,4 @@
-import { Popover } from "@material-ui/core";
+import { Popover } from "@mui/material";
 import { AddSectionPopover, Calendar, ScheduleToolbar } from "components";
 import { bindPopover, usePopupState } from "material-ui-popup-state/hooks";
 import React, { useCallback, useMemo, useState } from "react";
@@ -124,7 +124,7 @@ export const ScheduleBase = ({
       </div>
       <Popover
         {...bindPopover(popupState)}
-        PaperProps={{ style: { maxHeight: "90%", maxWidth: "90%", minWidth: "500px" } }}
+        PaperProps={{ style: { maxHeight: "80%", maxWidth: "90%", minWidth: "500px" } }}
         anchorOrigin={{
           horizontal: "left",
           vertical: "bottom",

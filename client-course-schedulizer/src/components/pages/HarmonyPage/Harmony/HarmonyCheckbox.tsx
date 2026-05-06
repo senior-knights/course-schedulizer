@@ -1,4 +1,4 @@
-import { Checkbox, Grid } from "@material-ui/core";
+import { Checkbox, Grid } from "@mui/material";
 import React, { ChangeEvent, Dispatch, SetStateAction, useCallback, useState } from "react";
 
 interface HarmonyCheckboxProps {
