@@ -23,11 +23,6 @@ export const AboutPage = () => {
       academicYearLabel: "2025–26",
       resourcesAndReports: [
         {
-          date: "2.26.2026",
-          href: "https://docs.google.com/document/d/1ZSYfABqfUSxhqqfZH9b_0fu2XrqBe46lxKp5XGHGvY8/edit?usp=sharing",
-          label: "Schedulizer Project Report ",
-        },
-        {
           date: "4.13.2026",
           href: "https://docs.google.com/presentation/d/1brMKI0mE3RnfzQWubYN0VOFEqjjvhLvagRhhpFNvEhg/edit?usp=sharing",
           label: "Schedulizer Project Final Presentation Slides",
