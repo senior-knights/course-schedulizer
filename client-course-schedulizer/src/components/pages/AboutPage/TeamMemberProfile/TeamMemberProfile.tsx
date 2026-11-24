@@ -1,17 +1,15 @@
 import { Grid } from "@mui/material";
 import { Spring3DHover } from "components";
 import React from "react";
+import { Spring3DHover } from "components";
 import { TeamMember } from "utilities";
 
-interface TeamMemberProfile {
+interface TeamMemberProfileProps {
   member: TeamMember;
 }
 
-/* Display information about the Team Member */
-// Turned off "eslint/no-redeclare" and "eslint/no-unused-vars"
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const TeamMemberProfile = ({ member }: TeamMemberProfile) => { // eslint-disable-line @typescript-eslint/no-redeclare
-  const { name, bio } = member;
+export const TeamMemberProfile = ({ member }: TeamMemberProfileProps) => {
+  const {name } = member;
 
   return (
     <Grid alignItems="center" container>
