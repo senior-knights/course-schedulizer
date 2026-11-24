@@ -7,17 +7,13 @@ import "./NoCoursesHeader.scss";
 export const NoCoursesHeader = () => {
   return (
     <>
-      <h2>No schedule data.</h2>
-      <p>
-        Please import an existing schedule or start building the schedule from scratch by
-        adding your first section.
+      <h2>The Schedulizer has been re-engineered.</h2>
+        <p>We recommend that you use the new Schedulizer, found here:&nbsp;
+          <a href="https://course-schedulizer.netlify.app" target="_blank">https://course-schedulizer.netlify.app</a></p>
+      <p>Many thanks to the generations of CS project students to conceived of, designed, built, and maintained the old version.
+        <br></br>If you need the old Schedulizer for any reason, use the development version, found here:&nbsp;
+          <code>https://sharp-babbage-a45ee2.netlify.app</code>
       </p>
-      <Box component="span" marginRight={1}>
-        <ImportButton variant="contained" />
-      </Box>
-      <Box component="span" marginRight={1}>
-        <AddSectionButton isIcon={false} />
-      </Box>
       {/* <ViewDemoButton /> */}
     </>
   );
