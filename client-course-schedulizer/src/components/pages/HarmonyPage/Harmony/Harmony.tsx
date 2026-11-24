@@ -1,5 +1,5 @@
 import { CustomButtonProps, Harmony as HarmonyBase, Result } from "@harmoniously/react";
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import {
   HarmonyAssignmentsState,

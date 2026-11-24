@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Button, Grid, InputAdornment, Typography } from "@material-ui/core";
+import { Box, Button, Grid, InputAdornment, Typography } from "@mui/material";
 import {
   GridItemAutocomplete,
   GridItemCheckboxGroup,
@@ -197,30 +197,30 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
             {title}
           </Typography>
         </Box>
-        <Grid container spacing={SPACING}>
+        <Grid columnSpacing={SPACING} container rowSpacing={SPACING} sx={{ py: 0.5 }} >
           <GridItemTextField label="Department" textFieldProps={{ autoFocus: true }} />
         </Grid>
-        <Grid container spacing={SPACING}>
+        <Grid columnSpacing={SPACING} container rowSpacing={SPACING} sx={{ py: 0.5 }} >
           <GridItemAutocomplete label="Instructor" multiple options={[...professors].sort()} />
-          <Grid item xs={2}>
+          <Grid size={{ xs: 2 }}>
             <GridItemAutocomplete label="Prefix" multiple options={getPrefixes(schedule)} />
           </Grid>
-          <Grid item xs={1}>
+          <Grid size={{ xs: 1 }}>
             <GridItemAutocomplete label="Number" options={getNumbers(schedule)} />
           </Grid>
-          <Grid item xs={1}>
+          <Grid size={{ xs: 1 }}>
             <GridItemAutocomplete label="Section" options={getSectionLetters(schedule)} />
           </Grid>
           <GridItemAutocomplete label="Course Title" options={getCourseNames(schedule)} />
         </Grid>
-        <Grid container spacing={SPACING}>
-          <Grid item xs={2}>
+        <Grid columnSpacing={SPACING} container rowSpacing={SPACING} sx={{ py: 0.5 }} >
+          <Grid size={{ xs: 2 }}>
             <GridItemTextField
               label="Start Time"
               textFieldProps={{ fullWidth: true, type: "time" }}
             />
           </Grid>
-          <Grid item xs={2}>
+          <Grid size={{ xs: 2 }}>
             <GridItemTextField
               label="Duration"
               textFieldProps={{
@@ -230,28 +230,30 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
               }}
             />
           </Grid>
-          <Grid item xs={2}>
+          <Grid size={{ xs: 2 }}>
             <GridItemAutocomplete label="Location" options={[...rooms].sort()} />
           </Grid>
-          <Grid item xs={1}>
+          <Grid size={{ xs: 1 }}>
             <GridItemTextField label="Faculty Hours" />
           </Grid>
-          <Grid item xs={1}>
+          <Grid size={{ xs: 1 }}>
             <GridItemTextField label="Student Hours" />
           </Grid>
-          <GridItemAutocomplete
-            label="Delivery Mode"
-            options={getDeliveryModes(schedule)}
-          />
-          <Grid item xs={2}>
+          <Grid size={{ xs: 2 }}>
+            <GridItemAutocomplete
+              label="Delivery Mode"
+              options={getDeliveryModes(schedule)}
+            />
+          </Grid>
+          <Grid size={{ xs: 2 }}>
             <GridItemTextField label="Group" />
           </Grid>
         </Grid>
-        <Grid container spacing={SPACING}>
+        <Grid columnSpacing={SPACING} container rowSpacing={SPACING}>
           {/* This empty item just fills space */}
-          <Grid item xs />
+          <Grid size="grow" />
         </Grid>
-        <Grid container spacing={SPACING}>
+        <Grid columnSpacing={SPACING} container rowSpacing={SPACING}>
           <GridItemCheckboxGroup
             initialValue={addFalseToDaysCheckboxList(values?.meeting?.days) as string[]}
             label="Days"
@@ -265,7 +267,7 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
             onChange={onSemesterLengthChange}
             options={Object.values(SemesterLengthOption)}
           />
-          <Grid item xs>
+          <Grid size="grow">
             {isHalfSemester && (
               <GridItemRadioGroup
                 label="Half Semester"
@@ -316,21 +318,21 @@ export const AddSectionPopover = ({ values }: PopoverValueProps) => {
             value={values?.section.comments}
           />
         </Grid>
-        <Grid alignItems="flex-end" container justify="space-between">
-          <Grid item>
+        <Grid alignItems="flex-end" container justifyContent="space-between">
+          <Grid>
             <Typography variant="caption">
               <b>Wildcard Tip:</b> To create a Wildcard meeting put a <b>&quot;*&quot;</b> in the Prefix, Number, Section, Instructor,
               and Location fields. Also, put a <b>&quot;0&quot;</b> in the Faculty Hours and Student Hours fields.
               Finally, select the Start Time and Duration.
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid>
             <Typography variant="caption">
               <b>Tip:</b> use <b>tab</b> and <b>shift + tab</b> to navigate, <b>space bar</b> to select
               days, <b>arrow keys</b> to select term and others, and <b>return</b> to submit.
             </Typography>
           </Grid>
-          <Grid className="popover-buttons" item>
+          <Grid className="popover-buttons">
             {buttons()}
             {values?.section.timestamp && (
               <Typography variant="caption">

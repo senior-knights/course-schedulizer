@@ -1,5 +1,4 @@
-import { Grid, TextField } from "@material-ui/core";
-import { Autocomplete, AutocompleteProps } from "@material-ui/lab";
+import { Grid, TextField, Autocomplete, AutocompleteProps } from "@mui/material";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { useInput } from "utilities";
@@ -22,8 +21,8 @@ export const GridItemAutocomplete = (
   const { name: nameFallback, errorMessage } = useInput(label, errors);
 
   return (
-    <Grid container direction="column" item xs>
-      <Grid item xs>
+    <Grid container direction="column" size="grow">
+      <Grid size="grow">
         <Controller
           control={control}
           defaultValue={defaultValue}

@@ -1,4 +1,5 @@
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
+import { NewTabLink, Page } from "components/reuseables";
 import React from "react";
 import { NewTabLink, Page } from "components/reuseables";
 import { team2020, team2021, team2022, team2023, team2024, team2025, teamAdvisors, TeamMember} from "utilities";
@@ -240,23 +241,42 @@ const AboutVision = () => {
   );
 };
 
-const AboutTeams = ({ sections }: { sections: TeamYearSection[] }) => {
-  const visibleSections = sections.filter((s) => {
-    return (s.team?.length ?? 0) > 0;
-  });
+const AboutTeam2020 = () => {
+  return (
+    <TextSection
+      body={
+        <Grid container direction="column" justifyContent="flex-start" spacing={2}>
+          {team2020.map((member: TeamMember) => {
+            return <TeamMemberProfile key={member.name} member={member} />;
+          })}
+        </Grid>
+      }
+      title="Team of 2020"
+    />
+  );
+};
 
-  if (visibleSections.length === 0) {
-    return null;
-  }
+const AboutTeam2021 = () => {
+  return (
+    <TextSection
+      body={
+        <Grid container direction="column" justifyContent="flex-start" spacing={2}>
+          {team2021.map((member: TeamMember) => {
+            return <TeamMemberProfile key={member.name} member={member} />;
+          })}
+        </Grid>
+      }
+      title="Team of 2021"
+    />
+  );
+};
 
   return (
     <TextSection
       body={
-        <div>
-          {visibleSections.map((section) => {
-            return (
-              <TeamAcademicYearBlock key={section.academicYearLabel} section={section} />
-            );
+        <Grid container direction="column" justifyContent="flex-start" spacing={2}>
+          {team2022.map((member: TeamMember) => {
+            return <TeamMemberProfile key={member.name} member={member} />;
           })}
         </div>
       }
@@ -265,50 +285,32 @@ const AboutTeams = ({ sections }: { sections: TeamYearSection[] }) => {
   );
 };
 
-const TeamAcademicYearBlock = ({ section }: { section: TeamYearSection }) => {
-  const { academicYearLabel, resourcesAndReports, team } = section;
+const AboutTeam2023 = () => {
+  return (
+    <TextSection
+      body={
+        <Grid container direction="column" justifyContent="flex-start" spacing={2}>
+          {team2023.map((member: TeamMember) => {
+            return <TeamMemberProfile key={member.name} member={member} />;
+          })}
+        </Grid>
+      }
+      title="Team of 2023"
+    />
+  );
+};
 
   return (
-    <div className="about-team-year-block">
-      <h2 className="about-team-year-title">Team of {academicYearLabel}</h2>
-
-      <Grid
-        className="about-team-grid"
-        container
-        direction="row"
-        justify="flex-start"
-        spacing={2}
-      >
-        {(team || []).map((member: TeamMember) => {
-          return (
-            <Grid item key={member.name} sm={3} xs={6}>
-              <TeamMemberProfile member={member} />
-            </Grid>
-          );
-        })}
-      </Grid>
-
-      {resourcesAndReports.length > 0 ? (
-        <div className="about-team-year-links">
-          <h4 className="about-team-year-subtitle">Resources &amp; Reports</h4>
-          <ul className="about-resource-list">
-            {resourcesAndReports.map((item) => {
-              return (
-                <li
-                  className="about-resource-item"
-                  key={`${academicYearLabel}-${item.label}-${item.href}`}
-                >
-                  <NewTabLink href={item.href}>{item.label}</NewTabLink>
-                  {item.date ? (
-                    <span className="about-resource-date"> — {item.date}</span>
-                  ) : null}
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      ) : null}
-    </div>
+    <TextSection
+      body={
+        <Grid container direction="column" justifyContent="flex-start" spacing={2}>
+          {team2024.map((member: TeamMember) => {
+            return <TeamMemberProfile key={member.name} member={member} />;
+          })}
+        </Grid>
+      }
+      title="Team of 2024"
+    />
   );
 };
 
@@ -320,13 +322,7 @@ const AboutAdvisors = () => {
   return (
     <TextSection
       body={
-        <Grid
-          className="about-team-grid"
-          container
-          direction="row"
-          justify="flex-start"
-          spacing={2}
-        >
+        <Grid container direction="column" justifyContent="flex-start" spacing={2}>
           {teamAdvisors.map((member: TeamMember) => {
             return (
               <Grid item key={member.name} sm={3} xs={6}>

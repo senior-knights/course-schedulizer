@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  Alert,
   Button,
   Card,
   CardContent,
@@ -13,10 +14,9 @@ import {
   TextField,
   Tooltip,
   Typography,
-} from "@material-ui/core";
-import SaveIcon from "@material-ui/icons/Save";
-import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
-import Alert from "@material-ui/lab/Alert";
+} from "@mui/material";
+import SaveIcon from "@mui/icons-material/Save";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import "./Meta.scss";
 
 /* Creates a Meta tab for notes, version, year, and time display
@@ -198,8 +198,8 @@ export const Meta = () => {
         )}
       </Typography>
 
-      <Grid className="meta-content" container spacing={3}>
-        <Grid item md={8} xs={12}>
+      <Grid className="meta-content" columnSpacing={3} container>
+        <Grid size={{ md: 8, xs: 12}}>
           <Card className="meta-card">
             <CardContent>
               <Typography className="section-title" variant="h6">General Information</Typography>
@@ -219,8 +219,8 @@ export const Meta = () => {
                 variant="outlined"
               />
 
-              <Grid className="meta-field-group" container spacing={2}>
-                <Grid item sm={6} xs={12}>
+              <Grid className="meta-field-group" columnSpacing={2} container>
+                <Grid size={{ sm: 6, xs: 12 }}>
                   <TextField
                     className="meta-field"
                     error={!!versionError}
@@ -237,7 +237,7 @@ export const Meta = () => {
                     variant="outlined"
                   />
                 </Grid>
-                <Grid item sm={6} xs={12}>
+                <Grid size={{ sm: 6, xs: 12 }}>
                   <TextField
                     className="meta-field"
                     error={!!yearError}
@@ -259,7 +259,7 @@ export const Meta = () => {
           </Card>
         </Grid>
 
-        <Grid item md={4} xs={12}>
+        <Grid size={{ md: 4,  xs: 12 }}>
           <Card className="meta-card time-card">
             <CardContent>
               <Typography className="section-title" variant="h6">Current Time</Typography>

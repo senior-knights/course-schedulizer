@@ -1,5 +1,5 @@
-import { IconButton, Tooltip } from "@material-ui/core";
-import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import { IconButton, Tooltip } from "@mui/material";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import React from "react";
 import { useFieldArrayFormContext } from "utilities";
 import "./DeleteFieldButton.scss";

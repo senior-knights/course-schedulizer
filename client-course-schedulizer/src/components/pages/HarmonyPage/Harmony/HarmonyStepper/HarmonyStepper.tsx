@@ -1,4 +1,4 @@
-import { Button, Step, StepLabel, Stepper, Typography } from "@material-ui/core";
+import { Button, Step, StepLabel, Stepper, Typography } from "@mui/material";
 import {
   HarmonyStepperAssignments,
   HarmonyStepperImportData,

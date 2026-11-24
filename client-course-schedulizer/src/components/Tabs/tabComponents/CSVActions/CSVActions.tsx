@@ -1,5 +1,5 @@
-import { IconButton, Menu, MenuItem } from "@material-ui/core";
-import { Menu as MenuIcon } from "@material-ui/icons";
+import { IconButton, Menu, MenuItem } from "@mui/material";
+import { Menu as MenuIcon } from "@mui/icons-material";
 import { ImportInputWrapper } from "components";
 import { bindMenu, bindTrigger, usePopupState } from "material-ui-popup-state/hooks";
 import React from "react";
@@ -23,7 +23,7 @@ export const CSVActions = () => {
           horizontal: "right",
           vertical: "top",
         }}
-        getContentAnchorEl={null}
+        // getContentAnchorEl={null}
         transformOrigin={{
           horizontal: "left",
           vertical: "top",
@@ -31,15 +31,15 @@ export const CSVActions = () => {
         {...bindMenu(popupState)}
       >
         <ImportInputWrapper isAdditiveImport={false}>
-          <MenuItem button>IMPORT NEW SCHEDULE</MenuItem>
+          <MenuItem>IMPORT NEW SCHEDULE</MenuItem>
         </ImportInputWrapper>
         <ImportInputWrapper isAdditiveImport>
-          <MenuItem button>ADD ADDITIONAL SCHEDULE</MenuItem>
+          <MenuItem>ADD ADDITIONAL SCHEDULE</MenuItem>
         </ImportInputWrapper>
         <ImportInputWrapper isAdditiveImport>
-          <MenuItem button>IMPORT CONSTRAINTS</MenuItem>
+          <MenuItem>IMPORT CONSTRAINTS</MenuItem>
         </ImportInputWrapper>
-        <MenuItem button onClick={onExportExcelClick}>
+        <MenuItem onClick={onExportExcelClick}>
           EXPORT EXCEL
         </MenuItem>
       </Menu>

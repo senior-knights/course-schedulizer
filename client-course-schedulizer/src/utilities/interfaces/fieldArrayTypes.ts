@@ -1,4 +1,4 @@
-import { TextFieldProps } from "@material-ui/core/TextField/TextField";
+import { TextFieldProps } from "@mui/material";
 import { FieldValues, UseFieldArrayMethods, UseFormMethods } from "react-hook-form";
 
 /**

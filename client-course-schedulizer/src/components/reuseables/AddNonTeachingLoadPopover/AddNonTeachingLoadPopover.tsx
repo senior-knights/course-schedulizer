@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Button, Grid, Typography } from "@material-ui/core";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import { GridItemAutocomplete, GridItemCheckboxGroup, GridItemTextField } from "components";
 import { isEqual } from "lodash";
 import moment from "moment";
@@ -69,10 +69,10 @@ export const AddNonTeachingLoadPopover = ({ values }: PopoverValueProps) => {
             {values ? "Update Non-Teaching Activity" : "Add Non-Teaching Activity"}
           </Typography>
         </Box>
-        <Grid container spacing={SPACING}>
+        <Grid container rowSpacing={SPACING} sx={{ py: 0.5 }} >
           <GridItemTextField label="Activity" />
         </Grid>
-        <Grid container spacing={SPACING}>
+        <Grid container rowSpacing={SPACING} sx={{ py: 0.5 }} >
           <GridItemAutocomplete
             defaultValue={values?.section.instructors}
             label="Instructor"
@@ -80,17 +80,17 @@ export const AddNonTeachingLoadPopover = ({ values }: PopoverValueProps) => {
             options={[...professors].sort()}
           />
         </Grid>
-        <Grid container spacing={SPACING}>
+        <Grid container rowSpacing={SPACING} sx={{ py: 0.5 }} >
           <GridItemTextField label="Faculty Hours" />
         </Grid>
-        <Grid container spacing={SPACING}>
+        <Grid container rowSpacing={SPACING} sx={{ py: 0.5 }} >
           <GridItemCheckboxGroup
             initialValue={addFalseToTermsCheckboxList(values?.section.term as Term[]) as string[]}
             label="Terms"
             options={Object.values(Term)}
           />
         </Grid>
-        <Grid className="popover-buttons" item>
+        <Grid className="popover-buttons">
           <Button
             color="primary"
             onClick={methods.handleSubmit(onSubmit(values !== undefined))}

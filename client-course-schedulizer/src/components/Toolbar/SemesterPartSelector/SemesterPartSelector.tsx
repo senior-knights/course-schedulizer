@@ -1,5 +1,5 @@
-import { InputLabel, MenuItem, Select } from "@material-ui/core";
-import React, { ChangeEvent, useContext } from "react";
+import { InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import React, { useContext } from "react";
 import { AppContext } from "utilities/contexts";
 import { SemesterLength } from "utilities/interfaces";
 import "./SemesterPartSelector.scss";
@@ -11,7 +11,7 @@ export const SemesterPartSelector = () => {
     setIsCSVLoading,
   } = useContext(AppContext);
 
-  const handleSemesterPartChange = (event: ChangeEvent<{ value: unknown }>) => {
+  const handleSemesterPartChange = (event: SelectChangeEvent<SemesterLength>) => {
     setIsCSVLoading(true);
     const semesterPart = event.target.value as SemesterLength;
     appDispatch({ payload: { selectedSemesterPart: semesterPart }, type: "setSelectedSemesterPart" });
@@ -21,7 +21,7 @@ export const SemesterPartSelector = () => {
   return (
     <div>
       <InputLabel id="label">Semester Part</InputLabel>
-      <Select id="semester-part-select" onChange={handleSemesterPartChange} value={selectedSemesterPart}>
+      <Select id="semester-part-select" onChange={handleSemesterPartChange} value={selectedSemesterPart} variant="standard">
         <MenuItem value={SemesterLength.Full}>Full</MenuItem>
         <MenuItem value={SemesterLength.HalfFirst}>First Half</MenuItem>
         <MenuItem value={SemesterLength.HalfSecond}>Second Half</MenuItem>

@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from "@material-ui/core";
+import { Button, ButtonProps } from "@mui/material";
 import { ImportInputWrapper } from "components";
 import React from "react";
 import "../CSVActions.scss";

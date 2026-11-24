@@ -1,4 +1,5 @@
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
+import { Spring3DHover } from "components";
 import React from "react";
 import { Spring3DHover } from "components";
 import { TeamMember } from "utilities";
@@ -11,13 +12,13 @@ export const TeamMemberProfile = ({ member }: TeamMemberProfileProps) => {
   const {name } = member;
 
   return (
-    <Grid container direction="column" item>
-      <Grid alignItems="center" container direction="column" item>
-        <div style={{ transform: "scale(1)", transformOrigin: "center" }}>
-          <Spring3DHover member={member} />
-        </div>
-
-        <h3 style={{ marginTop: 12, textAlign: "center" }}>{name}</h3>
+    <Grid alignItems="center" container>
+      <Grid alignItems="center" container direction="column" size={{xs: 4}}>
+        <Spring3DHover member={member} />
+        <h3>{name}</h3>
+      </Grid>
+      <Grid container size={{xs: 8}}>
+        {bio}
       </Grid>
     </Grid>
   );

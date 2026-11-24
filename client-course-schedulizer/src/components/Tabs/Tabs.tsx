@@ -1,4 +1,4 @@
-import { Container, Tab, Tabs as MUITabs } from "@material-ui/core";
+import { Container, Tab, Tabs as MUITabs } from "@mui/material";
 import { AsyncComponent } from "components";
 import {
   Conflicts,

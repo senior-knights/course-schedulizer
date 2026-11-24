@@ -1,5 +1,5 @@
-import { AppBar, Toolbar, Typography } from "@material-ui/core";
-import Link from "@material-ui/core/Link";
+import { AppBar, Toolbar, Typography } from "@mui/material";
+import Link from "@mui/material/Link";
 import { logo } from "assets";
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";

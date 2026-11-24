@@ -1,5 +1,4 @@
-import { Modal, Paper } from "@material-ui/core";
-import { Pagination } from "@material-ui/lab";
+import { Modal, Paper, Pagination } from "@mui/material";
 import React, {
   ChangeEvent,
   forwardRef,

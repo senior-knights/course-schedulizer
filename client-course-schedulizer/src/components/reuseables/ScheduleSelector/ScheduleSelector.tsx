@@ -1,56 +1,68 @@
-import { Chip, IconButton, Menu, Tooltip, Typography, makeStyles } from "@material-ui/core";
-import ToggleOnIcon from "@material-ui/icons/ToggleOn";
+import { Box, Chip, IconButton, Menu, Tooltip, Typography, styled } from "@mui/material";
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 import React, { useContext, useState, useCallback, useMemo } from "react";
 import { AppContext } from "utilities/contexts";
 import "./ScheduleSelector.scss";
 
-// Define styles using makeStyles for better organization
-const useStyles = makeStyles((theme) => {
+// Define styles using styled for better organization
+
+// Chip Container
+const ChipContainer = styled(Box)(({ theme }) => {
   return {
-    activeChip: {
-      fontWeight: 'bold',
-      margin: '4px',
-    },
-    chipContainer: {
-      display: 'flex',
-      flexWrap: 'wrap',
-      maxWidth: '400px',
-      padding: theme.spacing(1),
-    },
-    inactiveChip: {
-      margin: '4px',
-    },
-    scheduleCounter: {
-      backgroundColor: theme.palette.grey[200],
-      borderRadius: '10px',
-      fontSize: '0.75rem',
-      marginLeft: theme.spacing(0.5),
-      padding: theme.spacing(0.25, 0.75),
-    },
-    toggleButton: {
-      '&:hover': {
-        backgroundColor: '#e0e0e0',
-      },
-      alignItems: 'center',
-      backgroundColor: '#f5f5f5',
-      border: 'none',
-      borderRadius: '20px',
-      display: 'flex',
-      padding: '5px 12px',
-      transition: 'background-color 0.2s',
-    },
-    toggleIcon: {
-      marginRight: theme.spacing(0.5),
-    },
-    toggleLabel: {
-      alignItems: 'center',
-      display: 'flex',
-      fontSize: '14px',
-      fontWeight: 500,
-      marginLeft: '8px',
-      whiteSpace: 'nowrap',
-    },
+  display: 'flex',
+  flexWrap: 'wrap',
+  maxWidth: '400px',
+  padding: theme.spacing(1),
   };
+});
+
+// Schedule Counter
+const ScheduleCounter = styled("span")(({ theme }) => {
+  return {
+    backgroundColor: theme.palette.grey[200],
+    borderRadius: "10px",
+    fontSize: "0.75rem",
+    marginLeft: theme.spacing(0.5),
+    padding: theme.spacing(0.25, 0.75),
+  };
+});
+
+// Chip with state
+const StyledChip = styled(Chip)<{ isActive: boolean }>(({ theme, isActive }) => {
+  return {
+    fontWeight: isActive ? "bold" : "normal",
+    margin: "4px",
+  };
+});
+
+// Toggle button
+const ToggleButton = styled(IconButton)(({ theme }) => {
+  return {
+    "&:hover": {
+      backgroundColor: "#e0e0e0",
+    },
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
+    borderRadius: "20px",
+    display: "flex",
+    padding: "5px 12px",
+    transition: 'background-color 0.2s',
+  };
+});
+
+const ToggleIcon = styled("span")(({ theme }) => {
+  return {
+    marginRight: theme.spacing(0.5),
+  };
+});
+
+const ToggleLabel = styled(Typography)({
+  alignItems: "center",
+  display: "flex",
+  fontSize: "14px",
+  fontWeight: 500,
+  marginLeft: "8px",
+  whiteSpace: "nowrap",
 });
 
 /**
@@ -58,7 +70,6 @@ const useStyles = makeStyles((theme) => {
  * which schedules to display in the main view.
  */
 export const ScheduleSelector: React.FC = () => {
-  const classes = useStyles();
   const {
     appState: { schedules, activeScheduleIds },
     appDispatch,
@@ -121,17 +132,18 @@ export const ScheduleSelector: React.FC = () => {
 
   // Build the toggle button with counter
   const toggleButton = useMemo(() => {
-    return (
-      <Tooltip title="Toggle Schedules">
-        <IconButton className={classes.toggleButton} onClick={handleToggleOpen}>
-          <ToggleOnIcon className={classes.toggleIcon} />
-          <Typography className={classes.toggleLabel} variant="button">
-            TOGGLE&nbsp;SCHEDULES <span className={classes.scheduleCounter}>{scheduleCounter}</span>
-          </Typography>
-        </IconButton>
-      </Tooltip>
-    );
-  }, [classes, handleToggleOpen, scheduleCounter]);
+  return (
+    <Tooltip title="Toggle Schedules">
+      <ToggleButton onClick={handleToggleOpen}>
+        <ToggleOnIcon />
+        <ToggleLabel variant="button">
+          TOGGLE&nbsp;SCHEDULES{" "}
+          <ScheduleCounter>{scheduleCounter}</ScheduleCounter>
+        </ToggleLabel>
+      </ToggleButton>
+    </Tooltip>
+  );
+}, [handleToggleOpen, scheduleCounter]);
 
   // Hide if there are no schedules or only one schedule
   if (schedules.length <= 1) {
@@ -148,7 +160,6 @@ export const ScheduleSelector: React.FC = () => {
           horizontal: 'center',
           vertical: 'top',
         }}
-        getContentAnchorEl={null}
         id="schedules-menu"
         keepMounted
         onClose={handleClose}
@@ -158,27 +169,26 @@ export const ScheduleSelector: React.FC = () => {
           vertical: 'bottom',
         }}
       >
-        <div className={classes.chipContainer}>
+        <ChipContainer>
           {schedules.map((schedule, index) => {
-            // Get schedule name from file name or use default
             const scheduleName = schedule.name || `Schedule ${index + 1}`;
             const isActive = activeScheduleIds.includes(index);
 
             return (
-              <Chip
-                className={isActive ? classes.activeChip : classes.inactiveChip}
+              <StyledChip
                 color={isActive ? "primary" : "default"}
+                isActive={isActive}
                 key={`schedule-${index}`}
-                label={scheduleName}
-                onClick={(event) => { handleToggleSchedule(index, event); }}
-                style={{
+                label={scheduleName} 
+                onClick={(event) => { handleToggleSchedule(index, event);}}
+                sx={{
                   backgroundColor: isActive ? getChipColor(index) : undefined,
                 }}
-                variant={isActive ? "default" : "outlined"}
+                variant={isActive ? "filled" : "outlined"}
               />
             );
           })}
-        </div>
+        </ChipContainer>
       </Menu>
     </div>
   );

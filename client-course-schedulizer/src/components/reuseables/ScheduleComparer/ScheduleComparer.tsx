@@ -1,3 +1,5 @@
+// This is old code for the ScheduleComparer component, which allows users to compare two schedules and export the differences. It includes a dialog with options to select schedules, choose which columns to compare, preview the differences, and export the results to Excel. The component uses Material-UI for styling and layout, and it relies on utility functions for comparing schedules and exporting data.
+
 import {
   Box,
   Button,
@@ -26,24 +28,24 @@ import {
   TextField,
   Tooltip,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
-import CompareIcon from "@material-ui/icons/Compare";
-import SearchIcon from "@material-ui/icons/Search";
-import InfoIcon from "@material-ui/icons/Info";
-import GetAppIcon from "@material-ui/icons/GetApp";
-import SyncAltIcon from "@material-ui/icons/SyncAlt";
+  styled,
+} from "@mui/material";
+import CompareIcon from "@mui/icons-material/Compare";
+import SearchIcon from "@mui/icons-material/Search";
+import InfoIcon from "@mui/icons-material/Info";
+import GetAppIcon from "@mui/icons-material/GetApp";
+import SyncAltIcon from "@mui/icons-material/SyncAlt";
 import React, { useContext, useState, useMemo, useCallback } from "react";
 import { AppContext } from "utilities/contexts";
 import { Schedule } from "utilities/interfaces";
 import { compareSchedules, exportComparisonToExcel } from "utilities/services";
 import "./ScheduleComparer.scss";
 
-// Define styles using makeStyles for better organization
-const useStyles = makeStyles((theme) => {
+// Define styles using Styled for better organization
+
+const CompareButton = styled(Box)(({ theme }) => {
   return {
-    compareButton: {
-      '&:hover': {
+  '&:hover': {
         backgroundColor: '#e0e0e0',
       },
       alignItems: 'center',
@@ -53,20 +55,23 @@ const useStyles = makeStyles((theme) => {
       display: 'flex',
       padding: '5px 12px',
       transition: 'background-color 0.2s',
-    },
-    compareIcon: {
-      marginRight: theme.spacing(0.5),
-    },
-    compareLabel: {
-      alignItems: 'center',
-      display: 'flex',
-      fontSize: '14px',
-      fontWeight: 500,
-      marginLeft: '8px',
-      whiteSpace: 'nowrap',
-    },
   };
 });
+
+const CompareIconStyled = styled(CompareIcon)(({ theme }) => {
+  return {
+    marginRight: theme.spacing(0.5),
+  };
+});
+
+const CompareLabel = styled(Typography)({
+  alignItems: 'center',
+  display: 'flex',
+  fontSize: '14px',
+  fontWeight: 500,
+  marginLeft: '8px',
+  whiteSpace: 'nowrap',
+}); 
 
 // Define a type for comparison result status
 type ResultStatus = 'modified' | 'removed' | 'added' | 'unchanged';
@@ -122,7 +127,6 @@ const COLUMN_CATEGORIES = {
  * Component that allows users to compare two schedules and export the differences
  */
 export const ScheduleComparer = () => {
-  const classes = useStyles();
   const {
     appState: { schedules },
   } = useContext(AppContext);
@@ -419,7 +423,7 @@ export const ScheduleComparer = () => {
           <Grid container spacing={1}>
             {columns.map((column) => {
               return (
-                <Grid item key={column.key} xs={6}>
+                <Grid key={column.key} size={{xs: 6}}>
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -637,11 +641,11 @@ export const ScheduleComparer = () => {
   return (
     <>
       <Tooltip title="Compare Schedules">
-        <IconButton className={classes.compareButton} onClick={handleOpen}>
-          <CompareIcon className={classes.compareIcon} />
-          <Typography className={classes.compareLabel} variant="button">
+        <IconButton onClick={handleOpen}>
+          <CompareIcon />
+          <CompareLabel variant="button">
             COMPARE&nbsp;SCHEDULES
-          </Typography>
+          </CompareLabel>
         </IconButton>
       </Tooltip>
 
@@ -663,7 +667,7 @@ export const ScheduleComparer = () => {
 
         <DialogContent dividers>
           <Grid className="schedule-comparer-form" container spacing={3}>
-            <Grid item md={4} xs={12}>
+            <Grid size={{md: 4, xs: 12}}>
               <Paper className="schedule-selector-section" elevation={1}>
                 <Box p={2}>
                   <Typography gutterBottom variant="subtitle2">
@@ -765,7 +769,7 @@ export const ScheduleComparer = () => {
               </Paper>
             </Grid>
 
-            <Grid item md={8} xs={12}>
+            <Grid size={{md: 8, xs: 12}}>
               <Paper className="column-selector-section" elevation={1}>
                 <Box p={2}>
                   <Typography gutterBottom variant="subtitle2">
@@ -874,7 +878,7 @@ export const ScheduleComparer = () => {
 
                           return (
                             <React.Fragment key={category}>
-                              <Grid item xs={12}>
+                              <Grid size={{xs: 12}}>
                                 <Box mb={1} mt={2}>
                                   <Typography
                                     color="primary"
@@ -892,7 +896,7 @@ export const ScheduleComparer = () => {
                               </Grid>
 
                               {columns.map(column => {return (
-                                <Grid item key={column.key} md={3} sm={4} xs={6}>
+                                <Grid key={column.key} size={{md: 3, sm: 4, xs: 6}}>
                                   <FormControlLabel
                                     control={
                                       <Checkbox
@@ -924,7 +928,7 @@ export const ScheduleComparer = () => {
         </DialogContent>
 
         <DialogActions>
-          <Button color="default" onClick={handleClose}>
+          <Button onClick={handleClose}>
             Cancel
           </Button>
           <Button

@@ -1,4 +1,4 @@
-import { ButtonProps } from "@material-ui/core";
+import { ButtonProps } from "@mui/material";
 import { AddSectionPopover } from "components";
 import React from "react";
 import { PopoverButton } from "../PopoverButton";
